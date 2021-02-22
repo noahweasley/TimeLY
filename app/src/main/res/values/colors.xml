@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name = "colorPrimary">#2295FA</color>
+    <color name = "colorPrimaryDark">#1E88E5</color>
+    <color name = "_colorPrimaryDark">#801E88E5</color>
+    <color name = "colorAccent">@color/accent</color>
+    <color name = "colorAccentDarker">#B32C2C</color>
+    <color name = "colorAccentDark">#502E8D</color>
+    <color name = "bg_blue">#1976D2</color>
+    <color name = "bgBlueEnd">#8BB3D6</color>
+    <color name = "bgAddAssignment">#45E0DFDF</color>z
+    <color name = "bgPressed">#155899</color>
+    <color name = "pink">#F06292</color>
+    <color name = "accent">#ff4747</color>
+    <color name = "tomato_red">#FF6347</color>
+    <color name = "accent_click">#FA3232</color>
+    <color name = "accent_stroke">#420B1E</color>
+    <color name = "image_click_bg">#27000000</color>
+    <color name = "bg_multiSelect_images">#45000000</color>
+    <color name = "explore_text">#C0BEBE</color>
+    <color name = "alarm_view_gd">#B53F9B</color>
+    <color name = "activated">#FDFCFC</color>
+    <color name = "cardview_dark">#FF424242</color>
+    <color name = "colorAccent_50_percent">#80EC407A</color>
+    <color name = "tabIndicatorColor">#FFB600</color>
+    <color name = "image_background">#272295FA</color>
+    <color name = "image_background_2">#4F2295FA</color>
+    <color name = "image_background_stroke">#4A2295FA</color>
+    <color name = "image_background_stroke_2">#B52295FA</color>
+    <color name = "purple_light">#E1BEE7</color>
+    <color name = "pink_light">#F8BBD0</color>
+    <color name = "blue_light">#BBDEFB</color>
+    <color name = "green_light">#DCEDC8</color>
+    <color name = "orange_light">#FFE0B2</color>
+    <color name = "accent_disabled">#F84F4F</color>
+</resources>

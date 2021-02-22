@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:external = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	android:background = "@color/colorPrimaryDark">
+
+	<TextView
+		android:id = "@+id/time"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_marginBottom = "8dp"
+		android:fontFamily = "serif-monospace"
+		android:text = "@string/default_time"
+		android:textColor = "@android:color/white"
+		android:textSize = "40sp"
+		android:textStyle = "bold"
+		external:layout_constraintBottom_toTopOf = "@+id/label"
+		external:layout_constraintEnd_toStartOf = "@id/am_pm"
+		external:layout_constraintHorizontal_chainStyle = "packed"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toBottomOf = "@id/alarm_text" />
+
+	<TextView
+		android:id = "@+id/am_pm"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:fontFamily = "sans-serif-condensed"
+		android:text = "AM"
+		android:textColor = "@android:color/white"
+		android:textSize = "20sp"
+		external:layout_constraintBaseline_toBaselineOf = "@id/time"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toEndOf = "@+id/time"
+		tools:ignore = "HardcodedText" />
+
+	<TextView
+		android:id = "@+id/alarm_text"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_marginBottom = "8dp"
+		android:fontFamily = "serif-monospace"
+		android:maxLines = "1"
+		android:text = "ALARM"
+		android:textColor = "@android:color/white"
+		android:textSize = "70sp"
+		android:textStyle = "bold"
+		external:layout_constraintBottom_toTopOf = "@+id/time"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toTopOf = "parent"
+		external:layout_constraintVertical_bias = "0.13"
+		external:layout_constraintVertical_chainStyle = "packed"
+		tools:ignore = "HardcodedText" />
+
+	<ImageView
+		android:id = "@+id/alarm_clock"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:contentDescription = "@string/alarms"
+		external:layout_constraintBottom_toTopOf = "@+id/dismiss"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintHorizontal_bias = "0.497"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toBottomOf = "@+id/snooze_stat"
+		external:layout_constraintVertical_bias = "0.39"
+		external:srcCompat = "@drawable/ic_alarm_clock" />
+
+	<Button
+		android:id = "@+id/dismiss"
+		android:layout_width = "0dp"
+		android:layout_height = "wrap_content"
+		android:layout_marginStart = "8dp"
+		android:layout_marginLeft = "8dp"
+		android:layout_marginBottom = "8dp"
+		android:background = "@color/colorAccent"
+		android:drawablePadding = "8dp"
+		android:text = "Dismiss"
+		android:textColor = "@android:color/white"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toStartOf = "@id/snooze"
+		external:layout_constraintStart_toStartOf = "parent"
+		tools:ignore = "HardcodedText" />
+
+	<Button
+		android:id = "@+id/snooze"
+		android:layout_width = "0dp"
+		android:layout_height = "wrap_content"
+		android:layout_marginStart = "8dp"
+		android:layout_marginLeft = "8dp"
+		android:layout_marginEnd = "8dp"
+		android:layout_marginRight = "8dp"
+		android:background = "@android:color/holo_orange_dark"
+		android:drawablePadding = "8dp"
+		android:text = "Snooze"
+		android:textColor = "@android:color/white"
+		external:layout_constraintBaseline_toBaselineOf = "@id/dismiss"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toEndOf = "@id/dismiss"
+		tools:ignore = "HardcodedText" />
+
+	<TextView
+		android:id = "@+id/label"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_marginStart = "8dp"
+		android:layout_marginLeft = "8dp"
+		android:ellipsize = "end"
+		android:maxLines = "2"
+		android:text = "Wake up boy !!!"
+		android:textColor = "@android:color/white"
+		android:textSize = "24sp"
+		android:textStyle = "bold"
+		external:layout_constraintBottom_toTopOf = "@+id/snooze_stat"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toBottomOf = "@+id/time"
+		tools:ignore = "HardcodedText" />
+
+	<TextView
+		android:id = "@+id/snooze_stat"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_marginBottom = "8dp"
+		android:fontFamily = "serif-monospace"
+		android:text = "@string/snoozed"
+		android:textColor = "@android:color/white"
+		android:textSize = "24sp"
+		android:visibility = "gone"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toBottomOf = "@+id/label" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

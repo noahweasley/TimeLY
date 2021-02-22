@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:external = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	android:background = "@color/colorPrimaryDark">
+
+	<ImageView
+		android:id = "@+id/app_icon"
+		android:layout_width = "100dp"
+		android:layout_height = "100dp"
+		android:contentDescription = "App Icon"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toTopOf = "parent"
+		external:layout_constraintVertical_bias = "0.35000002"
+		external:srcCompat = "@drawable/icon"
+		tools:ignore = "HardcodedText" />
+
+	<TextView
+		android:id = "@+id/app_name"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:fontFamily="sans-serif-condensed-medium"
+		android:text = "@string/app_name"
+		android:textColor = "@android:color/white"
+		android:textSize = "56sp"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toBottomOf = "@+id/app_icon"
+		external:layout_constraintVertical_bias = "0.19"
+		tools:text = "@string/app_name" />
+
+	<ImageButton
+		android:id = "@+id/skip"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "8dp"
+		android:background = "@null"
+		android:contentDescription = "@string/skip"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:srcCompat = "@drawable/ic_arrow_forward" />
+
+	<TextView
+		android:id = "@+id/company"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_marginBottom = "8dp"
+		android:text = "@string/company"
+		android:textColor = "#A1FFFFFF"
+		android:textSize = "18sp"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:external = "http://schemas.android.com/apk/res-auto">
+
+	<PreferenceCategory
+		external:title = "General">
+
+		 <SwitchPreferenceCompat
+			 android:defaultValue = "true"
+			 external:icon = "@drawable/ic_settings_notification"
+			 external:key = "enable_notifications"
+			 external:summary = "Notifications are ON"
+			 external:title = "Enable notifications" />
+
+		<ListPreference
+			external:defaultValue = "TimeLY's Default"
+			external:entries = "@array/alert_entries"
+			external:entryValues = "@array/alert_values"
+			external:key = "Uri Type"
+			external:title = "Notification alert sound" />
+
+		<CheckBoxPreference
+			android:defaultValue = "true"
+			external:dependency = "enable_notifications"
+			external:icon = "@drawable/ic_alert_tone"
+			external:key = "enable alerts"
+			external:title = "Enable alert tones" />
+
+		<SwitchPreferenceCompat
+			external:defaultValue = "true"
+			external:icon = "@drawable/ic_access_time"
+			external:key = "time_format"
+			external:summary = "@string/time_format_summary"
+			external:title = "Use 24-hours format" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		external:allowDividerAbove = "true"
+		external:title = "Alarms">
+
+		<ListPreference
+			external:defaultValue = "5"
+			external:entries = "@array/snooze_choice"
+			external:entryValues = "@array/snooze_values"
+			external:icon = "@drawable/ic_snooze"
+			external:key = "snooze_time"
+			external:summary = "All alarms will be snoozed for 5 minutes"
+			external:title = "Alarm snooze time" />
+
+		<ListPreference
+			external:defaultValue = "Snooze"
+			external:entries = "@array/timeout_entries"
+			external:entryValues = "@array/timeout_values"
+			external:icon = "@drawable/ic_timer"
+			external:key = "snoozeOnStop"
+			external:summary = "Snooze"
+			external:title = "Alarm timeout operation" />
+
+		<ListPreference
+			external:defaultValue = "Medium"
+			external:entries = "@array/date_choice"
+			external:entryValues = "@array/date_values"
+			external:icon = "@drawable/ic_date_settings"
+			external:key = "date_format"
+			external:summary = "Medium"
+			external:title = "Date format" />
+
+		<ListPreference
+			external:defaultValue = "TimeLY's Default"
+			external:entries = "@array/ringtone_entries"
+			external:entryValues = "@array/ringtone_values"
+			external:key = "Alarm Ringtone"
+			external:title = "Alarm ringtone" />
+
+		<SwitchPreferenceCompat
+			external:defaultValue = "false"
+			external:key = "dismiss"
+			external:summary = "@string/dismiss_summary"
+			external:title = "Back is snooze" />
+
+	</PreferenceCategory>
+
+	<!--	<PreferenceCategory-->
+	<!--		external:allowDividerAbove = "true"-->
+	<!--		external:title = "Assignments">-->
+
+	<!--	</PreferenceCategory>-->
+
+	<PreferenceCategory
+		external:allowDividerAbove = "true"
+		external:title = "Exam Timetable">
+
+		<EditTextPreference
+			external:defaultValue = "8"
+			external:icon = "@drawable/ic_numbered"
+			external:key = "exam weeks"
+			external:title = "Number of weeks" />
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

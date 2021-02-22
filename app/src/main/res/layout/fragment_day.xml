@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+ <androidx.recyclerview.widget.RecyclerView
+     android:id="@+id/horizontalDayList"
+     android:layout_width="0dp"
+     android:layout_height="wrap_content"
+     external:layout_constraintBottom_toBottomOf="parent"
+     external:layout_constraintEnd_toEndOf="parent"
+     external:layout_constraintStart_toStartOf="parent"
+     external:layout_constraintTop_toTopOf="parent"
+     tools:ignore="RtlSymmetry" />
+
+  <View
+      android:id="@+id/right_shadow"
+      android:layout_width="30dp"
+      android:layout_height="0dp"
+      android:background="#80FFFFFF"
+      android:visibility="invisible"
+      external:layout_constraintBottom_toBottomOf="@id/horizontalDayList"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintTop_toTopOf="@id/horizontalDayList" />
+
+ <View
+     android:id="@+id/left_shadow"
+     android:layout_width="30dp"
+     android:layout_height="0dp"
+     android:background="#80FFFFFF"
+     external:layout_constraintBottom_toBottomOf="@id/horizontalDayList"
+     external:layout_constraintStart_toStartOf="parent"
+     external:layout_constraintTop_toTopOf="@id/horizontalDayList" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

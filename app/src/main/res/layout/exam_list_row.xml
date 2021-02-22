@@ -1,0 +1,106 @@
+<androidx.cardview.widget.CardView
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:external = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:id = "@+id/cardView"
+	android:layout_width = "match_parent"
+	android:layout_height = "120dp"
+	android:layout_marginBottom = "@dimen/secondary_card_margin_bottom"
+	android:background = "?attr/selectableItemBackground"
+	external:cardCornerRadius = "@dimen/corner_radius"
+	external:cardElevation = "@dimen/normal_elevation"
+	tools:ignore = "RtlSymmetry">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width = "match_parent"
+		android:layout_height = "match_parent">
+
+		<View
+			android:id = "@+id/left_indicator"
+			android:layout_width = "3dp"
+			android:layout_height = "0dp"
+			android:background = "@color/tomato_red"
+			external:layout_constraintBottom_toBottomOf = "parent"
+			external:layout_constraintStart_toStartOf = "parent"
+			external:layout_constraintTop_toTopOf = "parent" />
+
+		<com.projects.timely.VerticalTextView
+			android:id = "@+id/exam_day"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:text = "@string/default_day"
+			android:textSize="16sp"
+			android:textColor = "@android:color/black"
+			external:layout_constraintBottom_toBottomOf = "parent"
+			external:layout_constraintEnd_toStartOf = "@id/right_indicator"
+			external:layout_constraintStart_toEndOf = "@id/left_indicator"
+			external:layout_constraintTop_toTopOf = "parent" />
+
+		<View
+			android:id = "@+id/right_indicator"
+			android:layout_width = "3dp"
+			android:layout_height = "0dp"
+			android:layout_marginStart = "4dp"
+			android:layout_marginLeft = "4dp"
+			android:background = "@color/tomato_red"
+			external:layout_constraintBottom_toBottomOf = "parent"
+			external:layout_constraintStart_toEndOf = "@+id/exam_day"
+			external:layout_constraintTop_toTopOf = "parent" />
+
+		<ImageButton
+			android:id = "@+id/delete_exam"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:background = "@null"
+			android:contentDescription = "@string/delete"
+			android:paddingTop = "8dp"
+			android:paddingEnd = "8dp"
+			android:paddingRight = "8dp"
+			external:layout_constraintEnd_toEndOf = "parent"
+			external:layout_constraintTop_toTopOf = "parent"
+			external:srcCompat = "@drawable/ic_baseline_clear_18" />
+
+		<TextView
+			android:id = "@+id/time"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:layout_marginStart = "16dp"
+			android:layout_marginLeft = "16dp"
+			android:layout_marginTop = "16dp"
+			android:textStyle="bold"
+			android:text = "@string/default_time_2"
+			android:textColor = "@android:color/black"
+			external:layout_constraintStart_toEndOf = "@id/right_indicator"
+			external:layout_constraintTop_toTopOf = "parent" />
+
+		<TextView
+			android:id = "@+id/course_name"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:ellipsize = "end"
+			android:maxLines = "2"
+			android:paddingHorizontal = "16dp"
+			android:text = "@string/default_course_name"
+			android:textColor = "@android:color/black"
+			android:textSize = "16sp"
+			external:layout_constraintBottom_toBottomOf = "parent"
+			external:layout_constraintEnd_toEndOf = "parent"
+			external:layout_constraintStart_toEndOf = "@id/right_indicator"
+			external:layout_constraintTop_toTopOf = "parent" />
+
+		<TextView
+			android:id = "@+id/course_code"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:layout_marginEnd = "16dp"
+			android:layout_marginRight = "16dp"
+			android:layout_marginBottom = "8dp"
+			android:text = "@string/default_course"
+			android:textStyle="bold"
+			android:textColor = "@android:color/black"
+			external:layout_constraintBottom_toBottomOf = "parent"
+			external:layout_constraintEnd_toEndOf = "parent" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:external = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	android:background = "@drawable/bg_light">
+
+    <View
+	    android:id = "@+id/alarm_view"
+	    android:layout_width = "0dp"
+	    android:layout_height = "0dp"
+	    android:background = "@drawable/alarm_view_background"
+	    external:layout_constraintBottom_toBottomOf = "parent"
+	    external:layout_constraintEnd_toEndOf = "parent"
+	    external:layout_constraintStart_toStartOf = "parent"
+	    external:layout_constraintTop_toTopOf = "parent"
+	    external:layout_constraintVertical_bias = "0.82" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+	    android:id = "@+id/time_container"
+	    android:layout_width = "0dp"
+	    android:layout_height = "0dp"
+	    external:layout_constraintBottom_toTopOf = "@id/alarm_date"
+	    external:layout_constraintEnd_toEndOf = "parent"
+	    external:layout_constraintStart_toStartOf = "parent"
+	    external:layout_constraintTop_toTopOf = "parent">
+
+        <TextView
+	        android:id = "@+id/alarm_hour"
+	        android:layout_width = "wrap_content"
+	        android:layout_height = "wrap_content"
+	        android:text = "12"
+	        android:textColor = "@android:color/white"
+	        android:textSize = "50sp"
+	        external:layout_constraintBottom_toBottomOf = "parent"
+	        external:layout_constraintEnd_toStartOf = "@+id/blink"
+	        external:layout_constraintHorizontal_chainStyle = "packed"
+	        external:layout_constraintStart_toStartOf = "parent"
+	        external:layout_constraintTop_toTopOf = "parent"
+	        tools:ignore = "HardcodedText" />
+
+        <TextView
+	        android:id = "@+id/blink"
+	        android:layout_width = "wrap_content"
+	        android:layout_height = "wrap_content"
+	        android:text = ":"
+	        android:textColor = "@android:color/white"
+	        android:textSize = "40sp"
+	        external:layout_constraintBottom_toBottomOf = "parent"
+	        external:layout_constraintEnd_toStartOf = "@id/alarm_min"
+	        external:layout_constraintStart_toEndOf = "@id/alarm_hour"
+	        external:layout_constraintTop_toTopOf = "parent"
+	        tools:ignore = "HardcodedText" />
+
+        <TextView
+	        android:id = "@+id/alarm_min"
+	        android:layout_width = "wrap_content"
+	        android:layout_height = "wrap_content"
+	        android:text = "08"
+	        android:textColor = "@android:color/white"
+	        android:textSize = "50sp"
+	        external:layout_constraintBottom_toBottomOf = "parent"
+	        external:layout_constraintEnd_toStartOf = "@id/am_pm"
+	        external:layout_constraintStart_toEndOf = "@id/blink"
+	        external:layout_constraintTop_toTopOf = "parent"
+	        tools:ignore = "HardcodedText" />
+
+	    <TextView
+		    android:id = "@+id/am_pm"
+		    android:layout_width = "wrap_content"
+		    android:layout_height = "wrap_content"
+		    android:layout_marginStart = "8dp"
+		    android:layout_marginLeft = "8dp"
+		    android:text = "pm"
+		    android:textColor = "@android:color/white"
+		    android:textSize = "30sp"
+		    external:layout_constraintBottom_toBottomOf = "parent"
+		    external:layout_constraintEnd_toEndOf = "parent"
+		    external:layout_constraintStart_toEndOf = "@id/alarm_min"
+		    external:layout_constraintTop_toTopOf = "parent"
+		    tools:ignore = "HardcodedText" />
+
+            <ImageView
+	            android:id = "@+id/day_and_night"
+	            android:layout_width = "wrap_content"
+	            android:layout_height = "wrap_content"
+	            android:contentDescription = "@string/day_and_night"
+	            external:layout_constraintBottom_toBottomOf = "@id/img_bottom"
+	            external:layout_constraintEnd_toEndOf = "parent"
+	            external:layout_constraintHorizontal_bias = ".8"
+	            external:layout_constraintStart_toEndOf = "@+id/alarm_min"
+	            external:layout_constraintTop_toTopOf = "parent"
+	            external:layout_constraintVertical_bias = "1" />
+
+        <androidx.constraintlayout.widget.Guideline
+	        android:id = "@+id/img_bottom"
+	        android:layout_width = "match_parent"
+	        android:layout_height = "wrap_content"
+	        android:orientation = "horizontal"
+	        external:layout_constraintGuide_percent = "0.8" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+	    android:id = "@+id/alarm_date"
+	    android:layout_width = "wrap_content"
+	    android:layout_height = "wrap_content"
+	    android:textColor = "@android:color/white"
+	    android:textSize = "25sp"
+	    external:layout_constraintBottom_toBottomOf = "parent"
+	    external:layout_constraintEnd_toEndOf = "parent"
+	    external:layout_constraintStart_toStartOf = "parent"
+	    external:layout_constraintTop_toTopOf = "parent" />
+
+    <ImageButton
+	    android:id = "@+id/set_time"
+	    style = "@style/Widget.AppCompat.Button.Borderless"
+	    android:layout_width = "wrap_content"
+	    android:layout_height = "wrap_content"
+	    android:contentDescription = "@string/set_time"
+	    external:layout_constraintBottom_toBottomOf = "parent"
+	    external:layout_constraintEnd_toEndOf = "parent"
+	    external:layout_constraintHorizontal_bias = "0.01"
+	    external:layout_constraintStart_toStartOf = "parent"
+	    external:layout_constraintTop_toTopOf = "parent"
+	    external:layout_constraintVertical_bias = ".1"
+	    external:srcCompat = "@drawable/ic_settings" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

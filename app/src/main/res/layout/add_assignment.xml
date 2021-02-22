@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:external = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	android:background = "@drawable/bg_light"
+	android:orientation = "vertical">
+
+     <androidx.appcompat.widget.Toolbar
+	     android:id = "@+id/toolbar"
+	     android:layout_width = "0dp"
+	     android:layout_height = "?attr/actionBarSize"
+	     android:background = "@color/colorPrimary"
+	     android:theme = "@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+	     external:layout_constraintEnd_toEndOf = "parent"
+	     external:layout_constraintStart_toStartOf = "parent"
+	     external:layout_constraintTop_toTopOf = "parent"
+	     external:popupTheme = "@style/ThemeOverlay.AppCompat.Light" />
+
+	 <ScrollView
+		 android:layout_width = "0dp"
+		 android:layout_height = "0dp"
+		 external:layout_constraintBottom_toTopOf = "@+id/gallery"
+		 external:layout_constraintEnd_toEndOf = "parent"
+		 external:layout_constraintStart_toStartOf = "parent"
+		 external:layout_constraintTop_toBottomOf = "@id/toolbar">
+
+			<LinearLayout
+				android:layout_width = "match_parent"
+				android:layout_height = "wrap_content"
+				android:orientation = "vertical"
+				android:padding = "16dp">
+
+				<com.google.android.material.textfield.TextInputLayout
+					android:id = "@+id/lecturer_box"
+					external:errorEnabled="true"
+					android:layout_width = "match_parent"
+					android:layout_height = "wrap_content"
+					android:layout_marginBottom = "16dp"
+					android:background = "@drawable/bg_dialog_form">
+
+					<com.google.android.material.textfield.TextInputEditText
+						android:id = "@+id/choiceLecturer"
+						android:layout_width = "match_parent"
+						android:layout_height = "wrap_content"
+						android:layout_marginTop = "8dp"
+						android:background = "@android:color/transparent"
+						android:drawableStart = "@drawable/ic_lecturer"
+						android:drawableLeft = "@drawable/ic_lecturer"
+						android:drawablePadding = "@dimen/space"
+						android:hint = "@string/lecturer"
+						android:imeOptions = "actionNext"
+						android:inputType = "textMultiLine"
+						android:maxLines = "1"
+						android:textColor = "@android:color/black"
+						android:textCursorDrawable = "@drawable/colored_cursor"
+						tools:ignore = "Autofill" />
+
+				 </com.google.android.material.textfield.TextInputLayout>
+
+				 <com.google.android.material.textfield.TextInputLayout
+					 android:id = "@+id/title_box"
+					 android:layout_width = "match_parent"
+					 android:layout_height = "wrap_content"
+					 android:layout_marginBottom = "16dp"
+					 external:errorEnabled="true"
+					 android:background = "@drawable/bg_dialog_form">
+
+					  <com.google.android.material.textfield.TextInputEditText
+						  android:id = "@+id/assignment_title"
+						  android:layout_width = "match_parent"
+						  android:layout_height = "wrap_content"
+						  android:layout_marginTop = "8dp"
+						  android:background = "@android:color/transparent"
+						  android:drawableStart = "@drawable/ic_title"
+						  android:drawableLeft = "@drawable/ic_title"
+						  android:drawablePadding = "@dimen/space"
+						  android:hint = "@string/title"
+						  android:imeOptions = "actionNext"
+						  android:inputType = "textMultiLine"
+						  android:maxLines = "1"
+						  android:textCursorDrawable = "@drawable/colored_cursor"
+						  tools:ignore = "Autofill" />
+
+				    </com.google.android.material.textfield.TextInputLayout>
+
+					<com.google.android.material.textfield.TextInputLayout
+						android:id = "@+id/description_box"
+						android:layout_width = "match_parent"
+						android:layout_height = "wrap_content"
+						external:errorEnabled="true"
+						android:layout_marginBottom = "16dp"
+						android:background = "@drawable/bg_dialog_form">
+
+				        <com.google.android.material.textfield.TextInputEditText
+					        android:id = "@+id/description"
+					        android:layout_width = "match_parent"
+					        android:layout_height = "wrap_content"
+					        android:layout_marginTop = "8dp"
+					        android:background = "@android:color/transparent"
+					        android:drawableStart = "@drawable/ic_description"
+					        android:drawableLeft = "@drawable/ic_description"
+					        android:drawablePadding = "@dimen/space"
+					        android:hint = "@string/description"
+					        android:imeOptions = "actionNext"
+					        android:inputType = "textMultiLine"
+					        android:maxLines = "5"
+					        android:minLines = "5"
+					        android:textColor = "@android:color/black"
+					        android:textCursorDrawable = "@drawable/colored_cursor"
+					        tools:ignore = "Autofill" />
+
+					</com.google.android.material.textfield.TextInputLayout>
+
+					<com.google.android.material.textfield.TextInputLayout
+						android:id = "@+id/date_box"
+						android:layout_width = "match_parent"
+						android:layout_height = "wrap_content"
+						android:layout_marginBottom = "16dp"
+						external:errorEnabled="true"
+						android:background = "@drawable/bg_dialog_form">
+
+				         <com.google.android.material.textfield.TextInputEditText
+					         android:id = "@+id/submission_date"
+					         android:layout_width = "match_parent"
+					         android:layout_height = "wrap_content"
+					         android:background = "@android:color/transparent"
+					         android:drawableStart = "@drawable/ic_date"
+					         android:drawableLeft = "@drawable/ic_date"
+					         android:drawablePadding = "@dimen/space"
+					         android:hint = "@string/submission_date"
+					         android:imeOptions = "actionDone"
+					         android:inputType = "date"
+					         android:maxLines = "1"
+					         android:textColor = "@android:color/black"
+					         android:textCursorDrawable = "@drawable/colored_cursor"
+					         tools:ignore = "Autofill" />
+
+					</com.google.android.material.textfield.TextInputLayout>
+
+					<LinearLayout
+						android:layout_width = "match_parent"
+						android:layout_height = "match_parent"
+						android:orientation = "horizontal">
+
+						<TextView
+							android:id = "@+id/text"
+							android:layout_width = "wrap_content"
+							android:layout_height = "wrap_content"
+							android:text = "@string/choose_course"
+							android:textColor = "@android:color/black"
+							android:textSize = "16sp" />
+
+						 <Spinner
+							 android:id = "@+id/chooseCourse"
+							 android:layout_width = "wrap_content"
+							 android:layout_height = "wrap_content"
+							 android:layout_marginStart = "16dp"
+							 android:layout_marginLeft = "16dp" />
+
+					</LinearLayout>
+
+		</LinearLayout>
+
+	</ScrollView>
+
+	<Button
+		android:id = "@+id/submitButton"
+		android:layout_width = "0dp"
+		android:layout_height = "wrap_content"
+		android:layout_marginStart = "16dp"
+		android:layout_marginLeft = "16dp"
+		android:layout_marginEnd = "16dp"
+		android:layout_marginRight = "16dp"
+		android:layout_marginBottom = "16dp"
+		android:background = "@drawable/bg_submit"
+		android:text = "@string/register"
+		android:textColor = "@android:color/white"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toStartOf = "@id/camera"
+		external:layout_constraintStart_toStartOf = "parent" />
+
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id = "@+id/gallery"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "24dp"
+		external:backgroundTint="@color/colorPrimaryDark"
+		android:contentDescription = "@string/todo"
+		external:fabSize = "auto"
+		external:layout_constraintBottom_toTopOf = "@+id/camera"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:srcCompat = "@drawable/ic_image" />
+
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id = "@+id/camera"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "24dp"
+		android:contentDescription = "@string/todo"
+		external:fabSize = "auto"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:srcCompat = "@drawable/ic_camera" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

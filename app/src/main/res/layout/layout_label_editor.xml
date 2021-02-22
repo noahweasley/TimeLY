@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "350dp"
+	android:layout_height = "wrap_content"
+	xmlns:external = "http://schemas.android.com/apk/res-auto"
+	android:orientation = "vertical">
+
+	<TextView
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_margin="16dp"
+		android:textSize="20sp"
+		android:textStyle="bold"
+		android:textColor="@android:color/black"
+		android:text="@string/alarm_label"
+		android:fontFamily="sans-serif"/>
+
+	<EditText
+		android:id = "@+id/alarm_label"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:layout_marginStart = "16dp"
+		android:layout_marginLeft = "16dp"
+		android:layout_marginTop = "16dp"
+		android:layout_marginEnd = "16dp"
+		android:layout_marginRight = "16dp"
+		android:maxLines = "1"
+		android:textCursorDrawable="@drawable/colored_cursor"
+		external:backgroundTint="@color/colorPrimaryDark"
+		tools:ignore = "Autofill,LabelFor,TextFields" />
+
+	<LinearLayout
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_gravity = "end"
+		android:layout_marginTop="16dp"
+		android:orientation = "horizontal">
+
+		<Button
+			android:id = "@+id/cancel_button"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:layout_gravity = "end"
+			android:background = "@android:color/transparent"
+			android:text = "@android:string/cancel"
+			android:textColor = "@color/action_button"
+			tools:ignore = "ButtonStyle" />
+
+		<Button
+			android:id = "@+id/ok_button"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:layout_gravity = "end"
+			android:background = "@android:color/transparent"
+			android:text = "@android:string/ok"
+			android:textColor = "@color/action_button"
+			tools:ignore = "ButtonStyle" />
+
+	</LinearLayout>
+
+</LinearLayout>

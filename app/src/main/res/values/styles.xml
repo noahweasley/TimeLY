@@ -1,0 +1,46 @@
+<resources xmlns:tools = "http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+	<style name = "AppTheme"
+	       parent = "Theme.AppCompat.Light.NoActionBar">
+
+		<item name = "colorPrimary">@color/colorPrimary</item>
+        <item name = "colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name = "colorAccent">@color/colorAccent</item>
+        <item name = "snackbarStyle">@style/SnackbarStyle</item>
+		 <item name = "android:navigationBarColor"
+		       tools:targetApi = "lollipop">#BE000000</item>
+		<item name = "windowActionModeOverlay">true</item>
+		<item name="actionModeBackground">@color/colorPrimary</item>
+
+    </style>
+
+    <style name = "FullscreenTheme"
+           parent = "AppTheme">
+
+        <item name = "android:windowFullscreen">true</item>
+
+    </style>
+
+	<style name = "ImageViewerTheme"
+           parent = "FullscreenTheme">
+
+	 <item name = "android:navigationBarColor"
+	       tools:targetApi = "lollipop">@android:color/black</item>
+
+		<item name="android:windowDrawsSystemBarBackgrounds"
+		      tools:targetApi = "lollipop">true</item>
+    </style>
+
+
+    <style name = "SnackbarStyle"
+           parent = "Widget.Design.Snackbar">
+
+    <item name = "animationMode">fade</item>
+
+    </style>
+
+	<style name="LightTheme" parent="AppTheme">
+		<item name = "colorAccent">@android:color/white</item>
+	</style>
+
+</resources>

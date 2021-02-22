@@ -1,0 +1,12 @@
+1. Multi-Selection for all list. (Ongoing)
+2. Image Viewer (slider) for assignments.
+3. Long click pick activation for image picker.
+4. Image Viewer (slider) for image picker.
+5a. Schedule alarm notifier for exam timetable.
+5b. Check if all alarm notifiers are working correctly.
+6a. Finish up alarm scheduler.
+6b. Fix bugs and bad practices in AlarmTimeFragment and the TimeChangeDetector thread.
+7. Start implementing other features.
+8a. When app is finished, build correct layout for other screen sizes and densities.
+8b. Produce correct image sizes for difference screen densities for all the images used in app.
+9. Package and distribute app.

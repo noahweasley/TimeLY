@@ -1,0 +1,32 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="default_gap">10dp</dimen>
+    <dimen name="top_gap">20dp</dimen>
+    <dimen name="attach_gap">20dp</dimen>
+    <dimen name="corner_radius">10dp</dimen>
+    <dimen name="layout_top_gap">8dp</dimen>
+    <dimen name="card_margin_bottom">20dp</dimen>
+    <dimen name="layout_gap">16dp</dimen>
+    <dimen name="spacer_button">22dp</dimen>
+    <dimen name="space">8dp</dimen>
+    <dimen name="shift_in_space">100dp</dimen>
+    <dimen name="header_size">30dp</dimen>
+    <dimen name="card_elevation">20dp</dimen>
+    <dimen name="no_task_text_size">35sp</dimen>
+    <dimen name="greeting_textSize_land">50sp</dimen>
+    <dimen name="increment">50sp</dimen>
+    <dimen name="constraint_padding">16dp</dimen>
+    <dimen name="normal_elevation">8dp</dimen>
+    <dimen name="secondary_space">16dp</dimen>
+    <dimen name="img_size">220dp</dimen>
+    <dimen name="indicator_width">10dp</dimen>
+    <dimen name="timetable_space">8dp</dimen>
+    <dimen name="timetable_secondary_space">16dp</dimen>
+    <dimen name="timetable_card_width">300dp</dimen>
+    <dimen name="timetable_card_height">100dp</dimen>
+    <dimen name="split_space">4dp</dimen>
+    <dimen name="space2">15dp</dimen>
+    <dimen name="folder_img_margin">10dp</dimen>
+    <dimen name="imp_space">4dp</dimen>
+
+</resources>

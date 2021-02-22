@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:external = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "200dp"
+	android:layout_margin = "2dp">
+
+    <ImageView
+	    android:id = "@+id/rowImage"
+	    android:layout_width = "0dp"
+	    android:layout_height = "0dp"
+        android:background = "@drawable/bg_images"
+	    external:layout_constraintBottom_toBottomOf = "parent"
+	    external:layout_constraintEnd_toEndOf = "parent"
+	    external:layout_constraintStart_toStartOf = "parent"
+	    external:layout_constraintTop_toTopOf = "parent"
+	    tools:ignore = "ContentDescription" />
+
+	<!--to display the image directory details-->
+	<View
+		android:id = "@+id/details"
+		android:layout_width = "0dp"
+		android:layout_height = "100dp"
+		android:background = "@drawable/bg_details"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toBottomOf = "@id/rowImage" />
+
+	<!--folder image-->
+	<ImageView
+		android:id = "@+id/img_folder"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "@dimen/folder_img_margin"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:srcCompat = "@drawable/ic_folder"
+		tools:ignore = "ContentDescription" />
+
+	<!--folder size-->
+	<TextView
+		android:id = "@+id/directorySize"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "@dimen/folder_img_margin"
+		android:textColor = "@android:color/white"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent" />
+
+	<!--folder name-->
+	<TextView
+		android:id = "@+id/directoryName"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "@dimen/folder_img_margin"
+		android:textColor = "@android:color/white"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintStart_toEndOf = "@id/img_folder" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

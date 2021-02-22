@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:tools = "http://schemas.android.com/tools"
+	package = "com.projects.timely">
+
+    <supports-screens
+	    android:anyDensity = "true"
+	    android:largeScreens = "true"
+	    android:normalScreens = "true"
+	    android:smallScreens = "false"
+	    android:xlargeScreens = "true" />
+
+    <uses-permission android:name = "android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name = "android.permission.WRITE_EXTERNAL_STORAGE"
+                     tools:ignore = "ScopedStorage" />
+    <uses-permission android:name = "android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name = "android.permission.VIBRATE" />
+
+    <application
+	    android:allowBackup = "true"
+	    android:fullBackupContent = "true"
+	    android:icon = "@mipmap/app_icon"
+	    android:label = "@string/app_name"
+	    android:theme = "@style/AppTheme">
+
+        <service
+	        android:name = ".alarms.AlarmNotificationService"
+	        android:enabled = "true"
+	        android:exported = "false">
+        </service>
+
+        <activity
+	        android:name = ".main.SplashScreen"
+	        android:theme = "@style/FullscreenTheme">
+            <intent-filter>
+                <action android:name = "android.intent.action.MAIN" />
+                <category android:name = "android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+	        android:name = ".main.MainActivity"
+	        android:launchMode = "singleTask"
+	        android:theme = "@style/AppTheme" />
+
+        <activity
+	        android:name = ".settings.SettingsActivity"
+	        android:label = "Settings" />
+
+        <activity
+	        android:name = ".gallery.ImageGallery" />
+
+        <activity
+	        android:name = ".alarms.AlarmActivity"
+	        android:excludeFromRecents = "true"
+	        android:label = "@string/alarms" />
+
+	    <activity android:name = ".gallery.ImageDirectory" />
+
+        <activity
+	        android:name = ".assignment.AddAssignmentActivity"
+	        android:launchMode = "singleTask" />
+
+	    <activity
+		    android:name = ".assignment.ViewImagesActivity"
+		    android:launchMode = "singleTask" />
+
+	    <activity
+		    android:name = ".gallery.ImageSlideActivity"
+		    android:theme="@style/ImageViewerTheme"/>
+
+        <receiver android:name = ".alarms.AlarmReceiver" />
+        <receiver android:name = ".alarms.NotificationActionReceiver" />
+        <receiver android:name = ".assignment.Reminder" />
+        <receiver android:name = ".assignment.SubmissionNotifier" />
+	    <receiver android:name = ".timetable.TimetableNotifier" />
+	    <receiver android:name = ".scheduled.ScheduledTaskNotifier" />
+
+    </application>
+
+</manifest>
