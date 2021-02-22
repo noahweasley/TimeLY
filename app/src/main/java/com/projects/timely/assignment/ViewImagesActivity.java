@@ -178,7 +178,6 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         indeterminateProgress2.setVisibility(View.VISIBLE);
         String[] uriList = intent.getStringArrayExtra(ARG_URI_LIST);
 
-        // Commenting
         SchoolDatabase database = new SchoolDatabase(this);
         ThreadUtils.runBackgroundTask(() -> {
             boolean isUpdated /* use the intent that started this activity */
