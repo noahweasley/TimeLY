@@ -219,6 +219,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
          * @return the checked status of a particular image in the list
          */
         public boolean isChecked(int adapterPosition) {
+            // A comment to check pull request from master branch
             return choiceMode.isChecked(adapterPosition);
         }
 
