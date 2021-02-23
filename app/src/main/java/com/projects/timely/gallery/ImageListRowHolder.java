@@ -28,7 +28,6 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
     @SuppressLint("ClickableViewAccessibility")
     public ImageListRowHolder(@NonNull View rootView) {
         super(rootView);
-        isChecked = false;
         img_image = rootView.findViewById(R.id.image);
         v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
         Context context = img_image.getContext();
@@ -79,10 +78,10 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindView() {
-        Log.d(getClass().getSimpleName(),
-              "Image " + (getAdapterPosition() + 1) + " checked: " + isChecked);
         Picasso.get().load(imageContentUri).fit().centerCrop().into(this.img_image);
         isChecked = imageAdapter.isChecked(getAdapterPosition());
+        Log.d(getClass().getSimpleName(),
+              "Image " + (getAdapterPosition() + 1) + " checked: " + isChecked);
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 }

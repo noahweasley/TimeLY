@@ -80,6 +80,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_WEEK = "Exam_Week";
     private static final String COLUMN_OFFSET_TIME = "Offset_Time";
 
+    private final String TAG = this.getClass().getSimpleName();
+
     private final Context context;
 
     public SchoolDatabase(@Nullable Context context) {
@@ -1466,9 +1468,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 countValue = prefs.getString("exam weeks", "8");
                 if (countValue != null) wStart = Integer.parseInt(countValue);
             } catch (NumberFormatException exc) {
-                Log.w(getClass().getSimpleName(),
-                      "Ignoring user selected Week count of: " + countValue
-                              + ", using 8 weeks instead ");
+                Log.w(TAG, "Ignoring user selected Week count of: " + countValue
+                        + ", using 8 weeks instead ");
             }
             Cursor getEndCursor = db.rawQuery("SELECT " + COLUMN_EXAM_WEEK_COUNT
                                                       + " FROM "
@@ -1635,6 +1636,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             for (String ai : ais) uris.add(Uri.parse(ai));
         }
 
+        int counter = 0;
+        for (Uri uri : uris) {
+            Log.d(TAG, "URI " + ++counter + " " + uri);
+        }
         return uris;
     }
 
@@ -1716,8 +1721,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public boolean updateUris(int position, String[] uris) {
         String aI = getAttachedImagesAsString(position);
 
-        String joint = (TextUtils.isEmpty(aI) ? "" : aI + ";") + TextUtils.join(";", uris) + ";";
+        String joint = aI + TextUtils.join(";", uris) + ";";
 
+        Log.d(TAG, "Joint: " + joint);
         ContentValues uriValues = new ContentValues();
         uriValues.put(COLUMN_ATTACHED_IMAGE, joint);
 

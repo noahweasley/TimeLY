@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,16 +31,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.assignment.ViewImagesActivity.ARG_URI_LIST;
 
+@SuppressWarnings("ConstantConditions")
 @SuppressLint("InlinedApi")
 public class ImageGallery extends AppCompatActivity implements Runnable, ActionMode.Callback {
     public static final String ARG_FILES_COUNT = "Attached files count";
     private final List<Image> images = new ArrayList<>();
+    private final String TAG = this.getClass().getSimpleName();
+    private final ChoiceMode choiceMode = ChoiceMode.IMAGE_MULTI_SELECT;
     private ImageAdapter imageAdapter;
     private String folder;
     private ProgressBar indeterminateProgress;
     private RecyclerView imageList;
     private ActionMode actionMode;
-    private final ChoiceMode choiceMode = ChoiceMode.IMAGE_MULTI_SELECT;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +172,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
+        Log.d(TAG, "onDestroyActionMode() called");
         actionMode = null;
         imageAdapter.getChoiceMode().clearChoices();
         imageAdapter.notifyDataSetChanged();
@@ -202,7 +206,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
         }
 
         /**
-         * @return the choice-mode that was set
+         * @return the choice-mode that was set.
          */
         public ChoiceMode getChoiceMode() {
             return choiceMode;
@@ -210,7 +214,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
         /**
          * @param adapterPosition the position of the view holder
-         * @return the checked status of a particular image int he list
+         * @return the checked status of a particular image in the list
          */
         public boolean isChecked(int adapterPosition) {
             return choiceMode.isChecked(adapterPosition);
@@ -256,14 +260,19 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
             int choiceCount = imcm.getCheckedChoiceCount();
 
+            Log.d(TAG, "Choice count: " + choiceCount
+                    + " ... actionMode is " + (actionMode == null ? "null" : "initialized"));
+
             if (actionMode == null && choiceCount == 1) {
                 actionMode = startSupportActionMode(ImageGallery.this);
-            } else if (choiceCount < 1) {
+            } else if (choiceCount == 0 && actionMode != null) {
                 actionMode.finish();
                 isFinished = true;
+                Log.d(TAG, "Action mode nullified");
             }
 
-            if (!isFinished) actionMode.setTitle(String.format("%d %s", choiceCount, "selected"));
+            if (!isFinished && actionMode != null)
+                actionMode.setTitle(String.format("%d %s", choiceCount, "selected"));
         }
     }
 }

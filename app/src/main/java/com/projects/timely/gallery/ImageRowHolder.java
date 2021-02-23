@@ -16,10 +16,10 @@ import java.util.List;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-class ImageRowHolder extends RecyclerView.ViewHolder{
-    private ImageView img;
-    private TextView directoryName;
-    private TextView directorySize;
+class ImageRowHolder extends RecyclerView.ViewHolder {
+    private final ImageView img_image;
+    private final TextView tv_directoryName;
+    private final TextView tv_directorySize;
     private String bucketDisplayName;
     private Activity parentActivity;
     private List<? extends List<Image>> imageCollection;
@@ -29,11 +29,11 @@ class ImageRowHolder extends RecyclerView.ViewHolder{
     @SuppressLint("ClickableViewAccessibility")
     ImageRowHolder(View view) {
         super(view);
-        img = view.findViewById(R.id.rowImage);
-        directoryName = view.findViewById(R.id.directoryName);
-        directorySize = view.findViewById(R.id.directorySize);
+        img_image = view.findViewById(R.id.rowImage);
+        tv_directoryName = view.findViewById(R.id.directoryName);
+        tv_directorySize = view.findViewById(R.id.directorySize);
 
-        img.setOnClickListener(v -> {
+        img_image.setOnClickListener(v -> {
             if (parentActivity instanceof ImageDirectory) {
                 Intent intent = new Intent(parentActivity, ImageGallery.class);
                 intent.setAction(action);
@@ -43,15 +43,15 @@ class ImageRowHolder extends RecyclerView.ViewHolder{
             }
         });
 
-        img.setOnTouchListener((v, event) -> {
+        img_image.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    img.setColorFilter(
-                            ContextCompat.getColor(img.getContext(), R.color.image_click_bg));
+                    img_image.setColorFilter(
+                            ContextCompat.getColor(img_image.getContext(), R.color.image_click_bg));
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL: {
-                    img.clearColorFilter();
+                    img_image.clearColorFilter();
                 }
             }
             return false;
@@ -66,12 +66,12 @@ class ImageRowHolder extends RecyclerView.ViewHolder{
     }
 
     void loadThumbnail() {
-        // set the directory's ImageView's thumbnail to the first image thumbnail.
+        // set the directory's content image to the first image in the directory.
         Image image = imageCollection.get(position).get(0);
         bucketDisplayName = image.getFolderName();
-        directoryName.setText(bucketDisplayName);
-        directorySize.setText(String.valueOf(imageCollection.get(position).size()));
-        Picasso.get().load(image.getImageUri()).centerCrop().fit().into(img);
+        tv_directoryName.setText(bucketDisplayName);
+        tv_directorySize.setText(String.valueOf(imageCollection.get(position).size()));
+        Picasso.get().load(image.getImageUri()).centerCrop().fit().into(img_image);
     }
 
     public ImageRowHolder setAction(String action) {

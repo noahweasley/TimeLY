@@ -249,7 +249,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
             EventBus.getDefault().post(
                     new UpdateMessage(data, UpdateMessage.EventType.UPDATE_CURRENT));
         } else {
-            message = "Assignment registered";
+            message = "Registering Assignment...";
             isSuccessful = database.addAssignmentData(data);
             EventBus.getDefault().post(new UpdateMessage(data, UpdateMessage.EventType.NEW));
         }

@@ -38,7 +38,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.core.Globals.runBackgroundTask;
 
-@SuppressWarnings("ConstantConditions")
 public class AssignmentFragment extends Fragment {
     public static final String DELETE_REQUEST = "delete assignment";
     public static final String DESCRIPTION = "Description";

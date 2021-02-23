@@ -30,7 +30,6 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
     @SuppressLint("ClickableViewAccessibility")
     ImageGalleryRowHolder(View rootView) {
         super(rootView);
-        isChecked = false;
         img_image = rootView.findViewById(R.id.rowImage);
         tv_fileName = rootView.findViewById(R.id.filename);
         v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);

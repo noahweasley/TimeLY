@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+@SuppressWarnings("ConstantConditions")
 public class ViewImagesActivity extends AppCompatActivity implements ActionMode.Callback {
     public static final String ARG_POSITION = "com.projects.timely.viewImagesActivity.position";
     public static final String DELETE_REQUEST = "Delete Image";
@@ -175,6 +176,10 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        // FIXME: 2/23/2021 Find the reason for the checked images, then remove next line.
+        imageAdapter.getChoiceMode().clearChoices();
+
         indeterminateProgress2.setVisibility(View.VISIBLE);
         String[] uriList = intent.getStringArrayExtra(ARG_URI_LIST);
 
@@ -185,6 +190,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
             if (isUpdated) {
                 for (String uri : uriList) mediaUris.add(Uri.parse(uri));
+
                 runOnUiThread(() -> {
                     imageAdapter.notifyDataSetChanged();
                     doViewUpdate(null);
