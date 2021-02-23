@@ -201,7 +201,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         getMenuInflater().inflate(R.menu.deleted_items, menu);
         return true;
     }
-
+//
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         return false;
