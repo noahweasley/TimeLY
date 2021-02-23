@@ -55,5 +55,4 @@ public class MultiChoiceMode implements ChoiceMode {
             indices.add(position);
         }
     }
-
 }

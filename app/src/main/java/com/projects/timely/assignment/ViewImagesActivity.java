@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -314,11 +315,14 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
             int choiceCount = imcm.getCheckedChoiceCount();
 
+            Log.d(getClass().getSimpleName(), "Choice count " + choiceCount);
+
             if (actionMode == null && choiceCount == 1) {
                 actionMode = startSupportActionMode(ViewImagesActivity.this);
-            } else if (choiceCount == 1) {
+            } else if (actionMode != null && choiceCount <= 1) {
                 actionMode.finish();
                 isFinished = true;
+                choiceMode.clearChoices(); // added this, might be solution to my problem
             }
 
             if (!isFinished) actionMode.setTitle(String.format("%d %s", choiceCount, "selected"));

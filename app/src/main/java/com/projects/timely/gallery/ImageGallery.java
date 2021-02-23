@@ -160,6 +160,8 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
         if (getIntent().getAction().equals(ViewImagesActivity.ADD_NEW)) {
             ImageMultiChoiceMode imageMultiChoiceMode
                     = (ImageMultiChoiceMode) imageAdapter.getChoiceMode();
+
+            // FIXME: 2/23/2021 Find the cause of the additional images added
             startActivity(new Intent(this, ViewImagesActivity.class)
                                   .putExtra(ARG_URI_LIST, imageMultiChoiceMode.getUriList()));
         } else {

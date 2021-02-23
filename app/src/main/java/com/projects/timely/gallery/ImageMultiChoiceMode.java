@@ -15,7 +15,12 @@ public class ImageMultiChoiceMode extends MultiChoiceMode {
      * @return the uris of the items that was previously selected
      */
     public String[] getUriList() {
-        return uriList.toArray(new String[0]);
+
+        // FIXME: 2/23/2021 remove next line when additional images bug has been resolved
+
+        String[] uris = uriList.toArray(new String[0]);
+        uriList.clear();
+        return uris;
     }
 
     /**
