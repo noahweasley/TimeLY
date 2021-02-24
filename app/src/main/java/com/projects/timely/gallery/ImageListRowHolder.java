@@ -3,7 +3,6 @@ package com.projects.timely.gallery;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -80,8 +79,6 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
     public void bindView() {
         Picasso.get().load(imageContentUri).fit().centerCrop().into(this.img_image);
         isChecked = imageAdapter.isChecked(getAdapterPosition());
-        Log.d(getClass().getSimpleName(),
-              "Image " + (getAdapterPosition() + 1) + " checked: " + isChecked);
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 }

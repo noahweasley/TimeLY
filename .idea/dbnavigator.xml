@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="false" />
+    <value-preview-text-wrapping value="true" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -21,33 +21,31 @@
     </export-instructions>
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
-    <autoscroll-to-editor value="true" />
+    <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="b08591ef-55db-459b-b767-4aad40df796c">
-        <schema name="main" object-types="table, view" />
+      <connection connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d">
+        <schema name="main" object-types="constraint, dataset trigger, view, column, index, table" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="b08591ef-55db-459b-b767-4aad40df796c">
-      <console name="Connection" type="STANDARD" schema="main" session="Main" />
+    <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d">
+      <console name="Connection" type="STANDARD" schema="" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="b08591ef-55db-459b-b767-4aad40df796c" />
+    <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="b08591ef-55db-459b-b767-4aad40df796c" dataset="main.Assignment" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Assignment" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
-    <last-used-providers>
-      <object-type object-type="TABLE" editor-provider="DATA" />
-    </last-used-providers>
+    <last-used-providers />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
@@ -72,7 +70,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="b08591ef-55db-459b-b767-4aad40df796c" active="true">
+      <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" active="true">
         <database>
           <name value="Connection" />
           <description value="" />

@@ -1636,10 +1636,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             for (String ai : ais) uris.add(Uri.parse(ai));
         }
 
-        int counter = 0;
-        for (Uri uri : uris) {
-            Log.d(TAG, "URI " + ++counter + " " + uri);
-        }
         return uris;
     }
 
@@ -1723,7 +1719,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         String joint = aI + TextUtils.join(";", uris) + ";";
 
-        Log.d(TAG, "Joint: " + joint);
         ContentValues uriValues = new ContentValues();
         uriValues.put(COLUMN_ATTACHED_IMAGE, joint);
 
@@ -1748,7 +1743,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         for (int i : itemIndices) uris.remove(i);
 
         String[] s = uris.toArray(new String[0]);
-        String joint = TextUtils.join(";", s);
+        String joint = TextUtils.join(";", s) + ";";
 
         uriValues.put(COLUMN_ATTACHED_IMAGE, joint);
         long resCode = db.update(ASSIGNMENT_TABLE, uriValues, COLUMN_ID + " = " + position, null);

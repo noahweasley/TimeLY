@@ -99,8 +99,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.Media.SIZE,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.MIME_TYPE};
+                MediaStore.Images.Media.DISPLAY_NAME};
         String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ?";
         String[] selectionArgs = {folder};
 
@@ -118,18 +117,16 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
                 = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
         int bucketDisplayNameColumn
                 = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-        int mimeTypeColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE);
 
         while (imgCursor.moveToNext()) {
             long id = imgCursor.getLong(idColumn);
             int size = imgCursor.getInt(sizeColumn);
             String fileName = imgCursor.getString(displayNameColumn);
             String folderName = imgCursor.getString(bucketDisplayNameColumn);
-            String mimeType = imgCursor.getString(mimeTypeColumn);
 
             Uri contentUri
                     = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-            images.add(new Image(contentUri, size, fileName, folderName, mimeType));
+            images.add(new Image(contentUri, size, fileName, folderName));
         }
 
         imgCursor.close();
