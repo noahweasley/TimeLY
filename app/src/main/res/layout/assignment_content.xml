@@ -7,18 +7,19 @@
 	android:layout_height = "match_parent"
 	tools:showIn = "@layout/fragment_assignment">
 
-        <androidx.recyclerview.widget.RecyclerView
-	        android:id = "@+id/assignment_list"
-	        android:layout_width = "0dp"
-	        android:layout_height = "0dp"
-	        android:clipToPadding = "false"
-	        android:paddingTop = "14dp"
-	        android:paddingBottom = "80dp"
-	        android:visibility="gone"
-	        external:layout_constraintBottom_toBottomOf = "parent"
-	        external:layout_constraintEnd_toEndOf = "parent"
-	        external:layout_constraintStart_toStartOf = "parent"
-	        external:layout_constraintTop_toTopOf = "parent" />
+	<androidx.recyclerview.widget.RecyclerView
+		android:id = "@+id/assignment_list"
+		android:layout_width = "0dp"
+		android:layout_height = "0dp"
+		android:clipToPadding = "false"
+		android:paddingHorizontal = "16dp"
+		android:paddingTop = "16dp"
+		android:paddingBottom = "80dp"
+		android:visibility = "gone"
+		external:layout_constraintBottom_toBottomOf = "parent"
+		external:layout_constraintEnd_toEndOf = "parent"
+		external:layout_constraintStart_toStartOf = "parent"
+		external:layout_constraintTop_toTopOf = "parent" />
 
 		<ProgressBar
 			android:id = "@+id/indeterminateProgress"
@@ -33,7 +34,7 @@
 		android:id = "@+id/no_assignment_view"
 		android:layout_width = "0dp"
 		android:layout_height = "0dp"
-		android:visibility="gone"
+		android:visibility = "gone"
 		external:layout_constraintBottom_toBottomOf = "parent"
 		external:layout_constraintEnd_toEndOf = "parent"
 		external:layout_constraintStart_toStartOf = "parent"
@@ -44,9 +45,9 @@
 	    android:layout_width = "wrap_content"
 	    android:layout_height = "wrap_content"
 	    android:layout_marginTop = "8dp"
+	    android:fontFamily = "@font/righteous"
 	    android:text = "@string/no_assignments_yet"
 	    android:textColor = "@color/colorPrimaryDark"
-	    android:fontFamily="@font/righteous"
 	    android:textSize = "@dimen/no_task_text_size"
 	    external:layout_constraintBottom_toTopOf = "@id/img_no_event"
 	    external:layout_constraintEnd_toEndOf = "parent"
