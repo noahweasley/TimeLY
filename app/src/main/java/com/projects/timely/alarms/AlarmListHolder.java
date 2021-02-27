@@ -76,19 +76,19 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     private final ExpandableLayout detailLayout;
     private final ImageView expandStatus;
     private final Calendar calendar = Calendar.getInstance();
-    private SwitchCompat alarmStatus;
-    private TextView tv_alarmTime, btn_rngPicker, am_pm;
+    private final SwitchCompat alarmStatus;
+    private final TextView tv_alarmTime, btn_rngPicker, am_pm;
     private FragmentActivity mActivity;
     private FragmentManager mgr;
     private CoordinatorLayout coordinator;
     private List<DataModel> alarmModelList;
     private AlarmListFragment.AlarmAdapter alarmAdapter;
-    private RecyclerView rV_buttonRow;
+    private final RecyclerView rV_buttonRow;
     private SchoolDatabase database;
-    private CheckBox cbx_Repeat, cbx_Vibrate;
-    private ImageButton btn_deleteRow;
-    private TextView tv_label;
-    private View decoration;
+    private final CheckBox cbx_Repeat, cbx_Vibrate;
+    private final ImageButton btn_deleteRow;
+    private final TextView tv_label;
+    private final View decoration;
     private AlarmModel thisAlarm;
 
     AlarmListHolder(@NonNull View rootView) {
@@ -116,7 +116,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         rootView.setOnClickListener(v -> {
             detailLayout.toggle();
             details = new ExpansionDetails();
-            details.setPreviousExpandedPos(getAdapterPosition());
+            details.setPreviousExpandedPos(getAbsoluteAdapterPosition());
             details.setExpanded(detailLayout.isExpanded());
             // When detailLayout expansion state has changed, rotate arrow and change
             // background color.
@@ -138,7 +138,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                 if (alarmStatus.isChecked()) rescheduleAlarm(label, time);
                 else cancelAlarm(label, time);
                 // now update the alarm status when user toggles the state of the switch
-                database.updateAlarmState(getAdapterPosition(), alarmStatus.isChecked());
+                database.updateAlarmState(getAbsoluteAdapterPosition(), alarmStatus.isChecked());
             }
         });
 
@@ -149,7 +149,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                             tv_label.setText(label);
                             runBackgroundTask(() -> {
                                 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                                database.updateAlarmLabel(getAdapterPosition(), label);
+                                database.updateAlarmLabel(getAbsoluteAdapterPosition(), label);
                                 updateAlarm(label, time);
                             });
                         }));
@@ -179,7 +179,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                                 btn_rngPicker.setText(actualName);
                                 runBackgroundTask(() -> {
                                     Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                                    database.updateRingtone(getAdapterPosition(),
+                                    database.updateRingtone(getAbsoluteAdapterPosition(),
                                                             ringtoneName,
                                                             ringtoneUri);
                                 });
@@ -188,8 +188,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         });
 
         cbx_Repeat.setOnClickListener(v -> {
-            final int dataPos
-                    = getAdapterPosition(); // dataPos now refers to the alarms id in the database
+            final int dataPos   // dataPos now refers to the alarms id in the database
+                    = getAbsoluteAdapterPosition();
             rV_buttonRow.setVisibility(cbx_Repeat.isChecked() ? View.VISIBLE : View.GONE);
             if (database != null) {
                 // now update the current alarm's repeat status when user toggles the current
@@ -199,8 +199,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         });
 
         cbx_Vibrate.setOnClickListener(v -> {
-            final int dataPos
-                    = getAdapterPosition(); // dataPos now refers to the alarms id in the database
+            final int dataPos   // dataPos now refers to the alarms id in the database
+                    = getAbsoluteAdapterPosition();
             if (database != null) {
                 // now update the current alarm's vibrate status when user toggles the current
                 // state of the checkbox
@@ -245,17 +245,17 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         this.alarmModelList = alarmModelList;
         this.database = database;
         this.alarmAdapter = alarmAdapter;
-        this.thisAlarm = (AlarmModel) alarmModelList.get(getAdapterPosition());
+        this.thisAlarm = (AlarmModel) alarmModelList.get( getAbsoluteAdapterPosition());
         return this;
     }
 
     void bindView() {
         if (details != null) {
-            if (details.getPreviousExpandedPos() == getAdapterPosition()) {
+            if (details.getPreviousExpandedPos() == getAbsoluteAdapterPosition()) {
                 detailLayout.setExpanded(details.isExpanded(), false);
             }
         }
-        AlarmModel thisAlarm = (AlarmModel) alarmModelList.get(getAdapterPosition());
+        AlarmModel thisAlarm = (AlarmModel) alarmModelList.get( getAbsoluteAdapterPosition());
 
         // bind data to views in row layout, as received from the database.
         // Use time format according to user settings.
@@ -287,7 +287,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         cbx_Repeat.setChecked(thisAlarm.isRepeated());
         cbx_Vibrate.setChecked(thisAlarm.isVibrate());
         btn_rngPicker.setText(thisAlarm.getRingTone());
-        int rowDrawable = DRAWABLES[getAdapterPosition() % DRAWABLES.length];
+        int rowDrawable = DRAWABLES [getAbsoluteAdapterPosition() % DRAWABLES.length];
         decoration.setBackground(ContextCompat.getDrawable(mActivity, rowDrawable));
 
         rV_buttonRow.setVisibility(cbx_Repeat.isChecked() ? View.VISIBLE : View.GONE);
@@ -369,7 +369,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         if (label != null) {
             alarmReceiverIntent.putExtra("Label", label);
         }
-        alarmReceiverIntent.putExtra(ALARM_POS, getAdapterPosition());
+        alarmReceiverIntent.putExtra(ALARM_POS,  getAbsoluteAdapterPosition());
         alarmReceiverIntent.putExtra("Time", time);
 
         alarmReceiverIntent.addCategory("com.projects.timely.alarm.category");
@@ -390,7 +390,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
         }
         // Also toggle the alarm status switch state to the ON state
-        database.updateAlarmState(getAdapterPosition(), true);
+        database.updateAlarmState( getAbsoluteAdapterPosition(), true);
     }
 
     /**
@@ -528,7 +528,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          */
         @Override
         public void onTimeSet(TimePicker v, int hourOfDay, int minute) {
-            AlarmModel thisAlarm = (AlarmModel) database.getAlarmAt(getAdapterPosition());
+            AlarmModel thisAlarm = (AlarmModel) database.getAlarmAt( getAbsoluteAdapterPosition());
             String ll = tv_label.getText().toString();
             String[] ts = thisAlarm.getTime().split(":");
 
@@ -562,7 +562,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             runBackgroundTask(() -> {
                 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                 updateAlarm(ll.equals("Label") ? null : ll, currentTime);
-                database.updateTime(getAdapterPosition(), currentTime);
+                database.updateTime( getAbsoluteAdapterPosition(), currentTime);
             });
             notify(v); // notify the user
         }
@@ -608,7 +608,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         @Override
         public void onBindViewHolder(@NonNull ButtonListHolder viewHolder, int btn_pos) {
             viewHolder.with(btn_pos,
-                            getAdapterPosition(),
+                            getAbsoluteAdapterPosition(),
                             database)
                     .bindView();
         }

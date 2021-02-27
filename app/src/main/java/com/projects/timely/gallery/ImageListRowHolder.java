@@ -44,7 +44,7 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
             trySelectImage();
             imageAdapter
                     .setMultiSelectionEnabled(!imageAdapter.isMultiSelectionEnabled()
-                                                       || imageAdapter.getCheckedImageCount() != 0);
+                                                      || imageAdapter.getCheckedImageCount() != 0);
             return true;
         });
 
@@ -65,7 +65,7 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
 
     public ImageListRowHolder with(List<? extends Uri> uris,
                                    ViewImagesActivity.ImageAdapter imageAdapter) {
-        this.imageContentUri = uris.get(getAdapterPosition());
+        this.imageContentUri = uris.get(getAbsoluteAdapterPosition());
         this.imageAdapter = imageAdapter;
         return this;
     }
@@ -73,12 +73,12 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
     private void trySelectImage() {
         isChecked = !isChecked;
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        imageAdapter.onChecked(getAdapterPosition(), isChecked, imageContentUri);
+        imageAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, imageContentUri);
     }
 
     public void bindView() {
         Picasso.get().load(imageContentUri).fit().centerCrop().into(this.img_image);
-        isChecked = imageAdapter.isChecked(getAdapterPosition());
+        isChecked = imageAdapter.isChecked(getAbsoluteAdapterPosition());
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +43,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.core.Globals.runBackgroundTask;
 
+@SuppressWarnings("ConstantConditions")
 public class AssignmentFragment extends Fragment implements ActionMode.Callback{
     public static final String DELETE_REQUEST = "Delete Assignment";
     public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Assignments";
@@ -142,7 +142,8 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
 
                 runner.with(getActivity(), viewHolder, assignmentAdapter, aList)
                         .setAssignmentData((AssignmentModel)
-                                                   aList.get(viewHolder.getAdapterPosition()))
+                                                   aList.get(
+                                                           viewHolder.getAbsoluteAdapterPosition()))
                         .runRequest(DELETE_REQUEST);
             }
         });
@@ -221,7 +222,6 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
 
                 break;
             case REMOVE:
-                Log.d(getClass().getSimpleName(), "Change position: " + changePos);
 
                 aList.remove(changePos);
                 itemCount.setText(String.valueOf(aList.size()));

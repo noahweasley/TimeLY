@@ -83,7 +83,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
 
     public void bindView() {
         Context context = user.getContext();
-        int rowColor = COLORS[getAdapterPosition() % COLORS.length];
+        int rowColor = COLORS[ getAbsoluteAdapterPosition() % COLORS.length];
         lIndicator.setBackgroundColor(ContextCompat.getColor(context, rowColor));
         tv_courseCode.setText(cModel.getCourseCode());
         tv_courseName.setText(cModel.getCourseName());

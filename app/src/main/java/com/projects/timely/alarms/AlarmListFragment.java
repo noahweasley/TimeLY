@@ -151,7 +151,7 @@ public class AlarmListFragment extends Fragment {
 
                 snackbar.show();
 
-                int pos = viewHolder.getAdapterPosition();
+                int pos = viewHolder.getAbsoluteAdapterPosition();
                 String[] elements = database.getElementaryAlarmDataAt(pos);
 
                 runner.with(getActivity(),

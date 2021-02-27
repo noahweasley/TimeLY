@@ -54,10 +54,10 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             android.R.color.holo_orange_dark,
             android.R.color.holo_red_light
     };
-    private ImageView img_schImp;
-    private View lIndicator, rIndicator;
-    private TextView tv_time, tv_course, tv_lecturer, atv_FCN;
-    private VerticalTextView tv_day;
+    private final ImageView img_schImp;
+    private final View lIndicator, rIndicator;
+    private final TextView tv_time, tv_course, tv_lecturer, atv_FCN;
+    private final VerticalTextView tv_day;
     private Fragment user;
     private TimetableModel tModel;
     private List<DataModel> tList;
@@ -95,7 +95,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
         });
 
         btn_edit.setOnClickListener(v -> {
-            tModel.setChronologicalOrder(getAdapterPosition());
+            tModel.setChronologicalOrder(getAbsoluteAdapterPosition());
             if (user instanceof DaysFragment) {
                 tModel.setDay(timetable);
                 new AddTimetableDialog().show(user.getContext(), true, tModel);
@@ -148,7 +148,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             TooltipCompat.setTooltipText(img_schImp, tModel.getImportance());
         }
         if (user instanceof DaysFragment) {
-            int rowColor = COLORS_1[getAdapterPosition() % COLORS_1.length];
+            int rowColor = COLORS_1[getAbsoluteAdapterPosition() % COLORS_1.length];
             lIndicator.setBackgroundColor(ContextCompat.getColor(context, rowColor));
         } else {
             // indicator2 and verticalTextView will return null for users other than

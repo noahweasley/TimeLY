@@ -68,8 +68,8 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         img_stats = rootView.findViewById(R.id.stats);
 
         viewButton.setOnClickListener(v -> {
-            AssignmentModel assignment = (AssignmentModel) aList.get(getAdapterPosition());
-            assignment.setChronologicalOrder(getAdapterPosition());
+            AssignmentModel assignment = (AssignmentModel) aList.get( getAbsoluteAdapterPosition());
+            assignment.setChronologicalOrder( getAbsoluteAdapterPosition());
             new AssignmentViewDialog().show(mActivity, assignment);
         });
 
@@ -85,7 +85,8 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
                                                      .putExtra(DATE, date.getText().toString())
                                                      .putExtra(COURSE_CODE,
                                                                course.getText().toString())
-                                                     .putExtra(EDIT_POS, getAdapterPosition())
+                                                     .putExtra(EDIT_POS,
+                                                               getAbsoluteAdapterPosition())
                                                      .setAction("Edit")));
     }
 
@@ -98,7 +99,7 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         this.coordinator = coordinator;
         this.assignmentRowAdapter = assignmentRowAdapter;
         this.aList = aList;
-        this.assignment = (AssignmentModel) aList.get(getAdapterPosition());
+        this.assignment = (AssignmentModel) aList.get( getAbsoluteAdapterPosition());
         return this;
     }
 
@@ -107,7 +108,7 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         describe_text.setText(assignment.getDescription());
         date.setText(assignment.getDate());
         course.setText(assignment.getCourseCode());
-        int rowColor = COLORS[getAdapterPosition() % COLORS.length];
+        int rowColor = COLORS[ getAbsoluteAdapterPosition() % COLORS.length];
         header.setBackgroundColor(ContextCompat.getColor(mActivity, rowColor));
         // Truncate lecturer's name based on length
         lecturerName.setText(truncateName(assignment.getLecturerName()));

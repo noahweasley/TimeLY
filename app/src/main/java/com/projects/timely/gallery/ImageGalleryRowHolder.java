@@ -72,15 +72,15 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
     ImageGalleryRowHolder with(ImageGallery.ImageAdapter imageAdapter,
                                List<? extends Image> imageList) {
         this.imageAdapter = imageAdapter;
-        this.imageContentUri = imageList.get(getAdapterPosition()).getImageUri();
-        this.fileName = imageList.get(getAdapterPosition()).getFileName();
+        this.imageContentUri = imageList.get(getAbsoluteAdapterPosition()).getImageUri();
+        this.fileName = imageList.get(getAbsoluteAdapterPosition()).getFileName();
         return this;
     }
 
     private void trySelectImage() {
         isChecked = !isChecked;
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        imageAdapter.onChecked(getAdapterPosition(), isChecked, imageContentUri);
+        imageAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, imageContentUri);
         if (isChecked) AddAssignmentActivity.mediaUris.add(imageContentUri);
         else AddAssignmentActivity.mediaUris.remove(imageContentUri);
     }
@@ -88,7 +88,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
     public void bindView() {
         tv_fileName.setText(fileName);
         Picasso.get().load(imageContentUri).centerCrop().fit().into(img_image);
-        isChecked = imageAdapter.isChecked(getAdapterPosition());
+        isChecked = imageAdapter.isChecked(getAbsoluteAdapterPosition());
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 }

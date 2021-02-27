@@ -409,7 +409,7 @@ public class RequestRunner extends Thread {
                               RecyclerView.Adapter<?> adapter,
                               List<DataModel> modelList) {
         this.mActivity = activity;
-        this.adapterPosition = viewHolder.getAdapterPosition();
+        this.adapterPosition = viewHolder. getAbsoluteAdapterPosition();
         this.adapter = adapter;
         this.dList = modelList;
         database = new SchoolDatabase(mActivity);

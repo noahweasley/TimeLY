@@ -90,7 +90,7 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
     }
 
     void bindView() {
-        ExamModel examModel = (ExamModel) eList.get(getAdapterPosition());
+        ExamModel examModel = (ExamModel) eList.get( getAbsoluteAdapterPosition());
         Context context = user.getContext();
 
         int indicatorColor = ContextCompat.getColor(context, COLORS_2[examModel.getDayIndex()]);
