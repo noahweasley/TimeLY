@@ -44,16 +44,16 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
             android.R.color.holo_orange_dark,
             android.R.color.holo_red_light
     };
-
+    private final View header;
+    private final TextView title, describe_text, date, lecturerName, course;
+    private final ImageView img_stats;
     private AssignmentModel assignment;
     private FragmentActivity mActivity;
     private CoordinatorLayout coordinator;
     private AssignmentRowAdapter assignmentRowAdapter;
     private List<DataModel> aList;
-    private View header;
-    private TextView title, describe_text, date, lecturerName, course;
-    private ImageView img_stats;
 
+    @SuppressWarnings({"ClickableViewAccessibility", "ConstantConditions"})
     public AssignmentRowHolder(@NonNull View rootView) {
         super(rootView);
         header = rootView.findViewById(R.id.header);
@@ -68,8 +68,8 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         img_stats = rootView.findViewById(R.id.stats);
 
         viewButton.setOnClickListener(v -> {
-            AssignmentModel assignment = (AssignmentModel) aList.get( getAbsoluteAdapterPosition());
-            assignment.setChronologicalOrder( getAbsoluteAdapterPosition());
+            AssignmentModel assignment = (AssignmentModel) aList.get(getAbsoluteAdapterPosition());
+            assignment.setChronologicalOrder(getAbsoluteAdapterPosition());
             new AssignmentViewDialog().show(mActivity, assignment);
         });
 
@@ -88,6 +88,25 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
                                                      .putExtra(EDIT_POS,
                                                                getAbsoluteAdapterPosition())
                                                      .setAction("Edit")));
+
+        // Multi - Select actions
+
+        rootView.setOnTouchListener((t, event) -> {
+
+            return true;
+        });
+
+
+        rootView.setOnLongClickListener(l -> {
+            trySelectAssignment();
+            assignmentRowAdapter.setMultiSelectionEnabled(
+                    !assignmentRowAdapter.isMultiSelectionEnabled()
+                            || assignmentRowAdapter.getCheckedAssignmentsCount() != 0);
+            return true;
+        });
+
+        rootView.setOnClickListener(c -> {
+        });
     }
 
     // builder for the RowHolder
@@ -99,7 +118,7 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         this.coordinator = coordinator;
         this.assignmentRowAdapter = assignmentRowAdapter;
         this.aList = aList;
-        this.assignment = (AssignmentModel) aList.get( getAbsoluteAdapterPosition());
+        this.assignment = (AssignmentModel) aList.get(getAbsoluteAdapterPosition());
         return this;
     }
 
@@ -108,7 +127,7 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         describe_text.setText(assignment.getDescription());
         date.setText(assignment.getDate());
         course.setText(assignment.getCourseCode());
-        int rowColor = COLORS[ getAbsoluteAdapterPosition() % COLORS.length];
+        int rowColor = COLORS[getAbsoluteAdapterPosition() % COLORS.length];
         header.setBackgroundColor(ContextCompat.getColor(mActivity, rowColor));
         // Truncate lecturer's name based on length
         lecturerName.setText(truncateName(assignment.getLecturerName()));
@@ -193,6 +212,10 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         } else {
             return fullName;
         }
+    }
+
+    private void trySelectAssignment() {
+
     }
 
     private void doDeleteAssignment() {

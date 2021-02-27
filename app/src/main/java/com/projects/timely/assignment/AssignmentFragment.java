@@ -357,7 +357,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
         /**
          * @return the number of images that was selected
          */
-        public int getCheckedImageCount() {
+        public int getCheckedAssignmentsCount() {
             return choiceMode.getCheckedChoiceCount();
         }
 
@@ -403,7 +403,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
                     .setItemsIndices(getCheckedImagesIndices())
                     .runRequest(MULTIPLE_DELETE_REQUEST);
 
-            final int count = getCheckedImageCount();
+            final int count = getCheckedAssignmentsCount();
             Snackbar snackbar
                     = Snackbar.make(coordinator,
                                     count + " Assignment" + (count > 1 ? "s" : "") + " Deleted",
