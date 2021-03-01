@@ -30,6 +30,14 @@ import androidx.preference.PreferenceManager;
 import static com.projects.timely.core.Globals.runBackgroundTask;
 
 /**
+ * Sort order of list's in the database
+ */
+@SuppressWarnings("unused")
+enum SortOrder {
+    NATURAL_ORDER, UNORDERED, REVERSED_ORDERED
+}
+
+/**
  * TimeLY's database manager
  */
 public class SchoolDatabase extends SQLiteOpenHelper {
@@ -443,7 +451,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @author Noah Wesley
      */
     public List<DataModel> getAssignmentData() {
-        SQLiteDatabase db = getReadableDatabase();
 
         List<DataModel> data = new ArrayList<>();
         String selectStmt
@@ -456,6 +463,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 + COLUMN_ID + ", "
                 + COLUMN_SUBMITTED + " FROM " + ASSIGNMENT_TABLE;
 
+        SQLiteDatabase db = getReadableDatabase();
         Cursor result = db.rawQuery(selectStmt, null);
 
         if (result.moveToFirst()) {
@@ -1758,45 +1766,86 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      *
      * @param itemIndices the indices of the attached images to deleted
      * @param clazz       the class of the data model that should be deleted
-      * @return true if the data were deleted
+     * @return true if the data were deleted
      */
-    public boolean deleteDataModels(Class<?> clazz, Integer[] itemIndices) {
-        boolean resultCode = false;
+    public synchronized boolean deleteDataModels(Class<?> clazz, String[] metadata,
+                                                 Integer[] itemIndices) {
+        boolean resultCode;
 
         switch (clazz.getName()) {
             case Constants.ASSIGNMENTS:
                 resultCode = deleteMultipleAssignments(itemIndices);
                 break;
             case Constants.COURSES:
-                resultCode = deleteMultipleCourses(itemIndices);
+                resultCode = deleteMultipleCourses(metadata[0], itemIndices);
                 break;
             case Constants.EXAMS:
-                resultCode = deleteMultipleExams(itemIndices);
+                resultCode = deleteMultipleExams(metadata[1], itemIndices);
                 break;
             case Constants.TIMETABLE:
-                resultCode = deleteMultipleTimetables(itemIndices);
+                resultCode = deleteMultipleTimetables(metadata[2], itemIndices);
                 break;
+            default:
+                throw new IllegalArgumentException(clazz.getName() + " is not supported");
         }
         return resultCode;
     }
 
     // Delete timetables at specified indices
-    private boolean deleteMultipleTimetables(Integer[] itemIndices) {
-        return true;
+    private boolean deleteMultipleTimetables(String TIMETABLE, Integer[] itemIndices) {
+        // Transform all indices from Integers to Strings
+        if (TIMETABLE == null) throw new IllegalArgumentException("Timetable can't be null");
+
+        boolean resCode = false;
+        SQLiteDatabase db = getWritableDatabase();
+
+        for (int index : itemIndices) {
+            resCode |= db.delete(TIMETABLE, COLUMN_ID + " = " + index, null) != -1;
+        }
+
+        return resCode;
     }
 
     // Delete exams at specified indices
-    private boolean deleteMultipleExams(Integer[] itemIndices) {
-        return true;
+    private boolean deleteMultipleExams(String WEEK, Integer[] itemIndices) {
+        // Transform all indices from Integers to Strings
+        if (WEEK == null) throw new IllegalArgumentException("Week can't be null");
+
+        boolean resCode = false;
+        SQLiteDatabase db = getWritableDatabase();
+
+        for (int index : itemIndices) {
+            resCode |= db.delete(WEEK, COLUMN_ID + " = " + index, null) != -1;
+        }
+
+        return resCode;
     }
 
     // Delete courses at specified indices
-    private boolean deleteMultipleCourses(Integer[] itemIndices) {
-        return true;
+    private boolean deleteMultipleCourses(String SEMESTER, Integer[] itemIndices) {
+        // Transform all indices from Integers to Strings
+        if (SEMESTER == null) throw new IllegalArgumentException("Semester can't be null");
+
+        boolean resCode = false;
+        SQLiteDatabase db = getWritableDatabase();
+
+        for (int index : itemIndices) {
+            resCode |= db.delete(SEMESTER, COLUMN_ID + " = " + index, null) != -1;
+        }
+
+        return resCode;
     }
 
     // Delete assignments at specified indices
     private boolean deleteMultipleAssignments(Integer[] itemIndices) {
-        return true;
+        // Delete assignments with  the whereArgs specified
+        boolean resCode = false;
+        SQLiteDatabase db = getWritableDatabase();
+
+        for (int index : itemIndices) {
+            resCode |= db.delete(ASSIGNMENT_TABLE, COLUMN_ID + " = " + index, null) != -1;
+        }
+
+        return resCode;
     }
 }

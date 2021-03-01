@@ -51,12 +51,13 @@ import static com.projects.timely.core.Globals.playAlertTone;
  * Thread to handle all delete requests
  */
 public class RequestRunner extends Thread {
+    private static final int WAIT_TIME = 3000;
     private static boolean deleteRequestDiscarded;
     private String request;
     private SchoolDatabase database;
     private RequestParams params;
     private Context appContext;
-    private static final int WAIT_TIME = 3000;
+    public static final String TAG = "SchoolDatabase";
 
     /**
      * Use {@link RequestRunner#getInstance()} instead, to get the instance of the
@@ -83,45 +84,56 @@ public class RequestRunner extends Thread {
     }
 
     private void performDeleteOperation() {
-        switch (request) {
-            case AssignmentFragment.DELETE_REQUEST:
-                doAssignmentDelete();
-                break;
-            case AssignmentFragment.MULTIPLE_DELETE_REQUEST:
-                doDataModelMultiDelete();
-                break;
-            case DaysFragment.DELETE_REQUEST:
-            case ScheduledTimetableFragment.DELETE_REQUEST:
-                doTimeTableDelete();
-                break;
-            case AlarmListFragment.DELETE_REQUEST:
-                doAlarmDelete();
-                break;
-            case CourseRowHolder.DELETE_REQUEST:
-                doCourseDelete();
-                break;
-            case ExamRowHolder.DELETE_REQUEST:
-                doExamDelete();
-                break;
-            case ViewImagesActivity.DELETE_REQUEST:
-                doImageDelete();
-                break;
-            case ViewImagesActivity.MULTIPLE_DELETE_REQUEST:
-                doImageMultiDelete();
-                break;
+        try {
+            switch (request) {
+                case AssignmentFragment.DELETE_REQUEST:
+                    doAssignmentDelete();
+                    break;
+                case AssignmentFragment.MULTIPLE_DELETE_REQUEST:
+                    doDataModelMultiDelete();
+                    break;
+                case DaysFragment.DELETE_REQUEST:
+                case ScheduledTimetableFragment.DELETE_REQUEST:
+                    doTimeTableDelete();
+                    break;
+                case AlarmListFragment.DELETE_REQUEST:
+                    doAlarmDelete();
+                    break;
+                case CourseRowHolder.DELETE_REQUEST:
+                    doCourseDelete();
+                    break;
+                case ExamRowHolder.DELETE_REQUEST:
+                    doExamDelete();
+                    break;
+                case ViewImagesActivity.DELETE_REQUEST:
+                    doImageDelete();
+                    break;
+                case ViewImagesActivity.MULTIPLE_DELETE_REQUEST:
+                    doImageMultiDelete();
+                    break;
+                default:
+                    throw new IllegalArgumentException(request + " is invalid");
+
+            }
+        } finally {
+            // close database no matter even exception was thrown.
+            database.close();
         }
-        database.close();
     }
 
     private void doDataModelMultiDelete() {
         List<DataModel> assignmentCache = new ArrayList<>();
 
         Integer[] itemIndices = params.getItemIndices();
+        // Reverse array of indices in reversed order, because if the indices are not reversed,
+        // an error occurs.
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
         for (int i : itemIndices) {
             assignmentCache.add(params.getModelList().remove(i));
         }
+
+        // Update UI
         EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.REMOVE));
 
         try {
@@ -130,16 +142,23 @@ public class RequestRunner extends Thread {
             for (int x = 0; x < assignmentCache.size(); x++) {
                 params.getModelList().add(itemIndices[x], assignmentCache.get(x));
             }
+
+            // Update UI
             EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.INSERT));
         }
 
         if (!deleteRequestDiscarded) {
-            // Delete the data model from SchoolDatabase
-            boolean isDeleted = database.deleteDataModels(params.getDataClass(), itemIndices);
+            // Delete the data model from SchoolDatabase using their positions
+            boolean isDeleted = database.deleteDataModels(params.getDataClass(),
+                                                          null,
+                                                          params.getPositionIndices());
+
             if (isDeleted) {
                 playAlertTone(appContext, Alert.DELETE);
                 if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
+            }else {
+                Log.d(TAG, "Couldn't delete data models");
             }
         }
     }
@@ -149,10 +168,16 @@ public class RequestRunner extends Thread {
 
         Integer[] itemIndices = params.getItemIndices();
         List<Uri> mediaUris = params.getMediaUris();
+
+        // Reverse array of indices in reversed order, because if the indices are not reversed,
+        // an error occurs.
         Arrays.sort(itemIndices, Collections.reverseOrder());
+
         for (int i : itemIndices) {
             uriCache.add(mediaUris.remove(i));
         }
+
+        // Update UI
         EventBus.getDefault().post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.REMOVE));
 
         try {
@@ -161,11 +186,14 @@ public class RequestRunner extends Thread {
             for (int x = 0; x < uriCache.size(); x++) {
                 mediaUris.add(itemIndices[x], uriCache.get(x));
             }
+
+            // Update UI
             EventBus.getDefault().post(
                     new MultiUpdateMessage2(MultiUpdateMessage2.EventType.INSERT));
         }
 
         if (!deleteRequestDiscarded) {
+            // delete attached images from database
             boolean isDeleted
                     = database.deleteMultipleImages(params.getAssignmentPosition(), itemIndices);
             if (isDeleted) {
@@ -600,6 +628,11 @@ public class RequestRunner extends Thread {
 
         public Builder setItemIndices(Integer[] itemIndices) {
             requestParams.setItemIndices(itemIndices);
+            return this;
+        }
+
+        public Builder setPositionIndices(Integer[] positionIndices){
+            requestParams.setPositionIndices(positionIndices);
             return this;
         }
     }

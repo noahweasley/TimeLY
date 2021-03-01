@@ -23,6 +23,7 @@ public class RequestParams {
     private int assignmentPosition;
     private Class<? extends DataModel> dataClass;
     private Integer[] itemIndices;
+    private Integer[] positionIndices;
 
     public FragmentActivity getActivity() {
         return mActivity;
@@ -118,5 +119,13 @@ public class RequestParams {
 
     public void setItemIndices(Integer[] itemIndices) {
         this.itemIndices = itemIndices;
+    }
+
+    public void setPositionIndices(Integer[] positionIndices) {
+        this.positionIndices = positionIndices;
+    }
+
+    public Integer[] getPositionIndices() {
+        return positionIndices;
     }
 }

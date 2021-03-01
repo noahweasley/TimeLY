@@ -77,7 +77,8 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     public void doListUpdate(MultiUpdateMessage2 mUpdate) {
         if (mUpdate.getType() == MultiUpdateMessage2.EventType.REMOVE
                 || mUpdate.getType() == MultiUpdateMessage2.EventType.INSERT) {
-            actionMode.finish(); // require onDestroyActionMode() callback
+            if (actionMode != null)
+                actionMode.finish(); // require onDestroyActionMode() callback
         }
     }
 

@@ -12,7 +12,19 @@ import java.util.List;
 public class MultiChoiceMode implements ChoiceMode {
     public static final String ARG_STATES = "Choice states";
     private final List<Integer> indices = new ArrayList<>();
+    private final List<Integer> indices2 = new ArrayList<>();
     private ParcelableSparseBooleanArray sbarr = new ParcelableSparseBooleanArray();
+
+    @Override
+    public void setChecked(int position, boolean checked) {
+        if (!checked) {
+            sbarr.delete(position);
+            indices.remove(Integer.valueOf(position));
+        } else {
+            sbarr.put(position, true);
+            indices.add(position);
+        }
+    }
 
     @Override
     public boolean isChecked(int position) {
@@ -35,24 +47,38 @@ public class MultiChoiceMode implements ChoiceMode {
     }
 
     @Override
+    public void clearChoices() {
+        sbarr.clear();
+        indices.clear();
+        indices2.clear();
+    }
+
+    @Override
     public Integer[] getCheckedChoicesIndices() {
         return indices.toArray(new Integer[0]);
     }
 
     @Override
-    public void clearChoices() {
-        sbarr.clear();
-        indices.clear();
+    public Integer[] getCheckedChoicePositions() {
+        return indices2.toArray(new Integer[0]);
     }
 
-    @Override
-    public void setChecked(int position, boolean checked) {
+    /**
+     * Use this instead of {@link MultiChoiceMode#setChecked(int, boolean)} for Data Models.
+     *
+     * @param position the position in which the its checked value is to be inserted
+     * @param checked  the status of the checked item
+     * @param dataPos  the original data position in database
+     */
+    public void setChecked(int position, boolean checked, int dataPos) {
         if (!checked) {
             sbarr.delete(position);
             indices.remove(Integer.valueOf(position));
+            indices2.remove(Integer.valueOf(dataPos));
         } else {
             sbarr.put(position, true);
             indices.add(position);
+            indices2.add(dataPos);
         }
     }
 }

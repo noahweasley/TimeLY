@@ -69,4 +69,10 @@ public interface ChoiceMode {
      * @return the position or index of all the checked items in the list
      */
     Integer[] getCheckedChoicesIndices();
+
+    /**
+     * @return the position or index of all the checked items in the list (according to database)
+     */
+    Integer[] getCheckedChoicePositions();
+
 }

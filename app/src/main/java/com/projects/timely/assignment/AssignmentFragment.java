@@ -18,6 +18,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.DataMultiChoiceMode;
+import com.projects.timely.core.EmptyListEvent;
+import com.projects.timely.core.MultiUpdateMessage;
 import com.projects.timely.core.PositionMessageEvent;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
@@ -207,9 +209,21 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doListUpdate(MultiUpdateMessage mUpdate) {
+        if (mUpdate.getType() == MultiUpdateMessage.EventType.REMOVE
+                || mUpdate.getType() == MultiUpdateMessage.EventType.INSERT) {
+            if (actionMode != null)
+                actionMode.finish(); // require onDestroyActionMode() callback
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void doAssignmentUpdate(UpdateMessage update) {
         AssignmentModel data = update.getData();
-        int changePos = data.getId();
+        // data position is not the same as the absolute adapter position in list
+        // so, use the change ID that was gotten from the absolute adapter position to
+        // make changes to the list.
+        int changePos = data.getChangeId();
 
         switch (update.getType()) {
             case NEW:
@@ -234,10 +248,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                 assignmentAdapter.notifyItemRemoved(changePos);
                 assignmentAdapter.notifyDataSetChanged();
 
-                if (aList.isEmpty()) {
-                    noAssignmentView.setVisibility(View.VISIBLE);
-                    rV_assignmentList.setVisibility(View.GONE);
-                }
+                if (aList.isEmpty()) doEmptyListUpdate(null);
 
                 break;
             case INSERT:
@@ -261,7 +272,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                 am.setAttachedPDF(data.getAttachedPDF());
                 am.setCourseCode(data.getCourseCode());
                 am.setDate(data.getDate());
-                am.setId(data.getId());
+                am.setId(data.getChangeId());
                 am.setDescription(data.getDescription());
                 am.setPosition(data.getPosition());
                 am.setLecturerName(data.getLecturerName());
@@ -272,6 +283,12 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
                 break;
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doEmptyListUpdate(EmptyListEvent e) {
+        noAssignmentView.setVisibility(View.VISIBLE);
+        rV_assignmentList.setVisibility(View.GONE);
     }
 
     @Override
@@ -338,7 +355,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         }
 
         /**
-         * @return the status of the multi-selection mode
+         * @return the status of the multi-selection mode.
          */
         public boolean isMultiSelectionEnabled() {
             return multiSelectionEnabled;
@@ -369,6 +386,13 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         }
 
         /**
+         * @return an array of the checked indices as seen by database
+         */
+        public Integer[] getCheckedAssignmentPositions() {
+            return choiceMode.getCheckedChoicePositions();
+        }
+
+        /**
          * @return an array of the checked indices
          */
         private Integer[] getCheckedAssignmentsIndices() {
@@ -376,14 +400,15 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         }
 
         /**
-         * @param position the position where the change occurred
-         * @param state    the new state of the change
+         * @param position           the position where the change occurred
+         * @param state              the new state of the change
+         * @param assignmentPosition the position of the assignment in database.
          */
-        public void onChecked(int position, boolean state) {
+        public void onChecked(int position, boolean state, int assignmentPosition) {
             boolean isFinished = false;
 
             DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
-            dmcm.setChecked(position, state);
+            dmcm.setChecked(position, state, assignmentPosition);
 
             int choiceCount = dmcm.getCheckedChoiceCount();
 
@@ -399,7 +424,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
             if (!isFinished && actionMode != null)
                 actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
-         }
+        }
 
         /**
          * Deletes multiple images from the list of selected items
@@ -412,6 +437,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                     .setAdapter(assignmentAdapter)
                     .setModelList(aList)
                     .setItemIndices(getCheckedAssignmentsIndices())
+                    .setPositionIndices(getCheckedAssignmentPositions())
                     .setDataClass(AssignmentModel.class);
 
             runner.setRequestParams(builder.getParams())

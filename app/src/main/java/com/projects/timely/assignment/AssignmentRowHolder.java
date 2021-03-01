@@ -220,7 +220,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     private void trySelectAssignment() {
         isChecked = !isChecked;
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        assignmentRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked);
+        assignmentRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, assignment.getPosition());
     }
 
     private void doDeleteAssignment() {

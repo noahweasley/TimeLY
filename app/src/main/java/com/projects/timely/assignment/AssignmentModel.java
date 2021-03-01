@@ -5,10 +5,8 @@ import com.projects.timely.core.DataModel;
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
-public
-class AssignmentModel extends DataModel implements Serializable {
+public class AssignmentModel extends DataModel implements Serializable {
 
-    private int position;
     private int chronologicalOrder;
     private String courseCode;
     private String lecturerName;
@@ -31,7 +29,7 @@ class AssignmentModel extends DataModel implements Serializable {
         this.title = title;
         this.description = description;
         this.date = date;
-        this.position = id;
+        super.position = id;
         this.courseCode = courseCode;
         this.submissionDate = submissionDate;
         this.attachedPDF = attachedPDF;
@@ -51,7 +49,7 @@ class AssignmentModel extends DataModel implements Serializable {
     @SuppressWarnings("all")
     public String toString() {
         return "AssignmentModel{" +
-                "id=" + position +
+                "id=" + super.position +
                 ", courseCode='" + courseCode + '\'' +
                 ", lecturerName='" + lecturerName + '\'' +
                 ", title='" + title + '\'' +
@@ -104,14 +102,6 @@ class AssignmentModel extends DataModel implements Serializable {
         this.attachedImage = attachedImage;
     }
 
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public String getLecturerName() {
         return lecturerName;
     }
@@ -144,7 +134,7 @@ class AssignmentModel extends DataModel implements Serializable {
         this.date = date;
     }
 
-    public int getId() {
+    public int getChangeId() {
         return id;
     }
 
