@@ -188,8 +188,8 @@ public class RequestRunner extends Thread {
             }
 
             // Update UI
-            EventBus.getDefault().post(
-                    new MultiUpdateMessage2(MultiUpdateMessage2.EventType.INSERT));
+            EventBus.getDefault()
+                    .post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.INSERT));
         }
 
         if (!deleteRequestDiscarded) {
