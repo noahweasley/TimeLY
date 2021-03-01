@@ -399,7 +399,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
             if (!isFinished && actionMode != null)
                 actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
-        }
+         }
 
         /**
          * Deletes multiple images from the list of selected items

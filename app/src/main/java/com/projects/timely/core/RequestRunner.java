@@ -55,6 +55,8 @@ public class RequestRunner extends Thread {
     private String request;
     private SchoolDatabase database;
     private RequestParams params;
+    private Context appContext;
+    private static final int WAIT_TIME = 3000;
 
     /**
      * Use {@link RequestRunner#getInstance()} instead, to get the instance of the
@@ -72,9 +74,9 @@ public class RequestRunner extends Thread {
 
     @Override
     public void run() {
+        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         database = new SchoolDatabase(params.getActivity());
         deleteTaskRunning = true;
-        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         performDeleteOperation();
         deleteRequestDiscarded = false;
         deleteTaskRunning = false;
@@ -123,7 +125,7 @@ public class RequestRunner extends Thread {
         EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.REMOVE));
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException exc) {
             for (int x = 0; x < assignmentCache.size(); x++) {
                 params.getModelList().add(itemIndices[x], assignmentCache.get(x));
@@ -135,7 +137,7 @@ public class RequestRunner extends Thread {
             // Delete the data model from SchoolDatabase
             boolean isDeleted = database.deleteDataModels(params.getDataClass(), itemIndices);
             if (isDeleted) {
-                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                playAlertTone(appContext, Alert.DELETE);
                 if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
@@ -154,7 +156,7 @@ public class RequestRunner extends Thread {
         EventBus.getDefault().post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.REMOVE));
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException exc) {
             for (int x = 0; x < uriCache.size(); x++) {
                 mediaUris.add(itemIndices[x], uriCache.get(x));
@@ -167,7 +169,7 @@ public class RequestRunner extends Thread {
             boolean isDeleted
                     = database.deleteMultipleImages(params.getAssignmentPosition(), itemIndices);
             if (isDeleted) {
-                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                playAlertTone(appContext, Alert.DELETE);
                 if (mediaUris.isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
@@ -180,7 +182,7 @@ public class RequestRunner extends Thread {
         Uri uri = mediaUris.remove(params.getAdapterPosition());
         params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
         try {
-            Thread.sleep(3000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException exc) {
             mediaUris.add(params.getAdapterPosition(), uri);
             params.getAdapter().notifyItemInserted(params.getAdapterPosition());
@@ -189,7 +191,7 @@ public class RequestRunner extends Thread {
         if (!deleteRequestDiscarded) {
             String uris = database.deleteImage(params.getAdapterPosition(), uri);
             if (uris != null) {
-                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                playAlertTone(appContext, Alert.DELETE);
                 if (mediaUris.isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
@@ -210,7 +212,7 @@ public class RequestRunner extends Thread {
             which also is 3 seconds.
             */
         try {
-            Thread.sleep(3000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
             /*
             will be executed when the deleteRequestDiscarded property has been set,
@@ -225,7 +227,7 @@ public class RequestRunner extends Thread {
             ExamModel examModel = (ExamModel) model;
             boolean isDeleted = database.deleteExamEntry(examModel, examModel.getWeek());
             if (isDeleted) {
-                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                playAlertTone(appContext, Alert.DELETE);
                 if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
@@ -245,7 +247,7 @@ public class RequestRunner extends Thread {
             which also is 3 seconds.
             */
         try {
-            Thread.sleep(3000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
             /*
             will be executed when the deleteRequestDiscarded property has been set,
@@ -260,7 +262,7 @@ public class RequestRunner extends Thread {
             CourseModel courseModel = (CourseModel) model;
             boolean isDeleted = database.deleteCourseEntry(courseModel, courseModel.getSemester());
             if (isDeleted) {
-                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                playAlertTone(appContext, Alert.DELETE);
                 if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
@@ -279,7 +281,7 @@ public class RequestRunner extends Thread {
             which also is 3 seconds.
             */
         try {
-            Thread.sleep(3000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
             EventBus.getDefault()
                     .post(new UpdateMessage((AssignmentModel) model, EventType.INSERT));
@@ -288,7 +290,7 @@ public class RequestRunner extends Thread {
             boolean isDeleted = database.deleteAssignmentEntry((AssignmentModel) model);
             if (isDeleted) {
                 cancelAssignmentNotifier(params.getAssignmentData());
-                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                playAlertTone(appContext, Alert.DELETE);
             }
         }
     }
@@ -307,7 +309,7 @@ public class RequestRunner extends Thread {
         // being used in the TableFragment) when delete operation is still in progress,
         // as that would halt the delete operation !!!
         try {
-            Thread.sleep(3000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
             // will be executed when the deleteRequestDiscarded property has been set,
             // meaning an undo request
@@ -329,13 +331,12 @@ public class RequestRunner extends Thread {
                 if (request.equals(ScheduledTimetableFragment.DELETE_REQUEST))
                     cancelScheduledTimetableNotifier((TimetableModel) model);
                 else cancelTimetableNotifier((TimetableModel) model);
-                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                playAlertTone(appContext, Alert.DELETE);
             }
         }
     }
 
     private void cancelTimetableNotifier(TimetableModel timetable) {
-        Context context = params.getActivity().getApplicationContext();
         String[] t = timetable.getStartTime().split(":");
         timetable.setDay(params.getTimetable());
 
@@ -351,14 +352,14 @@ public class RequestRunner extends Thread {
         long CURRENT = calendar.getTimeInMillis();
         long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent timetableIntent = new Intent(context, TimetableNotifier.class);
+        AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
+        Intent timetableIntent = new Intent(appContext, TimetableNotifier.class);
         timetableIntent.addCategory("com.projects.timely.timetable")
                 .setAction("com.projects.timely.timetable.addAction")
                 .setDataAndType(Uri.parse("content://com.projects.timely.add." + timeInMillis),
                                 "com.projects.timely.dataType");
 
-        PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
+        PendingIntent pi = PendingIntent.getBroadcast(appContext, 555, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
         pi.cancel();
         manager.cancel(pi);
@@ -385,7 +386,7 @@ public class RequestRunner extends Thread {
             which also is 3 seconds.
             */
         try {
-            Thread.sleep(3000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
             /*
             will be executed when the deleteRequestDiscarded property has been set,
@@ -401,8 +402,9 @@ public class RequestRunner extends Thread {
             boolean isDeleted = database.deleteAlarmEntry((AlarmModel) model);
             if (isDeleted) {
                 cancelAlarm(); // if alarm was deleted, cancel alarm first, then ...
-                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
-                if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
+                playAlertTone(appContext, Alert.DELETE);
+                if (params.getModelList().isEmpty())
+                    EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
@@ -414,7 +416,7 @@ public class RequestRunner extends Thread {
         deleteRequestDiscarded = true;
         // wake RequestRunner thread immediately from sleep, for immediate undo response
         interrupt();
-        playAlertTone(params.getActivity().getApplicationContext(), Alert.UNDO);
+        playAlertTone(appContext, Alert.UNDO);
     }
 
     /**
@@ -428,7 +430,6 @@ public class RequestRunner extends Thread {
     }
 
     private void cancelScheduledTimetableNotifier(TimetableModel timetable) {
-        Context context = params.getActivity().getApplicationContext();
         String[] t = timetable.getStartTime().split(":");
 
         Calendar calendar = Calendar.getInstance();
@@ -445,44 +446,43 @@ public class RequestRunner extends Thread {
 
         Log.d(getClass().getSimpleName(), "Cancelling alarm: " + new Date(timeInMillis));
 
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
+        AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
+        Intent timetableIntent = new Intent(appContext, ScheduledTaskNotifier.class);
         timetableIntent.addCategory("com.projects.timely.scheduled")
                 .setAction("com.projects.timely.scheduled.addAction")
                 .setDataAndType(
                         Uri.parse("content://com.projects.timely.scheduled.add." + timeInMillis),
                         "com.projects.timely.scheduled.dataType");
 
-        PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
+        PendingIntent pi = PendingIntent.getBroadcast(appContext, 1156, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
         pi.cancel();
         manager.cancel(pi);
     }
 
     private void cancelAssignmentNotifier(AssignmentModel data) {
-        Context aCtxt = params.getActivity().getApplicationContext();
-        Intent notifyIntentCurrent = new Intent(aCtxt, SubmissionNotifier.class);
+        Intent notifyIntentCurrent = new Intent(appContext, SubmissionNotifier.class);
         notifyIntentCurrent
-                .addCategory(aCtxt.getPackageName() + ".category")
-                .setAction(aCtxt.getPackageName() + ".update")
-                .setDataAndType(Uri.parse("content://" + aCtxt.getPackageName()),
+                .addCategory(appContext.getPackageName() + ".category")
+                .setAction(appContext.getPackageName() + ".update")
+                .setDataAndType(Uri.parse("content://" + appContext.getPackageName()),
                                 data.toString());
 
-        Intent notifyIntentPrevious = new Intent(aCtxt, Reminder.class);
+        Intent notifyIntentPrevious = new Intent(appContext, Reminder.class);
         notifyIntentPrevious
-                .addCategory(aCtxt.getPackageName() + ".category")
-                .setAction(aCtxt.getPackageName() + ".update")
-                .setDataAndType(Uri.parse("content://" + aCtxt.getPackageName()),
+                .addCategory(appContext.getPackageName() + ".category")
+                .setAction(appContext.getPackageName() + ".update")
+                .setDataAndType(Uri.parse("content://" + appContext.getPackageName()),
                                 data.toString());
 
         PendingIntent assignmentPiPrevious
-                = PendingIntent.getBroadcast(aCtxt, 147, notifyIntentPrevious,
+                = PendingIntent.getBroadcast(appContext, 147, notifyIntentPrevious,
                                              PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent assignmentPiCurrent
-                = PendingIntent.getBroadcast(aCtxt, 141, notifyIntentCurrent,
+                = PendingIntent.getBroadcast(appContext, 141, notifyIntentCurrent,
                                              PendingIntent.FLAG_CANCEL_CURRENT);
 
-        AlarmManager manager = (AlarmManager) aCtxt.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
         assignmentPiCurrent.cancel();
         manager.cancel(assignmentPiCurrent);
         assignmentPiPrevious.cancel();
@@ -491,7 +491,6 @@ public class RequestRunner extends Thread {
 
     public void cancelAlarm() {
         Calendar calendar = Calendar.getInstance();
-
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(params.getAlarmTime()[0]));
         calendar.set(Calendar.MINUTE, Integer.parseInt(params.getAlarmTime()[1]));
@@ -502,7 +501,7 @@ public class RequestRunner extends Thread {
         long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
                                      : calendar.getTimeInMillis();
 
-        Intent alarmReceiverIntent = new Intent(params.getActivity(), AlarmReceiver.class);
+        Intent alarmReceiverIntent = new Intent(appContext, AlarmReceiver.class);
         alarmReceiverIntent.putExtra("Label", params.getAlarmLabel());
         // This is just used to prevent cancelling all pending intent, because when
         // PendingIntent#cancel is called, all pending intent that matches the intent supplied to
@@ -516,8 +515,8 @@ public class RequestRunner extends Thread {
                 "com.projects.timely.alarm.dataType");
 
         AlarmManager alarmManager
-                = (AlarmManager) params.getActivity().getSystemService(Context.ALARM_SERVICE);
-        PendingIntent alarmPI = PendingIntent.getBroadcast(params.getActivity(),
+                = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent alarmPI = PendingIntent.getBroadcast(appContext,
                                                            1189765,
                                                            alarmReceiverIntent,
                                                            PendingIntent.FLAG_CANCEL_CURRENT);
@@ -527,6 +526,8 @@ public class RequestRunner extends Thread {
 
     public RequestRunner setRequestParams(RequestParams params) {
         this.params = params;
+        // Use the application's context to prevent app crash
+        this.appContext = this.params.getActivity().getApplicationContext();
         return this;
     }
 
@@ -601,6 +602,5 @@ public class RequestRunner extends Thread {
             requestParams.setItemIndices(itemIndices);
             return this;
         }
-
     }
 }
