@@ -339,7 +339,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
         @Override
         public long getItemId(int position) {
-            return ((AssignmentModel) aList.get(position)).getPosition();
+            return aList.get(position).getPosition();
         }
 
         @Override
