@@ -269,7 +269,9 @@ public class RequestRunner extends Thread {
 
     private void doAssignmentDelete() {
         DataModel model = params.getModelList().get(params.getAdapterPosition());
-        EventBus.getDefault().post(new UpdateMessage((AssignmentModel) model, EventType.REMOVE));
+        AssignmentModel aModel = (AssignmentModel) model;
+        aModel.setId(params.getAdapterPosition());
+        EventBus.getDefault().post(new UpdateMessage(aModel, EventType.REMOVE));
             /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
@@ -539,7 +541,7 @@ public class RequestRunner extends Thread {
             return requestParams;
         }
 
-        public Builder setOwner(FragmentActivity mActivity) {
+        public Builder setOwnerContext(FragmentActivity mActivity) {
             requestParams.setActivity(mActivity);
             return this;
         }

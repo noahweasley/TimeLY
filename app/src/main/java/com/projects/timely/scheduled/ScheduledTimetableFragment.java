@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -138,10 +137,13 @@ public class ScheduledTimetableFragment extends Fragment {
                         .setActionTextColor(Color.YELLOW)
                         .show();
 
-                runner.with(getActivity(),
-                            viewHolder,
-                            tableRowAdapter,
-                            tList)
+                RequestRunner.Builder builder = new RequestRunner.Builder();
+                builder.setOwnerContext(getActivity())
+                        .setAdapter(tableRowAdapter)
+                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                        .setModelList(tList);
+
+                runner.setRequestParams(builder.getParams())
                         .runRequest(DELETE_REQUEST);
             }
         });
@@ -201,8 +203,6 @@ public class ScheduledTimetableFragment extends Fragment {
     public void doTimetableUpdate(UpdateMessage update) {
         TimetableModel data = update.getData();
         int changePos = data.getChronologicalOrder();
-
-        Log.d(getClass().getSimpleName(), "order: " + changePos);
 
         if (update.getType() == UpdateMessage.EventType.NEW) {
             tList.add(changePos, data);

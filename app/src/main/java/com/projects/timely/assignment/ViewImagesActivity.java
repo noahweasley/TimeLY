@@ -129,7 +129,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 RequestRunner runner = RequestRunner.getInstance();
                 RequestRunner.Builder builder = new RequestRunner.Builder();
-                builder.setOwner(ViewImagesActivity.this)
+                builder.setOwnerContext(ViewImagesActivity.this)
                         .setMediaUris(mediaUris)
                         .setAssignmentPosition(position)
                         .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
@@ -337,7 +337,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         public void deleteMultiple() {
             RequestRunner runner = RequestRunner.getInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
-            builder.setOwner(ViewImagesActivity.this)
+            builder.setOwnerContext(ViewImagesActivity.this)
                     .setAdapter(imageAdapter)
                     .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
                     .setAssignmentPosition(position)

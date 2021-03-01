@@ -54,11 +54,15 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
 
         btn_deleteCourse.setOnClickListener(v -> {
             RequestRunner runner = RequestRunner.getInstance();
-            runner.with(user.getActivity(),
-                        this,
-                        courseAdapter,
-                        cList)
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwnerContext(user.getActivity())
+                    .setAdapterPosition(getAbsoluteAdapterPosition())
+                    .setAdapter(courseAdapter)
+                    .setModelList(cList);
+
+            runner.setRequestParams(builder.getParams())
                     .runRequest(DELETE_REQUEST);
+
             Snackbar bar = Snackbar.make(coordinator, "Course Deleted", Snackbar.LENGTH_LONG);
             bar.setActionTextColor(Color.YELLOW);
             bar.setAction("Undo", x -> runner.undoRequest());
@@ -83,7 +87,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
 
     public void bindView() {
         Context context = user.getContext();
-        int rowColor = COLORS[ getAbsoluteAdapterPosition() % COLORS.length];
+        int rowColor = COLORS[getAbsoluteAdapterPosition() % COLORS.length];
         lIndicator.setBackgroundColor(ContextCompat.getColor(context, rowColor));
         tv_courseCode.setText(cModel.getCourseCode());
         tv_courseName.setText(cModel.getCourseName());

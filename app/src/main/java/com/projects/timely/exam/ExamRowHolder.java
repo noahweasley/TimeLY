@@ -50,14 +50,19 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
         tv_courseName = itemView.findViewById(R.id.course_name);
         tv_courseCode = itemView.findViewById(R.id.course_code);
         tv_examDay = itemView.findViewById(R.id.exam_day);
+
         itemView.findViewById(R.id.delete_exam)
                 .setOnClickListener(v -> {
                     RequestRunner runner = RequestRunner.getInstance();
-                    runner.with(user.getActivity(),
-                                this,
-                                examRowAdapter,
-                                eList)
+                    RequestRunner.Builder builder = new RequestRunner.Builder();
+                    builder.setOwnerContext(user.getActivity())
+                            .setModelList(eList)
+                            .setAdapter(examRowAdapter)
+                            .setAdapterPosition(getAbsoluteAdapterPosition());
+
+                    runner.setRequestParams(builder.getParams())
                             .runRequest(DELETE_REQUEST);
+
                     Snackbar bar = Snackbar.make(coordinator, "Exam Deleted", Snackbar.LENGTH_LONG);
                     bar.setActionTextColor(Color.YELLOW);
                     bar.setAction("Undo", x -> runner.undoRequest());
@@ -75,7 +80,6 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
                 new ErrorDialog().showErrorMessage(user.getContext(), builder.build());
             }
         });
-
     }
 
     public ExamRowHolder with(ExamTimetableFragment user,

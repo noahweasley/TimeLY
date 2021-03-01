@@ -221,7 +221,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
             RequestRunner runner = RequestRunner.getInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
-            builder.setOwner(mActivity)
+            builder.setOwnerContext(mActivity)
                     .setAdapterPosition(this.getAbsoluteAdapterPosition())
                     .setAdapter(alarmAdapter)
                     .setModelList(alarmModelList)

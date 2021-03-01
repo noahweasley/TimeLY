@@ -155,7 +155,7 @@ public class AlarmListFragment extends Fragment {
                 String[] elements = database.getElementaryAlarmDataAt(pos);
 
                 RequestRunner.Builder builder = new RequestRunner.Builder();
-                builder.setOwner(getActivity())
+                builder.setOwnerContext(getActivity())
                         .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
                         .setAdapter(alarmAdapter)
                         .setModelList(aList)

@@ -141,7 +141,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                 snackbar.show();
 
                 RequestRunner.Builder builder = new RequestRunner.Builder();
-                builder.setOwner(getActivity())
+                builder.setOwnerContext(getActivity())
                         .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
                         .setAdapter(assignmentAdapter)
                         .setModelList(aList)
@@ -209,7 +209,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doAssignmentUpdate(UpdateMessage update) {
         AssignmentModel data = update.getData();
-        int changePos = data.getPosition();
+        int changePos = data.getId();
 
         switch (update.getType()) {
             case NEW:
@@ -261,6 +261,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                 am.setAttachedPDF(data.getAttachedPDF());
                 am.setCourseCode(data.getCourseCode());
                 am.setDate(data.getDate());
+                am.setId(data.getId());
                 am.setDescription(data.getDescription());
                 am.setPosition(data.getPosition());
                 am.setLecturerName(data.getLecturerName());
@@ -406,7 +407,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         public void deleteMultiple() {
             RequestRunner runner = RequestRunner.getInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
-            builder.setOwner(getActivity())
+            builder.setOwnerContext(getActivity())
                     .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
                     .setAdapter(assignmentAdapter)
                     .setModelList(aList)

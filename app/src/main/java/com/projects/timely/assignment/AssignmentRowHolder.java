@@ -234,7 +234,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         snackbar.show();
 
         RequestRunner.Builder builder = new RequestRunner.Builder();
-        builder.setOwner(mActivity)
+        builder.setOwnerContext(mActivity)
                 .setAdapterPosition(getAbsoluteAdapterPosition())
                 .setAdapter(assignmentRowAdapter)
                 .setModelList(aList)

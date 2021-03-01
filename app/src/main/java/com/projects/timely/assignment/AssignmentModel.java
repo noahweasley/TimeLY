@@ -19,6 +19,8 @@ class AssignmentModel extends DataModel implements Serializable {
     private String attachedPDF;
     private String attachedImage;
     private boolean isSubmitted;
+    private int id;
+
     public AssignmentModel() {
     }
     AssignmentModel(int id, String lecturerName, String title, String description, String date,
@@ -140,5 +142,13 @@ class AssignmentModel extends DataModel implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 }
