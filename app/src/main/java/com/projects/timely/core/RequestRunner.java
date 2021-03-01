@@ -40,10 +40,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import static com.projects.timely.core.Globals.Alert;
 import static com.projects.timely.core.Globals.deleteTaskRunning;
@@ -427,22 +425,6 @@ public class RequestRunner extends Thread {
         this.start();
     }
 
-    /**
-     * Use this to set the <strong>RequestRunner</strong>'s properties
-     *
-     * @param activity   the container activity for the current fragment executing the request
-     * @param viewHolder the viewHolder to get the position in the list to be deleted
-     * @param adapter    the adapter to be notified about the changes
-     * @param modelList  the {@link List} which it's data is displayed in the list
-     * @return same instance of this class to be used for chain calls
-     */
-    public RequestRunner with(@Nullable FragmentActivity activity,
-                              ViewHolder viewHolder,
-                              RecyclerView.Adapter<?> adapter,
-                              List<DataModel> modelList) {
-        return this;
-    }
-
     private void cancelScheduledTimetableNotifier(TimetableModel timetable) {
         Context context = params.getActivity().getApplicationContext();
         String[] t = timetable.getStartTime().split(":");
@@ -549,7 +531,7 @@ public class RequestRunner extends Thread {
     /**
      * Special Builder class implementation to make code readable
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
         private RequestParams requestParams = new RequestParams();
 
