@@ -1,9 +1,9 @@
 package com.projects.timely.assignment;
 
-public class MultiUpdateMessage {
+public class MultiUpdateMessage2 {
     private EventType type;
 
-    public MultiUpdateMessage(EventType type) {
+    public MultiUpdateMessage2(EventType type) {
         this.type = type;
     }
 

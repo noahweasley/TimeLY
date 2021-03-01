@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,9 +74,9 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doListUpdate(MultiUpdateMessage mUpdate) {
-        if (mUpdate.getType() == MultiUpdateMessage.EventType.REMOVE
-                || mUpdate.getType() == MultiUpdateMessage.EventType.INSERT) {
+    public void doListUpdate(MultiUpdateMessage2 mUpdate) {
+        if (mUpdate.getType() == MultiUpdateMessage2.EventType.REMOVE
+                || mUpdate.getType() == MultiUpdateMessage2.EventType.INSERT) {
             actionMode.finish(); // require onDestroyActionMode() callback
         }
     }
@@ -127,9 +128,14 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 RequestRunner runner = RequestRunner.getInstance();
-                runner.with(ViewImagesActivity.this, viewHolder, imageAdapter, null)
-                        .setUriList(mediaUris)
+                RequestRunner.Builder builder = new RequestRunner.Builder();
+                builder.setOwner(ViewImagesActivity.this)
+                        .setMediaUris(mediaUris)
                         .setAssignmentPosition(position)
+                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                        .setAdapter(imageAdapter);
+
+                runner.setRequestParams(builder.getParams())
                         .runRequest(DELETE_REQUEST);
 
                 Snackbar snackbar
@@ -302,7 +308,6 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
          * @param state    the new state of the change
          * @param uri      the uri of the image where the change occurred
          */
-        @SuppressLint("DefaultLocale")
         public void onChecked(int position, boolean state, Uri uri) {
             boolean isFinished = false;
 
@@ -316,14 +321,14 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
             if (actionMode == null && choiceCount == 1) {
                 actionMode = startSupportActionMode(ViewImagesActivity.this);
-            } else if (actionMode != null && choiceCount <= 1) {
+            } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
                 isFinished = true;
                 choiceMode.clearChoices(); // added this, might be solution to my problem
             }
 
             if (!isFinished && actionMode != null)
-                actionMode.setTitle(String.format("%d %s", choiceCount, "selected"));
+                actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
         }
 
         /**
@@ -331,10 +336,15 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
          */
         public void deleteMultiple() {
             RequestRunner runner = RequestRunner.getInstance();
-            runner.with(ViewImagesActivity.this, rowHolder, imageAdapter, null)
-                    .setUriList(mediaUris)
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwner(ViewImagesActivity.this)
+                    .setAdapter(imageAdapter)
+                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
                     .setAssignmentPosition(position)
-                    .setItemsIndices(getCheckedImagesIndices())
+                    .setMediaUris(mediaUris)
+                    .setItemIndices(getCheckedImagesIndices());
+
+            runner.setRequestParams(builder.getParams())
                     .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedImageCount();

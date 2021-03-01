@@ -13,7 +13,7 @@ import com.projects.timely.alarms.AlarmModel;
 import com.projects.timely.alarms.AlarmReceiver;
 import com.projects.timely.assignment.AssignmentFragment;
 import com.projects.timely.assignment.AssignmentModel;
-import com.projects.timely.assignment.MultiUpdateMessage;
+import com.projects.timely.assignment.MultiUpdateMessage2;
 import com.projects.timely.assignment.Reminder;
 import com.projects.timely.assignment.SubmissionNotifier;
 import com.projects.timely.assignment.UpdateMessage;
@@ -55,18 +55,8 @@ import static com.projects.timely.core.Globals.playAlertTone;
 public class RequestRunner extends Thread {
     private static boolean deleteRequestDiscarded;
     private String request;
-    private FragmentActivity mActivity;
-    private int adapterPosition;
-    private RecyclerView.Adapter<?> adapter;
-    private List<DataModel> dList;
-    private String alarmLabel;
-    private String[] alarmTime;
-    private AssignmentModel assignmentData;
     private SchoolDatabase database;
-    private String timetable;
-    private List<Uri> mediaUris;
-    private int assignmentPosition;
-    private Integer[] itemIndices;
+    private RequestParams params;
 
     /**
      * Use {@link RequestRunner#getInstance()} instead, to get the instance of the
@@ -84,6 +74,7 @@ public class RequestRunner extends Thread {
 
     @Override
     public void run() {
+        database = new SchoolDatabase(params.getActivity());
         deleteTaskRunning = true;
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         performDeleteOperation();
@@ -95,6 +86,9 @@ public class RequestRunner extends Thread {
         switch (request) {
             case AssignmentFragment.DELETE_REQUEST:
                 doAssignmentDelete();
+                break;
+            case AssignmentFragment.MULTIPLE_DELETE_REQUEST:
+                doDataModelMultiDelete();
                 break;
             case DaysFragment.DELETE_REQUEST:
             case ScheduledTimetableFragment.DELETE_REQUEST:
@@ -119,14 +113,47 @@ public class RequestRunner extends Thread {
         database.close();
     }
 
+    private void doDataModelMultiDelete() {
+        List<DataModel> assignmentCache = new ArrayList<>();
+
+        Integer[] itemIndices = params.getItemIndices();
+        Arrays.sort(itemIndices, Collections.reverseOrder());
+
+        for (int i : itemIndices) {
+            assignmentCache.add(params.getModelList().remove(i));
+        }
+        EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.REMOVE));
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exc) {
+            for (int x = 0; x < assignmentCache.size(); x++) {
+                params.getModelList().add(itemIndices[x], assignmentCache.get(x));
+            }
+            EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.INSERT));
+        }
+
+        if (!deleteRequestDiscarded) {
+            // Delete the data model from SchoolDatabase
+            boolean isDeleted = database.deleteDataModels(params.getDataClass(), itemIndices);
+            if (isDeleted) {
+                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                if (params.getModelList().isEmpty())
+                    EventBus.getDefault().post(new EmptyListEvent());
+            }
+        }
+    }
+
     private void doImageMultiDelete() {
         List<Uri> uriCache = new ArrayList<>();
 
+        Integer[] itemIndices = params.getItemIndices();
+        List<Uri> mediaUris = params.getMediaUris();
         Arrays.sort(itemIndices, Collections.reverseOrder());
         for (int i : itemIndices) {
             uriCache.add(mediaUris.remove(i));
         }
-        EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.REMOVE));
+        EventBus.getDefault().post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.REMOVE));
 
         try {
             Thread.sleep(3000);
@@ -134,46 +161,50 @@ public class RequestRunner extends Thread {
             for (int x = 0; x < uriCache.size(); x++) {
                 mediaUris.add(itemIndices[x], uriCache.get(x));
             }
-            EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.INSERT));
+            EventBus.getDefault().post(
+                    new MultiUpdateMessage2(MultiUpdateMessage2.EventType.INSERT));
         }
 
         if (!deleteRequestDiscarded) {
-            boolean isDeleted = database.deleteMultipleImages(assignmentPosition, itemIndices);
+            boolean isDeleted
+                    = database.deleteMultipleImages(params.getAssignmentPosition(), itemIndices);
             if (isDeleted) {
-                playAlertTone(mActivity.getApplicationContext(), Alert.DELETE);
-                if(mediaUris.isEmpty())
+                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                if (mediaUris.isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
 
     private void doImageDelete() {
-        Uri uri = mediaUris.remove(adapterPosition);
-        adapter.notifyItemRemoved(adapterPosition);
+        List<Uri> mediaUris = params.getMediaUris();
+
+        Uri uri = mediaUris.remove(params.getAdapterPosition());
+        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
         try {
             Thread.sleep(3000);
         } catch (InterruptedException exc) {
-            mediaUris.add(adapterPosition, uri);
-            adapter.notifyItemInserted(adapterPosition);
+            mediaUris.add(params.getAdapterPosition(), uri);
+            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
         }
 
         if (!deleteRequestDiscarded) {
-            String uris = database.deleteImage(assignmentPosition, uri);
+            String uris = database.deleteImage(params.getAdapterPosition(), uri);
             if (uris != null) {
-                playAlertTone(mActivity.getApplicationContext(), Alert.DELETE);
+                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
                 if (mediaUris.isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
-            EventBus.getDefault().post(new UriUpdateEvent(assignmentPosition, uris));
+            EventBus.getDefault().post(new UriUpdateEvent(params.getAdapterPosition(), uris));
         }
     }
 
     private void doExamDelete() {
-        DataModel model = dList.get(adapterPosition);
-        dList.remove(adapterPosition);
-        adapter.notifyItemRemoved(adapterPosition);
-        adapter.notifyDataSetChanged();
-        EventBus.getDefault().post(new CountEvent(dList.size()));
+        DataModel model = params.getModelList().get(params.getAdapterPosition());
+        params.getModelList().remove(params.getAdapterPosition());
+        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
+        params.getAdapter().notifyDataSetChanged();
+        EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
             /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
@@ -187,28 +218,28 @@ public class RequestRunner extends Thread {
             will be executed when the deleteRequestDiscarded property has been set,
             meaning an undo request
             */
-            dList.add(adapterPosition, model);
-            adapter.notifyItemInserted(adapterPosition);
-            adapter.notifyDataSetChanged();
-            EventBus.getDefault().post(new CountEvent(dList.size()));
+            params.getModelList().add(params.getAdapterPosition(), model);
+            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
+            params.getAdapter().notifyDataSetChanged();
+            EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
         }
         if (!deleteRequestDiscarded) {
             ExamModel examModel = (ExamModel) model;
             boolean isDeleted = database.deleteExamEntry(examModel, examModel.getWeek());
             if (isDeleted) {
-                playAlertTone(mActivity.getApplicationContext(), Alert.DELETE);
-                if (dList.isEmpty())
+                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
 
     private void doCourseDelete() {
-        DataModel model = dList.get(adapterPosition);
-        dList.remove(adapterPosition);
-        adapter.notifyItemRemoved(adapterPosition);
-        adapter.notifyDataSetChanged();
-        EventBus.getDefault().post(new CountEvent(dList.size()));
+        DataModel model = params.getModelList().get(params.getAdapterPosition());
+        params.getModelList().remove(params.getAdapterPosition());
+        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
+        params.getAdapter().notifyDataSetChanged();
+        EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
             /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
@@ -222,24 +253,24 @@ public class RequestRunner extends Thread {
             will be executed when the deleteRequestDiscarded property has been set,
             meaning an undo request
             */
-            dList.add(adapterPosition, model);
-            adapter.notifyItemInserted(adapterPosition);
-            adapter.notifyDataSetChanged();
-            EventBus.getDefault().post(new CountEvent(dList.size()));
+            params.getModelList().add(params.getAdapterPosition(), model);
+            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
+            params.getAdapter().notifyDataSetChanged();
+            EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
         }
         if (!deleteRequestDiscarded) {
             CourseModel courseModel = (CourseModel) model;
             boolean isDeleted = database.deleteCourseEntry(courseModel, courseModel.getSemester());
             if (isDeleted) {
-                playAlertTone(mActivity.getApplicationContext(), Alert.DELETE);
-                if (dList.isEmpty())
+                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
 
     private void doAssignmentDelete() {
-        DataModel model = dList.get(adapterPosition);
+        DataModel model = params.getModelList().get(params.getAdapterPosition());
         EventBus.getDefault().post(new UpdateMessage((AssignmentModel) model, EventType.REMOVE));
             /*
             wait 3 seconds to perform actual delete request, because an undo request
@@ -256,18 +287,18 @@ public class RequestRunner extends Thread {
         if (!deleteRequestDiscarded) {
             boolean isDeleted = database.deleteAssignmentEntry((AssignmentModel) model);
             if (isDeleted) {
-                cancelAssignmentNotifier(assignmentData);
-                playAlertTone(mActivity.getApplicationContext(), Alert.DELETE);
+                cancelAssignmentNotifier(params.getAssignmentData());
+                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
             }
         }
     }
 
     private void doTimeTableDelete() {
-        DataModel model = dList.get(adapterPosition);
-        dList.remove(adapterPosition);
-        adapter.notifyItemRemoved(adapterPosition);
-        adapter.notifyDataSetChanged();
-        EventBus.getDefault().post(new CountEvent(dList.size()));
+        DataModel model = params.getModelList().get(params.getAdapterPosition());
+        params.getModelList().remove(params.getAdapterPosition());
+        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
+        params.getAdapter().notifyDataSetChanged();
+        EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
         // wait 3 seconds to perform actual delete request, because an undo request
         // might also be issued, which delete request would have to be cancelled.
         // The sleep timer is also synchronized with the undo Snackbar's display timeout,
@@ -280,32 +311,33 @@ public class RequestRunner extends Thread {
         } catch (InterruptedException e) {
             // will be executed when the deleteRequestDiscarded property has been set,
             // meaning an undo request
-            dList.add(adapterPosition, model);
-            adapter.notifyItemInserted(adapterPosition);
-            adapter.notifyDataSetChanged();
-            EventBus.getDefault().post(new CountEvent(dList.size()));
+            params.getModelList().add(params.getAdapterPosition(), model);
+            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
+            params.getAdapter().notifyDataSetChanged();
+            EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
         }
         if (!deleteRequestDiscarded) {
             boolean isDeleted;
             if (request.equals(ScheduledTimetableFragment.DELETE_REQUEST))
                 isDeleted = database.deleteTimetableEntry((TimetableModel) model,
                                                           SchoolDatabase.SCHEDULED_TIMETABLE);
-            else isDeleted = database.deleteTimetableEntry((TimetableModel) model, timetable);
+            else isDeleted
+                    = database.deleteTimetableEntry((TimetableModel) model, params.getTimetable());
             if (isDeleted) {
-                if (dList.isEmpty())
+                if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
                 if (request.equals(ScheduledTimetableFragment.DELETE_REQUEST))
                     cancelScheduledTimetableNotifier((TimetableModel) model);
                 else cancelTimetableNotifier((TimetableModel) model);
-                playAlertTone(mActivity.getApplicationContext(), Alert.DELETE);
+                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
             }
         }
     }
 
     private void cancelTimetableNotifier(TimetableModel timetable) {
-        Context context = mActivity.getApplicationContext();
+        Context context = params.getActivity().getApplicationContext();
         String[] t = timetable.getStartTime().split(":");
-        timetable.setDay(this.timetable);
+        timetable.setDay(params.getTimetable());
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
@@ -340,12 +372,12 @@ public class RequestRunner extends Thread {
         // So why did I still use it ? Because I wanted to play the animation of alarm row
         // delete task, and using the modelList, even though it is invalid, had an important role
         // to play, because it still represent the alarm row
-        DataModel model = database.getAlarmAt(adapterPosition);
-        dList.remove(adapterPosition);
-        adapter.notifyItemRemoved(adapterPosition);
+        DataModel model = database.getAlarmAt(params.getAdapterPosition());
+        params.getModelList().remove(params.getAdapterPosition());
+        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
         // now notify list of item change so that it can invalidate current views.
         // This line fixed a bug for me and help me change the indicators :)
-        adapter.notifyDataSetChanged();
+        params.getAdapter().notifyDataSetChanged();
             /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
@@ -359,18 +391,18 @@ public class RequestRunner extends Thread {
             will be executed when the deleteRequestDiscarded property has been set,
             meaning an undo request
             */
-            dList.add(adapterPosition, model);
-            adapter.notifyItemInserted(adapterPosition);
+            params.getModelList().add(params.getAdapterPosition(), model);
+            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
             // now notify list of item change so that it can invalidate current views.
             // This line fixed a bug for me and help me change the indicators :)
-            adapter.notifyDataSetChanged();
+            params.getAdapter().notifyDataSetChanged();
         }
         if (!deleteRequestDiscarded) {
             boolean isDeleted = database.deleteAlarmEntry((AlarmModel) model);
             if (isDeleted) {
                 cancelAlarm(); // if alarm was deleted, cancel alarm first, then ...
-                playAlertTone(mActivity.getApplicationContext(), Alert.DELETE);
-                if (dList.isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
+                playAlertTone(params.getActivity().getApplicationContext(), Alert.DELETE);
+                if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
@@ -382,7 +414,7 @@ public class RequestRunner extends Thread {
         deleteRequestDiscarded = true;
         // wake RequestRunner thread immediately from sleep, for immediate undo response
         interrupt();
-        playAlertTone(mActivity.getApplicationContext(), Alert.UNDO);
+        playAlertTone(params.getActivity().getApplicationContext(), Alert.UNDO);
     }
 
     /**
@@ -408,48 +440,11 @@ public class RequestRunner extends Thread {
                               ViewHolder viewHolder,
                               RecyclerView.Adapter<?> adapter,
                               List<DataModel> modelList) {
-        this.mActivity = activity;
-        this.adapterPosition = viewHolder. getAbsoluteAdapterPosition();
-        this.adapter = adapter;
-        this.dList = modelList;
-        database = new SchoolDatabase(mActivity);
-        return this;
-    }
-
-    /**
-     * Use this to set the fields to be used by {@link RequestRunner#cancelAlarm}
-     *
-     * @param alarmLabel the label of the alarm
-     * @param alarmTime  the time to be cancelled by alarm
-     * @return same instance of this class to be used for chain calls
-     */
-    public RequestRunner setAlarmData(String alarmLabel, String[] alarmTime) {
-        this.alarmLabel = alarmLabel;
-        this.alarmTime = alarmTime;
-        return this;
-    }
-
-    /**
-     * Use this to set the field to be used with
-     * {@link SchoolDatabase#deleteTimetableEntry(TimetableModel, String)}, if the user of
-     * this <code>RequestRunner</code> is an <strong>ordinary</strong> timetable, and
-     * <strong>not</strong> a scheduled timetable
-     *
-     * @param timetable the timetable to perform delete operation on
-     * @return same instance of this class to be used form chaining
-     */
-    public RequestRunner setTimetableData(String timetable) {
-        this.timetable = timetable;
-        return this;
-    }
-
-    public RequestRunner setAssignmentData(AssignmentModel assignmentData) {
-        this.assignmentData = assignmentData;
         return this;
     }
 
     private void cancelScheduledTimetableNotifier(TimetableModel timetable) {
-        Context context = mActivity.getApplicationContext();
+        Context context = params.getActivity().getApplicationContext();
         String[] t = timetable.getStartTime().split(":");
 
         Calendar calendar = Calendar.getInstance();
@@ -481,7 +476,7 @@ public class RequestRunner extends Thread {
     }
 
     private void cancelAssignmentNotifier(AssignmentModel data) {
-        Context aCtxt = mActivity.getApplicationContext();
+        Context aCtxt = params.getActivity().getApplicationContext();
         Intent notifyIntentCurrent = new Intent(aCtxt, SubmissionNotifier.class);
         notifyIntentCurrent
                 .addCategory(aCtxt.getPackageName() + ".category")
@@ -514,8 +509,8 @@ public class RequestRunner extends Thread {
         Calendar calendar = Calendar.getInstance();
 
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(alarmTime[0]));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(alarmTime[1]));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(params.getAlarmTime()[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(params.getAlarmTime()[1]));
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
@@ -523,8 +518,8 @@ public class RequestRunner extends Thread {
         long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
                                      : calendar.getTimeInMillis();
 
-        Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
-        alarmReceiverIntent.putExtra("Label", alarmLabel);
+        Intent alarmReceiverIntent = new Intent(params.getActivity(), AlarmReceiver.class);
+        alarmReceiverIntent.putExtra("Label", params.getAlarmLabel());
         // This is just used to prevent cancelling all pending intent, because when
         // PendingIntent#cancel is called, all pending intent that matches the intent supplied to
         // Intent#filterEquals (and it returns true), will be cancelled because there was no
@@ -537,8 +532,8 @@ public class RequestRunner extends Thread {
                 "com.projects.timely.alarm.dataType");
 
         AlarmManager alarmManager
-                = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity,
+                = (AlarmManager) params.getActivity().getSystemService(Context.ALARM_SERVICE);
+        PendingIntent alarmPI = PendingIntent.getBroadcast(params.getActivity(),
                                                            1189765,
                                                            alarmReceiverIntent,
                                                            PendingIntent.FLAG_CANCEL_CURRENT);
@@ -546,18 +541,82 @@ public class RequestRunner extends Thread {
         alarmManager.cancel(alarmPI);
     }
 
-    public RequestRunner setUriList(List<Uri> mediaUris) {
-        this.mediaUris = mediaUris;
+    public RequestRunner setRequestParams(RequestParams params) {
+        this.params = params;
         return this;
     }
 
-    public RequestRunner setAssignmentPosition(int position) {
-        this.assignmentPosition = position;
-        return this;
-    }
+    /**
+     * Special Builder class implementation to make code readable
+     */
+    @SuppressWarnings("unused")
+    public static class Builder {
+        private RequestParams requestParams = new RequestParams();
 
-    public RequestRunner setItemsIndices(Integer[] itemsIndices) {
-        this.itemIndices = itemsIndices;
-        return this;
+        public RequestParams getParams() {
+            return requestParams;
+        }
+
+        public Builder setOwner(FragmentActivity mActivity) {
+            requestParams.setActivity(mActivity);
+            return this;
+        }
+
+        public Builder setAdapterPosition(int adapterPosition) {
+            requestParams.setAdapterPosition(adapterPosition);
+            return this;
+        }
+
+        public Builder setAdapter(RecyclerView.Adapter<?> adapter) {
+            requestParams.setAdapter(adapter);
+            return this;
+        }
+
+        public Builder setModelList(List<DataModel> dList) {
+            requestParams.setModelList(dList);
+            return this;
+        }
+
+        public Builder setAlarmLabel(String alarmLabel) {
+            requestParams.setAlarmLabel(alarmLabel);
+            return this;
+        }
+
+        public Builder setAlarmTime(String[] alarmTime) {
+            requestParams.setAlarmTime(alarmTime);
+            return this;
+        }
+
+        public Builder setAssignmentData(AssignmentModel assignmentData) {
+            requestParams.setAssignmentData(assignmentData);
+            return this;
+        }
+
+        public Builder setTimetable(String timetable) {
+            requestParams.setTimetable(timetable);
+            return this;
+        }
+
+        public Builder setMediaUris(List<Uri> mediaUris) {
+            requestParams.setMediaUris(mediaUris);
+            return this;
+        }
+
+
+        public Builder setAssignmentPosition(int assignmentPosition) {
+            requestParams.setAssignmentPosition(assignmentPosition);
+            return this;
+        }
+
+        public Builder setDataClass(Class<? extends DataModel> dataClass) {
+            requestParams.setDataClass(dataClass);
+            return this;
+        }
+
+        public Builder setItemIndices(Integer[] itemIndices) {
+            requestParams.setItemIndices(itemIndices);
+            return this;
+        }
+
     }
 }

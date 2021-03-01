@@ -44,7 +44,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.projects.timely.core.Globals.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
-public class AssignmentFragment extends Fragment implements ActionMode.Callback{
+public class AssignmentFragment extends Fragment implements ActionMode.Callback {
     public static final String DELETE_REQUEST = "Delete Assignment";
     public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Assignments";
     public static final String DESCRIPTION = "Description";
@@ -140,10 +140,16 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
                         .setActionTextColor(Color.YELLOW);
                 snackbar.show();
 
-                runner.with(getActivity(), viewHolder, assignmentAdapter, aList)
-                        .setAssignmentData((AssignmentModel)
-                                                   aList.get(
-                                                           viewHolder.getAbsoluteAdapterPosition()))
+                RequestRunner.Builder builder = new RequestRunner.Builder();
+                builder.setOwner(getActivity())
+                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                        .setAdapter(assignmentAdapter)
+                        .setModelList(aList)
+                        .setAssignmentData(
+                                (AssignmentModel)
+                                        aList.get(viewHolder.getAbsoluteAdapterPosition()));
+
+                runner.setRequestParams(builder.getParams())
                         .runRequest(DELETE_REQUEST);
             }
         });
@@ -364,7 +370,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
         /**
          * @return an array of the checked indices
          */
-        private Integer[] getCheckedImagesIndices() {
+        private Integer[] getCheckedAssignmentsIndices() {
             return choiceMode.getCheckedChoicesIndices();
         }
 
@@ -372,7 +378,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
          * @param position the position where the change occurred
          * @param state    the new state of the change
          */
-        public void onChecked(int position, boolean state, AssignmentModel assignment) {
+        public void onChecked(int position, boolean state) {
             boolean isFinished = false;
 
             DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
@@ -384,7 +390,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
                 AppCompatActivity context = (AppCompatActivity) getActivity();
                 if (isAdded())
                     actionMode = context.startSupportActionMode(AssignmentFragment.this);
-            } else if (actionMode != null && choiceCount <= 1) {
+            } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
                 isFinished = true;
                 choiceMode.clearChoices(); // added this, might be solution to my problem
@@ -399,8 +405,15 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback{
          */
         public void deleteMultiple() {
             RequestRunner runner = RequestRunner.getInstance();
-            runner.with(getActivity(), rowHolder, assignmentAdapter, null)
-                    .setItemsIndices(getCheckedImagesIndices())
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwner(getActivity())
+                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                    .setAdapter(assignmentAdapter)
+                    .setModelList(aList)
+                    .setItemIndices(getCheckedAssignmentsIndices())
+                    .setDataClass(AssignmentModel.class);
+
+            runner.setRequestParams(builder.getParams())
                     .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedAssignmentsCount();

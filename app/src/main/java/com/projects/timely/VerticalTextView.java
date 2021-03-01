@@ -1,6 +1,5 @@
 package com.projects.timely;
 
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -14,8 +13,8 @@ import androidx.appcompat.widget.AppCompatTextView;
  */
 public class VerticalTextView extends AppCompatTextView {
 
-    private int width, height;
     private final Rect bounds = new Rect();
+    private int width, height;
 
     public VerticalTextView(Context context) {
         super(context);

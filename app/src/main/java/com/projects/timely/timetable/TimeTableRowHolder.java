@@ -85,9 +85,16 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                       ? ScheduledTimetableFragment.DELETE_REQUEST : DaysFragment.DELETE_REQUEST;
 
             RequestRunner runner = RequestRunner.getInstance();
-            runner.with(user.getActivity(), this, rowAdapter, tList)
-                    .setTimetableData(timetable)
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwner(user.getActivity())
+                    .setAdapterPosition(getAbsoluteAdapterPosition())
+                    .setAdapter(rowAdapter)
+                    .setModelList(tList)
+                    .setTimetable(timetable);
+
+            runner.setRequestParams(builder.getParams())
                     .runRequest(deleteRequest);
+
             Snackbar.make(coordinator, "Timetable Deleted", Snackbar.LENGTH_LONG)
                     .setActionTextColor(Color.YELLOW)
                     .setAction("undo", (view) -> runner.undoRequest())

@@ -259,15 +259,11 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
             int choiceCount = imcm.getCheckedChoiceCount();
 
-            Log.d(TAG, "Choice count: " + choiceCount
-                    + " ... actionMode is " + (actionMode == null ? "null" : "initialized"));
-
             if (actionMode == null && choiceCount == 1) {
                 actionMode = startSupportActionMode(ImageGallery.this);
             } else if (choiceCount == 0 && actionMode != null) {
                 actionMode.finish();
                 isFinished = true;
-                Log.d(TAG, "Action mode nullified");
             }
 
             if (!isFinished && actionMode != null)

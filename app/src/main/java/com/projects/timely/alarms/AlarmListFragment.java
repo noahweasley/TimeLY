@@ -154,11 +154,14 @@ public class AlarmListFragment extends Fragment {
                 int pos = viewHolder.getAbsoluteAdapterPosition();
                 String[] elements = database.getElementaryAlarmDataAt(pos);
 
-                runner.with(getActivity(),
-                            viewHolder,
-                            alarmAdapter,
-                            aList)
-                        .setAlarmData(elements[0], elements[1].split(":"))
+                RequestRunner.Builder builder = new RequestRunner.Builder();
+                builder.setOwner(getActivity())
+                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                        .setAdapter(alarmAdapter)
+                        .setModelList(aList)
+                        .setAlarmTime(elements);
+
+                runner.setRequestParams(builder.getParams())
                         .runRequest(DELETE_REQUEST);
             }
         });

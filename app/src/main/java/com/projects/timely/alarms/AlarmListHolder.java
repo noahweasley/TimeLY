@@ -220,11 +220,15 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             String[] time = thisAlarm.getTime().split(":");
 
             RequestRunner runner = RequestRunner.getInstance();
-            runner.with(mActivity,
-                        this,
-                        alarmAdapter,
-                        alarmModelList)
-                    .setAlarmData(label, time)
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwner(mActivity)
+                    .setAdapterPosition(this.getAbsoluteAdapterPosition())
+                    .setAdapter(alarmAdapter)
+                    .setModelList(alarmModelList)
+                    .setAlarmLabel(label)
+                    .setAlarmTime(time);
+
+            runner.setRequestParams(builder.getParams())
                     .runRequest(DELETE_REQUEST);
 
             Snackbar snackBar = Snackbar.make(coordinator, "Alarm Deleted", Snackbar.LENGTH_LONG);
@@ -233,7 +237,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             snackBar.show();
 
         });
-
     }
 
     AlarmListHolder with(FragmentActivity activity, CoordinatorLayout coordinator,

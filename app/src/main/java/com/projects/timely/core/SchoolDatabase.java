@@ -1728,6 +1728,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     }
 
     /**
+     * Deletes multiple images from the attached images assigned to a particular assignment
+     *
      * @param position    the position of the assignment that owns the images at
      *                    <code>itemIndices</code>
      * @param itemIndices the indices of the attached images to deleted
@@ -1749,5 +1751,52 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         long resCode = db.update(ASSIGNMENT_TABLE, uriValues, COLUMN_ID + " = " + position, null);
 
         return resCode != -1;
+    }
+
+    /**
+     * Deletes multiple data models from the list of data models in app's database.
+     *
+     * @param itemIndices the indices of the attached images to deleted
+     * @param clazz       the class of the data model that should be deleted
+      * @return true if the data were deleted
+     */
+    public boolean deleteDataModels(Class<?> clazz, Integer[] itemIndices) {
+        boolean resultCode = false;
+
+        switch (clazz.getName()) {
+            case Constants.ASSIGNMENTS:
+                resultCode = deleteMultipleAssignments(itemIndices);
+                break;
+            case Constants.COURSES:
+                resultCode = deleteMultipleCourses(itemIndices);
+                break;
+            case Constants.EXAMS:
+                resultCode = deleteMultipleExams(itemIndices);
+                break;
+            case Constants.TIMETABLE:
+                resultCode = deleteMultipleTimetables(itemIndices);
+                break;
+        }
+        return resultCode;
+    }
+
+    // Delete timetables at specified indices
+    private boolean deleteMultipleTimetables(Integer[] itemIndices) {
+        return true;
+    }
+
+    // Delete exams at specified indices
+    private boolean deleteMultipleExams(Integer[] itemIndices) {
+        return true;
+    }
+
+    // Delete courses at specified indices
+    private boolean deleteMultipleCourses(Integer[] itemIndices) {
+        return true;
+    }
+
+    // Delete assignments at specified indices
+    private boolean deleteMultipleAssignments(Integer[] itemIndices) {
+        return true;
     }
 }

@@ -30,8 +30,7 @@ import static com.projects.timely.assignment.AssignmentFragment.DESCRIPTION;
 import static com.projects.timely.assignment.AssignmentFragment.LECTURER_NAME;
 import static com.projects.timely.assignment.AssignmentFragment.TITLE;
 
-public
-class AssignmentRowHolder extends RecyclerView.ViewHolder {
+public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
     private static final int[] COLORS = {
             android.R.color.holo_blue_bright,
@@ -52,6 +51,8 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
     private CoordinatorLayout coordinator;
     private AssignmentRowAdapter assignmentRowAdapter;
     private List<DataModel> aList;
+    private View v_selectionOverlay;
+    private boolean isChecked;
 
     @SuppressWarnings({"ClickableViewAccessibility", "ConstantConditions"})
     public AssignmentRowHolder(@NonNull View rootView) {
@@ -64,6 +65,7 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         lecturerName = rootView.findViewById(R.id.lecturerName);
         course = rootView.findViewById(R.id.course);
         date = rootView.findViewById(R.id.deadline);
+        v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
         ImageButton viewButton = rootView.findViewById(R.id.viewButton);
         img_stats = rootView.findViewById(R.id.stats);
 
@@ -90,13 +92,6 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
                                                      .setAction("Edit")));
 
         // Multi - Select actions
-
-        rootView.setOnTouchListener((t, event) -> {
-
-            return true;
-        });
-
-
         rootView.setOnLongClickListener(l -> {
             trySelectAssignment();
             assignmentRowAdapter.setMultiSelectionEnabled(
@@ -106,6 +101,12 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         });
 
         rootView.setOnClickListener(c -> {
+            if (assignmentRowAdapter.isMultiSelectionEnabled()) {
+                trySelectAssignment();
+                if (assignmentRowAdapter.getCheckedAssignmentsCount() == 0) {
+                    assignmentRowAdapter.setMultiSelectionEnabled(false);
+                }
+            }
         });
     }
 
@@ -135,6 +136,8 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
         img_stats.setImageResource(assignment.isSubmitted() ? R.drawable.ic_round_check_circle
                                                             : R.drawable.ic_pending);
         TooltipCompat.setTooltipText(img_stats, "Submission status");
+        isChecked = assignmentRowAdapter.isChecked(getAbsoluteAdapterPosition());
+        v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 
     // Determines if there was an added title in the lecturer's name
@@ -215,7 +218,9 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
     }
 
     private void trySelectAssignment() {
-
+        isChecked = !isChecked;
+        v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        assignmentRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked);
     }
 
     private void doDeleteAssignment() {
@@ -228,8 +233,14 @@ class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
         snackbar.show();
 
-        runner.with(mActivity, this, assignmentRowAdapter, aList)
-                .setAssignmentData(assignment)
+        RequestRunner.Builder builder = new RequestRunner.Builder();
+        builder.setOwner(mActivity)
+                .setAdapterPosition(getAbsoluteAdapterPosition())
+                .setAdapter(assignmentRowAdapter)
+                .setModelList(aList)
+                .setAssignmentData(assignment);
+
+        runner.setRequestParams(builder.getParams())
                 .runRequest(DELETE_REQUEST);
     }
 }
