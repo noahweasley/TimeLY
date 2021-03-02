@@ -24,6 +24,25 @@ public class RequestParams {
     private Class<? extends DataModel> dataClass;
     private Integer[] itemIndices;
     private Integer[] positionIndices;
+    private String semester;
+    private MetaDataType metadataType;
+    private String examWeek;
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public MetaDataType getMetadataType() {
+        return metadataType;
+    }
+
+    public void setMetadataType(MetaDataType metadataType) {
+        this.metadataType = metadataType;
+    }
 
     public FragmentActivity getActivity() {
         return mActivity;
@@ -121,11 +140,23 @@ public class RequestParams {
         this.itemIndices = itemIndices;
     }
 
+    public Integer[] getPositionIndices() {
+        return positionIndices;
+    }
+
     public void setPositionIndices(Integer[] positionIndices) {
         this.positionIndices = positionIndices;
     }
 
-    public Integer[] getPositionIndices() {
-        return positionIndices;
+    public String getExamWeek() {
+        return examWeek;
+    }
+
+    public void setExamWeek(String examWeek) {
+        this.examWeek = examWeek;
+    }
+
+    public enum MetaDataType {
+        COURSE, NO_DATA, TIMETABLE, EXAM
     }
 }

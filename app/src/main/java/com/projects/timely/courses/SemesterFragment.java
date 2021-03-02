@@ -1,20 +1,29 @@
 package com.projects.timely.courses;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
 import com.projects.timely.core.CountEvent;
 import com.projects.timely.core.DataModel;
+import com.projects.timely.core.DataMultiChoiceMode;
 import com.projects.timely.core.EmptyListEvent;
+import com.projects.timely.core.MultiUpdateMessage;
+import com.projects.timely.core.RequestParams;
+import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.gallery.ChoiceMode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,9 +31,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -34,8 +46,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.projects.timely.core.Globals.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
-public class SemesterFragment extends Fragment {
+public class SemesterFragment extends Fragment implements ActionMode.Callback {
     public static final String ARG_POSITION = "page position";
+    public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Courses";
+    private static ActionMode actionMode;
     private List<DataModel> cList;
     private SchoolDatabase database;
     private TextView itemCount;
@@ -43,6 +57,9 @@ public class SemesterFragment extends Fragment {
     private RecyclerView rv_Courses;
     private CoordinatorLayout coordinator;
     private CourseAdapter courseAdapter;
+    private AppCompatActivity context;
+    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
+    private boolean isActionModeVisible;
 
     public static SemesterFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -57,7 +74,7 @@ public class SemesterFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cList = new ArrayList<>();
-        courseAdapter = new CourseAdapter();
+        courseAdapter = new CourseAdapter(choiceMode);
         database = new SchoolDatabase(getContext());
         EventBus.getDefault().register(this);
     }
@@ -73,6 +90,7 @@ public class SemesterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         // if modelList was empty, a layout indicating an empty list will be displayed, to avoid
         // displaying an empty list, which is not just quite good for UX design.
+        context = (AppCompatActivity) getActivity();
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
         boolean isPage1 = getArguments().getInt(ARG_POSITION) == 0;
         runBackgroundTask(() -> {
@@ -109,11 +127,25 @@ public class SemesterFragment extends Fragment {
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null)
+            courseAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         // Prevent glitch on adding menu to the toolbar. Only show a particular semester's course
         // count, if that is the only visible semester
         setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
+        initializeActionMode();
         super.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        choiceMode.onSaveInstanceState(outState);
     }
 
     @Override
@@ -135,8 +167,36 @@ public class SemesterFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    // Sets the visibility of the action mode and initialize its former content, if only the
+    // containing semester formerly activated it.
+    private void initializeActionMode() {
+        if (isActionModeVisible) {
+            Log.d(getClass().getSimpleName(), "Action was visible");
+            if (actionMode == null) {
+                Log.d(getClass().getSimpleName(), "Restarting action mode");
+                actionMode = context.startSupportActionMode(this);
+            }
+
+            int choiceCount = courseAdapter.getCheckedCoursesCount();
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+
+        } else {
+            Log.d(getClass().getSimpleName(), "Action was not started");
+            if (actionMode != null) {
+                Log.d(getClass().getSimpleName(), "Finishing action mode");
+                actionMode.finish();
+                actionMode = null;
+            }
+        }
+    }
+
     private int getPagePosition() {
         return getArguments().getInt(ARG_POSITION);
+    }
+
+    public String getSemester() {
+        if (getPagePosition() == 0) return SchoolDatabase.FIRST_SEMESTER;
+        else return SchoolDatabase.SECOND_SEMESTER;
     }
 
     private void dismissProgressbar(ProgressBar progressBar, boolean isEmpty) {
@@ -154,6 +214,15 @@ public class SemesterFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doListUpdate(MultiUpdateMessage mUpdate) {
+        if (mUpdate.getType() == MultiUpdateMessage.EventType.REMOVE
+                || mUpdate.getType() == MultiUpdateMessage.EventType.INSERT) {
+            if (actionMode != null)
+                actionMode.finish(); // require onDestroyActionMode() callback
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void doCourseUpdate(UpdateMessage update) {
         int pagePosition = update.getPagePosition();
         // Because an update message would be posted to the two existing fragments in viewpager,
@@ -161,7 +230,7 @@ public class SemesterFragment extends Fragment {
         // which was specified by the currently checked radio button in the add-course dialog
         if (getPagePosition() == pagePosition) {
             CourseModel data = update.getData();
-            int changePos = data.getChronologicalOrder();
+            int changePos = data.getId();
 
             if (update.getType() == UpdateMessage.EventType.NEW) {
                 cList.add(changePos, data);
@@ -191,15 +260,47 @@ public class SemesterFragment extends Fragment {
         itemCount.setText(String.valueOf(countEvent.getSize()));
     }
 
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        context.getMenuInflater().inflate(R.menu.deleted_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        courseAdapter.deleteMultiple();
+        return true;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        actionMode = null;
+        courseAdapter.getChoiceMode().clearChoices();
+        courseAdapter.notifyDataSetChanged();
+    }
+
     // For the vertical scrolling list (timetable)
     public class CourseAdapter extends RecyclerView.Adapter<CourseRowHolder> {
+        private final ChoiceMode choiceMode;
+        private boolean multiSelectionEnabled;
+        private CourseRowHolder rowHolder;
+
+        public CourseAdapter(ChoiceMode choiceMode) {
+            super();
+            this.choiceMode = choiceMode;
+        }
 
         @NonNull
         @Override
         public CourseRowHolder onCreateViewHolder(@NonNull ViewGroup container, int ignored) {
             View view = getLayoutInflater().inflate(R.layout.course_list_row, container,
                                                     false);
-            return new CourseRowHolder(view);
+            return (rowHolder = new CourseRowHolder(view));
         }
 
         @Override
@@ -215,7 +316,7 @@ public class SemesterFragment extends Fragment {
         @Override
         public long getItemId(int position) {
             if (cList.size() > 0) {
-                return ((CourseModel) cList.get(position)).getId();
+                return cList.get(position).getId();
             }
             return -2;
         }
@@ -223,6 +324,118 @@ public class SemesterFragment extends Fragment {
         @Override
         public int getItemCount() {
             return cList.size();
+        }
+
+        /**
+         * @return the choice-mode that was set
+         */
+        public ChoiceMode getChoiceMode() {
+            return choiceMode;
+        }
+
+        /**
+         * @return the status of the multi-selection mode.
+         */
+        public boolean isMultiSelectionEnabled() {
+            return multiSelectionEnabled;
+        }
+
+        /**
+         * Sets the multi-selection mode status
+         *
+         * @param status the status of the multi-selection mode
+         */
+        public void setMultiSelectionEnabled(boolean status) {
+            this.multiSelectionEnabled = status;
+        }
+
+        /**
+         * @param adapterPosition the position of the view holder
+         * @return the checked status of a particular image int he list
+         */
+        public boolean isChecked(int adapterPosition) {
+            return choiceMode.isChecked(adapterPosition);
+        }
+
+        /**
+         * @return the number of images that was selected
+         */
+        public int getCheckedCoursesCount() {
+            return choiceMode.getCheckedChoiceCount();
+        }
+
+        /**
+         * @return an array of the checked indices as seen by database
+         */
+        public Integer[] getCheckedCoursesPositions() {
+            return choiceMode.getCheckedChoicePositions();
+        }
+
+        /**
+         * @return an array of the checked indices
+         */
+        private Integer[] getCheckedCoursesIndices() {
+            return choiceMode.getCheckedChoicesIndices();
+        }
+
+        /**
+         * @param position           the position where the change occurred
+         * @param state              the new state of the change
+         * @param assignmentPosition the position of the assignment in database.
+         */
+        public void onChecked(int position, boolean state, int assignmentPosition) {
+            boolean isFinished = false;
+
+            DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+            dmcm.setChecked(position, state, assignmentPosition);
+
+            int choiceCount = dmcm.getCheckedChoiceCount();
+
+            if (actionMode == null && choiceCount == 1) {
+                AppCompatActivity context = (AppCompatActivity) getActivity();
+                if (isAdded()) {
+                    actionMode = context.startSupportActionMode(SemesterFragment.this);
+                    isActionModeVisible = true;
+                }
+            } else if (actionMode != null && choiceCount == 0) {
+                actionMode.finish();
+                isFinished = true;
+                isActionModeVisible = false;
+                choiceMode.clearChoices(); // added this, might be solution to my problem
+            }
+
+            if (!isFinished && actionMode != null)
+                actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+        }
+
+        /**
+         * Deletes multiple images from the list of selected items
+         */
+        public void deleteMultiple() {
+            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwnerContext(getActivity())
+                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                    .setAdapter(courseAdapter)
+                    .setModelList(cList)
+                    .setCourseSemester(SemesterFragment.this.getSemester())
+                    .setMetadataType(RequestParams.MetaDataType.COURSE)
+                    .setItemIndices(getCheckedCoursesIndices())
+                    .setPositionIndices(getCheckedCoursesPositions())
+                    .setDataClass(CourseModel.class);
+
+            runner.setRequestParams(builder.getParams())
+                    .runRequest(MULTIPLE_DELETE_REQUEST);
+
+            final int count = getCheckedCoursesCount();
+            Snackbar snackbar
+                    = Snackbar.make(coordinator,
+                                    count + " Course" + (count > 1 ? "s" : "") + " Deleted",
+                                    Snackbar.LENGTH_LONG);
+
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.setAction("UNDO", v -> runner.undoRequest());
+            snackbar.show();
         }
     }
 }

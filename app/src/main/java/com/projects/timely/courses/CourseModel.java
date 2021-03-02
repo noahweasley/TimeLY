@@ -8,7 +8,6 @@ public class CourseModel extends DataModel {
     private int credits;
     private String courseCode;
     private String courseName;
-    private int id;
     private int chronologicalOrder;
 
     public CourseModel(String semester, int credits, String courseCode, String courseName) {
@@ -19,6 +18,14 @@ public class CourseModel extends DataModel {
     }
 
     public CourseModel() {
+    }
+
+    public int getChronologicalOrder() {
+        return chronologicalOrder;
+    }
+
+    public void setChronologicalOrder(int chronologicalOrder) {
+        this.chronologicalOrder = chronologicalOrder;
     }
 
     public int getCredits() {
@@ -43,22 +50,6 @@ public class CourseModel extends DataModel {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
-    }
-
-    public int getChronologicalOrder() {
-        return chronologicalOrder;
-    }
-
-    public void setChronologicalOrder(int chronologicalOrder) {
-        this.chronologicalOrder = chronologicalOrder;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getSemester() {

@@ -7,7 +7,6 @@ import com.projects.timely.core.DataMultiChoiceMode;
 /**
  * The selection choice mode of the list
  */
-@SuppressWarnings("unused")
 public interface ChoiceMode {
 
     /* Choice mode constants */

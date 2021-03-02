@@ -22,6 +22,7 @@ import com.projects.timely.assignment.UriUpdateEvent;
 import com.projects.timely.assignment.ViewImagesActivity;
 import com.projects.timely.courses.CourseModel;
 import com.projects.timely.courses.CourseRowHolder;
+import com.projects.timely.courses.SemesterFragment;
 import com.projects.timely.exam.ExamModel;
 import com.projects.timely.exam.ExamRowHolder;
 import com.projects.timely.scheduled.ScheduledTaskNotifier;
@@ -51,7 +52,7 @@ import static com.projects.timely.core.Globals.playAlertTone;
  * Thread to handle all delete requests
  */
 public class RequestRunner extends Thread {
-    private static final int WAIT_TIME = 3000;
+    public static final int WAIT_TIME = 3000;
     private static boolean deleteRequestDiscarded;
     private String request;
     private SchoolDatabase database;
@@ -90,6 +91,7 @@ public class RequestRunner extends Thread {
                     doAssignmentDelete();
                     break;
                 case AssignmentFragment.MULTIPLE_DELETE_REQUEST:
+                case SemesterFragment.MULTIPLE_DELETE_REQUEST:
                     doDataModelMultiDelete();
                     break;
                 case DaysFragment.DELETE_REQUEST:
@@ -122,7 +124,7 @@ public class RequestRunner extends Thread {
     }
 
     private void doDataModelMultiDelete() {
-        List<DataModel> assignmentCache = new ArrayList<>();
+        List<DataModel> dataCache = new ArrayList<>();
 
         Integer[] itemIndices = params.getItemIndices();
         // Reverse array of indices in reversed order, because if the indices are not reversed,
@@ -130,7 +132,7 @@ public class RequestRunner extends Thread {
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
         for (int i : itemIndices) {
-            assignmentCache.add(params.getModelList().remove(i));
+            dataCache.add(params.getModelList().remove(i));
         }
 
         // Update UI
@@ -139,8 +141,8 @@ public class RequestRunner extends Thread {
         try {
             Thread.sleep(WAIT_TIME);
         } catch (InterruptedException exc) {
-            for (int x = 0; x < assignmentCache.size(); x++) {
-                params.getModelList().add(itemIndices[x], assignmentCache.get(x));
+            for (int x = 0; x < dataCache.size(); x++) {
+                params.getModelList().add(itemIndices[x], dataCache.get(x));
             }
 
             // Update UI
@@ -149,8 +151,27 @@ public class RequestRunner extends Thread {
 
         if (!deleteRequestDiscarded) {
             // Delete the data model from SchoolDatabase using their positions
+            String[] metadata;
+
+            switch (params.getMetadataType()){
+                case NO_DATA:
+                    metadata = new String[]{null, null, null, null};
+                    break;
+                case COURSE:
+                    metadata = new String[]{params.getSemester(), null, null, null};
+                    break;
+                case EXAM:
+                    metadata = new String[]{null, params.getExamWeek(), null, null};
+                    break;
+                case TIMETABLE:
+                    metadata = new String[]{null, null, params.getTimetable(), null};
+                    break;
+                default:
+                    throw new IllegalArgumentException("Specified metadata is invalid");
+            }
+
             boolean isDeleted = database.deleteDataModels(params.getDataClass(),
-                                                          null,
+                                                          metadata,
                                                           params.getPositionIndices());
 
             if (isDeleted) {
@@ -633,6 +654,16 @@ public class RequestRunner extends Thread {
 
         public Builder setPositionIndices(Integer[] positionIndices){
             requestParams.setPositionIndices(positionIndices);
+            return this;
+        }
+
+        public Builder setCourseSemester(String semester) {
+            requestParams.setSemester(semester);
+            return this;
+        }
+
+        public Builder setMetadataType(RequestParams.MetaDataType metadataType){
+            requestParams.setMetadataType(metadataType);
             return this;
         }
     }

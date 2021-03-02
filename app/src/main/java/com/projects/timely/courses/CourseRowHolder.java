@@ -43,14 +43,18 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
     private View lIndicator;
     private ImageButton btn_deleteCourse;
     private TextView tv_courseCode, tv_courseName, tv_credits;
+    private View v_selectionOverlay;
+    private boolean isChecked;
+    private CourseModel course;
 
-    public CourseRowHolder(@NonNull View itemView) {
-        super(itemView);
-        lIndicator = itemView.findViewById(R.id.left_indicator);
-        btn_deleteCourse = itemView.findViewById(R.id.delete_course);
-        tv_courseName = itemView.findViewById(R.id.course_name);
-        tv_courseCode = itemView.findViewById(R.id.course_code);
-        tv_credits = itemView.findViewById(R.id.credits);
+    public CourseRowHolder(@NonNull View rootView) {
+        super(rootView);
+        lIndicator = rootView.findViewById(R.id.left_indicator);
+        btn_deleteCourse = rootView.findViewById(R.id.delete_course);
+        tv_courseName = rootView.findViewById(R.id.course_name);
+        tv_courseCode = rootView.findViewById(R.id.course_code);
+        tv_credits = rootView.findViewById(R.id.credits);
+        v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
 
         btn_deleteCourse.setOnClickListener(v -> {
             RequestRunner runner = RequestRunner.getInstance();
@@ -69,6 +73,31 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
             bar.show();
         });
 
+        // Multi - Select actions
+        rootView.setOnLongClickListener(l -> {
+            trySelectCourse();
+            courseAdapter.setMultiSelectionEnabled(
+                    !courseAdapter.isMultiSelectionEnabled()
+                            || courseAdapter.getCheckedCoursesCount() != 0);
+            return true;
+        });
+
+        rootView.setOnClickListener(c -> {
+            if (courseAdapter.isMultiSelectionEnabled()) {
+                trySelectCourse();
+                if (courseAdapter.getCheckedCoursesCount() == 0) {
+                    courseAdapter.setMultiSelectionEnabled(false);
+                }
+            }
+        });
+
+    }
+
+    private void trySelectCourse() {
+        isChecked = !isChecked;
+        v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        courseAdapter.onChecked(getAbsoluteAdapterPosition(),
+                                       isChecked, course.getPosition());
     }
 
     public CourseRowHolder with(SemesterFragment user,
@@ -79,7 +108,8 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
         this.user = user;
         this.courseAdapter = courseAdapter;
         this.cList = cList;
-        this.cModel = (CourseModel) cList.get(position);
+        this.course = (CourseModel) cList.get(getAbsoluteAdapterPosition());
+        this.cModel = (CourseModel) cList.get(getAbsoluteAdapterPosition());
         this.coordinator = coordinator;
         this.position = position;
         return this;
@@ -94,5 +124,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
         String credit = String.valueOf(cModel.getCredits() + " credits");
         tv_credits.setText(credit);
         TooltipCompat.setTooltipText(btn_deleteCourse, "Delete");
+        isChecked = courseAdapter.isChecked(getAbsoluteAdapterPosition());
+        v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
     }
 }

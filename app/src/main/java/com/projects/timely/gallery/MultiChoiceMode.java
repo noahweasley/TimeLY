@@ -11,8 +11,12 @@ import java.util.List;
  */
 public class MultiChoiceMode implements ChoiceMode {
     public static final String ARG_STATES = "Choice states";
-    private final List<Integer> indices = new ArrayList<>();
-    private final List<Integer> indices2 = new ArrayList<>();
+    public static final String ARG_POS_INDICES = "Position indices";
+    public static final String ARG_ID_INDICES = "Id Indices";
+
+    // States to be saved
+    private List<Integer> indices = new ArrayList<>();
+    private List<Integer> indices2 = new ArrayList<>();
     private ParcelableSparseBooleanArray sbarr = new ParcelableSparseBooleanArray();
 
     @Override
@@ -34,11 +38,15 @@ public class MultiChoiceMode implements ChoiceMode {
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         bundle.putParcelable(ARG_STATES, sbarr);
+        bundle.putIntegerArrayList(ARG_ID_INDICES, (ArrayList<Integer>) indices);
+        bundle.putIntegerArrayList(ARG_POS_INDICES, (ArrayList<Integer>) indices2);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle bundle) {
         sbarr = bundle.getParcelable(ARG_STATES);
+        indices = bundle.getIntegerArrayList(ARG_ID_INDICES);
+        indices2 = bundle.getIntegerArrayList(ARG_POS_INDICES);
     }
 
     @Override

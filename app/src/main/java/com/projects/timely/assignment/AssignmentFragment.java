@@ -21,6 +21,7 @@ import com.projects.timely.core.DataMultiChoiceMode;
 import com.projects.timely.core.EmptyListEvent;
 import com.projects.timely.core.MultiUpdateMessage;
 import com.projects.timely.core.PositionMessageEvent;
+import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.gallery.ChoiceMode;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
@@ -63,6 +65,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     private RecyclerView rV_assignmentList;
     private ActionMode actionMode;
     private AppCompatActivity context;
+    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
 
     public static AssignmentFragment newInstance() {
         return new AssignmentFragment();
@@ -72,7 +75,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = new SchoolDatabase(getContext());
-        assignmentAdapter = new AssignmentRowAdapter(ChoiceMode.DATA_MULTI_SELECT);
+        assignmentAdapter = new AssignmentRowAdapter(choiceMode);
         aList = new ArrayList<>();
         EventBus.getDefault().register(this);
     }
@@ -160,9 +163,22 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null)
+            assignmentAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Assignments");
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        choiceMode.onSaveInstanceState(outState);
     }
 
     @Override
@@ -436,6 +452,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                     .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
                     .setAdapter(assignmentAdapter)
                     .setModelList(aList)
+                    .setMetadataType(RequestParams.MetaDataType.NO_DATA)
                     .setItemIndices(getCheckedAssignmentsIndices())
                     .setPositionIndices(getCheckedAssignmentPositions())
                     .setDataClass(AssignmentModel.class);

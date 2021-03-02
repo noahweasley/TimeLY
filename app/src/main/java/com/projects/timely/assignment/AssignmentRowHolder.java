@@ -220,11 +220,12 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     private void trySelectAssignment() {
         isChecked = !isChecked;
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        assignmentRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, assignment.getPosition());
+        assignmentRowAdapter.onChecked(getAbsoluteAdapterPosition(),
+                                       isChecked, assignment.getPosition());
     }
 
     private void doDeleteAssignment() {
-        // post a delete request on the assignment database
+        // post a delete request on the assignment database7
         RequestRunner runner = RequestRunner.getInstance();
         Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted",
                                           Snackbar.LENGTH_LONG)
