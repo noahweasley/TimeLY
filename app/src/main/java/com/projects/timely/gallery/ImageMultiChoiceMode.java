@@ -2,6 +2,8 @@ package com.projects.timely.gallery;
 
 import android.net.Uri;
 
+import com.projects.timely.core.MultiChoiceMode;
+
 import java.util.ArrayList;
 import java.util.List;
 

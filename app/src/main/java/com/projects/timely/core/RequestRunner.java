@@ -642,7 +642,7 @@ public class RequestRunner extends Thread {
             return this;
         }
 
-        public Builder setDataClass(Class<? extends DataModel> dataClass) {
+        public Builder setDataProvider(Class<? extends DataModel> dataClass) {
             requestParams.setDataClass(dataClass);
             return this;
         }

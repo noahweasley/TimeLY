@@ -1,7 +1,5 @@
 package com.projects.timely.core;
 
-import com.projects.timely.gallery.MultiChoiceMode;
-
 import java.util.ArrayList;
 import java.util.List;
 

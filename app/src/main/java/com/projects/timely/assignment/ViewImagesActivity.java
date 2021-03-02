@@ -19,7 +19,7 @@ import com.projects.timely.core.EmptyListEvent;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.core.ThreadUtils;
-import com.projects.timely.gallery.ChoiceMode;
+import com.projects.timely.core.ChoiceMode;
 import com.projects.timely.gallery.ImageDirectory;
 import com.projects.timely.gallery.ImageListRowHolder;
 import com.projects.timely.gallery.ImageMultiChoiceMode;

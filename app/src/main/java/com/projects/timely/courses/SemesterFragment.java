@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
+import com.projects.timely.core.ChoiceMode;
 import com.projects.timely.core.CountEvent;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.DataMultiChoiceMode;
@@ -23,7 +24,6 @@ import com.projects.timely.core.MultiUpdateMessage;
 import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.gallery.ChoiceMode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,7 +59,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     private CourseAdapter courseAdapter;
     private AppCompatActivity context;
     private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
-    private boolean isActionModeVisible;
+    private static final boolean[] actionModeStats = new boolean[2];
 
     public static SemesterFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -170,10 +170,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     // Sets the visibility of the action mode and initialize its former content, if only the
     // containing semester formerly activated it.
     private void initializeActionMode() {
-        if (isActionModeVisible) {
-            Log.d(getClass().getSimpleName(), "Action was visible");
+        if (actionModeStats[getPagePosition()]) {
             if (actionMode == null) {
-                Log.d(getClass().getSimpleName(), "Restarting action mode");
                 actionMode = context.startSupportActionMode(this);
             }
 
@@ -181,9 +179,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
             actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
 
         } else {
-            Log.d(getClass().getSimpleName(), "Action was not started");
             if (actionMode != null) {
-                Log.d(getClass().getSimpleName(), "Finishing action mode");
                 actionMode.finish();
                 actionMode = null;
             }
@@ -262,6 +258,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        Log.d(getClass().getSimpleName(), "Setting " + getPagePosition() + " to true");
+        actionModeStats[getPagePosition()] = true;
         context.getMenuInflater().inflate(R.menu.deleted_items, menu);
         return true;
     }
@@ -280,6 +278,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         actionMode = null;
+        Log.d(getClass().getSimpleName(), "Setting " + getPagePosition() + " to false");
+        actionModeStats[getPagePosition()] = false;
         courseAdapter.getChoiceMode().clearChoices();
         courseAdapter.notifyDataSetChanged();
     }
@@ -395,12 +395,10 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                 AppCompatActivity context = (AppCompatActivity) getActivity();
                 if (isAdded()) {
                     actionMode = context.startSupportActionMode(SemesterFragment.this);
-                    isActionModeVisible = true;
                 }
             } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
                 isFinished = true;
-                isActionModeVisible = false;
                 choiceMode.clearChoices(); // added this, might be solution to my problem
             }
 
@@ -422,7 +420,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                     .setMetadataType(RequestParams.MetaDataType.COURSE)
                     .setItemIndices(getCheckedCoursesIndices())
                     .setPositionIndices(getCheckedCoursesPositions())
-                    .setDataClass(CourseModel.class);
+                    .setDataProvider(CourseModel.class);
 
             runner.setRequestParams(builder.getParams())
                     .runRequest(MULTIPLE_DELETE_REQUEST);

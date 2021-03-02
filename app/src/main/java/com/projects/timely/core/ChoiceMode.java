@@ -1,8 +1,8 @@
-package com.projects.timely.gallery;
+package com.projects.timely.core;
 
 import android.os.Bundle;
 
-import com.projects.timely.core.DataMultiChoiceMode;
+import com.projects.timely.gallery.ImageMultiChoiceMode;
 
 /**
  * The selection choice mode of the list

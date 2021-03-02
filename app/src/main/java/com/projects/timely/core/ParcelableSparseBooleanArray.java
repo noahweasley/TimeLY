@@ -1,4 +1,4 @@
-package com.projects.timely.gallery;
+package com.projects.timely.core;
 
 import android.os.Parcel;
 import android.os.Parcelable;

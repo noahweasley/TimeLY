@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import com.projects.timely.R;
 import com.projects.timely.assignment.AddAssignmentActivity;
 import com.projects.timely.assignment.ViewImagesActivity;
+import com.projects.timely.core.ChoiceMode;
 
 import java.util.ArrayList;
 import java.util.List;

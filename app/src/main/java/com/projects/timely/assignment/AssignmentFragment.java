@@ -24,7 +24,7 @@ import com.projects.timely.core.PositionMessageEvent;
 import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.gallery.ChoiceMode;
+import com.projects.timely.core.ChoiceMode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -455,7 +455,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                     .setMetadataType(RequestParams.MetaDataType.NO_DATA)
                     .setItemIndices(getCheckedAssignmentsIndices())
                     .setPositionIndices(getCheckedAssignmentPositions())
-                    .setDataClass(AssignmentModel.class);
+                    .setDataProvider(AssignmentModel.class);
 
             runner.setRequestParams(builder.getParams())
                     .runRequest(MULTIPLE_DELETE_REQUEST);
