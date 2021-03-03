@@ -1769,20 +1769,21 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @return true if the data were deleted
      */
     public synchronized boolean deleteDataModels(Class<?> clazz, String[] metadata,
-                                                 Integer[] itemIndices) {
+                                                 Integer[] itemIndices,
+                                                 List<DataModel> data) {
         boolean resultCode;
 
         switch (clazz.getName()) {
-            case Constants.ASSIGNMENTS:
+            case Constants.ASSIGNMENT_MODEL:
                 resultCode = deleteMultipleAssignments(itemIndices);
                 break;
-            case Constants.COURSES:
-                resultCode = deleteMultipleCourses(metadata[0], itemIndices);
+            case Constants.COURSE_MODEL:
+                resultCode = deleteMultipleCourses(metadata[0], itemIndices, data);
                 break;
-            case Constants.EXAMS:
+            case Constants.EXAM_MODEL:
                 resultCode = deleteMultipleExams(metadata[1], itemIndices);
                 break;
-            case Constants.TIMETABLE:
+            case Constants.TIMETABLE_MODEL:
                 resultCode = deleteMultipleTimetables(metadata[2], itemIndices);
                 break;
             default:
@@ -1822,15 +1823,24 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     }
 
     // Delete courses at specified indices
-    private boolean deleteMultipleCourses(String SEMESTER, Integer[] itemIndices) {
+    private boolean deleteMultipleCourses(String SEMESTER, Integer[] itemIndices,
+                                          List<DataModel> data) {
         // Transform all indices from Integers to Strings
         if (SEMESTER == null) throw new IllegalArgumentException("Semester can't be null");
 
         boolean resCode = false;
         SQLiteDatabase db = getWritableDatabase();
 
-        for (int index : itemIndices) {
-            resCode |= db.delete(SEMESTER, COLUMN_ID + " = " + index, null) != -1;
+        for (int x = 0; x < itemIndices.length; x++) {
+            CourseModel model = (CourseModel) data.get(x);
+            resCode |=
+                    db.delete(SEMESTER, COLUMN_ID + " = " + itemIndices[x], null) != -1
+                            &
+                            // delete registered course entry also
+                            db.delete(REGISTERED_COURSES,
+                                      COLUMN_FULL_COURSE_NAME + " = '"
+                                              + sanitizeEntry(model.getCourseName()) + "'",
+                                      null) != -1;
         }
 
         return resCode;

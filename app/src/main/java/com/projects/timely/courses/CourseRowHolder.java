@@ -90,14 +90,13 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
-
     }
 
     private void trySelectCourse() {
         isChecked = !isChecked;
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         courseAdapter.onChecked(getAbsoluteAdapterPosition(),
-                                       isChecked, course.getPosition());
+                                isChecked, course.getId());
     }
 
     public CourseRowHolder with(SemesterFragment user,

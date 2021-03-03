@@ -172,7 +172,8 @@ public class RequestRunner extends Thread {
 
             boolean isDeleted = database.deleteDataModels(params.getDataClass(),
                                                           metadata,
-                                                          params.getPositionIndices());
+                                                          params.getPositionIndices(),
+                                                          dataCache);
 
             if (isDeleted) {
                 playAlertTone(appContext, Alert.DELETE);

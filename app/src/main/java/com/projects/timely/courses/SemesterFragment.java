@@ -3,7 +3,6 @@ package com.projects.timely.courses;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,7 +58,6 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     private CourseAdapter courseAdapter;
     private AppCompatActivity context;
     private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
-    private static final boolean[] actionModeStats = new boolean[2];
 
     public static SemesterFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -138,7 +136,10 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         // Prevent glitch on adding menu to the toolbar. Only show a particular semester's course
         // count, if that is the only visible semester
         setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
-        initializeActionMode();
+        // could have used ViewPager.OnPageChangedListener to increase code readability, but
+        // this was used to reduce code size as there is not much work to be done when ViewPager
+        // scrolls
+        if(actionMode != null) actionMode.finish();
         super.onResume();
     }
 
@@ -165,25 +166,6 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         TooltipCompat.setTooltipText(itemCount, "Courses Count");
 
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    // Sets the visibility of the action mode and initialize its former content, if only the
-    // containing semester formerly activated it.
-    private void initializeActionMode() {
-        if (actionModeStats[getPagePosition()]) {
-            if (actionMode == null) {
-                actionMode = context.startSupportActionMode(this);
-            }
-
-            int choiceCount = courseAdapter.getCheckedCoursesCount();
-            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
-
-        } else {
-            if (actionMode != null) {
-                actionMode.finish();
-                actionMode = null;
-            }
-        }
     }
 
     private int getPagePosition() {
@@ -258,8 +240,6 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        Log.d(getClass().getSimpleName(), "Setting " + getPagePosition() + " to true");
-        actionModeStats[getPagePosition()] = true;
         context.getMenuInflater().inflate(R.menu.deleted_items, menu);
         return true;
     }
@@ -278,8 +258,6 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         actionMode = null;
-        Log.d(getClass().getSimpleName(), "Setting " + getPagePosition() + " to false");
-        actionModeStats[getPagePosition()] = false;
         courseAdapter.getChoiceMode().clearChoices();
         courseAdapter.notifyDataSetChanged();
     }
@@ -298,18 +276,13 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         @NonNull
         @Override
         public CourseRowHolder onCreateViewHolder(@NonNull ViewGroup container, int ignored) {
-            View view = getLayoutInflater().inflate(R.layout.course_list_row, container,
-                                                    false);
+            View view = getLayoutInflater().inflate(R.layout.course_list_row, container, false);
             return (rowHolder = new CourseRowHolder(view));
         }
 
         @Override
         public void onBindViewHolder(@NonNull CourseRowHolder viewHolder, int position) {
-            viewHolder.with(SemesterFragment.this,
-                            courseAdapter,
-                            cList,
-                            coordinator,
-                            position)
+            viewHolder.with(SemesterFragment.this, courseAdapter, cList, coordinator, position)
                     .bindView();
         }
 

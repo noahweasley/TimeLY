@@ -9,6 +9,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.projects.timely.R;
 import com.projects.timely.alarms.AlarmHolderFragment;
 import com.projects.timely.assignment.AssignmentFragment;
+import com.projects.timely.core.Constants;
 import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.courses.CoursesFragment;
 import com.projects.timely.exam.ExamFragment;
@@ -133,9 +134,7 @@ public class MainActivity
             case R.id.whats_new:
 
                 break;
-            case R.id.backup:
-                break;
-            case R.id.restore:
+            case R.id.generate:
                 break;
             case R.id.report:
                 break;
@@ -154,22 +153,22 @@ public class MainActivity
         final String reqAction = intent.getAction();
         if (reqAction != null) {
             switch (reqAction) {
-                case "com.projects.timely.assignments":
+                case Constants.ASSIGNMENT:
                     loadFragment(AssignmentFragment.newInstance());
                     break;
-                case "com.projects.timely.scheduled":
+                case Constants.SCHEDULED_TIMETABLE:
                     loadFragment(ScheduledTimetableFragment.newInstance());
                     break;
-                case "com.projects.timely.timetable":
+                case Constants.TIMETABLE:
                     loadFragment(TimetableFragment.newInstance());
                     break;
-                case "com.projects.timely.exams":
+                case Constants.EXAM:
                     loadFragment(ExamFragment.newInstance());
                     break;
-                case "com.projects.timely.courses":
+                case Constants.COURSE:
                     loadFragment(CoursesFragment.newInstance());
                     break;
-                case "com.projects.timely.alarms":
+                case Constants.ALARM:
                     loadFragment(AlarmHolderFragment.newInstance());
                     break;
             }
