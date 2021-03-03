@@ -1836,7 +1836,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             resCode |=
                     db.delete(SEMESTER, COLUMN_ID + " = " + itemIndices[x], null) != -1
                             &
-                            // delete registered course entry also
+                            // delete registered course entry
                             db.delete(REGISTERED_COURSES,
                                       COLUMN_FULL_COURSE_NAME + " = '"
                                               + sanitizeEntry(model.getCourseName()) + "'",
