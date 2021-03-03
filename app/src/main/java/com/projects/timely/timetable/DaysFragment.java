@@ -2,21 +2,30 @@ package com.projects.timely.timetable;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
+import com.projects.timely.core.ChoiceMode;
 import com.projects.timely.core.CountEvent;
 import com.projects.timely.core.DataModel;
+import com.projects.timely.core.DataMultiChoiceMode;
 import com.projects.timely.core.EmptyListEvent;
+import com.projects.timely.core.MultiUpdateMessage;
+import com.projects.timely.core.RequestParams;
+import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.courses.CourseModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,9 +34,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -39,8 +51,9 @@ import static com.projects.timely.core.Globals.DAYS;
 import static com.projects.timely.core.Globals.runBackgroundTask;
 
 @SuppressWarnings({"ConstantConditions"})
-public class DaysFragment extends Fragment {
+public class DaysFragment extends Fragment implements ActionMode.Callback {
     public static final String DELETE_REQUEST = "delete timetable";
+    public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Timetable";
     public static final String ARG_POSITION = "List position";
     public static final String ARG_CLASS = "Current class";
     static final String ARG_PAGE_POSITION = "Tab position";
@@ -56,6 +69,7 @@ public class DaysFragment extends Fragment {
     private RecyclerView rV_timetable;
     private SchoolDatabase database;
     private CoordinatorLayout coordinator;
+    private ActionMode actionMode;
 
     public static DaysFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -71,7 +85,7 @@ public class DaysFragment extends Fragment {
         super.onCreate(savedInstanceState);
         tList = new ArrayList<>();
         database = new SchoolDatabase(getContext());
-        rowAdapter = new TimeTableRowAdapter();
+        rowAdapter = new TimeTableRowAdapter(ChoiceMode.DATA_MULTI_SELECT);
         EventBus.getDefault().register(this);
     }
 
@@ -134,6 +148,10 @@ public class DaysFragment extends Fragment {
     @Override
     public void onResume() {
         setHasOptionsMenu(true);
+        // could have used ViewPager.OnPageChangedListener to increase code readability, but
+        // this was used to reduce code size as there is not much work to be done when ViewPager
+        // scrolls
+        if(actionMode != null) actionMode.finish();
         super.onResume();
     }
 
@@ -154,6 +172,21 @@ public class DaysFragment extends Fragment {
         TooltipCompat.setTooltipText(itemCount, "Timetable Count");
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doListUpdate(MultiUpdateMessage mUpdate) {
+        if (mUpdate.getType() == MultiUpdateMessage.EventType.REMOVE
+                || mUpdate.getType() == MultiUpdateMessage.EventType.INSERT) {
+            if (actionMode != null)
+                actionMode.finish(); // require onDestroyActionMode() callback
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doEmptyCourseUpdate(EmptyListEvent o) {
+        noTimetableView.setVisibility(tList.isEmpty() ? View.VISIBLE : View.GONE);
+        rV_timetable.setVisibility(tList.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -211,13 +244,46 @@ public class DaysFragment extends Fragment {
                 .setDuration(1000);
     }
 
-    private class TimeTableRowAdapter extends RecyclerView.Adapter<TimeTableRowHolder> {
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        AppCompatActivity context = (AppCompatActivity) getActivity();
+        context.getMenuInflater().inflate(R.menu.deleted_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        rowAdapter.deleteMultiple();
+        return true;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        actionMode = null;
+        rowAdapter.getChoiceMode().clearChoices();
+        rowAdapter.notifyDataSetChanged();
+    }
+
+    public class TimeTableRowAdapter extends RecyclerView.Adapter<TimeTableRowHolder> {
+        private final ChoiceMode choiceMode;
+        private boolean multiSelectionEnabled;
+        private TimeTableRowHolder rowHolder;
+
+        public TimeTableRowAdapter(ChoiceMode choiceMode) {
+            super();
+            this.choiceMode = choiceMode;
+        }
 
         @NonNull
         @Override
         public TimeTableRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int ignored) {
             View view = getLayoutInflater().inflate(R.layout.timetable_row, viewGroup, false);
-            return new TimeTableRowHolder(view);
+            return (rowHolder = new TimeTableRowHolder(view));
         }
 
         @Override
@@ -235,6 +301,116 @@ public class DaysFragment extends Fragment {
         @Override
         public int getItemCount() {
             return tList.size();
+        }
+
+        /**
+         * @return the choice-mode that was set
+         */
+        public ChoiceMode getChoiceMode() {
+            return choiceMode;
+        }
+
+        /**
+         * @return the status of the multi-selection mode.
+         */
+        public boolean isMultiSelectionEnabled() {
+            return multiSelectionEnabled;
+        }
+
+        /**
+         * Sets the multi-selection mode status
+         *
+         * @param status the status of the multi-selection mode
+         */
+        public void setMultiSelectionEnabled(boolean status) {
+            this.multiSelectionEnabled = status;
+        }
+
+        /**
+         * @param adapterPosition the position of the view holder
+         * @return the checked status of a particular image int he list
+         */
+        public boolean isChecked(int adapterPosition) {
+            return choiceMode.isChecked(adapterPosition);
+        }
+
+        /**
+         * @return the number of images that was selected
+         */
+        public int getCheckedCoursesCount() {
+            return choiceMode.getCheckedChoiceCount();
+        }
+
+        /**
+         * @return an array of the checked indices as seen by database
+         */
+        public Integer[] getCheckedCoursesPositions() {
+            return choiceMode.getCheckedChoicePositions();
+        }
+
+        /**
+         * @return an array of the checked indices
+         */
+        private Integer[] getCheckedCoursesIndices() {
+            return choiceMode.getCheckedChoicesIndices();
+        }
+
+        /**
+         * @param position           the position where the change occurred
+         * @param state              the new state of the change
+         * @param assignmentPosition the position of the assignment in database.
+         */
+        public void onChecked(int position, boolean state, int assignmentPosition) {
+            boolean isFinished = false;
+
+            DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+            dmcm.setChecked(position, state, assignmentPosition);
+
+            int choiceCount = dmcm.getCheckedChoiceCount();
+
+            if (actionMode == null && choiceCount == 1) {
+                AppCompatActivity context = (AppCompatActivity) getActivity();
+                if (isAdded()) {
+                    actionMode = context.startSupportActionMode(DaysFragment.this);
+                }
+            } else if (actionMode != null && choiceCount == 0) {
+                actionMode.finish();
+                isFinished = true;
+                choiceMode.clearChoices(); // added this, might be solution to my problem
+            }
+
+            if (!isFinished && actionMode != null)
+                actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+        }
+
+        /**
+         * Deletes multiple images from the list of selected items
+         */
+        public void deleteMultiple() {
+            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwnerContext(getActivity())
+                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                    .setAdapter(rowAdapter)
+                    .setModelList(tList)
+                    .setTimetable(getCurrentTableDay())
+                    .setMetadataType(RequestParams.MetaDataType.COURSE)
+                    .setItemIndices(getCheckedCoursesIndices())
+                    .setPositionIndices(getCheckedCoursesPositions())
+                    .setDataProvider(CourseModel.class);
+
+            runner.setRequestParams(builder.getParams())
+                    .runRequest(MULTIPLE_DELETE_REQUEST);
+
+            final int count = getCheckedCoursesCount();
+            Snackbar snackbar
+                    = Snackbar.make(coordinator,
+                                    count + " Course" + (count > 1 ? "s" : "") + " Deleted",
+                                    Snackbar.LENGTH_LONG);
+
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.setAction("UNDO", v -> runner.undoRequest());
+            snackbar.show();
         }
     }
 }

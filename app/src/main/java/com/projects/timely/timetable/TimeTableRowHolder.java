@@ -6,18 +6,19 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
+import com.projects.timely.VerticalTextView;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.error.ErrorDialog;
 import com.projects.timely.scheduled.AddScheduledDialog;
 import com.projects.timely.scheduled.ScheduledTimetableFragment;
-import com.projects.timely.VerticalTextView;
 
 import java.util.List;
 import java.util.Locale;
@@ -64,20 +65,23 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
     private RecyclerView.Adapter<?> rowAdapter;
     private CoordinatorLayout coordinator;
     private String timetable;
+    private ViewGroup v_selectionOverlay;
+    private boolean isChecked;
 
-    public TimeTableRowHolder(@NonNull View itemView) {
-        super(itemView);
-        lIndicator = itemView.findViewById(R.id.indicator);
-        rIndicator = itemView.findViewById(R.id.indicator2);
-        tv_time = itemView.findViewById(R.id.time);
-        tv_course = itemView.findViewById(R.id.subject);
-        tv_lecturer = itemView.findViewById(R.id.name);
-        atv_FCN = itemView.findViewById(R.id.full_course_name);
-        img_schImp = itemView.findViewById(R.id.schedule_importance);
-        tv_day = itemView.findViewById(R.id.vertical_text);
+    public TimeTableRowHolder(@NonNull View rootView) {
+        super(rootView);
+        lIndicator = rootView.findViewById(R.id.indicator);
+        rIndicator = rootView.findViewById(R.id.indicator2);
+        tv_time = rootView.findViewById(R.id.time);
+        tv_course = rootView.findViewById(R.id.subject);
+        tv_lecturer = rootView.findViewById(R.id.name);
+        atv_FCN = rootView.findViewById(R.id.full_course_name);
+        img_schImp = rootView.findViewById(R.id.schedule_importance);
+        tv_day = rootView.findViewById(R.id.vertical_text);
+        v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
 
-        ImageButton btn_delete = itemView.findViewById(R.id.deleteButton);
-        ImageButton btn_edit = itemView.findViewById(R.id.editButton);
+        ImageButton btn_delete = rootView.findViewById(R.id.deleteButton);
+        ImageButton btn_edit = rootView.findViewById(R.id.editButton);
 
         btn_delete.setOnClickListener(v -> {
             String deleteRequest
@@ -122,6 +126,48 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                 new ErrorDialog().showErrorMessage(user.getContext(), builder.build());
             }
         });
+
+        // Multi - Select actions
+        rootView.setOnLongClickListener(l -> {
+            if (user instanceof DaysFragment) {
+
+                DaysFragment.TimeTableRowAdapter rowAdapter
+                        = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+                trySelectTimetable();
+                rowAdapter.setMultiSelectionEnabled(
+                        !rowAdapter.isMultiSelectionEnabled()
+                                || rowAdapter.getCheckedCoursesCount() != 0);
+            }
+            return true;
+        });
+
+        rootView.setOnClickListener(c -> {
+            if (user instanceof DaysFragment) {
+                DaysFragment.TimeTableRowAdapter rowAdapter
+                        = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+
+                if (rowAdapter.isMultiSelectionEnabled()) {
+                    trySelectTimetable();
+                    if (rowAdapter.getCheckedCoursesCount() == 0) {
+                        rowAdapter.setMultiSelectionEnabled(false);
+                    }
+                }
+            }
+        });
+    }
+
+    private void trySelectTimetable() {
+        if (user instanceof DaysFragment) {
+            DaysFragment.TimeTableRowAdapter rowAdapter
+                    = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+
+            TimetableModel timetableModel = (TimetableModel) tList.get(
+                    getAbsoluteAdapterPosition());
+            isChecked = !isChecked;
+            v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            rowAdapter.onChecked(getAbsoluteAdapterPosition(),
+                                 isChecked, timetableModel.getId());
+        }
     }
 
     public TimeTableRowHolder with(Fragment user,
@@ -180,6 +226,13 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             end = convertTime(tModel.getEndTime(), context);
         }
         tv_time.setText(String.format("%s - %s", start, end));
+
+        if (user instanceof DaysFragment) {
+            DaysFragment.TimeTableRowAdapter rowAdapter
+                    = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+            isChecked = rowAdapter.isChecked(getAbsoluteAdapterPosition());
+            v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        }
     }
 
     // Convert to 12 hours clock format
