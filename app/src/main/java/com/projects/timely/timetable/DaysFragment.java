@@ -62,6 +62,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
     static final String ARG_TO_EDIT = "Editor stat";
     static final String ARG_DATA = "Timetable Data";
     static final String ARG_CHRONOLOGY = "Chronological Order";
+    private static ActionMode actionMode;
     private TimeTableRowAdapter rowAdapter;
     private List<DataModel> tList;
     private TextView itemCount;
@@ -69,7 +70,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
     private RecyclerView rV_timetable;
     private SchoolDatabase database;
     private CoordinatorLayout coordinator;
-    private ActionMode actionMode;
+    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
 
     public static DaysFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -85,7 +86,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
         super.onCreate(savedInstanceState);
         tList = new ArrayList<>();
         database = new SchoolDatabase(getContext());
-        rowAdapter = new TimeTableRowAdapter(ChoiceMode.DATA_MULTI_SELECT);
+        rowAdapter = new TimeTableRowAdapter(choiceMode);
         EventBus.getDefault().register(this);
     }
 
@@ -146,13 +147,26 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null)
+            rowAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         setHasOptionsMenu(true);
         // could have used ViewPager.OnPageChangedListener to increase code readability, but
         // this was used to reduce code size as there is not much work to be done when ViewPager
         // scrolls
-        if(actionMode != null) actionMode.finish();
+        if (actionMode != null) actionMode.finish();
         super.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        choiceMode.onSaveInstanceState(outState);
     }
 
     @Override

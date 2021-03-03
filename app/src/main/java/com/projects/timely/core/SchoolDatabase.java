@@ -1368,7 +1368,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public boolean isTimeTableAbsent(String timetable, TimetableModel model) {
         SQLiteDatabase db = getReadableDatabase();
         String search_stmt1 = "SELECT * FROM " + timetable
-                + " WHERE " + COLUMN_START_TIME + " = '" + model.getStartTime();
+                + " WHERE " + COLUMN_START_TIME + " = '" + model.getStartTime() + "'";
         String search_stmt2 = "SELECT * FROM " + timetable
                 + " WHERE " + COLUMN_START_TIME + " = '" + model.getStartTime() + "'"
                 + "  AND " + COLUMN_DAY + " = '" + model.getDay() + "'";

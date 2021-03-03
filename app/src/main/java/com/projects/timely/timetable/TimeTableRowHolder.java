@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,7 +64,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
     private RecyclerView.Adapter<?> rowAdapter;
     private CoordinatorLayout coordinator;
     private String timetable;
-    private ViewGroup v_selectionOverlay;
+    private View v_selectionOverlay;
     private boolean isChecked;
 
     public TimeTableRowHolder(@NonNull View rootView) {
