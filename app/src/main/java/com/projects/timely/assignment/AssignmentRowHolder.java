@@ -2,6 +2,7 @@ package com.projects.timely.assignment;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import com.projects.timely.R;
 import com.projects.timely.assignment.AssignmentFragment.AssignmentRowAdapter;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.RequestRunner;
+import com.projects.timely.error.ErrorDialog;
 
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
             android.R.color.holo_red_light
     };
     private final View header;
-    private final TextView title, describe_text, date, lecturerName, course;
+    private final TextView tv_title, tv_description, tv_date, tv_lecturerName, tv_course;
     private final ImageView img_stats;
     private AssignmentModel assignment;
     private FragmentActivity mActivity;
@@ -58,13 +60,13 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     public AssignmentRowHolder(@NonNull View rootView) {
         super(rootView);
         header = rootView.findViewById(R.id.header);
-        title = rootView.findViewById(R.id.title);
-        describe_text = rootView.findViewById(R.id.describe_text);
+        tv_title = rootView.findViewById(R.id.title);
+        tv_description = rootView.findViewById(R.id.describe_text);
         ImageButton editButton = rootView.findViewById(R.id.editButton);
         ImageButton deleteButton = rootView.findViewById(R.id.deleteButton);
-        lecturerName = rootView.findViewById(R.id.lecturerName);
-        course = rootView.findViewById(R.id.course);
-        date = rootView.findViewById(R.id.deadline);
+        tv_lecturerName = rootView.findViewById(R.id.lecturerName);
+        tv_course = rootView.findViewById(R.id.course);
+        tv_date = rootView.findViewById(R.id.deadline);
         v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
         ImageButton viewButton = rootView.findViewById(R.id.viewButton);
         img_stats = rootView.findViewById(R.id.stats);
@@ -81,15 +83,27 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
                 v -> mActivity.startActivity(new Intent(mActivity, AddAssignmentActivity.class)
                                                      .putExtra(LECTURER_NAME,
                                                                assignment.getLecturerName())
-                                                     .putExtra(TITLE, title.getText().toString())
+                                                     .putExtra(TITLE, tv_title.getText().toString())
                                                      .putExtra(DESCRIPTION,
-                                                               describe_text.getText().toString())
-                                                     .putExtra(DATE, date.getText().toString())
+                                                               tv_description.getText().toString())
+                                                     .putExtra(DATE, tv_date.getText().toString())
                                                      .putExtra(COURSE_CODE,
-                                                               course.getText().toString())
+                                                               tv_course.getText().toString())
                                                      .putExtra(EDIT_POS,
                                                                getAbsoluteAdapterPosition())
                                                      .setAction("Edit")));
+
+        tv_course.setOnClickListener(v -> {
+            if (TextUtils.equals(tv_course.getText(), "NIL")) {
+                ErrorDialog.Builder builder = new ErrorDialog.Builder();
+                builder.setDialogMessage("No matching course code found")
+                        .setShowSuggestions(true)
+                        .setSuggestionCount(2)
+                        .setSuggestion2("After registration, use that course title")
+                        .setSuggestion1("Register courses first");
+                new ErrorDialog().showErrorMessage(mActivity, builder.build());
+            }
+        });
 
         // Multi - Select actions
         rootView.setOnLongClickListener(l -> {
@@ -124,14 +138,14 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindView() {
-        title.setText(assignment.getTitle());
-        describe_text.setText(assignment.getDescription());
-        date.setText(assignment.getDate());
-        course.setText(assignment.getCourseCode());
+        tv_title.setText(assignment.getTitle());
+        tv_description.setText(assignment.getDescription());
+        tv_date.setText(assignment.getDate());
+        tv_course.setText(assignment.getCourseCode());
         int rowColor = COLORS[getAbsoluteAdapterPosition() % COLORS.length];
         header.setBackgroundColor(ContextCompat.getColor(mActivity, rowColor));
         // Truncate lecturer's name based on length
-        lecturerName.setText(truncateName(assignment.getLecturerName()));
+        tv_lecturerName.setText(truncateName(assignment.getLecturerName()));
 
         img_stats.setImageResource(assignment.isSubmitted() ? R.drawable.ic_round_check_circle
                                                             : R.drawable.ic_pending);
@@ -161,7 +175,8 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
         int iMax = nameTokens.length - 1;
 
-        int nameLimit = lecturerName.getContext().getResources().getInteger(R.integer.name_limit);
+        int nameLimit = tv_lecturerName.getContext().getResources().getInteger(
+                R.integer.name_limit);
         if (fullName.length() > nameLimit && nameTokens.length > 2) {
             if (startsWithAny(titles, fullName)) {
                 // Append the title if there is one
