@@ -9,4 +9,9 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/update"
+        android:title="@string/check_update"
+        app:showAsAction="never"/>
+
 </menu>

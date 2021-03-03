@@ -92,7 +92,7 @@ public class DaysFragment extends Fragment {
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
         runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-            tList = database.getTimeTableData(getCurrentTable());
+            tList = database.getTimeTableData(getCurrentTableDay());
             // Sort according to classes' start time
             Collections.sort(tList, (t1, t2) -> {
                 TimetableModel tm1 = ((TimetableModel) t1);
@@ -199,7 +199,7 @@ public class DaysFragment extends Fragment {
     }
 
     // Get current timetable from the current selected tab
-    private String getCurrentTable() {
+    private String getCurrentTableDay() {
         return DAYS[getArguments().getInt(ARG_POSITION)];
     }
 
@@ -222,12 +222,8 @@ public class DaysFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull TimeTableRowHolder timeTableRowHolder, int position) {
-            timeTableRowHolder.with(DaysFragment.this,
-                                    rowAdapter,
-                                    tList,
-                                    coordinator,
-                                    position)
-                    .setTimetableDay(getCurrentTable())
+            timeTableRowHolder.with(DaysFragment.this, rowAdapter, tList, coordinator, position)
+                    .setTimetableDay(getCurrentTableDay())
                     .bindView();
         }
 

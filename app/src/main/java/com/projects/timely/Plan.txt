@@ -4,6 +4,7 @@
 * Image Viewer (slider) for image picker.
 * Schedule alarm notifier for exam timetable.
 * Check if all alarm notifiers are working correctly.
+* Check if alarms works for all normal situations possible (Phone off/on, idle mode, etc)
 * Finish up alarm scheduler.
 * Fix bugs and bad practices in AlarmTimeFragment and the TimeChangeDetector thread.
 * Build alternate UI to add data to all list.
