@@ -53,12 +53,12 @@ import static com.projects.timely.core.Globals.playAlertTone;
  */
 public class RequestRunner extends Thread {
     public static final int WAIT_TIME = 3000;
+    public static final String TAG = "SchoolDatabase";
     private static boolean deleteRequestDiscarded;
     private String request;
     private SchoolDatabase database;
     private RequestParams params;
     private Context appContext;
-    public static final String TAG = "SchoolDatabase";
 
     /**
      * Use {@link RequestRunner#getInstance()} instead, to get the instance of the
@@ -92,6 +92,8 @@ public class RequestRunner extends Thread {
                     break;
                 case AssignmentFragment.MULTIPLE_DELETE_REQUEST:
                 case SemesterFragment.MULTIPLE_DELETE_REQUEST:
+                case ScheduledTimetableFragment.MULTIPLE_DELETE_REQUEST:
+                case DaysFragment.MULTIPLE_DELETE_REQUEST:
                     doDataModelMultiDelete();
                     break;
                 case DaysFragment.DELETE_REQUEST:
@@ -153,7 +155,7 @@ public class RequestRunner extends Thread {
             // Delete the data model from SchoolDatabase using their positions
             String[] metadata;
 
-            switch (params.getMetadataType()){
+            switch (params.getMetadataType()) {
                 case NO_DATA:
                     metadata = new String[]{null, null, null, null};
                     break;
@@ -179,7 +181,7 @@ public class RequestRunner extends Thread {
                 playAlertTone(appContext, Alert.DELETE);
                 if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
-            }else {
+            } else {
                 Log.d(TAG, "Couldn't delete data models");
             }
         }
@@ -653,7 +655,7 @@ public class RequestRunner extends Thread {
             return this;
         }
 
-        public Builder setPositionIndices(Integer[] positionIndices){
+        public Builder setPositionIndices(Integer[] positionIndices) {
             requestParams.setPositionIndices(positionIndices);
             return this;
         }
@@ -663,7 +665,7 @@ public class RequestRunner extends Thread {
             return this;
         }
 
-        public Builder setMetadataType(RequestParams.MetaDataType metadataType){
+        public Builder setMetadataType(RequestParams.MetaDataType metadataType) {
             requestParams.setMetadataType(metadataType);
             return this;
         }

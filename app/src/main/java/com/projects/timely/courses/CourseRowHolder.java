@@ -114,6 +114,12 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    // Disable click on views not allowed to fire View#onClick while in multi-selection mode
+    private void tryDisableViews(boolean disable) {
+        btn_deleteCourse.setFocusable(!disable);
+        btn_deleteCourse.setEnabled(!disable);
+    }
+
     public void bindView() {
         Context context = user.getContext();
         int rowColor = COLORS[getAbsoluteAdapterPosition() % COLORS.length];
@@ -125,5 +131,6 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
         TooltipCompat.setTooltipText(btn_deleteCourse, "Delete");
         isChecked = courseAdapter.isChecked(getAbsoluteAdapterPosition());
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        tryDisableViews(courseAdapter.isMultiSelectionEnabled());
     }
 }

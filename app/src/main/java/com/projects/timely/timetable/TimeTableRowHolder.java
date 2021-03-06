@@ -57,6 +57,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
     private final ImageView img_schImp;
     private final View lIndicator, rIndicator;
     private final TextView tv_time, tv_course, tv_lecturer, atv_FCN;
+    private final ImageButton btn_delete, btn_edit;
     private final VerticalTextView tv_day;
     private Fragment user;
     private TimetableModel tModel;
@@ -79,8 +80,8 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
         tv_day = rootView.findViewById(R.id.vertical_text);
         v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
 
-        ImageButton btn_delete = rootView.findViewById(R.id.deleteButton);
-        ImageButton btn_edit = rootView.findViewById(R.id.editButton);
+        btn_delete = rootView.findViewById(R.id.deleteButton);
+        btn_edit = rootView.findViewById(R.id.editButton);
 
         btn_delete.setOnClickListener(v -> {
             String deleteRequest
@@ -132,11 +133,19 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
                 DaysFragment.TimeTableRowAdapter rowAdapter
                         = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
-                trySelectTimetable();
                 rowAdapter.setMultiSelectionEnabled(
                         !rowAdapter.isMultiSelectionEnabled()
                                 || rowAdapter.getCheckedCoursesCount() != 0);
+                trySelectTimetable();
+            } else {
+                ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
+                        = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
+                rowAdapter.setMultiSelectionEnabled(
+                        !rowAdapter.isMultiSelectionEnabled()
+                                || rowAdapter.getCheckedCoursesCount() != 0);
+                trySelectTimetable();
             }
+
             return true;
         });
 
@@ -144,6 +153,16 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             if (user instanceof DaysFragment) {
                 DaysFragment.TimeTableRowAdapter rowAdapter
                         = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+
+                if (rowAdapter.isMultiSelectionEnabled()) {
+                    trySelectTimetable();
+                    if (rowAdapter.getCheckedCoursesCount() == 0) {
+                        rowAdapter.setMultiSelectionEnabled(false);
+                    }
+                }
+            } else {
+                ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
+                        = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
 
                 if (rowAdapter.isMultiSelectionEnabled()) {
                     trySelectTimetable();
@@ -166,7 +185,25 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             rowAdapter.onChecked(getAbsoluteAdapterPosition(),
                                  isChecked, timetableModel.getId());
+        } else {
+            ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
+                    = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
+
+            TimetableModel timetableModel = (TimetableModel) tList.get(
+                    getAbsoluteAdapterPosition());
+            isChecked = !isChecked;
+            v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            rowAdapter.onChecked(getAbsoluteAdapterPosition(),
+                                 isChecked, timetableModel.getId());
         }
+    }
+
+    // Disable click on views not allowed to fire View#onClick while in multi-selection mode
+    private void tryDisableViews(boolean disable) {
+        btn_edit.setFocusable(!disable);
+        btn_edit.setEnabled(!disable);
+        btn_delete.setFocusable(!disable);
+        btn_delete.setEnabled(!disable);
     }
 
     public TimeTableRowHolder with(Fragment user,
@@ -231,6 +268,13 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                     = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
             isChecked = rowAdapter.isChecked(getAbsoluteAdapterPosition());
             v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            tryDisableViews(rowAdapter.isMultiSelectionEnabled());
+        } else {
+            ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
+                    = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
+            isChecked = rowAdapter.isChecked(getAbsoluteAdapterPosition());
+            v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            tryDisableViews(rowAdapter.isMultiSelectionEnabled());
         }
     }
 

@@ -25,7 +25,6 @@ import com.projects.timely.core.MultiUpdateMessage;
 import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.courses.CourseModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -387,6 +386,9 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
                 if (isAdded()) {
                     actionMode = context.startSupportActionMode(DaysFragment.this);
                 }
+
+                notifyDataSetChanged(); // Used to deactivate all the button's in the list
+
             } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
                 isFinished = true;
@@ -408,10 +410,10 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
                     .setAdapter(rowAdapter)
                     .setModelList(tList)
                     .setTimetable(getCurrentTableDay())
-                    .setMetadataType(RequestParams.MetaDataType.COURSE)
+                    .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
                     .setItemIndices(getCheckedCoursesIndices())
                     .setPositionIndices(getCheckedCoursesPositions())
-                    .setDataProvider(CourseModel.class);
+                    .setDataProvider(TimetableModel.class);
 
             runner.setRequestParams(builder.getParams())
                     .runRequest(MULTIPLE_DELETE_REQUEST);
