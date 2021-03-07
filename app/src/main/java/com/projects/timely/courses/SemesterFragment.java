@@ -173,7 +173,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     }
 
     public String getSemester() {
-        if (getPagePosition() == 0) return SchoolDatabase.FIRST_SEMESTER;
+        if (getPagePosition() == 0)
+            return SchoolDatabase.FIRST_SEMESTER;
         else return SchoolDatabase.SECOND_SEMESTER;
     }
 
@@ -282,7 +283,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
         @Override
         public void onBindViewHolder(@NonNull CourseRowHolder viewHolder, int position) {
-            viewHolder.with(SemesterFragment.this, courseAdapter, cList, coordinator, position)
+            viewHolder.with(SemesterFragment.this, courseAdapter, cList, coordinator)
                     .bindView();
         }
 
@@ -369,6 +370,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                 if (isAdded()) {
                     actionMode = context.startSupportActionMode(SemesterFragment.this);
                 }
+                notifyDataSetChanged();
             } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
                 isFinished = true;

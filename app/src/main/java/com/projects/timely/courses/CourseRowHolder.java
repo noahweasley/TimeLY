@@ -20,7 +20,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-@SuppressWarnings("all")
 public class CourseRowHolder extends RecyclerView.ViewHolder {
     public static final String DELETE_REQUEST = "Delete course";
     private static final int[] COLORS = {
@@ -39,7 +38,6 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
     private List<DataModel> cList;
     private CourseModel cModel;
     private CoordinatorLayout coordinator;
-    private int position;
     private View lIndicator;
     private ImageButton btn_deleteCourse;
     private TextView tv_courseCode, tv_courseName, tv_credits;
@@ -101,15 +99,13 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
     public CourseRowHolder with(SemesterFragment user,
                                 CourseAdapter courseAdapter,
                                 List<DataModel> cList,
-                                CoordinatorLayout coordinator,
-                                int position) {
+                                CoordinatorLayout coordinator) {
         this.user = user;
         this.courseAdapter = courseAdapter;
         this.cList = cList;
         this.course = (CourseModel) cList.get(getAbsoluteAdapterPosition());
         this.cModel = (CourseModel) cList.get(getAbsoluteAdapterPosition());
         this.coordinator = coordinator;
-        this.position = position;
         return this;
     }
 
@@ -125,7 +121,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
         lIndicator.setBackgroundColor(ContextCompat.getColor(context, rowColor));
         tv_courseCode.setText(cModel.getCourseCode());
         tv_courseName.setText(cModel.getCourseName());
-        String credit = String.valueOf(cModel.getCredits() + " credits");
+        String credit = cModel.getCredits() + " credits";
         tv_credits.setText(credit);
         TooltipCompat.setTooltipText(btn_deleteCourse, "Delete");
         isChecked = courseAdapter.isChecked(getAbsoluteAdapterPosition());

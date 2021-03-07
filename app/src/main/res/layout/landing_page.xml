@@ -9,11 +9,11 @@
 
     <!-- The text to be displayed on top of the image -->
 	<TextView
-		android:id = "@+id/no_task_text"
+		android:id = "@+id/greeting_text"
 		android:layout_width = "wrap_content"
 		android:layout_height = "wrap_content"
 		android:fontFamily = "@font/righteous"
-		android:text = "@string/no_events_yet"
+		android:text = "Good Morning"
 		android:textColor = "@color/colorPrimaryDark"
 		android:textSize = "@dimen/no_task_text_size"
 		external:layout_constraintBottom_toBottomOf = "parent"

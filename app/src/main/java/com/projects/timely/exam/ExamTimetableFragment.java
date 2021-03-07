@@ -321,7 +321,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
         /**
          * Sets the multi-selection mode status
          *
-         * @param status the statu+s of the multi-selection mode
+         * @param status the status of the multi-selection mode
          */
         public void setMultiSelectionEnabled(boolean status) {
             this.multiSelectionEnabled = status;
@@ -374,6 +374,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                 if (isAdded()) {
                     actionMode = context.startSupportActionMode(ExamTimetableFragment.this);
                 }
+                notifyDataSetChanged();
             } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
                 isFinished = true;

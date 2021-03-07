@@ -1,6 +1,6 @@
 * Long click pick activation for image picker. (done)
 * Multi-Selection for all list. (done)
-* Image Viewer (slider) for assignments attached images.
+* Image Viewer (slider) for assignments attached images(ongoing).
 * Image Viewer (slider) for image picker.
 * De-activate all notifiers of all item list on multi-select
 * Check if all alarm notifiers are working correctly.
