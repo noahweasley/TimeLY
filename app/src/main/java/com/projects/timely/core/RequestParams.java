@@ -26,7 +26,6 @@ public class RequestParams {
     private Integer[] positionIndices;
     private String semester;
     private MetaDataType metadataType;
-    private String examWeek;
 
     public String getSemester() {
         return semester;
@@ -146,14 +145,6 @@ public class RequestParams {
 
     public void setPositionIndices(Integer[] positionIndices) {
         this.positionIndices = positionIndices;
-    }
-
-    public String getExamWeek() {
-        return examWeek;
-    }
-
-    public void setExamWeek(String examWeek) {
-        this.examWeek = examWeek;
     }
 
     public enum MetaDataType {

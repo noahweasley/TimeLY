@@ -1,20 +1,28 @@
 package com.projects.timely.exam;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
+import com.projects.timely.core.ChoiceMode;
 import com.projects.timely.core.CountEvent;
 import com.projects.timely.core.DataModel;
+import com.projects.timely.core.DataMultiChoiceMode;
 import com.projects.timely.core.EmptyListEvent;
+import com.projects.timely.core.MultiUpdateMessage;
+import com.projects.timely.core.RequestParams;
+import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,9 +32,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -36,8 +47,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.projects.timely.core.Globals.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
-public class ExamTimetableFragment extends Fragment {
+public class ExamTimetableFragment extends Fragment implements ActionMode.Callback {
     public static final String ARG_POSITION = "page position";
+    public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple exams";
+    private static ActionMode actionMode;
     private List<DataModel> eList;
     private SchoolDatabase database;
     private TextView itemCount;
@@ -45,6 +58,8 @@ public class ExamTimetableFragment extends Fragment {
     private RecyclerView rv_Exams;
     private CoordinatorLayout coordinator;
     private ExamRowAdapter examRowAdapter;
+    private AppCompatActivity context;
+    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
 
     public static ExamTimetableFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -58,7 +73,7 @@ public class ExamTimetableFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         eList = new ArrayList<>();
-        examRowAdapter = new ExamRowAdapter();
+        examRowAdapter = new ExamRowAdapter(choiceMode);
         database = new SchoolDatabase(getContext());
         EventBus.getDefault().register(this);
     }
@@ -72,6 +87,7 @@ public class ExamTimetableFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        context = (AppCompatActivity) getActivity();
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
         int position = getArguments().getInt(ARG_POSITION);
         runBackgroundTask(() -> {
@@ -118,11 +134,28 @@ public class ExamTimetableFragment extends Fragment {
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null)
+            examRowAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
-        // Prevent glitch on adding menu to the toolbar. Only show a particular scheduled exam
-        // count, if that is the only visible exam timetable
+        // Prevent glitch on adding menu to the toolbar. Only show a particular semester's course
+        // count, if that is the only visible semester
         setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
+        // could have used ViewPager.OnPageChangedListener to increase code readability, but
+        // this was used to reduce code size as there is not much work to be done when ViewPager
+        // scrolls
+        if (actionMode != null) actionMode.finish();
         super.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        choiceMode.onSaveInstanceState(outState);
     }
 
     @Override
@@ -148,6 +181,39 @@ public class ExamTimetableFragment extends Fragment {
     public void doEmptyExamsUpdate(EmptyListEvent o) {
         noExamView.setVisibility(eList.isEmpty() ? View.VISIBLE : View.GONE);
         rv_Exams.setVisibility(eList.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doListUpdate(MultiUpdateMessage mUpdate) {
+        if (mUpdate.getType() == MultiUpdateMessage.EventType.REMOVE
+                || mUpdate.getType() == MultiUpdateMessage.EventType.INSERT) {
+            if (actionMode != null)
+                actionMode.finish(); // require onDestroyActionMode() callback
+        }
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        context.getMenuInflater().inflate(R.menu.deleted_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        examRowAdapter.deleteMultiple();
+        return true;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        actionMode = null;
+        examRowAdapter.getChoiceMode().clearChoices();
+        examRowAdapter.notifyDataSetChanged();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -202,28 +268,33 @@ public class ExamTimetableFragment extends Fragment {
     }
 
     class ExamRowAdapter extends RecyclerView.Adapter<ExamRowHolder> {
+        private final ChoiceMode choiceMode;
+        private boolean multiSelectionEnabled;
+        private ExamRowHolder rowHolder;
+
+        public ExamRowAdapter(ChoiceMode choiceMode) {
+            super();
+            this.choiceMode = choiceMode;
+        }
 
         @NonNull
         @Override
         public ExamRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.exam_list_row, parent,
                                                     false);
-            return new ExamRowHolder(view);
+            return (rowHolder = new ExamRowHolder(view));
         }
 
         @Override
         public void onBindViewHolder(@NonNull ExamRowHolder holder, int position) {
-            holder.with(ExamTimetableFragment.this,
-                        examRowAdapter,
-                        eList,
-                        coordinator)
+            holder.with(ExamTimetableFragment.this, examRowAdapter, eList, coordinator)
                     .bindView();
         }
 
         @Override
         public long getItemId(int position) {
             if (eList.size() > 0) {
-                return ((ExamModel) eList.get(position)).getId();
+                return eList.get(position).getId();
             }
             return -2;
         }
@@ -231,6 +302,115 @@ public class ExamTimetableFragment extends Fragment {
         @Override
         public int getItemCount() {
             return eList.size();
+        }
+
+        /**
+         * @return the choice-mode that was set
+         */
+        public ChoiceMode getChoiceMode() {
+            return choiceMode;
+        }
+
+        /**
+         * @return the status of the multi-selection mode.
+         */
+        public boolean isMultiSelectionEnabled() {
+            return multiSelectionEnabled;
+        }
+
+        /**
+         * Sets the multi-selection mode status
+         *
+         * @param status the statu+s of the multi-selection mode
+         */
+        public void setMultiSelectionEnabled(boolean status) {
+            this.multiSelectionEnabled = status;
+        }
+
+        /**
+         * @param adapterPosition the position of the view holder
+         * @return the checked status of a particular image int he list
+         */
+        public boolean isChecked(int adapterPosition) {
+            return choiceMode.isChecked(adapterPosition);
+        }
+
+        /**
+         * @return the number of images that was selected
+         */
+        public int getCheckedCoursesCount() {
+            return choiceMode.getCheckedChoiceCount();
+        }
+
+        /**
+         * @return an array of the checked indices as seen by database
+         */
+        public Integer[] getCheckedExamsPositions() {
+            return choiceMode.getCheckedChoicePositions();
+        }
+
+        /**
+         * @return an array of the checked indices
+         */
+        private Integer[] getCheckedExamsIndices() {
+            return choiceMode.getCheckedChoicesIndices();
+        }
+
+        /**
+         * @param position           the position where the change occurred
+         * @param state              the new state of the change
+         * @param examPosition the position of the assignment in database.
+         */
+        public void onChecked(int position, boolean state, int examPosition) {
+            boolean isFinished = false;
+
+            DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+            dmcm.setChecked(position, state, examPosition);
+
+            int choiceCount = dmcm.getCheckedChoiceCount();
+
+            if (actionMode == null && choiceCount == 1) {
+                AppCompatActivity context = (AppCompatActivity) getActivity();
+                if (isAdded()) {
+                    actionMode = context.startSupportActionMode(ExamTimetableFragment.this);
+                }
+            } else if (actionMode != null && choiceCount == 0) {
+                actionMode.finish();
+                isFinished = true;
+                choiceMode.clearChoices(); // added this, might be solution to my problem
+            }
+
+            if (!isFinished && actionMode != null)
+                actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+        }
+
+        /**
+         * Deletes multiple images from the list of selected items
+         */
+        public void deleteMultiple() {
+            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwnerContext(getActivity())
+                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                    .setAdapter(examRowAdapter)
+                    .setModelList(eList)
+                    .setMetadataType(RequestParams.MetaDataType.EXAM)
+                    .setItemIndices(getCheckedExamsIndices())
+                    .setPositionIndices(getCheckedExamsPositions())
+                    .setDataProvider(ExamModel.class);
+
+            runner.setRequestParams(builder.getParams())
+                    .runRequest(MULTIPLE_DELETE_REQUEST);
+
+            final int count = getCheckedCoursesCount();
+            Snackbar snackbar
+                    = Snackbar.make(coordinator,
+                                    count + " Exam" + (count > 1 ? "s" : "") + " Deleted",
+                                    Snackbar.LENGTH_LONG);
+
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.setAction("UNDO", v -> runner.undoRequest());
+            snackbar.show();
         }
     }
 }

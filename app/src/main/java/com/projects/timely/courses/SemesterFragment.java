@@ -354,13 +354,13 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         /**
          * @param position           the position where the change occurred
          * @param state              the new state of the change
-         * @param assignmentPosition the position of the assignment in database.
+         * @param coursePosition the position of the assignment in database.
          */
-        public void onChecked(int position, boolean state, int assignmentPosition) {
+        public void onChecked(int position, boolean state, int coursePosition) {
             boolean isFinished = false;
 
             DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
-            dmcm.setChecked(position, state, assignmentPosition);
+            dmcm.setChecked(position, state, coursePosition);
 
             int choiceCount = dmcm.getCheckedChoiceCount();
 

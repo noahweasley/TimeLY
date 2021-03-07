@@ -2,7 +2,7 @@
 * Multi-Selection for all list. (Ongoing)
 * Image Viewer (slider) for assignments attached images.
 * Image Viewer (slider) for image picker.
-* Schedule alarm notifier for exam timetable.
+* De-activate all notifiers of all item list on multi-select
 * Check if all alarm notifiers are working correctly.
 * Check if alarms works for all normal situations possible (Phone off/on, idle mode, etc)
 * Finish up alarm scheduler.

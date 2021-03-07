@@ -1,11 +1,10 @@
 package com.projects.timely.exam;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -20,7 +19,6 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.os.ConfigurationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.core.Globals.isUserPreferred24Hours;
@@ -41,33 +39,38 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
     private CoordinatorLayout coordinator;
     private View leftIndicator, rightIndicator;
     private TextView tv_time, tv_courseName, tv_courseCode, tv_examDay;
+    private View v_selectionOverlay;
+    private boolean isChecked;
+    private ExamModel exam;
+    private ImageButton btn_deleteExam;
 
-    public ExamRowHolder(@NonNull View itemView) {
-        super(itemView);
-        leftIndicator = itemView.findViewById(R.id.left_indicator);
-        rightIndicator = itemView.findViewById(R.id.right_indicator);
-        tv_time = itemView.findViewById(R.id.time);
-        tv_courseName = itemView.findViewById(R.id.course_name);
-        tv_courseCode = itemView.findViewById(R.id.course_code);
-        tv_examDay = itemView.findViewById(R.id.exam_day);
+    public ExamRowHolder(@NonNull View rootView) {
+        super(rootView);
+        leftIndicator = rootView.findViewById(R.id.left_indicator);
+        rightIndicator = rootView.findViewById(R.id.right_indicator);
+        tv_time = rootView.findViewById(R.id.time);
+        tv_courseName = rootView.findViewById(R.id.course_name);
+        tv_courseCode = rootView.findViewById(R.id.course_code);
+        tv_examDay = rootView.findViewById(R.id.exam_day);
+        v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
+        btn_deleteExam = rootView.findViewById(R.id.delete_exam);
 
-        itemView.findViewById(R.id.delete_exam)
-                .setOnClickListener(v -> {
-                    RequestRunner runner = RequestRunner.getInstance();
-                    RequestRunner.Builder builder = new RequestRunner.Builder();
-                    builder.setOwnerContext(user.getActivity())
-                            .setModelList(eList)
-                            .setAdapter(examRowAdapter)
-                            .setAdapterPosition(getAbsoluteAdapterPosition());
+        btn_deleteExam.setOnClickListener(v -> {
+            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwnerContext(user.getActivity())
+                    .setModelList(eList)
+                    .setAdapter(examRowAdapter)
+                    .setAdapterPosition(getAbsoluteAdapterPosition());
 
-                    runner.setRequestParams(builder.getParams())
-                            .runRequest(DELETE_REQUEST);
+            runner.setRequestParams(builder.getParams())
+                    .runRequest(DELETE_REQUEST);
 
-                    Snackbar bar = Snackbar.make(coordinator, "Exam Deleted", Snackbar.LENGTH_LONG);
-                    bar.setActionTextColor(Color.YELLOW);
-                    bar.setAction("Undo", x -> runner.undoRequest());
-                    bar.show();
-                });
+            Snackbar bar = Snackbar.make(coordinator, "Exam Deleted", Snackbar.LENGTH_LONG);
+            bar.setActionTextColor(Color.YELLOW);
+            bar.setAction("Undo", x -> runner.undoRequest());
+            bar.show();
+        });
 
         tv_courseCode.setOnClickListener(v -> {
             if (TextUtils.equals(tv_courseCode.getText(), "NIL")) {
@@ -80,6 +83,36 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
                 new ErrorDialog().showErrorMessage(user.getContext(), builder.build());
             }
         });
+
+        // Multi - Select actions
+        rootView.setOnLongClickListener(l -> {
+            trySelectExam();
+            examRowAdapter.setMultiSelectionEnabled(
+                    !examRowAdapter.isMultiSelectionEnabled()
+                            || examRowAdapter.getCheckedCoursesCount() != 0);
+            return true;
+        });
+
+        rootView.setOnClickListener(c -> {
+            if (examRowAdapter.isMultiSelectionEnabled()) {
+                trySelectExam();
+                if (examRowAdapter.getCheckedCoursesCount() == 0) {
+                    examRowAdapter.setMultiSelectionEnabled(false);
+                }
+            }
+        });
+    }
+
+    // Disable click on views not allowed to fire View#onClick while in multi-selection mode
+    private void tryDisableViews(boolean disable) {
+        btn_deleteExam.setFocusable(!disable);
+        btn_deleteExam.setEnabled(!disable);
+    }
+
+    private void trySelectExam() {
+        isChecked = !isChecked;
+        v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        examRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, exam.getId());
     }
 
     public ExamRowHolder with(ExamTimetableFragment user,
@@ -89,47 +122,44 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
         this.user = user;
         this.examRowAdapter = examRowAdapter;
         this.eList = eList;
+        this.exam = (ExamModel) eList.get(getAbsoluteAdapterPosition());
         this.coordinator = coordinator;
         return this;
     }
 
     void bindView() {
-        ExamModel examModel = (ExamModel) eList.get( getAbsoluteAdapterPosition());
         Context context = user.getContext();
 
-        int indicatorColor = ContextCompat.getColor(context, COLORS_2[examModel.getDayIndex()]);
+        int indicatorColor = ContextCompat.getColor(context, COLORS_2[exam.getDayIndex()]);
         leftIndicator.setBackgroundColor(indicatorColor);
         rightIndicator.setBackgroundColor(indicatorColor);
-        tv_courseCode.setText(examModel.getCourseCode());
-        tv_courseName.setText(examModel.getCourseName());
-        tv_examDay.setText(examModel.getDay());
+        tv_courseCode.setText(exam.getCourseCode());
+        tv_courseName.setText(exam.getCourseName());
+        tv_examDay.setText(exam.getDay());
 
         String start, end;
         if (isUserPreferred24Hours(context)) {
-            start = examModel.getStart();
-            end = examModel.getEnd();
+            start = exam.getStart();
+            end = exam.getEnd();
         } else {
-            start = convertTime(examModel.getStart(), context);
-            end = convertTime(examModel.getEnd(), context);
+            start = convertTime(exam.getStart());
+            end = convertTime(exam.getEnd());
         }
         tv_time.setText(String.format("%s - %s", start, end));
+        tryDisableViews(examRowAdapter.isMultiSelectionEnabled());
     }
 
     // Convert to 12 hours clock format
-    private String convertTime(String time, Context context) {
+    private String convertTime(String time) {
         try {
             String[] st = time.split(":");
             int hh = Integer.parseInt(st[0]);
             int mm = Integer.parseInt(st[1]);
 
-            Resources aResources = context.getResources();
-            Configuration config = aResources.getConfiguration();
-            Locale locale = ConfigurationCompat.getLocales(config).get(0);
-
-            String formattedHrAM = String.format(locale, "%02d", (hh == 0 ? 12 : hh));
-            String formattedHrPM = String.format(locale, "%02d", (hh % 12 == 0 ? 12 : hh % 12));
-            String formattedMinAM = String.format(locale, "%02d", mm) + " AM";
-            String formattedMinPM = String.format(locale, "%02d", mm) + " PM";
+            String formattedHrAM = String.format(Locale.US, "%02d", (hh == 0 ? 12 : hh));
+            String formattedHrPM = String.format(Locale.US, "%02d", (hh % 12 == 0 ? 12 : hh % 12));
+            String formattedMinAM = String.format(Locale.US, "%02d", mm) + " AM";
+            String formattedMinPM = String.format(Locale.US, "%02d", mm) + " PM";
 
             boolean isAM = hh >= 0 && hh < 12;
 

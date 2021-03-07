@@ -25,6 +25,7 @@ import com.projects.timely.courses.CourseRowHolder;
 import com.projects.timely.courses.SemesterFragment;
 import com.projects.timely.exam.ExamModel;
 import com.projects.timely.exam.ExamRowHolder;
+import com.projects.timely.exam.ExamTimetableFragment;
 import com.projects.timely.scheduled.ScheduledTaskNotifier;
 import com.projects.timely.scheduled.ScheduledTimetableFragment;
 import com.projects.timely.timetable.DaysFragment;
@@ -79,49 +80,49 @@ public class RequestRunner extends Thread {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         database = new SchoolDatabase(params.getActivity());
         deleteTaskRunning = true;
-        performDeleteOperation();
+        try {
+            performDeleteOperation();
+        } finally {
+            database.close();
+        }
         deleteRequestDiscarded = false;
         deleteTaskRunning = false;
     }
 
-    private void performDeleteOperation() {
-        try {
-            switch (request) {
-                case AssignmentFragment.DELETE_REQUEST:
-                    doAssignmentDelete();
-                    break;
-                case AssignmentFragment.MULTIPLE_DELETE_REQUEST:
-                case SemesterFragment.MULTIPLE_DELETE_REQUEST:
-                case ScheduledTimetableFragment.MULTIPLE_DELETE_REQUEST:
-                case DaysFragment.MULTIPLE_DELETE_REQUEST:
-                    doDataModelMultiDelete();
-                    break;
-                case DaysFragment.DELETE_REQUEST:
-                case ScheduledTimetableFragment.DELETE_REQUEST:
-                    doTimeTableDelete();
-                    break;
-                case AlarmListFragment.DELETE_REQUEST:
-                    doAlarmDelete();
-                    break;
-                case CourseRowHolder.DELETE_REQUEST:
-                    doCourseDelete();
-                    break;
-                case ExamRowHolder.DELETE_REQUEST:
-                    doExamDelete();
-                    break;
-                case ViewImagesActivity.DELETE_REQUEST:
-                    doImageDelete();
-                    break;
-                case ViewImagesActivity.MULTIPLE_DELETE_REQUEST:
-                    doImageMultiDelete();
-                    break;
-                default:
-                    throw new IllegalArgumentException(request + " is invalid");
+    private void performDeleteOperation() throws IllegalArgumentException {
+        switch (request) {
+            case AssignmentFragment.DELETE_REQUEST:
+                doAssignmentDelete();
+                break;
+            case AssignmentFragment.MULTIPLE_DELETE_REQUEST:
+            case SemesterFragment.MULTIPLE_DELETE_REQUEST:
+            case ScheduledTimetableFragment.MULTIPLE_DELETE_REQUEST:
+            case DaysFragment.MULTIPLE_DELETE_REQUEST:
+            case ExamTimetableFragment.MULTIPLE_DELETE_REQUEST:
+                doDataModelMultiDelete();
+                break;
+            case DaysFragment.DELETE_REQUEST:
+            case ScheduledTimetableFragment.DELETE_REQUEST:
+                doTimeTableDelete();
+                break;
+            case AlarmListFragment.DELETE_REQUEST:
+                doAlarmDelete();
+                break;
+            case CourseRowHolder.DELETE_REQUEST:
+                doCourseDelete();
+                break;
+            case ExamRowHolder.DELETE_REQUEST:
+                doExamDelete();
+                break;
+            case ViewImagesActivity.DELETE_REQUEST:
+                doImageDelete();
+                break;
+            case ViewImagesActivity.MULTIPLE_DELETE_REQUEST:
+                doImageMultiDelete();
+                break;
+            default:
+                throw new IllegalArgumentException(request + " is invalid");
 
-            }
-        } finally {
-            // close database no matter even exception was thrown.
-            database.close();
         }
     }
 
@@ -138,6 +139,7 @@ public class RequestRunner extends Thread {
         }
 
         // Update UI
+        EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
         EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.REMOVE));
 
         try {
@@ -148,6 +150,7 @@ public class RequestRunner extends Thread {
             }
 
             // Update UI
+            EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
             EventBus.getDefault().post(new MultiUpdateMessage(MultiUpdateMessage.EventType.INSERT));
         }
 
@@ -163,7 +166,8 @@ public class RequestRunner extends Thread {
                     metadata = new String[]{params.getSemester(), null, null, null};
                     break;
                 case EXAM:
-                    metadata = new String[]{null, params.getExamWeek(), null, null};
+                    ExamModel exam = (ExamModel) params.getModelList();
+                    metadata = new String[]{null, exam.getWeek(), null, null};
                     break;
                 case TIMETABLE:
                     metadata = new String[]{null, null, params.getTimetable(), null};
