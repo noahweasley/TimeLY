@@ -162,7 +162,6 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     }
 
     @Override
-
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);

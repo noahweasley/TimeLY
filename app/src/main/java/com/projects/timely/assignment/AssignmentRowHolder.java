@@ -55,6 +55,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     private List<DataModel> aList;
     private View v_selectionOverlay;
     private boolean isChecked;
+    private ImageButton editButton, deleteButton, viewButton;
 
     @SuppressWarnings({"ClickableViewAccessibility", "ConstantConditions"})
     public AssignmentRowHolder(@NonNull View rootView) {
@@ -62,13 +63,13 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         header = rootView.findViewById(R.id.header);
         tv_title = rootView.findViewById(R.id.title);
         tv_description = rootView.findViewById(R.id.describe_text);
-        ImageButton editButton = rootView.findViewById(R.id.editButton);
-        ImageButton deleteButton = rootView.findViewById(R.id.deleteButton);
+        editButton = rootView.findViewById(R.id.editButton);
+        deleteButton = rootView.findViewById(R.id.deleteButton);
         tv_lecturerName = rootView.findViewById(R.id.lecturerName);
         tv_course = rootView.findViewById(R.id.course);
         tv_date = rootView.findViewById(R.id.deadline);
         v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
-        ImageButton viewButton = rootView.findViewById(R.id.viewButton);
+        viewButton = rootView.findViewById(R.id.viewButton);
         img_stats = rootView.findViewById(R.id.stats);
 
         viewButton.setOnClickListener(v -> {
@@ -152,6 +153,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         TooltipCompat.setTooltipText(img_stats, "Submission status");
         isChecked = assignmentRowAdapter.isChecked(getAbsoluteAdapterPosition());
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        tryDisableViews(assignmentRowAdapter.isMultiSelectionEnabled());
     }
 
     // Determines if there was an added title in the lecturer's name
@@ -230,6 +232,15 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         } else {
             return fullName;
         }
+    }
+
+    private void tryDisableViews(boolean disable) {
+        editButton.setEnabled(!disable);
+        editButton.setFocusable(!disable);
+        viewButton.setEnabled(!disable);
+        viewButton.setFocusable(!disable);
+        deleteButton.setEnabled(!disable);
+        deleteButton.setFocusable(!disable);
     }
 
     private void trySelectAssignment() {

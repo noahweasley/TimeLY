@@ -432,6 +432,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                 AppCompatActivity context = (AppCompatActivity) getActivity();
                 if (isAdded())
                     actionMode = context.startSupportActionMode(AssignmentFragment.this);
+                notifyDataSetChanged();
             } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
                 isFinished = true;
