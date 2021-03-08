@@ -177,8 +177,8 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
         int iMax = nameTokens.length - 1;
 
-        int nameLimit = tv_lecturerName.getContext().getResources().getInteger(
-                R.integer.name_limit);
+        int nameLimit
+                = tv_lecturerName.getContext().getResources().getInteger(R.integer.name_limit);
         if (fullName.length() > nameLimit && nameTokens.length > 2) {
             if (startsWithAny(titles, fullName)) {
                 // Append the title if there is one
