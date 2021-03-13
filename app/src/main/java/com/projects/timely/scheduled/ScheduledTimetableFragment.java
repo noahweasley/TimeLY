@@ -181,6 +181,18 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        tableRowAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        tableRowAdapter.getChoiceMode().onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDetach() {
         EventBus.getDefault().unregister(this);
         database.close();

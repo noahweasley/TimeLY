@@ -121,8 +121,8 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                 builder.setDialogMessage("No matching course code found")
                         .setShowSuggestions(true)
                         .setSuggestionCount(2)
-                        .setSuggestion2("After registration, use that course title")
-                        .setSuggestion1("Register courses first");
+                        .setSuggestion1("Register courses first")
+                        .setSuggestion2("After registration, use that course title");
                 new ErrorDialog().showErrorMessage(user.getContext(), builder.build());
             }
         });

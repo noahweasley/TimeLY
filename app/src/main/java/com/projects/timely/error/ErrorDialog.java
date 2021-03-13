@@ -17,25 +17,13 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-@SuppressWarnings("ALL")
 public class ErrorDialog extends DialogFragment implements View.OnClickListener {
-    private static String dialogMessage;
-    private static boolean showSuggestions;
-    private static String suggestion1;
-    private static String suggestion2;
-    private static int suggestionCount = 2;
-    private ImageButton img_dissmiss;
+    private ErrorMessage err;
 
     public void showErrorMessage(Context context, ErrorMessage errorMessage) {
-        dialogMessage = errorMessage.getDialogMessage();
-        showSuggestions = errorMessage.isShowSuggestions();
-        suggestion1 = errorMessage.getSuggestion1();
-        suggestion2 = errorMessage.getSuggestion2();
-        int count = errorMessage.getSuggestionCount();
-        // Override suggestion count when == 0 and suggestion is shown
-        if (!(showSuggestions && count == 0)) suggestionCount = count;
+        this.err = errorMessage;
         FragmentManager mgr = ((FragmentActivity) context).getSupportFragmentManager();
-        final String TAG = com.projects.timely.error.ErrorDialog.class.getName();
+        final String TAG = ErrorDialog.class.getName();
         show(mgr, TAG);
     }
 
@@ -51,9 +39,10 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
     }
 
     /**
-     * Convenience class to set the <code>ErrorMessage</code> to be used in the
+     * Convenience Builder Class implementation to set the <code>ErrorMessage</code> to be used in the
      * <code>ErrorDialog</code>
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
         private ErrorMessage e = new ErrorMessage();
 
@@ -105,26 +94,26 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
             TextView suggestion2 = findViewById(R.id.suggestion_2);
             TextView suggestionTitle = findViewById(R.id.suggestion_title);
 
-            ((TextView) findViewById(R.id.message)).setText(dialogMessage);
-            img_dissmiss = findViewById(R.id.dismiss2);
-            img_dissmiss.setOnClickListener(ErrorDialog.this);
+            ((TextView) findViewById(R.id.message)).setText(err.getDialogMessage());
+            ImageButton img_dismiss = findViewById(R.id.dismiss2);
+            img_dismiss.setOnClickListener(ErrorDialog.this);
 
-            if (suggestionCount < 1 && showSuggestions)
+            if (err.getSuggestionCount() < 1 && err.isShowSuggestions())
                 throw new IllegalArgumentException("Suggestion count must be >= 1 if suggestions" +
                                                            " are" + " enabled");
-            if (suggestionCount > 2)
-                Log.w(getClass().getSimpleName(), "Ignoring suggestionCount of: " + suggestionCount
-                        + ", 2 suggestions will be shown");
+            if (err.getSuggestionCount() > 2)
+                Log.w(getClass().getSimpleName(), "Ignoring suggestionCount of: "
+                        + err.getSuggestionCount() + ", 2 suggestions will be shown");
 
-            if (showSuggestions) {
+            if (err.isShowSuggestions()) {
                 suggestion1.setVisibility(View.VISIBLE);
                 suggestionTitle.setVisibility(View.VISIBLE);
-                suggestion1.setText(ErrorDialog.suggestion1);
+                suggestion1.setText(err.getSuggestion2());
 
-                if (suggestionCount == 1) suggestion2.setVisibility(View.GONE);
+                if (err.getSuggestionCount() == 1) suggestion2.setVisibility(View.GONE);
                 else {
                     suggestion2.setVisibility(View.VISIBLE);
-                    suggestion2.setText(ErrorDialog.suggestion2);
+                    suggestion2.setText(err.getSuggestion2());
                 }
             } else {
                 suggestionTitle.setVisibility(View.GONE);

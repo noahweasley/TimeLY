@@ -1,11 +1,11 @@
 package com.projects.timely.error;
 
- class ErrorMessage {
+class ErrorMessage {
     private String dialogMessage;
     private boolean showSuggestions;
     private String suggestion1;
     private String suggestion2;
-    private int suggestionCount;
+    private int suggestionCount = 2; // default value
 
     @SuppressWarnings("unused")
     public ErrorMessage(String dialogMessage, boolean showSuggestions, String suggestion1,
@@ -17,11 +17,14 @@ package com.projects.timely.error;
         this.suggestionCount = suggestionCount;
     }
 
-    public ErrorMessage(){
-
+    /**
+     * Consider using {@link ErrorDialog.Builder} methods to set an <code>ErrorMessage</code>
+     * instead. Use this only if you want to set up a Builder class
+     */
+    public ErrorMessage() {
     }
 
-    public  String getDialogMessage() {
+    public String getDialogMessage() {
         return dialogMessage;
     }
 
@@ -29,7 +32,7 @@ package com.projects.timely.error;
         this.dialogMessage = dialogMessage;
     }
 
-    public  boolean isShowSuggestions() {
+    public boolean isShowSuggestions() {
         return showSuggestions;
     }
 
@@ -37,7 +40,8 @@ package com.projects.timely.error;
         this.showSuggestions = showSuggestions;
     }
 
-    public  String getSuggestion1() {
+    @SuppressWarnings("unused")
+    public String getSuggestion1() {
         return suggestion1;
     }
 
@@ -49,7 +53,7 @@ package com.projects.timely.error;
         return suggestion2;
     }
 
-    public  void setSuggestion2(String suggestion2) {
+    public void setSuggestion2(String suggestion2) {
         this.suggestion2 = suggestion2;
     }
 
