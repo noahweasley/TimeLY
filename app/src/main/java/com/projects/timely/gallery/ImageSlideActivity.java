@@ -2,20 +2,28 @@ package com.projects.timely.gallery;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.projects.timely.R;
 
+import java.util.List;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class ImageSlideActivity extends AppCompatActivity {
-    public static final String ARG_INIT_URI = "Initial Uri from list";
+    public static final String ARG_INITIAL_POSITION = "Initial Uri from list";
+    private static List<? extends Image> images;
 
-    public static void start(Context context, Uri initial) {
+    public static void start(Context context, int fromPosition, List<? extends Image> images1) {
+        images = images1;
         Intent starter = new Intent(context, ImageSlideActivity.class);
-        starter.putExtra(ARG_INIT_URI, initial.toString());
+        starter.putExtra(ARG_INITIAL_POSITION, fromPosition);
         context.startActivity(starter);
     }
 
@@ -24,5 +32,25 @@ public class ImageSlideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.slide_enter, R.anim.slide_exit);
         setContentView(R.layout.image_silder);
+        ViewPager2 pager = findViewById(R.id.pager);
+        pager.setAdapter(new ImageAdapter(this));
+    }
+
+    private static class ImageAdapter extends FragmentStateAdapter {
+
+        public ImageAdapter(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return FullScreenImageFragment.newInstance(images.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return images.size();
+        }
     }
 }

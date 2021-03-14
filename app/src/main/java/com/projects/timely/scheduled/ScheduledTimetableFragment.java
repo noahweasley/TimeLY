@@ -77,7 +77,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         super.onCreate(savedInstanceState);
         tableRowAdapter = new TimeTableRowAdapter(choiceMode);
         tList = new ArrayList<>();
-        //getInstance all the saved timetable data from the database
+        //createInstance all the saved timetable data from the database
         database = new SchoolDatabase(getContext());
         EventBus.getDefault().register(this);
     }

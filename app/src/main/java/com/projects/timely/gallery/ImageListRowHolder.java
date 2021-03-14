@@ -23,6 +23,7 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
     private boolean isChecked;
     private Uri imageContentUri;
     private ViewImagesActivity.ImageAdapter imageAdapter;
+    private List<Image> imageList;
 
     @SuppressLint("ClickableViewAccessibility")
     public ImageListRowHolder(@NonNull View rootView) {
@@ -37,7 +38,7 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
                 if (imageAdapter.getCheckedImageCount() == 0) {
                     imageAdapter.setMultiSelectionEnabled(false);
                 }
-            } else ImageSlideActivity.start(context, imageContentUri);
+            } else ImageSlideActivity.start(context, getAbsoluteAdapterPosition(), imageList);
         });
 
         rootView.setOnLongClickListener(l -> {
@@ -64,7 +65,9 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
     }
 
     public ImageListRowHolder with(List<? extends Uri> uris,
+                                   List<Image> imageList,
                                    ViewImagesActivity.ImageAdapter imageAdapter) {
+        this.imageList = imageList;
         this.imageContentUri = uris.get(getAbsoluteAdapterPosition());
         this.imageAdapter = imageAdapter;
         return this;

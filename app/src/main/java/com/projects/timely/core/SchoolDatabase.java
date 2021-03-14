@@ -15,6 +15,7 @@ import com.projects.timely.alarms.AlarmModel;
 import com.projects.timely.assignment.AssignmentModel;
 import com.projects.timely.courses.CourseModel;
 import com.projects.timely.exam.ExamModel;
+import com.projects.timely.gallery.Image;
 import com.projects.timely.timetable.TimetableModel;
 
 import java.util.ArrayList;
@@ -1624,7 +1625,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @param position the position of assignment in database
      * @return the attached images or null if no images were assigned
      */
-    public List<Uri> getAttachedImagesAsUriList(int position) {
+    public List<?>[] getAttachedImagesAsUriList(int position) {
         String getAttachedImages_stmt
                 = "SELECT " + COLUMN_ATTACHED_IMAGE + " FROM " + ASSIGNMENT_TABLE
                 + " WHERE " + COLUMN_ID + " = " + position;
@@ -1638,13 +1639,19 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         attachedImagesCursor.close();
 
         List<Uri> uris = new ArrayList<>();
+        List<Image> images = new ArrayList<>();
 
         if (!TextUtils.isEmpty(attachedImages)) {
             String[] ais = attachedImages.split(";");
-            for (String ai : ais) uris.add(Uri.parse(ai));
+
+            for (String ai : ais) {
+                Uri uri = Uri.parse(ai);
+                uris.add(uri);
+                images.add(Image.createInstance(uri));
+            }
         }
 
-        return uris;
+        return new List[]{uris, images};
     }
 
     /**

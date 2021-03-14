@@ -25,6 +25,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
     private ImageGallery.ImageAdapter imageAdapter;
     private String fileName;
     private Uri imageContentUri;
+    private List<? extends Image> imageList;
     private boolean isChecked;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -41,7 +42,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
                 if (imageAdapter.getCheckedImageCount() == 0) {
                     imageAdapter.setMultiSelectionEnabled(false);
                 }
-            } else ImageSlideActivity.start(context, imageContentUri);
+            } else ImageSlideActivity.start(context, getAbsoluteAdapterPosition(), imageList);
 
         });
 
@@ -49,7 +50,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
             trySelectImage();
             imageAdapter
                     .setMultiSelectionEnabled(!imageAdapter.isMultiSelectionEnabled()
-                                                     || imageAdapter.getCheckedImageCount() != 0);
+                                                      || imageAdapter.getCheckedImageCount() != 0);
             return true;
         });
 
@@ -71,9 +72,11 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
 
     ImageGalleryRowHolder with(ImageGallery.ImageAdapter imageAdapter,
                                List<? extends Image> imageList) {
+        this.imageList = imageList;
+        Image image = imageList.get(getAbsoluteAdapterPosition());
+        this.imageContentUri = image.getImageUri();
+        this.fileName = image.getFileName();
         this.imageAdapter = imageAdapter;
-        this.imageContentUri = imageList.get(getAbsoluteAdapterPosition()).getImageUri();
-        this.fileName = imageList.get(getAbsoluteAdapterPosition()).getFileName();
         return this;
     }
 

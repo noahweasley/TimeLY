@@ -2,18 +2,29 @@ package com.projects.timely.gallery;
 
 import android.net.Uri;
 
+import java.io.Serializable;
+
 @SuppressWarnings("unused")
-class Image {
-    private final String folderName;
+public class Image implements Serializable {
+    private String folderName;
     private Uri imageUri;
     private int size;
     private String fileName;
 
-    Image(Uri imageUri, int size, String fileName, String folderName) {
+    public Image(Uri imageUri, int size, String fileName, String folderName) {
         this.folderName = folderName;
         this.imageUri = imageUri;
         this.size = size;
         this.fileName = fileName;
+    }
+
+    public Image() {
+    }
+
+    public static Image createInstance(Uri uri) {
+        Image image = new Image();
+        image.setImageUri(uri);
+        return image;
     }
 
     String getFileName() {
@@ -43,4 +54,5 @@ class Image {
     void setSize(int size) {
         this.size = size;
     }
+
 }

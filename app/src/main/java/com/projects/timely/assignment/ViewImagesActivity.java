@@ -15,11 +15,12 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
+import com.projects.timely.core.ChoiceMode;
 import com.projects.timely.core.EmptyListEvent;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.core.ThreadUtils;
-import com.projects.timely.core.ChoiceMode;
+import com.projects.timely.gallery.Image;
 import com.projects.timely.gallery.ImageDirectory;
 import com.projects.timely.gallery.ImageListRowHolder;
 import com.projects.timely.gallery.ImageMultiChoiceMode;
@@ -57,6 +58,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     private CoordinatorLayout coordinator;
     private ActionMode actionMode;
     private List<Uri> mediaUris = new ArrayList<>();
+    private List<Image> imageList = new ArrayList<>();
     private int position;
 
     public static void start(Context context, int position, String title) {
@@ -90,6 +92,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
     @Override
     @SuppressLint("DefaultLocale")
+    @SuppressWarnings("unchecked")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
@@ -151,7 +154,9 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
         ThreadUtils.runBackgroundTask(() -> {
             SchoolDatabase database = new SchoolDatabase(this);
-            mediaUris = database.getAttachedImagesAsUriList(position);
+            List<?>[] genericList = database.getAttachedImagesAsUriList(position);
+            mediaUris = (List<Uri>) genericList[0];
+            imageList = (List<Image>) genericList[1];
 
             runOnUiThread(() -> {
                 imageAdapter.notifyDataSetChanged();
@@ -250,7 +255,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
         @Override
         public void onBindViewHolder(@NonNull ImageListRowHolder holder, int position) {
-            holder.with(mediaUris, imageAdapter).bindView();
+            holder.with(mediaUris, imageList, imageAdapter).bindView();
         }
 
         @Override
