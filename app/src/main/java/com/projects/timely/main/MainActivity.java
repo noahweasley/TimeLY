@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.projects.timely.R;
 import com.projects.timely.alarms.AlarmHolderFragment;
+import com.projects.timely.alarms.TimeChangeDetector;
 import com.projects.timely.assignment.AssignmentFragment;
 import com.projects.timely.core.Constants;
 import com.projects.timely.core.SchoolDatabase;
@@ -31,6 +33,7 @@ public class MainActivity
         extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
+    private TimeChangeDetector timeChangeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class MainActivity
         if (savedInstanceState == null) {
             doUpdateFragment(getIntent()); // update the fragment attached to this activity
         }
+        beginOrEndTimeChangeDetection();
     }
 
     @Override
@@ -63,7 +67,17 @@ public class MainActivity
     protected void onStop() {
         // drop unwanted exam week tables from database
         new SchoolDatabase(this.getApplicationContext()).dropRedundantExamTables();
+        beginOrEndTimeChangeDetection();
         super.onStop();
+    }
+
+    private void beginOrEndTimeChangeDetection() {
+        if (timeChangeDetector == null) {
+            (timeChangeDetector = new TimeChangeDetector().with(this)).start();
+        } else {
+            timeChangeDetector.pauseOperation();
+            timeChangeDetector = null;
+        }
     }
 
     // Because launch mode of this activity is set to single task, this callback will be
@@ -106,9 +120,10 @@ public class MainActivity
     @SuppressWarnings("all")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Toast toast = Toast.makeText(this, "No action yet", Toast.LENGTH_LONG);
         switch (menuItem.getItemId()) {
             case R.id.home:
-                loadFragment(EventFragment.newInstance());
+                loadFragment(LandingPageFragment.newInstance());
                 break;
             case R.id.courses:
                 loadFragment(CoursesFragment.newInstance());
@@ -132,14 +147,16 @@ public class MainActivity
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.whats_new:
-
+                toast.show();
                 break;
             case R.id.generate:
+                toast.show();
                 break;
             case R.id.report:
+                toast.show();
                 break;
             case R.id.about:
-
+                toast.show();
                 break;
         }
 
@@ -173,8 +190,8 @@ public class MainActivity
                     break;
             }
         } else {
-            // Loads default fragment on start up.
-            loadFragment(EventFragment.newInstance());
+            // Loads landing page on start up.
+            loadFragment(LandingPageFragment.newInstance());
         }
     }
 

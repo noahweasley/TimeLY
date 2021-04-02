@@ -17,6 +17,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.projects.timely.R;
+import com.projects.timely.core.Time;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -61,6 +66,10 @@ public class AlarmTimeFragment extends Fragment {
         am_pm = view.findViewById(R.id.am_pm);
         ImageButton btn_setTime = view.findViewById(R.id.set_time);
         img_dayAndNight = view.findViewById(R.id.day_and_night);
+
+        // can't register event bus in onCreate() callback, because of possible null exceptions that
+        // would have been thrown
+        EventBus.getDefault().register(this);
 
         btn_setTime.setOnClickListener((v) -> {
             // when settings button is clicked, show the system date settings
@@ -132,41 +141,26 @@ public class AlarmTimeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (timeChangeDetector == null) {
-            (timeChangeDetector
-                    = TimeChangeDetector.getInstance().with(this.getContext(),
-                                                            preferences))
-                    .start();
-
-        }
-        if (timeChangeDetector != null)
-            timeChangeDetector.setOnTimeChangedListener(
-                    (date, hour, min, v, is24, isAM) -> {
-                        alarmDate.setText(date);
-                        alarmHour.setText(hour);
-                        alarmMin.setText(min);
-                        am_pm.setVisibility(v);
-                        setDayIcon(is24, isAM, Short.parseShort(hour));
-                    });
     }
-
 
     @Override
     public void onDestroyView() {
-        if (timeChangeDetector != null) {
-            timeChangeDetector.pauseOperation();
-            timeChangeDetector = null;
-        }
         super.onDestroyView();
     }
 
     @Override
     public void onDetach() {
-        if (timeChangeDetector != null) {
-            timeChangeDetector.pauseOperation();
-            timeChangeDetector = null;
-        }
+        EventBus.getDefault().unregister(this);
         super.onDetach();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doTimeUpdate(Time time) {
+        alarmDate.setText(time.getDate());
+        alarmHour.setText(time.getHour());
+        alarmMin.setText(time.getMin());
+        am_pm.setVisibility(time.getIs24() ? View.GONE : View.GONE);
+        setDayIcon(time.getIs24(), time.isAM(), Short.parseShort(time.getHour()));
     }
 
     private void setDayIcon(boolean is24, boolean isAM, short hourNum) {

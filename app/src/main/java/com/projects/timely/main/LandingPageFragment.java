@@ -18,11 +18,11 @@ import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 
 @SuppressWarnings({"ConstantConditions"})
-public class EventFragment extends Fragment {
+public class LandingPageFragment extends Fragment {
     private TextView text;
 
-    static EventFragment newInstance() {
-        return new EventFragment();
+    static LandingPageFragment newInstance() {
+        return new LandingPageFragment();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
