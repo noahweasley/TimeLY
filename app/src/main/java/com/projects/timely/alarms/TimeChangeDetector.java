@@ -60,22 +60,21 @@ public class TimeChangeDetector extends Thread {
     @Override
     public void run() {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-        // Get the preferences for date format
         while (!wantToStopOperation) {
 
             if (!wantToStopOperation) {
                 Time calculatedTime = getCalculatedTime();
 
-                if (!wantToStopOperation && !this.min.equals(calculatedTime.getMin())) {
+                if (!wantToStopOperation && !this.min.equals(calculatedTime.getMinutes())) {
                     // system time is posted
                     EventBus.getDefault().post(calculatedTime);
-                    this.min = calculatedTime.getMin();
+                    this.min = calculatedTime.getMinutes();
                 }
             }
         }
     }
 
-    // retrives calculated time
+    // retrieves calculated time
     private Time getCalculatedTime() {
         boolean is24 = isUserPreferred24Hours(mContext);
 
