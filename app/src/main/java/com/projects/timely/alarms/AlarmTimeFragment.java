@@ -3,7 +3,6 @@ package com.projects.timely.alarms;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -16,6 +15,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+
 import com.projects.timely.R;
 import com.projects.timely.core.Time;
 
@@ -24,22 +27,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.core.os.ConfigurationCompat;
-import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
-
-import static com.projects.timely.core.Globals.isUserPreferred24Hours;
 
 @SuppressWarnings("ConstantConditions")
 public class AlarmTimeFragment extends Fragment {
-    private SharedPreferences preferences;
-    private TimeChangeDetector timeChangeDetector;
     private ImageView img_dayAndNight;
     private TextView alarmDate, alarmMin, alarmHour, am_pm;
 
@@ -76,42 +67,15 @@ public class AlarmTimeFragment extends Fragment {
             startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
         });
 
-        /////////////////////////////      Code duplication    //////////////////////////////////
-
-        Calendar date = Calendar.getInstance();
-
-        Configuration config = getResources().getConfiguration();
-        Locale currentLocale = ConfigurationCompat.getLocales(config).get(0);
-
-        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", currentLocale);
-        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm:aa", currentLocale);
-
-        String timeView;
-        Date calendarTime = date.getTime();
-
-        boolean is24 = isUserPreferred24Hours(getContext());
-        timeView = is24 ? timeFormat24.format(calendarTime)
-                        : timeFormat12.format(calendarTime);
-
-        String[] splitTime = timeView.split(":");
-        String hour = splitTime[0];
-        alarmHour.setText(hour);
-        alarmMin.setText(splitTime[1]);
-        boolean isAM = false;
-        if (is24) {
-            am_pm.setVisibility(View.GONE);
-        } else {
-            am_pm.setText(splitTime[2]);
-            isAM = splitTime[2].equals("AM");
-        }
-
         // avoid glitch by setting the icon before starting timer
-        setDayIcon(is24, isAM, Short.parseShort(hour));
+        Time time = new TimeChangeDetector().with(getActivity()).requestImmediateTime();
+        doTimeUpdate(time);
+        setDayIcon(time);
 
         // Get the preferences for date format
-
+        Calendar date = Calendar.getInstance();
         Context appContext = getContext().getApplicationContext();
-        preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
         String dateFormat = preferences.getString("date_format", "");
         String format;
 
@@ -127,7 +91,6 @@ public class AlarmTimeFragment extends Fragment {
             default:
                 format = DateFormat.getDateInstance(DateFormat.MEDIUM)
                         .format(date.getTime());
-
         }
 
         alarmDate.setText(format);
@@ -158,21 +121,31 @@ public class AlarmTimeFragment extends Fragment {
     public void doTimeUpdate(Time time) {
         alarmDate.setText(time.getDate());
         alarmHour.setText(time.getHour());
-        alarmMin.setText(time.getMin());
-        am_pm.setVisibility(time.getIs24() ? View.GONE : View.GONE);
-        setDayIcon(time.getIs24(), time.isAM(), Short.parseShort(time.getHour()));
+        alarmMin.setText(time.getMinutes());
+        am_pm.setVisibility(time.getIs24() ? View.GONE : View.VISIBLE);
+        setDayIcon(time);
     }
 
-    private void setDayIcon(boolean is24, boolean isAM, short hourNum) {
-        if (is24) {
-            if (hourNum <= 18) {
+    private void setDayIcon(Time time) {
+
+        boolean is24 = time.getIs24(), isAM = time.isAM();
+        int hourNum = Integer.parseInt(time.getHour());
+
+        /////////////////////   CODE DUPLICATION, TO BE UPDATED  ///////////////////////////////
+
+        if (isAM && !is24) {
+            img_dayAndNight.setImageResource(R.drawable.ic_day_full);
+        } else if (!isAM && !is24) {
+            if (hourNum == 12 || (hourNum >= 1 && hourNum <= 4)) {
                 img_dayAndNight.setImageResource(R.drawable.ic_day_full);
             } else {
                 img_dayAndNight.setImageResource(R.drawable.ic_night_icon);
                 img_dayAndNight.setBackgroundResource(R.drawable.night);
             }
-        } else {
-            if (isAM) {
+        } else if (is24) {
+            if (hourNum >= 0 && hourNum < 12) {
+                img_dayAndNight.setImageResource(R.drawable.ic_day_full);
+            } else if (hourNum >= 12 && hourNum <= 16) {
                 img_dayAndNight.setImageResource(R.drawable.ic_day_full);
             } else {
                 img_dayAndNight.setImageResource(R.drawable.ic_night_icon);

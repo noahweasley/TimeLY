@@ -55,7 +55,7 @@ public class Time {
         this.hour = hour;
     }
 
-    public String getMin() {
+    public String getMinutes() {
         return min;
     }
 
