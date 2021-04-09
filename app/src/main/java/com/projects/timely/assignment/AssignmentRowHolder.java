@@ -53,9 +53,9 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     private CoordinatorLayout coordinator;
     private AssignmentRowAdapter assignmentRowAdapter;
     private List<DataModel> aList;
-    private View v_selectionOverlay;
+    private final View v_selectionOverlay;
     private boolean isChecked;
-    private ImageButton editButton, deleteButton, viewButton;
+    private final ImageButton editButton, deleteButton, viewButton;
 
     @SuppressWarnings({"ClickableViewAccessibility", "ConstantConditions"})
     public AssignmentRowHolder(@NonNull View rootView) {

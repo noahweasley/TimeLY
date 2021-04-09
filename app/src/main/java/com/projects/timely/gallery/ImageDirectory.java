@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -29,11 +30,14 @@ import androidx.recyclerview.widget.RecyclerView;
 @SuppressWarnings("ConstantConditions")
 public class ImageDirectory extends AppCompatActivity implements Runnable {
     public static final int requestCode = 112;
-    //    List<Image> imageArrayList = new ArrayList<>();
+    private static final String STORAGE_ACCESS = "Storage access";
+    private static final String EXTERNAL = "External Storage";
+    private static final String INTERNAL = "Internal Storage";
     List<List<Image>> imageDirectoryList = new ArrayList<>();
     private final ImageAdapter imageAdapter = new ImageAdapter();
     private ProgressBar indeterminateProgress;
     private RecyclerView imageList;
+    private ViewGroup v_noMedia;
 
     protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -42,6 +46,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         Toolbar toolbar = findViewById(R.id.toolbar);
         imageList = findViewById(R.id.imageList);
         indeterminateProgress = findViewById(R.id.indeterminateProgress);
+        v_noMedia = findViewById(R.id.no_media);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Select Image");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,8 +61,8 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
             new Thread(this).start();
         } else {
             ActivityCompat.requestPermissions(this,
-                                              new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                              requestCode);
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    requestCode);
         }
     }
 
@@ -89,6 +94,13 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     @Override
     @SuppressLint("InlinedApi")
     public void run() {
+        String extra = getIntent().getStringExtra(STORAGE_ACCESS);
+        Uri storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        if (extra != null) {
+            storageUri = extra.equals(EXTERNAL) ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+        }
+
         String[] projection = {
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
@@ -96,8 +108,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
                 MediaStore.Images.Media.DISPLAY_NAME};
         Cursor imgCursor = getApplicationContext()
                 .getContentResolver()
-                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                       projection, null, null, null);
+                .query(storageUri, projection, null, null, null);
 
         int bucketId = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
         int imgSize = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
@@ -114,7 +125,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
             Uri contentUri
                     = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                                 id);
+                    id);
             Image currentImage = new Image(contentUri, size, fileName, folderName);
 
             int directoryIndex = linearSearch(dirName, folderName);
@@ -140,9 +151,13 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     }
 
     private void doViewUpdate() {
-        indeterminateProgress.setVisibility(imageDirectoryList.isEmpty() ? View.VISIBLE
-                                                                         : View.GONE);
+        Log.d(getClass().getSimpleName(), "Size: " + imageDirectoryList.size());
+
+        indeterminateProgress.setVisibility(
+                imageDirectoryList.isEmpty() ? View.GONE : View.VISIBLE);
+
         imageList.setVisibility(imageDirectoryList.isEmpty() ? View.GONE : View.VISIBLE);
+        v_noMedia.setVisibility(imageDirectoryList.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     /*
@@ -165,8 +180,8 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         @Override
         public ImageRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
             View view = getLayoutInflater().inflate(R.layout.layout_image_directory_row,
-                                                    viewGroup,
-                                                    false);
+                    viewGroup,
+                    false);
             return new ImageRowHolder(view).setAction(getIntent().getAction());
         }
 
