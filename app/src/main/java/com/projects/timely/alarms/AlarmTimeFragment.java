@@ -124,6 +124,7 @@ public class AlarmTimeFragment extends Fragment {
         alarmDate.setText(time.getDate());
         alarmHour.setText(time.getHour());
         alarmMin.setText(time.getMinutes());
+        am_pm.setText(time.isForenoon() ? "AM" : "PM");
         am_pm.setVisibility(is24 ? View.GONE : View.VISIBLE);
         setDayIcon(time);
     }
