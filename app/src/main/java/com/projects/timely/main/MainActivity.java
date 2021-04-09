@@ -31,8 +31,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity
         extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
+    DrawerLayout drawer;
     private TimeChangeDetector timeChangeDetector;
 
     @Override
@@ -46,15 +46,15 @@ public class MainActivity
         NavigationView navView = findViewById(R.id.nav_view);
         drawer = findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                                           R.string.open,
-                                           R.string.close);
+                R.string.open,
+                R.string.close);
         drawer.addDrawerListener(toggle);
         navView.setNavigationItemSelectedListener(this);
         // Set the first viewed fragment on app start
         if (savedInstanceState == null) {
             doUpdateFragment(getIntent()); // update the fragment attached to this activity
         }
-        beginOrEndTimeChangeDetection();
+        tryActivateTimeChangeDetector();
     }
 
     @Override
@@ -67,11 +67,16 @@ public class MainActivity
     protected void onStop() {
         // drop unwanted exam week tables from database
         new SchoolDatabase(this.getApplicationContext()).dropRedundantExamTables();
-        beginOrEndTimeChangeDetection();
         super.onStop();
     }
 
-    private void beginOrEndTimeChangeDetection() {
+    @Override
+    protected void onDestroy() {
+        tryActivateTimeChangeDetector(); // cannot activate, so stop
+        super.onDestroy();
+    }
+
+    private void tryActivateTimeChangeDetector() {
         if (timeChangeDetector == null) {
             (timeChangeDetector = new TimeChangeDetector().with(this)).start();
         } else {
@@ -113,6 +118,8 @@ public class MainActivity
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
+        } else if (id == R.id.update) {
+            Toast.makeText(this, "No action yet", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
