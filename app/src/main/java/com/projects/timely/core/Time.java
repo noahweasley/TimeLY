@@ -19,12 +19,12 @@ public class Time {
         this.isAM = isAM;
     }
 
-    public DayPart getDayPart() {
+    public DayPart getCurrentDayPart() {
         int __hour = Integer.parseInt(hour);
         if (isAM && !is24) {
             return DayPart.MORNING;
         } else if (!isAM && !is24) {
-            if (__hour >= 12 && __hour <= 4) {
+            if (__hour == 12 || (__hour >= 1 && __hour <= 4)) {
                 return DayPart.AFTERNOON;
             } else
                 return DayPart.EVENING;

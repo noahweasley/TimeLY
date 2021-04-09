@@ -30,12 +30,28 @@ public class TimeChangeDetector extends Thread {
     private volatile boolean wantToStopOperation;
     private Context mContext;
 
+    /**
+     * @return the current OS time immediately
+     */
+    public Time requestImmediateTime() {
+        return getCalculatedTime();
+    }
+
+    /**
+     * Main initializations useful for TimeChangeDetector
+     *
+     * @param context the user
+     * @return the same instance of the TimeChangeDetector for chain calls
+     */
     public TimeChangeDetector with(Context context) {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         mContext = context.getApplicationContext();
         return this;
     }
 
+    /**
+     * Temporarily pauses the operation of this background task, but thread is still active
+     */
     public void pauseOperation() {
         wantToStopOperation = true;
     }
@@ -46,55 +62,58 @@ public class TimeChangeDetector extends Thread {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         // Get the preferences for date format
         while (!wantToStopOperation) {
-            boolean is24 = isUserPreferred24Hours(mContext);
 
             if (!wantToStopOperation) {
+                Time calculatedTime = getCalculatedTime();
 
-                Calendar calendar = Calendar.getInstance();
-
-                Configuration config = mContext.getResources().getConfiguration();
-                Locale currentLocale = ConfigurationCompat.getLocales(config).get(0);
-
-                SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", currentLocale);
-                SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm:aa", currentLocale);
-
-                String formattedDate;
-
-                switch (mPreferences.getString("date_format", "Medium")) {
-                    case "Full":
-                        formattedDate = DateFormat.getDateInstance(DateFormat.FULL)
-                                .format(calendar.getTime());
-                        break;
-                    case "Short":
-                        formattedDate = DateFormat.getDateInstance(DateFormat.SHORT)
-                                .format(calendar.getTime());
-                        break;
-                    default:
-                        formattedDate = DateFormat.getDateInstance(DateFormat.MEDIUM)
-                                .format(calendar.getTime());
-                }
-
-                String timeView;
-                Date calendarTime = calendar.getTime();
-                timeView = is24 ? timeFormat24.format(calendarTime)
-                                : timeFormat12.format(calendarTime);
-
-                String[] splitTime = timeView.split(":");
-                String hour = splitTime[0];
-                String min = splitTime[1];
-
-                boolean isAM = false;
-                if (!is24) isAM = splitTime[2].equals("AM");
-
-                if (!wantToStopOperation) {
-                    if (!this.min.equals(min)) {
-                        // system time is posted
-                        EventBus.getDefault()
-                                .post(new Time(formattedDate, hour, min, is24, isAM));
-                    }
-                    this.min = min;
+                if (!wantToStopOperation && !this.min.equals(calculatedTime.getMin())) {
+                    // system time is posted
+                    EventBus.getDefault().post(calculatedTime);
+                    this.min = calculatedTime.getMin();
                 }
             }
         }
+    }
+
+    // retrives calculated time
+    private Time getCalculatedTime() {
+        boolean is24 = isUserPreferred24Hours(mContext);
+
+        Calendar calendar = Calendar.getInstance();
+
+        Configuration config = mContext.getResources().getConfiguration();
+        Locale currentLocale = ConfigurationCompat.getLocales(config).get(0);
+
+        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", currentLocale);
+        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm:aa", currentLocale);
+
+        String formattedDate;
+
+        switch (mPreferences.getString("date_format", "Medium")) {
+            case "Full":
+                formattedDate = DateFormat.getDateInstance(DateFormat.FULL)
+                        .format(calendar.getTime());
+                break;
+            case "Short":
+                formattedDate = DateFormat.getDateInstance(DateFormat.SHORT)
+                        .format(calendar.getTime());
+                break;
+            default:
+                formattedDate = DateFormat.getDateInstance(DateFormat.MEDIUM)
+                        .format(calendar.getTime());
+        }
+
+        String timeView;
+        Date calendarTime = calendar.getTime();
+        timeView = is24 ? timeFormat24.format(calendarTime) : timeFormat12.format(calendarTime);
+
+        String[] splitTime = timeView.split(":");
+        String hour = splitTime[0];
+        String min = splitTime[1];
+
+        boolean isAM = false;
+        if (!is24) isAM = splitTime[2].equals("AM");
+
+        return new Time(formattedDate, hour, min, is24, isAM);
     }
 }

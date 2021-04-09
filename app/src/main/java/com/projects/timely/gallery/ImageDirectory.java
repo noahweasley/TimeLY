@@ -26,13 +26,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 @SuppressWarnings("ConstantConditions")
 public class ImageDirectory extends AppCompatActivity implements Runnable {
     public static final int requestCode = 112;
     //    List<Image> imageArrayList = new ArrayList<>();
     List<List<Image>> imageDirectoryList = new ArrayList<>();
-    private ImageAdapter imageAdapter = new ImageAdapter();
+    private final ImageAdapter imageAdapter = new ImageAdapter();
     private ProgressBar indeterminateProgress;
     private RecyclerView imageList;
 
@@ -78,6 +77,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     public void onRequestPermissionsResult(int _requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(_requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             new Thread(this).start();
         } else {

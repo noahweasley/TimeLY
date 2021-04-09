@@ -62,7 +62,7 @@ public class AlarmListFragment extends Fragment {
     private ConstraintLayout no_alarm_view;
     private LinkedList<DataModel> aList;
     private AlarmAdapter alarmAdapter;
-    private Calendar calendar = Calendar.getInstance();
+    private final Calendar calendar = Calendar.getInstance();
     private SchoolDatabase database;
     private CoordinatorLayout coordinator;
     private ProgressBar indeterminateProgress;

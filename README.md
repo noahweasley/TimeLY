@@ -1,7 +1,9 @@
 # TimeLY
-An Android app that manages University students activities
 
-# Application package usages
+## An Android app that manages University students activities
+
+### Application package usages
+
 ** about: Package housing everything related to description of both the contributors to this project
           and what TimeLY is all about.
 ** alarms: Package housing everything about TimeLY's alarm management system.
@@ -18,5 +20,5 @@ An Android app that manages University students activities
 ** settings: Contains TimeLY's global settings.
 ** timetable: Package that contains TimeLY's timetable management system.
 
-    Feel free to contribute to this project. Please never update the master branch. Create a child
-branch and wait for me to review and merge your pull request. Thank you for your collaboration.
+*Feel free to contribute to this project. Please never update the master branch. Create a child
+branch and wait for me to review and merge your pull request. Thank you for your collaboration*.
