@@ -33,6 +33,7 @@ import java.util.Calendar;
 public class AlarmTimeFragment extends Fragment {
     private ImageView img_dayAndNight;
     private TextView alarmDate, alarmMin, alarmHour, am_pm;
+    private boolean is24;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle) {
@@ -69,6 +70,7 @@ public class AlarmTimeFragment extends Fragment {
 
         // avoid glitch by setting the icon before starting timer
         Time time = new TimeChangeDetector().with(getActivity()).requestImmediateTime();
+        this.is24 = time.getIs24();
         doTimeUpdate(time);
         setDayIcon(time);
 
@@ -122,20 +124,20 @@ public class AlarmTimeFragment extends Fragment {
         alarmDate.setText(time.getDate());
         alarmHour.setText(time.getHour());
         alarmMin.setText(time.getMinutes());
-        am_pm.setVisibility(time.getIs24() ? View.GONE : View.VISIBLE);
+        am_pm.setVisibility(is24 ? View.GONE : View.VISIBLE);
         setDayIcon(time);
     }
 
     private void setDayIcon(Time time) {
 
-        boolean is24 = time.getIs24(), isAM = time.isAM();
+        boolean isForeNoon = time.isForenoon();
         int hourNum = Integer.parseInt(time.getHour());
 
         /////////////////////   CODE DUPLICATION, TO BE UPDATED  ///////////////////////////////
 
-        if (isAM && !is24) {
+        if (isForeNoon && !is24) {
             img_dayAndNight.setImageResource(R.drawable.ic_day_full);
-        } else if (!isAM && !is24) {
+        } else if (!isForeNoon && !is24) {
             if (hourNum == 12 || (hourNum >= 1 && hourNum <= 4)) {
                 img_dayAndNight.setImageResource(R.drawable.ic_day_full);
             } else {

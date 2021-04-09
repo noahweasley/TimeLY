@@ -71,7 +71,7 @@ public class Time {
         this.is24 = is24;
     }
 
-    public boolean isAM() {
+    public boolean isForenoon() {
         return isAM;
     }
 
