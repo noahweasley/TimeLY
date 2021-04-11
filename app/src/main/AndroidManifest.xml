@@ -69,6 +69,7 @@
 	    <activity
 		    android:name = ".gallery.ImageSlideActivity"
 		    android:theme="@style/ImageViewerTheme"/>
+        <activity android:name=".gallery.StorageViewer" />
 
         <receiver android:name = ".alarms.AlarmReceiver" />
         <receiver android:name = ".alarms.NotificationActionReceiver" />

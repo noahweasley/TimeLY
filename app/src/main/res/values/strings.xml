@@ -131,6 +131,18 @@
 	<string name = "view">VIEW IMAGES</string>
 	<string name = "default_file_name">IMG_20210011.jpg</string>
 	<string name = "default_mime_type">JPEG</string>
-	<string name = "check_stat">image checked status</string><string name = "no_media">No Images Attached</string><string name = "image">Image</string><string name = "add_course">add course</string><string name = "generate">Generate and Share</string><string name = "check_update">Check for updates</string><string name = "morning">Good Morning</string><string name = "afternoon">Good Afternoon</string><string name = "evening">Good Evening</string><string name = "fullscreen_image">Fullsceen Image</string>
+	<string name = "check_stat">image checked status</string>
+	<string name = "no_media">No Images Attached</string>
+	<string name = "image">Image</string>
+	<string name = "add_course">add course</string>
+	<string name = "generate">Generate and Share</string>
+	<string name = "check_update">Check for updates</string>
+	<string name = "morning">Good Morning</string>
+	<string name = "afternoon">Good Afternoon</string>
+	<string name = "evening">Good Evening</string>
+	<string name = "fullscreen_image">Fullscreen Image</string>
     <string name="no_image">No Image Found</string>
+	<string name="internal_storage">internal storage</string>
+	<string name="internal">Internal Storage</string>
+	<string name="external">External Storage</string>
 </resources>
