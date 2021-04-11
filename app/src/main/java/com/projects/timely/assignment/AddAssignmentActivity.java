@@ -24,6 +24,7 @@ import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.error.ErrorDialog;
 import com.projects.timely.gallery.ImageDirectory;
 import com.projects.timely.gallery.ImageGallery;
+import com.projects.timely.gallery.StorageViewer;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -85,7 +86,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
         submitButton.setOnClickListener(v -> saveOrUpdateAssignment());
         btn_gallery.setOnClickListener(
-                v -> startActivity(new Intent(this, ImageDirectory.class).setAction(ADD_NEW)));
+                v -> startActivity(new Intent(this, StorageViewer.class).setAction(ADD_NEW)));
 
         ArrayAdapter<String> courseAdapter
                 = new ArrayAdapter<>(this,
