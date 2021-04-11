@@ -1,213 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:external = "http://schemas.android.com/apk/res-auto"
-	xmlns:tools = "http://schemas.android.com/tools"
-	android:layout_width = "match_parent"
-	android:layout_height = "wrap_content"
-	android:background="?attr/selectableItemBackground"
-	android:clickable="true"
-	android:focusable="true"
-	android:orientation = "vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-	    android:layout_width = "match_parent"
-	    android:layout_height = "wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-             <TextView
-	             android:id = "@+id/alarm_list_time"
-	             android:layout_width = "wrap_content"
-	             android:layout_height = "wrap_content"
-	             android:layout_marginStart = "16dp"
-	             android:layout_marginLeft = "16dp"
-	             android:layout_marginTop = "8dp"
-	             android:drawablePadding = "8dp"
-	             android:fontFamily = "sans-serif-condensed-light"
-	             android:text = "20:09"
-	             android:textColor = "@android:color/black"
-	             android:textSize = "25sp"
-	             external:drawableLeftCompat = "@drawable/ic_alarm"
-	             external:drawableStartCompat = "@drawable/ic_alarm"
-	             external:layout_constraintBottom_toBottomOf = "parent"
-	             external:layout_constraintEnd_toStartOf = "@id/am_pm"
-	             external:layout_constraintHorizontal_chainStyle = "packed"
-	             external:layout_constraintHorizontal_bias=".1"
-	             external:layout_constraintStart_toStartOf = "parent"
-	             external:layout_constraintTop_toTopOf = "parent"
-	             tools:ignore = "HardcodedText" />
+        <TextView
+            android:id="@+id/alarm_list_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="8dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="20:09"
+            android:textColor="@android:color/black"
+            android:textSize="25sp"
+            external:drawableLeftCompat="@drawable/ic_alarm"
+            external:drawableStartCompat="@drawable/ic_alarm"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toStartOf="@id/am_pm"
+            external:layout_constraintHorizontal_bias=".1"
+            external:layout_constraintHorizontal_chainStyle="packed"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
-	    <TextView
-		    android:id = "@+id/am_pm"
-		    android:layout_width = "wrap_content"
-		    android:layout_height = "wrap_content"
-		    android:layout_marginStart = "8dp"
-		    android:layout_marginLeft = "8dp"
-		    android:fontFamily = "sans-serif-condensed-light"
-		    android:text = "pm"
-		    android:textColor = "@android:color/black"
-		    android:textSize = "15sp"
-		    external:layout_constraintStart_toEndOf = "@id/alarm_list_time"
-		    external:layout_constraintBaseline_toBaselineOf="@id/alarm_list_time"
-		    external:layout_constraintVertical_bias = ".1"
-		    tools:ignore = "HardcodedText" />
+        <TextView
+            android:id="@+id/am_pm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="pm"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            external:layout_constraintBaseline_toBaselineOf="@id/alarm_list_time"
+            external:layout_constraintStart_toEndOf="@id/alarm_list_time"
+            external:layout_constraintVertical_bias=".1"
+            tools:ignore="HardcodedText" />
 
-            <androidx.appcompat.widget.SwitchCompat
-	            android:id = "@+id/alarm_status"
-	            android:layout_width = "wrap_content"
-	            android:layout_height = "wrap_content"
-	            android:layout_marginEnd = "16dp"
-	            android:layout_marginRight = "16dp"
-	            android:checked = "true"
-	            external:layout_constraintBaseline_toBaselineOf = "@id/alarm_list_time"
-	            external:layout_constraintBottom_toBottomOf = "parent"
-	            external:layout_constraintEnd_toEndOf = "parent"
-	            external:layout_constraintVertical_bias = ".1" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/alarm_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:checked="true"
+            external:layout_constraintBaseline_toBaselineOf="@id/alarm_list_time"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintVertical_bias=".1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-	<net.cachapa.expandablelayout.ExpandableLayout
-		android:id = "@+id/detail_layout"
-		android:layout_width = "match_parent"
-		android:layout_height = "wrap_content"
-		external:el_duration = "250"
-		external:el_expanded = "false"
-		external:el_parallax = "0.5">
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/detail_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        external:el_duration="250"
+        external:el_expanded="false"
+        external:el_parallax="0.5">
 
-		  <LinearLayout
-			  android:layout_width = "match_parent"
-			  android:layout_height = "wrap_content"
-			  android:orientation = "vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-	        android:layout_width = "match_parent"
-	        android:layout_height = "wrap_content"
-	        android:orientation = "horizontal">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-             <CheckBox
-	             android:id = "@+id/checkbox_repeat"
-	             android:layout_width = "wrap_content"
-	             android:layout_height = "wrap_content"
-	             android:layout_marginStart = "16dp"
-	             android:layout_marginLeft = "16dp"
-	             android:fontFamily = "sans-serif-condensed-light"
-	             android:text = "@string/repeat"
-	             android:textSize = "20sp"
-	             external:layout_constraintBottom_toBottomOf = "parent"
-	             external:layout_constraintStart_toStartOf = "parent"
-	             external:layout_constraintTop_toTopOf = "parent" />
+                <CheckBox
+                    android:id="@+id/checkbox_repeat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@string/repeat"
+                    android:textSize="20sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent" />
 
-            <CheckBox
-	            android:id = "@+id/checkbox_vibrate"
-	            android:layout_width = "wrap_content"
-	            android:layout_height = "wrap_content"
-	            android:layout_gravity = "end|center_horizontal"
-	            android:layout_marginEnd = "16dp"
-	            android:layout_marginRight = "16dp"
-	            android:fontFamily = "sans-serif-condensed-light"
-	            android:text = "@string/vibrate"
-	            android:textSize = "20sp"
-	            external:layout_constraintBottom_toBottomOf = "parent"
-	            external:layout_constraintEnd_toEndOf = "parent"
-	            external:layout_constraintTop_toTopOf = "parent" />
+                <CheckBox
+                    android:id="@+id/checkbox_vibrate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_horizontal"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@string/vibrate"
+                    android:textSize="20sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintEnd_toEndOf="parent"
+                    external:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-             <androidx.recyclerview.widget.RecyclerView
-	             android:id = "@+id/row_of_buttons"
-	             android:layout_width = "match_parent"
-	             android:layout_height = "wrap_content"
-	             android:layout_marginStart = "16dp"
-	             android:layout_marginLeft = "16dp"
-	             android:layout_marginEnd = "16dp"
-	             android:layout_marginRight = "16dp"
-	             android:layout_marginTop = "8dp"
-	             android:layout_marginBottom = "8dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/row_of_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp" />
 
 
             <TextView
-	            android:id = "@+id/tv_label"
-	            android:layout_width = "wrap_content"
-	            android:layout_height = "wrap_content"
-	            android:layout_marginStart = "16dp"
-	            android:layout_marginLeft = "16dp"
-	            android:layout_marginTop = "5dp"
-	            android:layout_marginEnd = "16dp"
-	            android:layout_marginRight = "16dp"
-	            android:layout_marginBottom = "5dp"
-	            android:drawablePadding = "8dp"
-	            android:ellipsize = "end"
-	            android:maxLines = "1"
-	            android:text = "@string/label"
-	            android:textColor = "@android:color/black"
-	            android:textSize = "18sp"
-	            external:drawableLeftCompat = "@drawable/ic_label"
-	            external:drawableStartCompat = "@drawable/ic_label" />
+                android:id="@+id/tv_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="5dp"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/label"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                external:drawableLeftCompat="@drawable/ic_label"
+                external:drawableStartCompat="@drawable/ic_label" />
 
-        <TextView
-	        android:id = "@+id/ringtone_picker"
-	        android:layout_width = "wrap_content"
-	        android:layout_height = "wrap_content"
-	        android:layout_marginStart = "16dp"
-	        android:layout_marginLeft = "16dp"
-	        android:layout_marginTop = "8dp"
-	        android:background = "@drawable/bg_rng"
-	        android:drawablePadding = "8dp"
-	        android:ellipsize = "end"
-	        android:maxLines = "1"
-	        android:text = "@string/choose_ringtone"
-	        android:textColor = "@android:color/black"
-	        android:textSize = "15sp"
-	        external:drawableLeftCompat = "@drawable/ic_notification"
-	        external:drawableStartCompat = "@drawable/ic_notification"
-	        tools:ignore = "RtlSymmetry" />
+            <TextView
+                android:id="@+id/ringtone_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_rng"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/choose_ringtone"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                external:drawableLeftCompat="@drawable/ic_notification"
+                external:drawableStartCompat="@drawable/ic_notification"
+                tools:ignore="RtlSymmetry" />
 
-    </LinearLayout>
+        </LinearLayout>
 
-	</net.cachapa.expandablelayout.ExpandableLayout>
+    </net.cachapa.expandablelayout.ExpandableLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-	    android:layout_width = "match_parent"
-	    android:layout_height = "wrap_content"
-	    android:layout_marginTop = "16dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
 
         <View
-	        android:id = "@+id/decoration"
-	        android:layout_width = "20dp"
-	        android:layout_height = "20dp"
-	        android:layout_marginStart = "16dp"
-	        android:layout_marginLeft = "16dp"
-	        android:background = "@drawable/enabled_round_button"
-	        external:layout_constraintBottom_toBottomOf = "parent"
-	        external:layout_constraintStart_toStartOf = "parent"
-	        external:layout_constraintTop_toTopOf = "parent" />
+            android:id="@+id/decoration"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/enabled_round_button"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent" />
 
-         <ImageView
-	         android:id = "@+id/expand_status"
-	         android:layout_width = "wrap_content"
-	         android:layout_height = "wrap_content"
-	         external:layout_constraintBottom_toBottomOf = "parent"
-	         external:layout_constraintEnd_toEndOf = "parent"
-	         external:layout_constraintStart_toStartOf = "parent"
-	         external:layout_constraintTop_toTopOf = "parent"
-	         external:srcCompat = "@drawable/ic_arrow_down"
-	         tools:ignore = "ContentDescription" />
+        <ImageView
+            android:id="@+id/expand_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            external:srcCompat="@drawable/ic_arrow_down"
+            tools:ignore="ContentDescription" />
 
         <ImageButton
-	        android:id = "@+id/delete_row"
-	        style = "@android:style/Widget.Holo.Button.Borderless"
-	        android:layout_width = "wrap_content"
-	        android:layout_height = "wrap_content"
-	        android:layout_marginEnd = "8dp"
-	        android:layout_marginRight = "8dp"
-	        android:padding = "0dp"
-	        external:layout_constraintBottom_toBottomOf = "parent"
-	        external:layout_constraintEnd_toEndOf = "parent"
-	        external:layout_constraintTop_toTopOf = "parent"
-	        external:srcCompat = "@drawable/ic_delete_grey"
-	        tools:ignore = "ContentDescription" />
+            android:id="@+id/delete_row"
+            style="@android:style/Widget.Holo.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:padding="0dp"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            external:srcCompat="@drawable/ic_delete_grey"
+            tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </LinearLayout>
