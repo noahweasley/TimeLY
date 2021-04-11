@@ -62,6 +62,7 @@
             android:layout_height = "wrap_content"
             android:layout_margin = "@dimen/layout_gap"
             android:contentDescription = "@string/no_task"
+            android:visibility="gone"
             external:layout_constraintBottom_toBottomOf = "parent"
             external:layout_constraintEnd_toEndOf = "parent"
             external:layout_constraintStart_toStartOf = "parent"
