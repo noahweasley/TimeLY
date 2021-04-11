@@ -8,16 +8,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.projects.timely.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,13 +21,18 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.projects.timely.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("ConstantConditions")
 public class ImageDirectory extends AppCompatActivity implements Runnable {
     public static final int requestCode = 112;
-    private static final String STORAGE_ACCESS = "Storage access";
-    private static final String EXTERNAL = "External Storage";
-    private static final String INTERNAL = "Internal Storage";
-    List<List<Image>> imageDirectoryList = new ArrayList<>();
+    public static final String STORAGE_ACCESS = "Storage access";
+    public static final String EXTERNAL = "External Storage";
+    public static final String INTERNAL = "Internal Storage";
+    private final List<List<Image>> imageDirectoryList = new ArrayList<>();
     private final ImageAdapter imageAdapter = new ImageAdapter();
     private ProgressBar indeterminateProgress;
     private RecyclerView imageList;
@@ -48,7 +47,8 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         indeterminateProgress = findViewById(R.id.indeterminateProgress);
         v_noMedia = findViewById(R.id.no_media);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Select Image");
+
+        getSupportActionBar().setTitle(getIntent().getStringExtra(STORAGE_ACCESS));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageList.setHasFixedSize(true);
@@ -151,11 +151,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     }
 
     private void doViewUpdate() {
-        Log.d(getClass().getSimpleName(), "Size: " + imageDirectoryList.size());
-
-        indeterminateProgress.setVisibility(
-                imageDirectoryList.isEmpty() ? View.GONE : View.VISIBLE);
-
+        indeterminateProgress.setVisibility(View.GONE);
         imageList.setVisibility(imageDirectoryList.isEmpty() ? View.GONE : View.VISIBLE);
         v_noMedia.setVisibility(imageDirectoryList.isEmpty() ? View.VISIBLE : View.GONE);
     }
