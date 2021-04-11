@@ -28,8 +28,7 @@ public class SplashScreen extends AppCompatActivity {
         findViewById(R.id.skip).setOnClickListener(this::skipSplashScreen);
 
         // Used the non-italic version here, even when VISIONPHIX font is the italics version
-        tv_company.setTypeface(Typeface.createFromAsset(getAssets(),
-                                                        "fonts/Modern Machine.ttf"));
+        tv_company.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Modern Machine.ttf"));
         // Load all animations
         tv_company.startAnimation(AnimationUtils.loadAnimation(this, R.anim.cn_anim));
         tv_appName.startAnimation(AnimationUtils.loadAnimation(this, R.anim.an_anim));
