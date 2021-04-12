@@ -8,13 +8,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.projects.timely.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 class ImageRowHolder extends RecyclerView.ViewHolder {
     private final ImageView img_image;
@@ -24,7 +24,8 @@ class ImageRowHolder extends RecyclerView.ViewHolder {
     private Activity parentActivity;
     private List<? extends List<Image>> imageCollection;
     private int position;
-    private String action;
+    private String accessedStorage;
+    private static final String ADD_NEW = "com.projects.timely.gallery.ImageGallery.ADD_NEW";
 
     @SuppressLint("ClickableViewAccessibility")
     ImageRowHolder(View view) {
@@ -36,8 +37,9 @@ class ImageRowHolder extends RecyclerView.ViewHolder {
         img_image.setOnClickListener(v -> {
             if (parentActivity instanceof ImageDirectory) {
                 Intent intent = new Intent(parentActivity, ImageGallery.class);
-                intent.setAction(action);
+                intent.setAction(ADD_NEW);
                 intent.putExtra("folder", bucketDisplayName);
+                intent.putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, accessedStorage);
                 parentActivity.startActivity(intent);
                 parentActivity.finish();
             }
@@ -58,10 +60,12 @@ class ImageRowHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    ImageRowHolder with(Activity activity, List<? extends List<Image>> list, int position) {
+    ImageRowHolder with(Activity activity, List<? extends List<Image>> list, int position,
+                        String accessedStorage) {
         this.parentActivity = activity;
         this.imageCollection = list;
         this.position = position;
+        this.accessedStorage = accessedStorage;
         return this;
     }
 
@@ -72,10 +76,5 @@ class ImageRowHolder extends RecyclerView.ViewHolder {
         tv_directoryName.setText(bucketDisplayName);
         tv_directorySize.setText(String.valueOf(imageCollection.get(position).size()));
         Picasso.get().load(image.getImageUri()).centerCrop().fit().into(img_image);
-    }
-
-    public ImageRowHolder setAction(String action) {
-        this.action = action;
-        return this;
     }
 }
