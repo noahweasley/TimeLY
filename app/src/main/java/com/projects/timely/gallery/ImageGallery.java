@@ -8,12 +8,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.projects.timely.R;
 import com.projects.timely.assignment.AddAssignmentActivity;
@@ -23,21 +29,15 @@ import com.projects.timely.core.ChoiceMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import static com.projects.timely.assignment.ViewImagesActivity.ARG_URI_LIST;
+import static com.projects.timely.gallery.ImageDirectory.EXTERNAL;
+import static com.projects.timely.gallery.ImageDirectory.STORAGE_ACCESS_ROOT;
 
 @SuppressWarnings("ConstantConditions")
 @SuppressLint("InlinedApi")
 public class ImageGallery extends AppCompatActivity implements Runnable, ActionMode.Callback {
     public static final String ARG_FILES_COUNT = "Attached files count";
     private final List<Image> images = new ArrayList<>();
-    private final String TAG = this.getClass().getSimpleName();
     private final ChoiceMode choiceMode = ChoiceMode.IMAGE_MULTI_SELECT;
     private ImageAdapter imageAdapter;
     private String folder;
@@ -88,13 +88,21 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, ImageDirectory.class));
+        startActivity(new Intent(this, ImageDirectory.class)
+                .putExtra(STORAGE_ACCESS_ROOT, getIntent().getStringExtra(STORAGE_ACCESS_ROOT)));
         finish();
     }
 
     // will be replaced with a cursor loader
     @Override
     public void run() {
+        String root_extra = getIntent().getStringExtra(STORAGE_ACCESS_ROOT);
+        Uri storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        if (root_extra != null) {
+            storageUri = root_extra.equals(EXTERNAL) ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+        }
+
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         String[] projection = {
                 MediaStore.Images.Media._ID,
@@ -106,11 +114,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
         Cursor imgCursor = getApplicationContext()
                 .getContentResolver()
-                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                       projection,
-                       selection,
-                       selectionArgs,
-                       null);
+                .query(storageUri, projection, selection, selectionArgs, null);
 
         int idColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
         int sizeColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
@@ -149,6 +153,12 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        imageAdapter.getChoiceMode().clearChoices();
+    }
+
+    @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         return false;
     }
@@ -159,12 +169,12 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
             ImageMultiChoiceMode imageMultiChoiceMode
                     = (ImageMultiChoiceMode) imageAdapter.getChoiceMode();
 
-            // FIXME: 2/23/2021 Find the cause of the additional images added
+            // FIXME: 2/23/2021 Find the cause of the additional images
             startActivity(new Intent(this, ViewImagesActivity.class)
-                                  .putExtra(ARG_URI_LIST, imageMultiChoiceMode.getUriList()));
+                    .putExtra(ARG_URI_LIST, imageMultiChoiceMode.getUriList()));
         } else {
             startActivity(new Intent(this, AddAssignmentActivity.class)
-                                  .putExtra(ARG_FILES_COUNT, imageAdapter.getCheckedImageCount()));
+                    .putExtra(ARG_FILES_COUNT, imageAdapter.getCheckedImageCount()));
         }
         finish();
         return true;
@@ -172,13 +182,11 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        Log.d(TAG, "onDestroyActionMode() called");
         actionMode = null;
         imageAdapter.getChoiceMode().clearChoices();
         imageAdapter.notifyDataSetChanged();
     }
 
-    // Image Adapter
     class ImageAdapter extends RecyclerView.Adapter<ImageGalleryRowHolder> {
         private final ChoiceMode choiceMode;
         private boolean multiSelectionEnabled;
@@ -190,8 +198,9 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
         @NonNull
         @Override
         public ImageGalleryRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
-            View view = getLayoutInflater().inflate(R.layout.layout_image_gallery_row, viewGroup,
-                                                    false);
+            View view =
+                    getLayoutInflater()
+                            .inflate(R.layout.layout_image_gallery_row, viewGroup, false);
             return new ImageGalleryRowHolder(view);
         }
 
