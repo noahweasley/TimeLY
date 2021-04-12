@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.projects.timely.R;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.projects.timely.R;
+
+import java.util.List;
 
 public class ImageSlideActivity extends AppCompatActivity {
     public static final String ARG_INITIAL_POSITION = "Initial Uri from list";
@@ -34,6 +34,7 @@ public class ImageSlideActivity extends AppCompatActivity {
         setContentView(R.layout.image_silder);
         ViewPager2 pager = findViewById(R.id.pager);
         pager.setAdapter(new ImageAdapter(this));
+        pager.setCurrentItem(getIntent().getIntExtra(ARG_INITIAL_POSITION, 0), false);
     }
 
     private static class ImageAdapter extends FragmentStateAdapter {
