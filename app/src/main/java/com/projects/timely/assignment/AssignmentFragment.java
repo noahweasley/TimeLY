@@ -99,22 +99,23 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             aList = database.getAssignmentData();
-            getActivity().runOnUiThread(() -> {
-                boolean empty = aList.isEmpty();
-                // animate progress bar dismissal
-                dismissProgressbar(indeterminateProgress, empty);
-                noAssignmentView.setVisibility(empty ? View.VISIBLE : View.GONE);
-                rV_assignmentList.setVisibility(empty ? View.GONE : View.VISIBLE);
-                assignmentAdapter.notifyDataSetChanged();
-                if (itemCount != null)
-                    itemCount.setText(String.valueOf(aList.size()));
-            });
+            if (isAdded())
+                getActivity().runOnUiThread(() -> {
+                    boolean empty = aList.isEmpty();
+                    // animate progress bar dismissal
+                    dismissProgressbar(indeterminateProgress, empty);
+                    noAssignmentView.setVisibility(empty ? View.VISIBLE : View.GONE);
+                    rV_assignmentList.setVisibility(empty ? View.GONE : View.VISIBLE);
+                    assignmentAdapter.notifyDataSetChanged();
+                    if (itemCount != null)
+                        itemCount.setText(String.valueOf(aList.size()));
+                });
         });
 
         FloatingActionButton fab_add = view.findViewById(R.id.fab_add);
         fab_add.setOnClickListener(
                 v -> startActivity(new Intent(getActivity(), AddAssignmentActivity.class)
-                                           .setAction("Create")));
+                        .setAction("Create")));
 
         assignmentAdapter.setHasStableIds(true);
         rV_assignmentList.setHasFixedSize(true);
@@ -464,8 +465,8 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             final int count = getCheckedAssignmentsCount();
             Snackbar snackbar
                     = Snackbar.make(coordinator,
-                                    count + " Assignment" + (count > 1 ? "s" : "") + " Deleted",
-                                    Snackbar.LENGTH_LONG);
+                    count + " Assignment" + (count > 1 ? "s" : "") + " Deleted",
+                    Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());
