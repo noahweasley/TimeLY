@@ -31,25 +31,24 @@ public class StorageViewer extends AppCompatActivity implements View.OnClickList
         boolean ext_str_mounted
                 = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
         v_externalStorage.setVisibility(ext_str_mounted ? View.VISIBLE : View.GONE);
-
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.internal_storage) {
             startActivity(new Intent(this, ImageDirectory.class)
-                    .putExtra(ImageDirectory.STORAGE_ACCESS, ImageDirectory.INTERNAL));
+                    .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.INTERNAL));
         } else {
             startActivity(new Intent(this, ImageDirectory.class)
-                    .putExtra(ImageDirectory.STORAGE_ACCESS, ImageDirectory.EXTERNAL));
+                    .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL));
         }
+        finish();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         super.onBackPressed();
         return true;
-//        return super.onSupportNavigateUp();
     }
 }
 
