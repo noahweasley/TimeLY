@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Process;
 
+import androidx.core.os.ConfigurationCompat;
+import androidx.preference.PreferenceManager;
+
 import com.projects.timely.core.Time;
 
 import org.greenrobot.eventbus.EventBus;
@@ -14,9 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import androidx.core.os.ConfigurationCompat;
-import androidx.preference.PreferenceManager;
 
 import static com.projects.timely.core.Globals.isUserPreferred24Hours;
 
@@ -67,7 +67,8 @@ public class TimeChangeDetector extends Thread {
 
                 if (!wantToStopOperation && !this.min.equals(calculatedTime.getMinutes())) {
                     // system time is posted
-                    EventBus.getDefault().post(calculatedTime);
+                    if (EventBus.getDefault().hasSubscriberForEvent(Time.class))
+                        EventBus.getDefault().post(calculatedTime);
                     this.min = calculatedTime.getMinutes();
                 }
             }
