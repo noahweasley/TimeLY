@@ -34,41 +34,41 @@
         external:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id = "@+id/no_media"
-        android:layout_width = "0dp"
-        android:layout_height = "0dp"
-        external:layout_constraintBottom_toBottomOf = "parent"
-        external:layout_constraintEnd_toEndOf = "parent"
-        external:layout_constraintStart_toStartOf = "parent"
-        external:layout_constraintTop_toTopOf = "parent">
+        android:id="@+id/no_media"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id = "@+id/no_task_text"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:text = "@string/no_image"
+            android:id="@+id/no_task_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/righteous"
-            android:textColor = "@color/colorPrimaryDark"
-            android:textSize = "35sp"
-            external:layout_constraintBottom_toTopOf = "@id/img_no_event"
-            external:layout_constraintEnd_toEndOf = "parent"
-            external:layout_constraintStart_toStartOf = "parent"
-            external:layout_constraintTop_toTopOf = "parent"
-            external:layout_constraintVertical_bias = "0.75" />
+            android:text="@string/no_image"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="35sp"
+            external:layout_constraintBottom_toTopOf="@id/img_no_event"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            external:layout_constraintVertical_bias="0.75" />
 
         <ImageView
-            android:id = "@+id/img_no_event"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:layout_margin = "@dimen/layout_gap"
-            android:contentDescription = "@string/no_task"
-            android:visibility="gone"
-            external:layout_constraintBottom_toBottomOf = "parent"
-            external:layout_constraintEnd_toEndOf = "parent"
-            external:layout_constraintStart_toStartOf = "parent"
-            external:layout_constraintTop_toTopOf = "parent"
-            external:layout_constraintVertical_bias = ".6"
-            external:srcCompat = "@drawable/image_availability" />
+            android:id="@+id/img_no_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_gap"
+            android:contentDescription="@string/no_task"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            external:layout_constraintVertical_bias=".6"
+            external:srcCompat="@drawable/image_availability" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
