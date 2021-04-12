@@ -14,6 +14,18 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
 import com.projects.timely.core.ChoiceMode;
@@ -38,18 +50,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
-import androidx.appcompat.widget.TooltipCompat;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import static com.projects.timely.core.Globals.runBackgroundTask;
 
 @SuppressWarnings({"ConstantConditions"})
@@ -66,7 +66,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
     private TextView itemCount;
     private RecyclerView rV_timetable;
     private CoordinatorLayout coordinator;
-    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
+    private final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
 
     public static ScheduledTimetableFragment newInstance() {
         return new ScheduledTimetableFragment();
@@ -167,8 +167,8 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
             rV_timetable.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         } else {
             rV_timetable.setLayoutManager(new LinearLayoutManager(getActivity(),
-                                                                  LinearLayoutManager.VERTICAL,
-                                                                  false));
+                    LinearLayoutManager.VERTICAL,
+                    false));
         }
         view.findViewById(R.id.fab_add_new)
                 .setOnClickListener(v -> new AddScheduledDialog().show(getContext()));
@@ -183,7 +183,8 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        tableRowAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null)
+            tableRowAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -304,20 +305,20 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         @Override
         public TimeTableRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int ignored) {
             View view = getLayoutInflater().inflate(R.layout.scheduled_timetable_row, viewGroup,
-                                                    false);
+                    false);
             return (rowHolder = new TimeTableRowHolder(view));
         }
 
         @Override
         public void onBindViewHolder(@NonNull TimeTableRowHolder timeTableRowHolder, int position) {
             timeTableRowHolder.with(ScheduledTimetableFragment.this, tableRowAdapter, tList,
-                                    coordinator, position)
+                    coordinator, position)
                     .bindView();
         }
 
         @Override
         public long getItemId(int position) {
-            return ((TimetableModel) tList.get(position)).getId();
+            return tList.get(position).getId();
         }
 
         @Override
@@ -430,8 +431,8 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
             final int count = getCheckedCoursesCount();
             Snackbar snackbar
                     = Snackbar.make(coordinator,
-                                    count + " Course" + (count > 1 ? "s" : "") + " Deleted",
-                                    Snackbar.LENGTH_LONG);
+                    count + " Course" + (count > 1 ? "s" : "") + " Deleted",
+                    Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());
