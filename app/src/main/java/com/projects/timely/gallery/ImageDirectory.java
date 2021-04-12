@@ -3,6 +3,7 @@ package com.projects.timely.gallery;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -29,7 +30,7 @@ import java.util.List;
 @SuppressWarnings("ConstantConditions")
 public class ImageDirectory extends AppCompatActivity implements Runnable {
     public static final int requestCode = 112;
-    public static final String STORAGE_ACCESS = "Storage access";
+    public static final String STORAGE_ACCESS_ROOT = "Storage access";
     public static final String EXTERNAL = "External Storage";
     public static final String INTERNAL = "Internal Storage";
     private final List<List<Image>> imageDirectoryList = new ArrayList<>();
@@ -37,6 +38,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     private ProgressBar indeterminateProgress;
     private RecyclerView imageList;
     private ViewGroup v_noMedia;
+    private String accessedStorage;
 
     protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -48,7 +50,9 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         v_noMedia = findViewById(R.id.no_media);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(getIntent().getStringExtra(STORAGE_ACCESS));
+        getSupportActionBar()
+                .setTitle(accessedStorage = getIntent().getStringExtra(STORAGE_ACCESS_ROOT));
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageList.setHasFixedSize(true);
@@ -74,8 +78,9 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        startActivity(new Intent(this, StorageViewer.class));
+        finish();
     }
 
     @Override
@@ -94,10 +99,10 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     @Override
     @SuppressLint("InlinedApi")
     public void run() {
-        String extra = getIntent().getStringExtra(STORAGE_ACCESS);
+        String root_extra = getIntent().getStringExtra(STORAGE_ACCESS_ROOT);
         Uri storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        if (extra != null) {
-            storageUri = extra.equals(EXTERNAL) ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        if (root_extra != null) {
+            storageUri = root_extra.equals(EXTERNAL) ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
         }
 
@@ -124,8 +129,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
             String folderName = imgCursor.getString(bucketName);
 
             Uri contentUri
-                    = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    id);
+                    = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
             Image currentImage = new Image(contentUri, size, fileName, folderName);
 
             int directoryIndex = linearSearch(dirName, folderName);
@@ -175,15 +179,16 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         @NonNull
         @Override
         public ImageRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
-            View view = getLayoutInflater().inflate(R.layout.layout_image_directory_row,
-                    viewGroup,
-                    false);
-            return new ImageRowHolder(view).setAction(getIntent().getAction());
+            View view =
+                    getLayoutInflater()
+                            .inflate(R.layout.layout_image_directory_row, viewGroup, false);
+            return new ImageRowHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ImageRowHolder viewHolder, int pos) {
-            viewHolder.with(ImageDirectory.this, imageDirectoryList, pos).loadThumbnail();
+            viewHolder.with(ImageDirectory.this, imageDirectoryList, pos, accessedStorage)
+                    .loadThumbnail();
         }
 
         @Override
