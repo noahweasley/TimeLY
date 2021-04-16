@@ -129,7 +129,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
             String folderName = imgCursor.getString(bucketName);
 
             Uri contentUri
-                    = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                    = ContentUris.withAppendedId(storageUri, id);
             Image currentImage = new Image(contentUri, size, fileName, folderName);
 
             int directoryIndex = linearSearch(dirName, folderName);
@@ -151,7 +151,6 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
             imageAdapter.notifyDataSetChanged();
             doViewUpdate();
         });
-
     }
 
     private void doViewUpdate() {
