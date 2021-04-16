@@ -129,8 +129,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
             String fileName = imgCursor.getString(displayNameColumn);
             String folderName = imgCursor.getString(bucketDisplayNameColumn);
 
-            Uri contentUri
-                    = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            Uri contentUri = ContentUris.withAppendedId(storageUri, id);
             images.add(new Image(contentUri, size, fileName, folderName));
         }
 
