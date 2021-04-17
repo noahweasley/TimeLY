@@ -1,0 +1,29 @@
+{
+  "header": {
+    "name": "Custom cookbook",
+    "description": "cookbook for internal use within our company",
+    "company": "SCW",
+    "appsecmail": "appsecteam@senseifinancial.com",
+    "rulepack_id": "a312aeec-71c6-43ce-8f85-88d08da30910",
+    "rulePackVersion": "0.1.0",
+    "enabled": true
+  },
+  "rules": [
+    {
+      "type": "947034909c9b08d0b583170e594b0eb327933231",
+      "model": {
+        "yamlCode": "search:\n  methodcall: {}\n",
+        "mver": 8,
+        "yamlQuickFixCode": "availableFixes:\n- name: \"Fix the code by ...\"\n  actions:\n  - rewrite:\n      to: \"\"\n",
+        "ruleName": "new recipe",
+        "ruleID": "0f563a4e-2963-447d-992d-f06b29cb5840",
+        "disableRuleIDs": [],
+        "ruleShortDescription": "This text will be shown as a tooltip when code violates this recipe",
+        "ruleErrorLevel": 2,
+        "ruleScope": [],
+        "ruleEnabled": true
+      }
+    }
+  ],
+  "generators": []
+}

@@ -823,9 +823,7 @@
     <inspection_tool class="DivideByZero" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="DollarSignInName" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DoubleBraceInitialization" enabled="true" level="INFORMATION" enabled_by_default="true" />
-    <inspection_tool class="DoubleCheckedLocking" enabled="false" level="WARNING" enabled_by_default="false">
-      <option name="ignoreOnVolatileVariables" value="false" />
-    </inspection_tool>
+    <inspection_tool class="DoubleCheckedLocking" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DoubleLiteralMayBeFloatLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DoubleNegation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="DoubleNegative" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -2825,6 +2823,7 @@
     <inspection_tool class="YAMLUnresolvedAlias" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="YAMLUnusedAnchor" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ZeroLengthArrayInitialization" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="a312aeec-71c6-43ce-8f85-88d08da30910_newrecipe" enabled="false" level="SENSEI ERROR" enabled_by_default="false" />
     <inspection_tool class="dependsOnMethodTestNG" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="fcd36335-ac86-4bef-8d30-062d8aae0364_CryptoCipherInsecureAsymmetricCryptographicAlgorithm" enabled="true" level="SENSEI ERROR" enabled_by_default="true" />
     <inspection_tool class="fcd36335-ac86-4bef-8d30-062d8aae0364_CryptoKeyAgreementGuideonApprovedCryptographicAlgorithm" enabled="true" level="SENSEI MARKED INFO" enabled_by_default="true" />
