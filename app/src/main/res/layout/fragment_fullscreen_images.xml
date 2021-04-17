@@ -19,7 +19,6 @@
         android:id="@+id/fullscreen_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
         android:contentDescription="@string/fullscreen_image"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"

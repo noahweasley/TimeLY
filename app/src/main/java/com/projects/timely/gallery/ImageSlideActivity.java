@@ -3,6 +3,7 @@ package com.projects.timely.gallery;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.projects.timely.R;
@@ -34,6 +36,13 @@ public class ImageSlideActivity extends AppCompatActivity {
         setContentView(R.layout.image_silder);
         ViewPager2 pager = findViewById(R.id.pager);
         pager.setAdapter(new ImageAdapter(this));
+
+        // Converts 8 dip into its equivalent px
+        float mPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8.0f,
+                getResources().getDisplayMetrics());
+
+        pager.setPageTransformer(new MarginPageTransformer((int) mPx));
+        pager.setOffscreenPageLimit(images.size());
         pager.setCurrentItem(getIntent().getIntExtra(ARG_INITIAL_POSITION, 0), false);
     }
 
