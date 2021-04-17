@@ -13,26 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.projects.timely.R;
-import com.projects.timely.core.ChoiceMode;
-import com.projects.timely.core.EmptyListEvent;
-import com.projects.timely.core.RequestRunner;
-import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ThreadUtils;
-import com.projects.timely.gallery.Image;
-import com.projects.timely.gallery.ImageDirectory;
-import com.projects.timely.gallery.ImageListRowHolder;
-import com.projects.timely.gallery.ImageMultiChoiceMode;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +21,26 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.projects.timely.R;
+import com.projects.timely.core.ChoiceMode;
+import com.projects.timely.core.EmptyListEvent;
+import com.projects.timely.core.RequestRunner;
+import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.gallery.Image;
+import com.projects.timely.gallery.ImageListRowHolder;
+import com.projects.timely.gallery.ImageMultiChoiceMode;
+import com.projects.timely.gallery.StorageViewer;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("ConstantConditions")
 public class ViewImagesActivity extends AppCompatActivity implements ActionMode.Callback {
@@ -113,7 +113,8 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         rv_imageList.setAdapter(imageAdapter = new ImageAdapter(choiceMode));
 
         findViewById(R.id.add_new).setOnClickListener(
-                v -> startActivity(new Intent(this, ImageDirectory.class).setAction(ADD_NEW)));
+                v -> startActivity(new Intent(this, StorageViewer.class)
+                        .setAction(ADD_NEW)));
 
         ItemTouchHelper swipeHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override

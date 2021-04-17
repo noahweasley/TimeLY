@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -52,6 +53,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
         getSupportActionBar()
                 .setTitle(accessedStorage = getIntent().getStringExtra(STORAGE_ACCESS_ROOT));
+        Log.d(getClass().getSimpleName(), "Setting title to: " + accessedStorage);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -173,20 +175,21 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     }
 
     // Image List Adapter
-    private class ImageAdapter extends RecyclerView.Adapter<ImageRowHolder> {
+    private class ImageAdapter extends RecyclerView.Adapter<ImageDirectoryRowHolder> {
 
         @NonNull
         @Override
-        public ImageRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
+        public ImageDirectoryRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
             View view =
                     getLayoutInflater()
                             .inflate(R.layout.layout_image_directory_row, viewGroup, false);
-            return new ImageRowHolder(view);
+            return new ImageDirectoryRowHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ImageRowHolder viewHolder, int pos) {
+        public void onBindViewHolder(@NonNull ImageDirectoryRowHolder viewHolder, int pos) {
             viewHolder.with(ImageDirectory.this, imageDirectoryList, pos, accessedStorage)
+                    .setRequestAction(getIntent().getAction())
                     .loadThumbnail();
         }
 

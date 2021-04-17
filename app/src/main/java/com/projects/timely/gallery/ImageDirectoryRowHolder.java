@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-class ImageRowHolder extends RecyclerView.ViewHolder {
+class ImageDirectoryRowHolder extends RecyclerView.ViewHolder {
     private final ImageView img_image;
     private final TextView tv_directoryName;
     private final TextView tv_directorySize;
@@ -25,10 +25,10 @@ class ImageRowHolder extends RecyclerView.ViewHolder {
     private List<? extends List<Image>> imageCollection;
     private int position;
     private String accessedStorage;
-    private static final String ADD_NEW = "com.projects.timely.gallery.ImageGallery.ADD_NEW";
+    private String reqAction;
 
     @SuppressLint("ClickableViewAccessibility")
-    ImageRowHolder(View view) {
+    ImageDirectoryRowHolder(View view) {
         super(view);
         img_image = view.findViewById(R.id.rowImage);
         tv_directoryName = view.findViewById(R.id.directoryName);
@@ -37,7 +37,7 @@ class ImageRowHolder extends RecyclerView.ViewHolder {
         img_image.setOnClickListener(v -> {
             if (parentActivity instanceof ImageDirectory) {
                 Intent intent = new Intent(parentActivity, ImageGallery.class);
-                intent.setAction(ADD_NEW);
+                intent.setAction(reqAction);
                 intent.putExtra("folder", bucketDisplayName);
                 intent.putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, accessedStorage);
                 parentActivity.startActivity(intent);
@@ -60,8 +60,8 @@ class ImageRowHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    ImageRowHolder with(Activity activity, List<? extends List<Image>> list, int position,
-                        String accessedStorage) {
+    ImageDirectoryRowHolder with(Activity activity, List<? extends List<Image>> list, int position,
+                                 String accessedStorage) {
         this.parentActivity = activity;
         this.imageCollection = list;
         this.position = position;
@@ -76,5 +76,10 @@ class ImageRowHolder extends RecyclerView.ViewHolder {
         tv_directoryName.setText(bucketDisplayName);
         tv_directorySize.setText(String.valueOf(imageCollection.get(position).size()));
         Picasso.get().load(image.getImageUri()).centerCrop().fit().into(img_image);
+    }
+
+    public ImageDirectoryRowHolder setRequestAction(String action) {
+        this.reqAction = action;
+        return this;
     }
 }

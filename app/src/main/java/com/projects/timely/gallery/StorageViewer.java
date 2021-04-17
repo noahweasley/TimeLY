@@ -37,10 +37,12 @@ public class StorageViewer extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v.getId() == R.id.internal_storage) {
             startActivity(new Intent(this, ImageDirectory.class)
-                    .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.INTERNAL));
+                    .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.INTERNAL)
+                    .setAction(getIntent().getAction()));
         } else {
             startActivity(new Intent(this, ImageDirectory.class)
-                    .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL));
+                    .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
+                    .setAction(getIntent().getAction()));
         }
         finish();
     }

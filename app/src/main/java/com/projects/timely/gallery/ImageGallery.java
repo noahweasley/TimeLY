@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -164,6 +165,8 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        Log.d(getClass().getSimpleName(), "Action: " + getIntent().getAction());
+
         if (getIntent().getAction().equals(ViewImagesActivity.ADD_NEW)) {
             ImageMultiChoiceMode imageMultiChoiceMode
                     = (ImageMultiChoiceMode) imageAdapter.getChoiceMode();
