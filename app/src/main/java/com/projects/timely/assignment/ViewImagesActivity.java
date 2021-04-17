@@ -234,8 +234,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         actionMode = null;
-        imageAdapter.getChoiceMode().clearChoices();
-        imageAdapter.notifyDataSetChanged();
+        imageAdapter.reset();
     }
 
     public class ImageAdapter extends RecyclerView.Adapter<ImageListRowHolder> {
@@ -269,6 +268,15 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
          */
         public ChoiceMode getChoiceMode() {
             return choiceMode;
+        }
+
+        /**
+         * Reset this image adapter to initial state
+         */
+        public void reset() {
+            choiceMode.clearChoices();
+            setMultiSelectionEnabled(false);
+            notifyDataSetChanged();
         }
 
         /**
@@ -356,8 +364,8 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
             final int count = getCheckedImageCount();
             Snackbar snackbar
                     = Snackbar.make(coordinator,
-                                    count + " Image" + (count > 1 ? "s" : "") + " Deleted",
-                                    Snackbar.LENGTH_LONG);
+                    count + " Image" + (count > 1 ? "s" : "") + " Deleted",
+                    Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());
