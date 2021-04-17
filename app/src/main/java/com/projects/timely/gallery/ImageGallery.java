@@ -185,8 +185,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         actionMode = null;
-        imageAdapter.getChoiceMode().clearChoices();
-        imageAdapter.notifyDataSetChanged();
+        imageAdapter.reset();
     }
 
     class ImageAdapter extends RecyclerView.Adapter<ImageGalleryRowHolder> {
@@ -243,6 +242,15 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
          */
         public boolean isMultiSelectionEnabled() {
             return multiSelectionEnabled;
+        }
+
+        /**
+         * Reset this image adapter to initial state
+         */
+        public void reset() {
+            choiceMode.clearChoices();
+            setMultiSelectionEnabled(false);
+            notifyDataSetChanged();
         }
 
         /**
