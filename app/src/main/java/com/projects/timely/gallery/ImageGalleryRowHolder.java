@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.projects.timely.R;
 import com.projects.timely.assignment.AddAssignmentActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
     private final ImageView img_image;
