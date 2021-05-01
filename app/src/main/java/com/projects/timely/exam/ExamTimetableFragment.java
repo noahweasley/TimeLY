@@ -13,16 +13,26 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
 import com.projects.timely.core.ChoiceMode;
-import com.projects.timely.core.CountEvent;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.DataMultiChoiceMode;
 import com.projects.timely.core.EmptyListEvent;
 import com.projects.timely.core.MultiUpdateMessage;
 import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
+import com.projects.timely.core.RequestUpdateEvent;
 import com.projects.timely.core.SchoolDatabase;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,16 +43,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
-import androidx.appcompat.widget.TooltipCompat;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
@@ -121,7 +121,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
 
         int pagePos = getArguments().getInt(ARG_POSITION);
         view.findViewById(R.id.add_exams)
-                .setOnClickListener(v -> new AddExamDialog().show(getContext(), pagePos));
+            .setOnClickListener(v -> new AddExamDialog().show(getContext(), pagePos));
         // set  list to have a fixed size to increase performance and set stable id, to use same
         // view holder on adapter change
         rv_Exams.setHasFixedSize(true);
@@ -241,7 +241,8 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                     examRowAdapter.notifyItemInserted(changePos);
                     examRowAdapter.notifyDataSetChanged();
                 } else {
-                    // This else block is never used, but is left here for future app updates, where I
+                    // This else block is never used, but is left here for future app updates,
+                    // where I
                     // would need to edit exams.
                     eList.remove(changePos);
                     eList.add(changePos, data);
@@ -255,16 +256,27 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doCountUpdate(CountEvent countEvent) {
-        itemCount.setText(String.valueOf(countEvent.getSize()));
+    public void doOnRequestUpdate(RequestUpdateEvent request) {
+        switch (request.getUpdateType()) {
+            case INSERT:
+                itemCount.setText(String.valueOf(eList.size()));
+                examRowAdapter.notifyItemInserted(request.getChangePosition());
+                examRowAdapter.notifyDataSetChanged();
+                break;
+            case REMOVE:
+                itemCount.setText(String.valueOf(eList.size()));
+                examRowAdapter.notifyItemRemoved(request.getChangePosition());
+                examRowAdapter.notifyDataSetChanged();
+                break;
+        }
     }
 
     private void dismissProgressbar(ProgressBar progressBar, boolean isEmpty) {
         if (isEmpty) progressBar.setVisibility(View.GONE);
         else progressBar.animate()
-                .scaleX(0.0f)
-                .scaleY(0.0f)
-                .setDuration(1000);
+                        .scaleX(0.0f)
+                        .scaleY(0.0f)
+                        .setDuration(1000);
     }
 
     class ExamRowAdapter extends RecyclerView.Adapter<ExamRowHolder> {
@@ -288,7 +300,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
         @Override
         public void onBindViewHolder(@NonNull ExamRowHolder holder, int position) {
             holder.with(ExamTimetableFragment.this, examRowAdapter, eList, coordinator)
-                    .bindView();
+                  .bindView();
         }
 
         @Override
@@ -357,8 +369,8 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
         }
 
         /**
-         * @param position           the position where the change occurred
-         * @param state              the new state of the change
+         * @param position     the position where the change occurred
+         * @param state        the new state of the change
          * @param examPosition the position of the assignment in database.
          */
         public void onChecked(int position, boolean state, int examPosition) {
@@ -392,16 +404,16 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
             RequestRunner runner = RequestRunner.getInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
-                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                    .setAdapter(examRowAdapter)
-                    .setModelList(eList)
-                    .setMetadataType(RequestParams.MetaDataType.EXAM)
-                    .setItemIndices(getCheckedExamsIndices())
-                    .setPositionIndices(getCheckedExamsPositions())
-                    .setDataProvider(ExamModel.class);
+                   .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                   .setAdapter(examRowAdapter)
+                   .setModelList(eList)
+                   .setMetadataType(RequestParams.MetaDataType.EXAM)
+                   .setItemIndices(getCheckedExamsIndices())
+                   .setPositionIndices(getCheckedExamsPositions())
+                   .setDataProvider(ExamModel.class);
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(MULTIPLE_DELETE_REQUEST);
+                  .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedCoursesCount();
             Snackbar snackbar
