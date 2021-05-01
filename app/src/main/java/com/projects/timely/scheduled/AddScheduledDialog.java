@@ -23,6 +23,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.projects.timely.R;
 import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.error.ErrorDialog;
@@ -34,17 +40,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
 import static android.content.Context.ALARM_SERVICE;
-import static com.projects.timely.core.Globals.Alert.SCHEDULED_TIMETABLE;
-import static com.projects.timely.core.Globals.DAYS;
-import static com.projects.timely.core.Globals.playAlertTone;
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.Alert.SCHEDULED_TIMETABLE;
+import static com.projects.timely.core.AppUtils.DAYS;
+import static com.projects.timely.core.AppUtils.playAlertTone;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 import static com.projects.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
 import static com.projects.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
 
@@ -100,15 +100,13 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
         String code = database.getCourseCodeFromName(course);
 
         String importance;
-        switch (imp_group.getCheckedRadioButtonId()) {
-            case R.id.less_important:
-                importance = "Less Important";
-                break;
-            case R.id.very_important:
-                importance = "Very Important";
-                break;
-            default:
-                importance = "Not Important";
+        int checkedRadioButtonId = imp_group.getCheckedRadioButtonId();
+        if (checkedRadioButtonId == R.id.less_important) {
+            importance = "Less Important";
+        } else if (checkedRadioButtonId == R.id.very_important) {
+            importance = "Very Important";
+        } else {
+            importance = "Not Important";
         }
 
         String timeRegex  /* 24 Hours format */

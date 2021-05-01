@@ -50,7 +50,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings({"ConstantConditions"})
 public class ScheduledTimetableFragment extends Fragment implements ActionMode.Callback {

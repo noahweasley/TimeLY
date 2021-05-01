@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+
 import com.projects.timely.R;
 import com.projects.timely.alarms.TimeChangeDetector;
 import com.projects.timely.core.DayPart;
@@ -16,13 +20,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import androidx.annotation.NonNull;
-import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-
 @SuppressWarnings({"ConstantConditions"})
 public class LandingPageFragment extends Fragment {
-    private TextView text;
+    private TextView tv_gText;
     private DayPart lastDayPart;
 
     static LandingPageFragment newInstance() {
@@ -35,18 +35,18 @@ public class LandingPageFragment extends Fragment {
         if (this.lastDayPart != time.getCurrentDayPart()) {
             switch (time.getCurrentDayPart()) {
                 case MORNING:
-                    if (text != null)
-                        text.setText(R.string.morning);
+                    if (tv_gText != null)
+                        tv_gText.setText(R.string.morning);
                     Log.d(getClass().getSimpleName(), "Morning");
                     break;
                 case AFTERNOON:
-                    if (text != null)
-                        text.setText(R.string.afternoon);
+                    if (tv_gText != null)
+                        tv_gText.setText(R.string.afternoon);
                     Log.d(getClass().getSimpleName(), "Afternoon");
                     break;
                 case EVENING:
-                    if (text != null)
-                        text.setText(R.string.evening);
+                    if (tv_gText != null)
+                        tv_gText.setText(R.string.evening);
                     Log.d(getClass().getSimpleName(), "Evening");
                     break;
                 default:
@@ -66,8 +66,8 @@ public class LandingPageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle state) {
         view.findViewById(R.id.discover).setOnClickListener(
                 (v) -> ((MainActivity) getActivity()).drawer.openDrawer(GravityCompat.START));
-        text = view.findViewById(R.id.greeting_text);
-        doUpdateGreeting(new TimeChangeDetector().with(getActivity()).requestImmediateTime());
+        tv_gText = view.findViewById(R.id.greeting_text);
+        doUpdateGreeting(TimeChangeDetector.requestImmediateTime(getContext()));
     }
 
     @Override

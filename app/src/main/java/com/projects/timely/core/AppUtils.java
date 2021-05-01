@@ -4,10 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 
-import com.projects.timely.R;
-
 import androidx.preference.PreferenceManager;
 
+import com.projects.timely.R;
 
 /**
  * This is just a simple class to hold all variables that can be assessed by all the
@@ -17,14 +16,13 @@ import androidx.preference.PreferenceManager;
  * and it also provides a neater way to assess Global variables
  */
 
-@SuppressWarnings("unused")
-public class Globals {
+public class AppUtils {
     public static final boolean isLoggingEnabled = true;
     public static final String[] DAYS
             = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     public static final String[] DAYS_3
             = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-    public static final char[] DAYS_2 = {'S', 'M','T', 'W', 'T', 'F', 'S'};
+    public static final char[] DAYS_2 = {'S', 'M', 'T', 'W', 'T', 'F', 'S'};
     // Used By DayRowHolder for polling changes in button state
     public static String timetable = "Monday"; // Monday: Default
     public static boolean deleteTaskRunning;

@@ -22,7 +22,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.projects.timely.R;
 import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.error.ErrorDialog;
-import com.projects.timely.gallery.ImageDirectory;
 import com.projects.timely.gallery.ImageGallery;
 import com.projects.timely.gallery.StorageViewer;
 
@@ -40,8 +39,8 @@ import static com.projects.timely.assignment.AssignmentFragment.DATE;
 import static com.projects.timely.assignment.AssignmentFragment.DESCRIPTION;
 import static com.projects.timely.assignment.AssignmentFragment.LECTURER_NAME;
 import static com.projects.timely.assignment.AssignmentFragment.TITLE;
-import static com.projects.timely.core.Globals.Alert;
-import static com.projects.timely.core.Globals.playAlertTone;
+import static com.projects.timely.core.AppUtils.Alert;
+import static com.projects.timely.core.AppUtils.playAlertTone;
 
 @SuppressWarnings({"ConstantConditions", "unused"})
 public class AddAssignmentActivity extends AppCompatActivity {

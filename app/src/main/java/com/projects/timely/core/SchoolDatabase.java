@@ -28,7 +28,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 /**
  * Sort order of list's in the database

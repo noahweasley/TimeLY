@@ -1,33 +1,26 @@
 package com.projects.timely.alarms;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
 
 import com.projects.timely.R;
 import com.projects.timely.core.Time;
+import com.projects.timely.core.TimeRefreshEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.text.DateFormat;
-import java.util.Calendar;
 
 @SuppressWarnings("ConstantConditions")
 public class AlarmTimeFragment extends Fragment {
@@ -43,14 +36,9 @@ public class AlarmTimeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle state) {
         // start blinking the colon in between the min and sec
-        // Start all the alarm animations
         TextView blinkTarget = view.findViewById(R.id.blink);
-        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        alphaAnimation.setRepeatMode(Animation.REVERSE);
-        alphaAnimation.setRepeatCount(Animation.INFINITE);
-        alphaAnimation.setDuration(500);
-        alphaAnimation.setInterpolator(new AccelerateInterpolator());
-        blinkTarget.startAnimation(alphaAnimation);
+        blinkTarget
+                .startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation));
 
         alarmDate = view.findViewById(R.id.alarm_date);
         alarmMin = view.findViewById(R.id.alarm_min);
@@ -67,35 +55,16 @@ public class AlarmTimeFragment extends Fragment {
             // when settings button is clicked, show the system date settings
             startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
         });
+        instantiateTime();
+    }
 
-        // avoid glitch by setting the icon before starting timer
-        Time time = new TimeChangeDetector().with(getActivity()).requestImmediateTime();
-        this.is24 = time.getIs24();
+    // avoid glitch by setting the icon before starting timer
+    private void instantiateTime() {
+        Time time = TimeChangeDetector.requestImmediateTime(getContext());
+        this.is24 = time.isMilitaryTime();
         doTimeUpdate(time);
         setDayIcon(time);
-
-        // Get the preferences for date format
-        Calendar date = Calendar.getInstance();
-        Context appContext = getContext().getApplicationContext();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
-        String dateFormat = preferences.getString("date_format", "");
-        String format;
-
-        switch (dateFormat) {
-            case "Full":
-                format = DateFormat.getDateInstance(DateFormat.FULL)
-                        .format(date.getTime());
-                break;
-            case "Short":
-                format = DateFormat.getDateInstance(DateFormat.SHORT)
-                        .format(date.getTime());
-                break;
-            default:
-                format = DateFormat.getDateInstance(DateFormat.MEDIUM)
-                        .format(date.getTime());
-        }
-
-        alarmDate.setText(format);
+        alarmDate.setText(time.getDate());
     }
 
     @Override
@@ -127,6 +96,11 @@ public class AlarmTimeFragment extends Fragment {
         am_pm.setText(time.isForenoon() ? "AM" : "PM");
         am_pm.setVisibility(is24 ? View.GONE : View.VISIBLE);
         setDayIcon(time);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doLayoutRefresh(TimeRefreshEvent refreshLayoutEvent) {
+        instantiateTime();
     }
 
     private void setDayIcon(Time time) {

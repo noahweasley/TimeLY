@@ -21,7 +21,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.projects.timely.core.Globals.isUserPreferred24Hours;
+import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 
 @SuppressWarnings("ConstantConditions")
 public class ExamRowHolder extends RecyclerView.ViewHolder {

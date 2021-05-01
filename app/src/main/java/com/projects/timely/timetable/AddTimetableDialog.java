@@ -38,10 +38,10 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import static com.projects.timely.core.Globals.Alert.COURSE;
-import static com.projects.timely.core.Globals.DAYS;
-import static com.projects.timely.core.Globals.playAlertTone;
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.Alert.COURSE;
+import static com.projects.timely.core.AppUtils.DAYS;
+import static com.projects.timely.core.AppUtils.playAlertTone;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 import static com.projects.timely.timetable.DaysFragment.ARG_CHRONOLOGY;
 import static com.projects.timely.timetable.DaysFragment.ARG_CLASS;
 import static com.projects.timely.timetable.DaysFragment.ARG_DATA;

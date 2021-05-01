@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,10 +30,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.projects.timely.R;
+import com.projects.timely.core.AppUtils.Alert;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.EmptyListEvent;
-import com.projects.timely.core.Globals.Alert;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.TimeRefreshEvent;
 import com.projects.timely.error.ErrorDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,9 +47,9 @@ import java.util.LinkedList;
 import java.util.Locale;
 
 import static com.projects.timely.alarms.AlarmReceiver.ALARM_POS;
-import static com.projects.timely.core.Globals.isUserPreferred24Hours;
-import static com.projects.timely.core.Globals.playAlertTone;
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
+import static com.projects.timely.core.AppUtils.playAlertTone;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings({"ConstantConditions"})
 public class AlarmListFragment extends Fragment {
@@ -101,9 +101,9 @@ public class AlarmListFragment extends Fragment {
                     no_alarm_view.setVisibility(empty ? View.VISIBLE : View.GONE);
 
                     indeterminateProgress.animate()
-                            .scaleX(0.0f)
-                            .scaleY(0.0f)
-                            .setDuration(1000);
+                                         .scaleX(0.0f)
+                                         .scaleY(0.0f)
+                                         .setDuration(1000);
 
                     alarmAdapter.notifyDataSetChanged();
                 });
@@ -119,6 +119,9 @@ public class AlarmListFragment extends Fragment {
         rV_AlarmList.addItemDecoration(
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         rV_AlarmList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+//      Note:  Code commented out because a user requested but code remains for code re-usability
+
 
 //        ItemTouchHelper deleteSwiper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
 //            @Override
@@ -176,7 +179,12 @@ public class AlarmListFragment extends Fragment {
         no_alarm_view.setVisibility(aList.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
-    // This class will handle everything related to alarms
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doLayoutRefresh(TimeRefreshEvent refreshEvent) {
+        if (alarmAdapter != null)
+            alarmAdapter.notifyDataSetChanged();
+    }
+
     private class TimeManager implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
 
         /**
@@ -221,17 +229,16 @@ public class AlarmListFragment extends Fragment {
             String time = timeFormat24.format(calendar.getTime());
 
             if (database.isAlarmPresent(time)) {
-                String message = "Alarm for %s exists";
                 String sTime = is24 ? timeFormat24.format(calendar.getTime())
                                     : timeFormat12.format(calendar.getTime());
 
                 ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
                 errorBuilder.setShowSuggestions(true)
-                        .setDialogMessage(String.format(message, sTime))
-                        .setShowSuggestions(true)
-                        .setSuggestionCount(2)
-                        .setSuggestion1("Consider editing former alarm")
-                        .setSuggestion2("Delete former alarm");
+                            .setDialogMessage(String.format("Alarm for %s exists", sTime))
+                            .setShowSuggestions(true)
+                            .setSuggestionCount(2)
+                            .setSuggestion1("Consider editing former alarm")
+                            .setSuggestion2("Delete former alarm");
 
                 new ErrorDialog().showErrorMessage(getContext(), errorBuilder.build());
 
@@ -273,18 +280,16 @@ public class AlarmListFragment extends Fragment {
             if (isAlarmAdded) {
                 aList.add(newAlarm);
 
-                boolean isAM = hh >= 0 && hh < 12;
-                Resources aResources = getResources();
-                Configuration config = aResources.getConfiguration();
-                Locale locale = ConfigurationCompat.getLocales(config).get(0);
+                boolean isForenoon = hh >= 0 && hh < 12;
 
-                String formattedHrAM = String.format(locale, "%02d", (hh == 0 ? 12 : hh));
-                String formattedHrPM = String.format(locale, "%02d", (hh % 12 == 0 ? 12 : hh % 12));
-                String formattedMinAM = String.format(locale, "%02d", mm) + " AM";
-                String formattedMinPM = String.format(locale, "%02d", mm) + " PM";
+                String formattedHrAM = String.format(Locale.US, "%02d", (hh == 0 ? 12 : hh));
+                String formattedHrPM = String.format(Locale.US, "%02d",
+                                                     (hh % 12 == 0 ? 12 : hh % 12));
+                String formattedMinAM = String.format(Locale.US, "%02d", mm) + " AM";
+                String formattedMinPM = String.format(Locale.US, "%02d", mm) + " PM";
 
-                String _12H = isAM ? formattedHrAM + ":" + formattedMinAM
-                                   : formattedHrPM + ":" + formattedMinPM;
+                String _12H = isForenoon ? formattedHrAM + ":" + formattedMinAM
+                                         : formattedHrPM + ":" + formattedMinPM;
 
                 String message = isNextDay ? "Alarm set for: " + (is24 ? alarmTime
                                                                        : _12H) + " tomorrow"
@@ -334,7 +339,6 @@ public class AlarmListFragment extends Fragment {
         }
 
     }
-
 
     // The layout for the alarms occupying the alarm_list RecyclerView
     class AlarmAdapter extends RecyclerView.Adapter<AlarmListHolder> {

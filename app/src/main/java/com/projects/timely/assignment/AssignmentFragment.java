@@ -45,7 +45,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
 public class AssignmentFragment extends Fragment implements ActionMode.Callback {

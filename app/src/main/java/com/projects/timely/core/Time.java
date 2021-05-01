@@ -5,30 +5,50 @@ package com.projects.timely.core;
  */
 @SuppressWarnings("unused")
 public class Time {
+    //    fields
     private String date;
     private String hour;
     private String min;
-    private boolean is24;
-    private boolean isAM;
+    private boolean isMilitaryTime;
+    private boolean isForenoon;
+    private String dateFormat;
 
-    public Time(String date, String hour, String min, boolean is24, boolean isAM) {
+    public Time(String date, String hour, String min, boolean isMilitaryTime, boolean isForenoon) {
         this.date = date;
         this.hour = hour;
         this.min = min;
-        this.is24 = is24;
-        this.isAM = isAM;
+        this.isMilitaryTime = isMilitaryTime;
+        this.isForenoon = isForenoon;
     }
 
+    /**
+     * Instantiate with all date params
+     *
+     * @param date           the date
+     * @param hour           the hour
+     * @param min            the minute
+     * @param isMilitaryTime military time or not
+     * @param isForenoon     day or night
+     */
+    public Time(String dateFormat, String date, String hour, String min,
+                boolean isMilitaryTime, boolean isForenoon) {
+        this(date, hour, min, isMilitaryTime, isForenoon);
+        this.dateFormat = dateFormat;
+    }
+
+    /**
+     * @return the current day part (Morning, Afternoon or Night)
+     */
     public DayPart getCurrentDayPart() {
         int __hour = Integer.parseInt(hour);
-        if (isAM && !is24) {
+        if (isForenoon && !isMilitaryTime) {
             return DayPart.MORNING;
-        } else if (!isAM && !is24) {
+        } else if (!isForenoon && !isMilitaryTime) {
             if (__hour == 12 || (__hour >= 1 && __hour <= 4)) {
                 return DayPart.AFTERNOON;
             } else
                 return DayPart.EVENING;
-        } else if (is24) {
+        } else if (isMilitaryTime) {
             if (__hour >= 0 && __hour < 12) {
                 return DayPart.MORNING;
             } else if (__hour >= 12 && __hour <= 16) {
@@ -63,20 +83,40 @@ public class Time {
         this.min = min;
     }
 
-    public boolean getIs24() {
-        return is24;
+    public boolean isMilitaryTime() {
+        return isMilitaryTime;
     }
 
-    public void setIs24(boolean is24) {
-        this.is24 = is24;
+    public void setMilitaryTime(boolean militaryTime) {
+        this.isMilitaryTime = militaryTime;
     }
 
     public boolean isForenoon() {
-        return isAM;
+        return isForenoon;
     }
 
-    public void setAM(boolean AM) {
-        isAM = AM;
+    public void setIsForeNoon(boolean isForenoon) {
+        this.isForenoon = isForenoon;
     }
 
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    @SuppressWarnings("ALL")
+    @Override
+    public String toString() {
+        return "Time{" +
+                "date='" + date + '\'' +
+                ", hour='" + hour + '\'' +
+                ", min='" + min + '\'' +
+                ", isMilitaryTime=" + isMilitaryTime +
+                ", isForenoon=" + isForenoon +
+                ", dateFormat='" + dateFormat + '\'' +
+                '}';
+    }
 }

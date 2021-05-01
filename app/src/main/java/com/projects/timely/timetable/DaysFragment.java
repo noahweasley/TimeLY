@@ -46,8 +46,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.projects.timely.core.Globals.DAYS;
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.DAYS;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings({"ConstantConditions"})
 public class DaysFragment extends Fragment implements ActionMode.Callback {

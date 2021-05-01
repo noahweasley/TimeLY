@@ -11,33 +11,17 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Process;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
-import com.kevalpatel.ringtonepicker.RingtoneUtils;
-import com.projects.timely.R;
-import com.projects.timely.core.DataModel;
-import com.projects.timely.core.RequestRunner;
-import com.projects.timely.core.SchoolDatabase;
-
-import net.cachapa.expandablelayout.ExpandableLayout;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,12 +34,28 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
+import com.kevalpatel.ringtonepicker.RingtoneUtils;
+import com.projects.timely.R;
+import com.projects.timely.core.DataModel;
+import com.projects.timely.core.RequestRunner;
+import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import static com.projects.timely.alarms.AlarmReceiver.ALARM_POS;
-import static com.projects.timely.core.Globals.Alert;
-import static com.projects.timely.core.Globals.isLoggingEnabled;
-import static com.projects.timely.core.Globals.isUserPreferred24Hours;
-import static com.projects.timely.core.Globals.playAlertTone;
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.Alert;
+import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
+import static com.projects.timely.core.AppUtils.playAlertTone;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
 class AlarmListHolder extends RecyclerView.ViewHolder {
@@ -123,8 +123,9 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             final boolean isExpanded = detailLayout.isExpanded();
             rootView.setActivated(isExpanded);
             expandStatus.animate()
-                    .rotation(isExpanded ? 180 : 0)
-                    .setDuration(detailLayout.getDuration());
+                        .rotation(isExpanded ? 180 : 0)
+                        .setInterpolator(new BounceInterpolator())
+                        .setDuration(detailLayout.getDuration());
         });
 
         // display the days to repeat if repeat checkbox is checked
@@ -142,50 +143,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        tv_label.setOnClickListener(
-                v -> new EditTextDialog(mActivity).prepareAndShow()
-                        .setActionListener(label -> {
-                            String time = thisAlarm.getTime();
-                            tv_label.setText(label);
-                            runBackgroundTask(() -> {
-                                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                                database.updateAlarmLabel(getAbsoluteAdapterPosition(), label);
-                                updateAlarm(label, time);
-                            });
-                        }));
+        tv_label.setOnClickListener(this::onLabelClick);
 
         tv_alarmTime.setOnClickListener(new TimeManager());
 
-        btn_rngPicker.setOnClickListener(v -> {
-            // Show ringtone dialog
-            RingtonePickerDialog.Builder pickerDialog = new RingtonePickerDialog.Builder(mActivity,
-                                                                                         mgr);
-            pickerDialog.setCancelButtonText(android.R.string.cancel)
-                    .setPositiveButtonText(android.R.string.ok)
-                    .setTitle("Select Ringtone")
-                    .displaySilentRingtone(true)
-                    .displayDefaultRingtone(true)
-                    .setPlaySampleWhileSelection(true)
-                    .addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
-                    .setListener(
-                            (String ringtoneName, @Nullable Uri ringtoneUri) -> {
-                                String ringtone = null;
-                                if (ringtoneUri != null) {
-                                    ringtone = RingtoneUtils.getRingtoneName(mActivity,
-                                                                             ringtoneUri);
-                                }
-                                String actualName = ringtoneName.equals("Default") ?
-                                                    ringtone : ringtoneName;
-                                btn_rngPicker.setText(actualName);
-                                runBackgroundTask(() -> {
-                                    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                                    database.updateRingtone(getAbsoluteAdapterPosition(),
-                                                            ringtoneName,
-                                                            ringtoneUri);
-                                });
-                            })
-                    .show();
-        });
+        btn_rngPicker.setOnClickListener(this::onSelectRingtone);
 
         cbx_Repeat.setOnClickListener(v -> {
             final int dataPos   // dataPos now refers to the alarms id in the database
@@ -206,9 +168,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                 // state of the checkbox
                 boolean isUpdated
                         = database.updateAlarmVibrateStatus(dataPos, cbx_Vibrate.isChecked());
-                if (isLoggingEnabled)
-                    Log.d(getClass().getSimpleName(), isUpdated ? "updated: " +
-                            cbx_Vibrate.isChecked() : "error while updating");
             }
         });
 
@@ -222,14 +181,14 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             RequestRunner runner = RequestRunner.getInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(mActivity)
-                    .setAdapterPosition(this.getAbsoluteAdapterPosition())
-                    .setAdapter(alarmAdapter)
-                    .setModelList(alarmModelList)
-                    .setAlarmLabel(label)
-                    .setAlarmTime(time);
+                   .setAdapterPosition(this.getAbsoluteAdapterPosition())
+                   .setAdapter(alarmAdapter)
+                   .setModelList(alarmModelList)
+                   .setAlarmLabel(label)
+                   .setAlarmTime(time);
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(DELETE_REQUEST);
+                  .runRequest(DELETE_REQUEST);
 
             Snackbar snackBar = Snackbar.make(coordinator, "Alarm Deleted", Snackbar.LENGTH_LONG);
             snackBar.setActionTextColor(Color.YELLOW);
@@ -248,7 +207,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         this.alarmModelList = alarmModelList;
         this.database = database;
         this.alarmAdapter = alarmAdapter;
-        this.thisAlarm = (AlarmModel) alarmModelList.get( getAbsoluteAdapterPosition());
+        this.thisAlarm = (AlarmModel) alarmModelList.get(getAbsoluteAdapterPosition());
         return this;
     }
 
@@ -258,14 +217,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                 detailLayout.setExpanded(details.isExpanded(), false);
             }
         }
-        AlarmModel thisAlarm = (AlarmModel) alarmModelList.get( getAbsoluteAdapterPosition());
+        AlarmModel thisAlarm = (AlarmModel) alarmModelList.get(getAbsoluteAdapterPosition());
 
         // bind data to views in row layout, as received from the database.
         // Use time format according to user settings.
         boolean is24 = isUserPreferred24Hours(mActivity);
-        Resources alarmTimeResources = tv_alarmTime.getContext().getResources();
-        Configuration config = alarmTimeResources.getConfiguration();
-        Locale locale = ConfigurationCompat.getLocales(config).get(0);
 
         /////////////////////////////////////////////////////////////////////////////////////
         tv_label.setText(thisAlarm.getLabel());
@@ -274,23 +230,23 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         int hh = Integer.parseInt(splitStrings[0]);
 
         String mm = splitStrings[1];
-        boolean isAM = hh >= 0 && hh < 12;
+        boolean isForenoon = hh >= 0 && hh < 12;
         String _24H = thisAlarm.getTime();
 
-        String _12H = isAM ? String.format(locale, "%02d", (hh == 0 ? 12 : hh)) + ":" + mm
-                           : String.format(locale, "%02d",
-                                           (hh % 12 == 0 ? 12 : hh % 12)) + ":" + mm;
+        String _12H = isForenoon ? String.format(Locale.US, "%02d", (hh == 0 ? 12 : hh)) + ":" + mm
+                                 : String.format(Locale.US, "%02d",
+                                                 (hh % 12 == 0 ? 12 : hh % 12)) + ":" + mm;
 
         String realTime = is24 ? _24H : _12H;
         tv_alarmTime.setText(realTime);
         if (is24) am_pm.setVisibility(View.GONE);
-        else am_pm.setText(isAM ? "AM" : "PM");
+        else am_pm.setText(isForenoon ? "AM" : "PM");
 
         alarmStatus.setChecked(thisAlarm.isOn());
         cbx_Repeat.setChecked(thisAlarm.isRepeated());
         cbx_Vibrate.setChecked(thisAlarm.isVibrate());
         btn_rngPicker.setText(thisAlarm.getRingTone());
-        int rowDrawable = DRAWABLES [getAbsoluteAdapterPosition() % DRAWABLES.length];
+        int rowDrawable = DRAWABLES[getAbsoluteAdapterPosition() % DRAWABLES.length];
         decoration.setBackground(ContextCompat.getDrawable(mActivity, rowDrawable));
 
         rV_buttonRow.setVisibility(cbx_Repeat.isChecked() ? View.VISIBLE : View.GONE);
@@ -301,13 +257,10 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         rV_buttonRow.setAdapter(new ButtonListAdapter());
     }
 
-    /**
+    /*
      * When alarm is set, user has the option to toggle the alarm status with the switch in the
      * list, so when the event that occurs when switch is toggled is a request to cancel
      * the former alarm, just cancel it with this method !!
-     *
-     * @param label the new label of the rescheduled alarm
-     * @param time  the scheduled time for alarm to go off
      */
     private void cancelAlarm(String label, String[] time) {
 
@@ -347,12 +300,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         alarmManager.cancel(alarmPI);
     }
 
-    /**
-     * Updates the alarm pending intent extras
-     *
-     * @param label the new label of the alarm
-     * @param time  the new time of the alarm
-     */
+    //  Updates the alarm pending intent extras
     private void updateAlarm(String label, String time) {
         String[] realTime = time.split(":");
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -372,7 +320,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         if (label != null) {
             alarmReceiverIntent.putExtra("Label", label);
         }
-        alarmReceiverIntent.putExtra(ALARM_POS,  getAbsoluteAdapterPosition());
+        alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
         alarmReceiverIntent.putExtra("Time", time);
 
         alarmReceiverIntent.addCategory("com.projects.timely.alarm.category");
@@ -393,16 +341,13 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
         }
         // Also toggle the alarm status switch state to the ON state
-        database.updateAlarmState( getAbsoluteAdapterPosition(), true);
+        database.updateAlarmState(getAbsoluteAdapterPosition(), true);
     }
 
-    /**
+    /*
      * When alarm is set, user has the option to toggle the alarm status with the switch in the
      * list, so when the event that occurs when switch is toggled is a request to reschedule
      * the former alarm, just reschedule it with this method !!
-     *
-     * @param label the new label of the rescheduled alarm
-     * @param time  the scheduled time for alarm to go off
      */
     private void rescheduleAlarm(String label, String[] time) {
         boolean is24 = isUserPreferred24Hours(mActivity);
@@ -472,6 +417,43 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
     }
 
+    private void onLabelClick(View v) {
+        new EditTextDialog(mActivity)
+                .prepareAndShow()
+                .setActionListener(label -> {
+                    tv_label.setText(label);
+                    ThreadUtils.runBackgroundTask(() -> {
+                        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                        database.updateAlarmLabel(getAbsoluteAdapterPosition(), label);
+                        updateAlarm(label, thisAlarm.getTime());
+                    });
+                });
+    }
+
+    private void onSelectRingtone(View v) {
+        RingtonePickerDialog.Builder builder = new RingtonePickerDialog.Builder(mActivity, mgr);
+        builder.setCancelButtonText(android.R.string.cancel)
+               .setPositiveButtonText(android.R.string.ok)
+               .setTitle("Select Ringtone")
+               .displaySilentRingtone(true)
+               .displayDefaultRingtone(true)
+               .setPlaySampleWhileSelection(true)
+               .addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
+               .setListener((String ringtoneName, @Nullable Uri ringtoneUri) -> {
+                   String ringtone = null;
+                   if (ringtoneUri != null)
+                       ringtone = RingtoneUtils.getRingtoneName(mActivity, ringtoneUri);
+                   String actualName = ringtoneName.equals("Default") ? ringtone : ringtoneName;
+                   btn_rngPicker.setText(actualName);
+                   ThreadUtils.runBackgroundTask(() -> {
+                       Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                       database.updateRingtone(getAbsoluteAdapterPosition(),
+                                               ringtoneName,
+                                               ringtoneUri);
+                   });
+               }).show();
+    }
+
     private static class ExpansionDetails {
         private int previousExpandedPos;
         private boolean isExpanded;
@@ -531,7 +513,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          */
         @Override
         public void onTimeSet(TimePicker v, int hourOfDay, int minute) {
-            AlarmModel thisAlarm = (AlarmModel) database.getAlarmAt( getAbsoluteAdapterPosition());
+            AlarmModel thisAlarm = (AlarmModel) database.getAlarmAt(getAbsoluteAdapterPosition());
             String ll = tv_label.getText().toString();
             String[] ts = thisAlarm.getTime().split(":");
 
@@ -565,7 +547,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             runBackgroundTask(() -> {
                 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                 updateAlarm(ll.equals("Label") ? null : ll, currentTime);
-                database.updateTime( getAbsoluteAdapterPosition(), currentTime);
+                database.updateTime(getAbsoluteAdapterPosition(), currentTime);
             });
             notify(v); // notify the user
         }
@@ -613,7 +595,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             viewHolder.with(btn_pos,
                             getAbsoluteAdapterPosition(),
                             database)
-                    .bindView();
+                      .bindView();
         }
 
         @Override

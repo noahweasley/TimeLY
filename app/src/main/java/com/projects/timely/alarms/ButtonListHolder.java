@@ -8,7 +8,7 @@ import com.projects.timely.core.SchoolDatabase;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.projects.timely.core.Globals.DAYS_2;
+import static com.projects.timely.core.AppUtils.DAYS_2;
 
 @SuppressWarnings("unused")
 class ButtonListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

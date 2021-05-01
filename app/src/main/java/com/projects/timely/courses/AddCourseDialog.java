@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.projects.timely.R;
-import com.projects.timely.core.Globals.Alert;
+import com.projects.timely.core.AppUtils.Alert;
 import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.error.ErrorDialog;
 
@@ -29,8 +29,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import static com.projects.timely.core.Globals.playAlertTone;
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.playAlertTone;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 import static com.projects.timely.courses.SemesterFragment.ARG_POSITION;
 
 @SuppressWarnings("ConstantConditions")

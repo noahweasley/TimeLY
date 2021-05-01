@@ -25,7 +25,7 @@ import androidx.preference.PreferenceManager;
 import static com.projects.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.projects.timely.alarms.AlarmReceiver.ID;
 import static com.projects.timely.alarms.AlarmReceiver.NOTIFICATION_ID;
-import static com.projects.timely.core.Globals.isUserPreferred24Hours;
+import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 
 @SuppressWarnings("ConstantConditions")
 public class AlarmActivity extends AppCompatActivity {

@@ -44,7 +44,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
 public class ExamTimetableFragment extends Fragment implements ActionMode.Callback {

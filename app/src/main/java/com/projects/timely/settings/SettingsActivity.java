@@ -5,12 +5,15 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.projects.timely.R;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.projects.timely.R;
+import com.projects.timely.core.TimeRefreshEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 @SuppressWarnings("ConstantConditions")
 public class SettingsActivity extends AppCompatActivity {
@@ -135,17 +138,14 @@ public class SettingsActivity extends AppCompatActivity {
                                 = "Turning this " + (b_state ? "OFF" : "ON") + " will ensure that "
                                 + (b_state ? "12" : "24") + "-hours format is used";
                         pref.setSummary(append);
-                        if (!onStart) {
-                            Toast message = Toast.makeText(getContext(),
-                                                           R.string.change_notification,
-                                                           Toast.LENGTH_LONG);
-                            message.setGravity(Gravity.CENTER, 0, 0);
-                            message.show();
-                        }
+                        // Perform time refresh
+                        EventBus.getDefault().post(new TimeRefreshEvent());
                     }
                     break;
                     case "date_format":
                         pref.setSummary(state);
+                        // Perform time refresh
+                        EventBus.getDefault().post(new TimeRefreshEvent());
                         break;
                     case "snooze_time": {
                         pref.setSummary("All alarms will be snoozed for " + state + " minute"

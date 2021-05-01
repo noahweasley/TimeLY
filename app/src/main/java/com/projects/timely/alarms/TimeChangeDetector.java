@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.projects.timely.core.Globals.isUserPreferred24Hours;
+import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 
 /**
  * The thread responsible for blinking the colon in between the minute and second indicator
@@ -29,12 +29,19 @@ public class TimeChangeDetector extends Thread {
     private String min = "";
     private volatile boolean wantToStopOperation;
     private Context mContext;
+    private static boolean wmt = true;
+    private static String prevDateFormat;
 
     /**
+     * This won't spawn up a new thread. But just return the current OS time.
+     *
      * @return the current OS time immediately
      */
-    public Time requestImmediateTime() {
-        return getCalculatedTime();
+    public static Time requestImmediateTime(Context mContext) {
+        Time calculatedTime = getCalculatedTime(mContext);
+        wmt = calculatedTime.isMilitaryTime();
+        prevDateFormat = calculatedTime.getDateFormat();
+        return calculatedTime;
     }
 
     /**
@@ -63,20 +70,24 @@ public class TimeChangeDetector extends Thread {
         while (!wantToStopOperation) {
 
             if (!wantToStopOperation) {
-                Time calculatedTime = getCalculatedTime();
+                Time calculatedTime = getCalculatedTime(mContext);
 
                 if (!wantToStopOperation && !this.min.equals(calculatedTime.getMinutes())) {
                     // system time is posted
-                    if (EventBus.getDefault().hasSubscriberForEvent(Time.class))
-                        EventBus.getDefault().post(calculatedTime);
+                    EventBus eventBus = EventBus.getDefault();
+                    if (eventBus.hasSubscriberForEvent(Time.class))
+                        eventBus.post(calculatedTime);
+
                     this.min = calculatedTime.getMinutes();
+                    wmt = calculatedTime.isMilitaryTime();
+                    prevDateFormat = calculatedTime.getDateFormat();
                 }
             }
         }
     }
 
     // retrieves calculated time
-    private Time getCalculatedTime() {
+    private static Time getCalculatedTime(Context mContext) {
         boolean is24 = isUserPreferred24Hours(mContext);
 
         Calendar calendar = Calendar.getInstance();
@@ -84,24 +95,11 @@ public class TimeChangeDetector extends Thread {
         Configuration config = mContext.getResources().getConfiguration();
         Locale currentLocale = ConfigurationCompat.getLocales(config).get(0);
 
-        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", currentLocale);
+        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm:aa", currentLocale);
         SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm:aa", currentLocale);
 
         String formattedDate;
-
-        switch (mPreferences.getString("date_format", "Medium")) {
-            case "Full":
-                formattedDate = DateFormat.getDateInstance(DateFormat.FULL)
-                        .format(calendar.getTime());
-                break;
-            case "Short":
-                formattedDate = DateFormat.getDateInstance(DateFormat.SHORT)
-                        .format(calendar.getTime());
-                break;
-            default:
-                formattedDate = DateFormat.getDateInstance(DateFormat.MEDIUM)
-                        .format(calendar.getTime());
-        }
+        String dateFormat = mPreferences.getString("date_format", "Medium");
 
         String timeView;
         Date calendarTime = calendar.getTime();
@@ -111,9 +109,22 @@ public class TimeChangeDetector extends Thread {
         String hour = splitTime[0];
         String min = splitTime[1];
 
-        boolean isAM = false;
-        if (!is24) isAM = splitTime[2].equals("AM");
+        boolean isForenoon = splitTime[2].equals("AM");
 
-        return new Time(formattedDate, hour, min, is24, isAM);
+        switch (dateFormat) {
+            case "Full":
+                formattedDate
+                        = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+                break;
+            case "Short":
+                formattedDate
+                        = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
+                break;
+            default:
+                formattedDate
+                        = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
+        }
+
+        return new Time(dateFormat, formattedDate, hour, min, is24, isForenoon);
     }
 }

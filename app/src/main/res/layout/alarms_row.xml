@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +19,6 @@
             android:layout_marginTop="8dp"
             android:drawablePadding="8dp"
             android:fontFamily="sans-serif-condensed-light"
-            android:text="20:09"
             android:textColor="@android:color/black"
             android:textSize="25sp"
             external:drawableLeftCompat="@drawable/ic_alarm"
@@ -42,7 +38,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:fontFamily="sans-serif-condensed-light"
-            android:text="pm"
             android:textColor="@android:color/black"
             android:textSize="15sp"
             external:layout_constraintBaseline_toBaselineOf="@id/alarm_list_time"

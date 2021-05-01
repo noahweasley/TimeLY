@@ -22,6 +22,14 @@ public class ImageSlideActivity extends AppCompatActivity {
     public static final String ARG_INITIAL_POSITION = "Initial Uri from list";
     private static List<? extends Image> images;
 
+    /**
+     * Static utility method to simplify starting the ImageSlideActivity with the arguments
+     * needed for adequate response
+     *
+     * @param context      the originator of this event
+     * @param fromPosition the position at which the slide begins image display
+     * @param images1      the list of images to display
+     */
     public static void start(Context context, int fromPosition, List<? extends Image> images1) {
         images = images1;
         Intent starter = new Intent(context, ImageSlideActivity.class);

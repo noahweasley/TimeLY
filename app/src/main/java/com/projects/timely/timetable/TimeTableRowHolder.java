@@ -30,7 +30,7 @@ import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.projects.timely.core.Globals.isUserPreferred24Hours;
+import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 
 @SuppressWarnings("ConstantConditions")
 public class TimeTableRowHolder extends RecyclerView.ViewHolder {

@@ -19,7 +19,7 @@ import java.util.Locale;
 import androidx.core.app.NotificationCompat;
 import androidx.core.os.ConfigurationCompat;
 
-import static com.projects.timely.core.Globals.isUserPreferred24Hours;
+import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 
 public class AlarmReceiver extends BroadcastReceiver {
     static final int NOTIFICATION_ID = 1189765;

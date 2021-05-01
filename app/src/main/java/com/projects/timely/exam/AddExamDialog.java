@@ -28,10 +28,10 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import static com.projects.timely.core.Globals.Alert;
-import static com.projects.timely.core.Globals.DAYS_3;
-import static com.projects.timely.core.Globals.playAlertTone;
-import static com.projects.timely.core.Globals.runBackgroundTask;
+import static com.projects.timely.core.AppUtils.Alert;
+import static com.projects.timely.core.AppUtils.DAYS_3;
+import static com.projects.timely.core.AppUtils.playAlertTone;
+import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
 public class AddExamDialog extends DialogFragment implements View.OnClickListener {

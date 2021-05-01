@@ -45,9 +45,9 @@ import java.util.concurrent.TimeUnit;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.projects.timely.core.Globals.Alert;
-import static com.projects.timely.core.Globals.deleteTaskRunning;
-import static com.projects.timely.core.Globals.playAlertTone;
+import static com.projects.timely.core.AppUtils.Alert;
+import static com.projects.timely.core.AppUtils.deleteTaskRunning;
+import static com.projects.timely.core.AppUtils.playAlertTone;
 
 /**
  * Thread to handle all delete requests
