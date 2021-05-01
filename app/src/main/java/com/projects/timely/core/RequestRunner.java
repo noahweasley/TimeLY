@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Process;
 import android.util.Log;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.projects.timely.alarms.AlarmListFragment;
 import com.projects.timely.alarms.AlarmModel;
 import com.projects.timely.alarms.AlarmReceiver;
@@ -20,6 +23,7 @@ import com.projects.timely.assignment.UpdateMessage;
 import com.projects.timely.assignment.UpdateMessage.EventType;
 import com.projects.timely.assignment.UriUpdateEvent;
 import com.projects.timely.assignment.ViewImagesActivity;
+import com.projects.timely.core.RequestUpdateEvent.UpdateType;
 import com.projects.timely.courses.CourseModel;
 import com.projects.timely.courses.CourseRowHolder;
 import com.projects.timely.courses.SemesterFragment;
@@ -41,9 +45,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.core.AppUtils.Alert;
 import static com.projects.timely.core.AppUtils.deleteTaskRunning;
@@ -258,9 +259,8 @@ public class RequestRunner extends Thread {
     private void doExamDelete() {
         DataModel model = params.getModelList().get(params.getAdapterPosition());
         params.getModelList().remove(params.getAdapterPosition());
-        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
-        params.getAdapter().notifyDataSetChanged();
-        EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
+        EventBus.getDefault()
+                .post(new RequestUpdateEvent(UpdateType.REMOVE, params.getAdapterPosition()));
             /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
@@ -275,9 +275,8 @@ public class RequestRunner extends Thread {
             meaning an undo request
             */
             params.getModelList().add(params.getAdapterPosition(), model);
-            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
-            params.getAdapter().notifyDataSetChanged();
-            EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
+            EventBus.getDefault()
+                    .post(new RequestUpdateEvent(UpdateType.INSERT, params.getAdapterPosition()));
         }
         if (!deleteRequestDiscarded) {
             ExamModel examModel = (ExamModel) model;
@@ -293,9 +292,8 @@ public class RequestRunner extends Thread {
     private void doCourseDelete() {
         DataModel model = params.getModelList().get(params.getAdapterPosition());
         params.getModelList().remove(params.getAdapterPosition());
-        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
-        params.getAdapter().notifyDataSetChanged();
-        EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
+        EventBus.getDefault()
+                .post(new RequestUpdateEvent(UpdateType.REMOVE, params.getAdapterPosition()));
             /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
@@ -310,9 +308,8 @@ public class RequestRunner extends Thread {
             meaning an undo request
             */
             params.getModelList().add(params.getAdapterPosition(), model);
-            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
-            params.getAdapter().notifyDataSetChanged();
-            EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
+            EventBus.getDefault()
+                    .post(new RequestUpdateEvent(UpdateType.INSERT, params.getAdapterPosition()));
         }
         if (!deleteRequestDiscarded) {
             CourseModel courseModel = (CourseModel) model;
@@ -592,7 +589,7 @@ public class RequestRunner extends Thread {
      */
     @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
-        private RequestParams requestParams = new RequestParams();
+        private final RequestParams requestParams = new RequestParams();
 
         public RequestParams getParams() {
             return requestParams;
