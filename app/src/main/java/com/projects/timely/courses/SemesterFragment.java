@@ -12,26 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.projects.timely.R;
-import com.projects.timely.core.ChoiceMode;
-import com.projects.timely.core.CountEvent;
-import com.projects.timely.core.DataModel;
-import com.projects.timely.core.DataMultiChoiceMode;
-import com.projects.timely.core.EmptyListEvent;
-import com.projects.timely.core.MultiUpdateMessage;
-import com.projects.timely.core.RequestParams;
-import com.projects.timely.core.RequestRunner;
-import com.projects.timely.core.SchoolDatabase;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +21,26 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.projects.timely.R;
+import com.projects.timely.core.ChoiceMode;
+import com.projects.timely.core.DataModel;
+import com.projects.timely.core.DataMultiChoiceMode;
+import com.projects.timely.core.EmptyListEvent;
+import com.projects.timely.core.MultiUpdateMessage;
+import com.projects.timely.core.RequestParams;
+import com.projects.timely.core.RequestRunner;
+import com.projects.timely.core.RequestUpdateEvent;
+import com.projects.timely.core.SchoolDatabase;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
@@ -57,7 +57,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     private CoordinatorLayout coordinator;
     private CourseAdapter courseAdapter;
     private AppCompatActivity context;
-    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
+    private final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
 
     public static SemesterFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -235,8 +235,19 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doCountUpdate(CountEvent countEvent) {
-        itemCount.setText(String.valueOf(countEvent.getSize()));
+    public void doOnRequestUpdate(RequestUpdateEvent request) {
+        switch (request.getUpdateType()) {
+            case INSERT:
+                itemCount.setText(String.valueOf(cList.size()));
+                courseAdapter.notifyItemInserted(request.getChangePosition());
+                courseAdapter.notifyDataSetChanged();
+                break;
+            case REMOVE:
+                itemCount.setText(String.valueOf(cList.size()));
+                courseAdapter.notifyItemRemoved(request.getChangePosition());
+                courseAdapter.notifyDataSetChanged();
+                break;
+        }
     }
 
     @Override
