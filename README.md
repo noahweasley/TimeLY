@@ -32,5 +32,5 @@
 
 * timetable: Package that contains TimeLY's timetable management system.
 
-*Feel free to contribute to this project. Please never update the master branch. Create a child
+*Feel free to contribute to this project. Please never try to update the master branch. Create a child
 branch and wait for me to review and merge your pull request. Thank you for your collaboration*.
