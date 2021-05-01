@@ -123,7 +123,6 @@ public class RequestRunner extends Thread {
                 break;
             default:
                 throw new IllegalArgumentException(request + " is invalid");
-
         }
     }
 
@@ -158,7 +157,7 @@ public class RequestRunner extends Thread {
         if (!deleteRequestDiscarded) {
             // Delete the data model from SchoolDatabase using their positions
             String[] metadata;
-
+            // metadata: [0] = semester; [1] = exam; [2] = timetable; ALL_NULL = Assignment
             switch (params.getMetadataType()) {
                 case NO_DATA:
                     metadata = new String[]{null, null, null, null};
@@ -186,8 +185,6 @@ public class RequestRunner extends Thread {
                 playAlertTone(appContext, Alert.DELETE);
                 if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
-            } else {
-                Log.d(TAG, "Couldn't delete data models");
             }
         }
     }
