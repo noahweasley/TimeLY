@@ -6,6 +6,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.navigation.NavigationView;
 import com.projects.timely.R;
 import com.projects.timely.alarms.AlarmHolderFragment;
@@ -18,16 +28,6 @@ import com.projects.timely.exam.ExamFragment;
 import com.projects.timely.scheduled.ScheduledTimetableFragment;
 import com.projects.timely.settings.SettingsActivity;
 import com.projects.timely.timetable.TimetableFragment;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity
         extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,15 +46,15 @@ public class MainActivity
         NavigationView navView = findViewById(R.id.nav_view);
         drawer = findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.open,
-                R.string.close);
+                                           R.string.open,
+                                           R.string.close);
         drawer.addDrawerListener(toggle);
         navView.setNavigationItemSelectedListener(this);
         // Set the first viewed fragment on app start
         if (savedInstanceState == null) {
             doUpdateFragment(getIntent()); // update the fragment attached to this activity
         }
-        tryActivateTimeChangeDetector();
+        tryActivateTimeChangeDetector(); // start OS time and date detection
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MainActivity
 
     @Override
     protected void onDestroy() {
-        tryActivateTimeChangeDetector(); // cannot activate, so stop
+        tryActivateTimeChangeDetector(); // cannot activate, stop OS time and date detection
         super.onDestroy();
     }
 
