@@ -41,5 +41,6 @@ android {
         implementation 'androidx.viewpager2:viewpager2:1.0.0'
         implementation 'com.github.chrisbanes:PhotoView:2.0.0'
         implementation 'com.airbnb.android:lottie:3.7.0'
+        implementation 'com.github.javiersantos:AppUpdater:2.7'
     }
 }
