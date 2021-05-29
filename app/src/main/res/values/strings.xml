@@ -146,7 +146,7 @@
 	<string name="internal">Internal Storage</string>
 	<string name="external">External Storage</string>
     <string name="close_description">close page</string>
-	<string name="start">Am ready!</string>
+	<string name="start">I\'m ready!</string>
     <string name="good_morning">Good Morning</string>
     <string name="manage_time">Manage your time</string>
 	<string name="track_progress">Increase your productivity</string>
