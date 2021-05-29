@@ -1,3 +1,0 @@
-* Re-design deleted images
-* Produce adequate images for different screen densities and resolution
-*
