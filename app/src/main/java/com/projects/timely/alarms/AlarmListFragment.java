@@ -34,6 +34,7 @@ import com.projects.timely.core.AppUtils.Alert;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.EmptyListEvent;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
 import com.projects.timely.core.TimeRefreshEvent;
 import com.projects.timely.error.ErrorDialog;
 
@@ -49,7 +50,6 @@ import java.util.Locale;
 import static com.projects.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 import static com.projects.timely.core.AppUtils.playAlertTone;
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings({"ConstantConditions"})
 public class AlarmListFragment extends Fragment {
@@ -92,7 +92,7 @@ public class AlarmListFragment extends Fragment {
         RecyclerView rV_AlarmList = view.findViewById(R.id.alarm_list);
         indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
 
-        runBackgroundTask(() -> {
+        ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             aList = (LinkedList<DataModel>) database.getAlarms();
             if (isAdded())
@@ -120,52 +120,56 @@ public class AlarmListFragment extends Fragment {
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         rV_AlarmList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-//      Note:  Code commented out because a user requested but code remains for code re-usability
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                               //
+//   Note:  Code commented out because a user requested but code remains for code re-usability   //
+//                                                                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//        ItemTouchHelper deleteSwiper = new ItemTouchHelper(new ItemTouchHelper.Callback() {    //
+//            @Override                                                                          //
+//            public int getMovementFlags(@NonNull RecyclerView recyclerView,                    //
+//                                        @NonNull RecyclerView.ViewHolder viewHolder) {         //
+//                return makeMovementFlags(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);     //
+//            }                                                                                  //
+//                                                                                               //
+//            @Override                                                                          //
+//            public boolean onMove(@NonNull RecyclerView recyclerView,                          //
+//                                  @NonNull RecyclerView.ViewHolder viewHolder,                 //
+//                                  @NonNull RecyclerView.ViewHolder target) {                   //
+//                // Not implemented, return false                                               //
+//                return false;                                                                  //
+//                                                                                               //
+//            }                                                                                  //
+//                                                                                               //
+//            @Override                                                                          //
+//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) { //
+//                // post a delete request on the assignment database                            //
+//                RequestRunner runner = RequestRunner.getInstance();                            //
+//                Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted",           //
+//                                                  Snackbar.LENGTH_LONG)                        //
+//                        .setAction("undo", v -> runner.undoRequest())                          //
+//                        .setActionTextColor(Color.YELLOW);                                     //
+//                                                                                               //
+//                snackbar.show();                                                               //
+//                                                                                               //
+//                int pos = viewHolder.getAbsoluteAdapterPosition();                             //
+//                String[] elements = database.getElementaryAlarmDataAt(pos);                    //
+//                                                                                               //
+//                RequestRunner.Builder builder = new RequestRunner.Builder();                   //
+//                builder.setOwnerContext(getActivity())                                         //
+//                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())           //
+//                        .setAdapter(alarmAdapter)                                              //
+//                        .setModelList(aList)                                                   //
+//                        .setAlarmTime(elements);                                               //
+//                                                                                               //
+//                runner.setRequestParams(builder.getParams())                                   //
+//                        .runRequest(DELETE_REQUEST);                                           //
+//            }                                                                                  //
+//        });                                                                                    //
+//                                                                                               //
+//        deleteSwiper.attachToRecyclerView(rV_AlarmList);                                       //
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-//        ItemTouchHelper deleteSwiper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-//            @Override
-//            public int getMovementFlags(@NonNull RecyclerView recyclerView,
-//                                        @NonNull RecyclerView.ViewHolder viewHolder) {
-//                return makeMovementFlags(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
-//            }
-//
-//            @Override
-//            public boolean onMove(@NonNull RecyclerView recyclerView,
-//                                  @NonNull RecyclerView.ViewHolder viewHolder,
-//                                  @NonNull RecyclerView.ViewHolder target) {
-//                // Not implemented, return false
-//                return false;
-//
-//            }
-//
-//            @Override
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                // post a delete request on the assignment database
-//                RequestRunner runner = RequestRunner.getInstance();
-//                Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted",
-//                                                  Snackbar.LENGTH_LONG)
-//                        .setAction("undo", v -> runner.undoRequest())
-//                        .setActionTextColor(Color.YELLOW);
-//
-//                snackbar.show();
-//
-//                int pos = viewHolder.getAbsoluteAdapterPosition();
-//                String[] elements = database.getElementaryAlarmDataAt(pos);
-//
-//                RequestRunner.Builder builder = new RequestRunner.Builder();
-//                builder.setOwnerContext(getActivity())
-//                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
-//                        .setAdapter(alarmAdapter)
-//                        .setModelList(aList)
-//                        .setAlarmTime(elements);
-//
-//                runner.setRequestParams(builder.getParams())
-//                        .runRequest(DELETE_REQUEST);
-//            }
-//        });
-//
-//        deleteSwiper.attachToRecyclerView(rV_AlarmList);
     }
 
     @Override
@@ -316,7 +320,14 @@ public class AlarmListFragment extends Fragment {
                                                                    alarmReceiverIntent,
                                                                    PendingIntent.FLAG_CANCEL_CURRENT);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+                    // alarm has to be triggered even when device is in idle or doze mode.
+                    // This alarm is very important
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                                                               alarmMillis, alarmPI);
+                    } else {
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+                    }
                 } else {
                     alarmManager.set(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
                 }

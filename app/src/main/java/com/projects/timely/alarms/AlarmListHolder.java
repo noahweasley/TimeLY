@@ -55,7 +55,6 @@ import static com.projects.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.projects.timely.core.AppUtils.Alert;
 import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 import static com.projects.timely.core.AppUtils.playAlertTone;
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
 class AlarmListHolder extends RecyclerView.ViewHolder {
@@ -178,7 +177,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             String label = ss.equals("Label") ? null : ss;
             String[] time = thisAlarm.getTime().split(":");
 
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(mActivity)
                    .setAdapterPosition(this.getAbsoluteAdapterPosition())
@@ -240,7 +239,10 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         String realTime = is24 ? _24H : _12H;
         tv_alarmTime.setText(realTime);
         if (is24) am_pm.setVisibility(View.GONE);
-        else am_pm.setText(isForenoon ? "AM" : "PM");
+        else {
+            am_pm.setVisibility(View.VISIBLE);
+            am_pm.setText(isForenoon ? "AM" : "PM");
+        }
 
         alarmStatus.setChecked(thisAlarm.isOn());
         cbx_Repeat.setChecked(thisAlarm.isRepeated());
@@ -336,7 +338,14 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                                                            alarmReceiverIntent,
                                                            PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // alarm has to be triggered even when device is in idle or doze mode.
+                // This alarm is very important
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis,
+                                                       alarmPI);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+            }
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
         }
@@ -544,7 +553,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             tv_alarmTime.setText(currentTime);
             am_pm.setText(isAM ? "AM" : "PM");
 
-            runBackgroundTask(() -> {
+            ThreadUtils.runBackgroundTask(() -> {
                 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                 updateAlarm(ll.equals("Label") ? null : ll, currentTime);
                 database.updateTime(getAbsoluteAdapterPosition(), currentTime);
