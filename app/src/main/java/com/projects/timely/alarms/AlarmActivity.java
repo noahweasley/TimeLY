@@ -5,22 +5,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import com.projects.timely.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 
 import static com.projects.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.projects.timely.alarms.AlarmReceiver.ID;
@@ -60,11 +59,7 @@ public class AlarmActivity extends AppCompatActivity {
         if (time != null)
             tv_time.setText(time);
 
-        // Start all the alarm animations
-        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        alphaAnimation.setRepeatMode(Animation.REVERSE);
-        alphaAnimation.setRepeatCount(Animation.INFINITE);
-        alphaAnimation.setDuration(500);
+        Animation alphaAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_reverse);
         findViewById(R.id.alarm_text).startAnimation(alphaAnimation);
 
         Button btn_snooze, btn_dismiss;
