@@ -1,5 +1,7 @@
 package com.projects.timely.core;
 
+import androidx.annotation.NonNull;
+
 /**
  * A time data model, that can store all data about time
  */
@@ -37,7 +39,7 @@ public class Time {
     }
 
     /**
-     * @return the current day part (Morning, Afternoon or Night)
+     * @return the current day part (Morning, Afternoon, Evening or Night)
      */
     public DayPart getCurrentDayPart() {
         int __hour = Integer.parseInt(hour);
@@ -79,6 +81,10 @@ public class Time {
         return min;
     }
 
+    public String getFullTime() {
+        return getHour() + ":" + getMinutes();
+    }
+
     public void setMin(String min) {
         this.min = min;
     }
@@ -107,16 +113,16 @@ public class Time {
         this.dateFormat = dateFormat;
     }
 
-    @SuppressWarnings("ALL")
     @Override
+    @NonNull
     public String toString() {
-        return "Time{" +
-                "date='" + date + '\'' +
-                ", hour='" + hour + '\'' +
-                ", min='" + min + '\'' +
-                ", isMilitaryTime=" + isMilitaryTime +
-                ", isForenoon=" + isForenoon +
-                ", dateFormat='" + dateFormat + '\'' +
-                '}';
+        return "\n{\n" +
+                "  \"date\": " + "\"" + getDate() + "\"" + ",\n" +
+                "  \"time\": " + "\"" + getFullTime() + "\"" + ",\n" +
+                "  \"isMilitary\": " + "\"" + isMilitaryTime() + "\"" + ",\n" +
+                "  \"isForeNoon\": " + "\"" + isForenoon() + "\"" + ",\n" +
+                "  \"dateFormat\": " + "\"" + getDateFormat() + "\"" + "\n" +
+                "}";
     }
+
 }
