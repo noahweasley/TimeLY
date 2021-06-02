@@ -13,6 +13,9 @@ import android.os.Build;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import androidx.core.os.ConfigurationCompat;
+import androidx.preference.PreferenceManager;
+
 import com.projects.timely.R;
 import com.projects.timely.core.PositionMessageEvent;
 import com.projects.timely.core.SchoolDatabase;
@@ -23,9 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import androidx.core.os.ConfigurationCompat;
-import androidx.preference.PreferenceManager;
 
 import static com.projects.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.projects.timely.alarms.AlarmReceiver.ID;
@@ -114,7 +114,13 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                                                            alarmReceiverIntent,
                                                            PendingIntent.FLAG_CANCEL_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, rTime, alarmPI);
+            // alarm has to be triggered even when device is in idle or doze mode.
+            // This alarm is very important
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, rTime, alarmPI);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, rTime, alarmPI);
+            }
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, rTime, alarmPI);
         }

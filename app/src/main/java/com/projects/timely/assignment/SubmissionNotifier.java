@@ -10,6 +10,10 @@ import org.greenrobot.eventbus.EventBus;
 
 import static com.projects.timely.assignment.AddAssignmentActivity.POSITION;
 
+/**
+ * A {@link AssignmentNotifier} that sends notification reminding user that assignment's are
+ * to be submitted the that day
+ */
 public class SubmissionNotifier extends AssignmentNotifier {
 
     @Override
