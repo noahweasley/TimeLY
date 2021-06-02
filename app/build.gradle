@@ -18,6 +18,18 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+    }
+
+    // changing the default apk build name from app-debug to proper name
+    applicationVariants.all {
+        variant ->
+            variant.outputs.each {
+                output ->
+                    def date = new Date().format("MM-yyyy")
+                    def appName = "TimeLY_v${variant.versionName}_${date}.apk"
+                    output.outputFileName = appName
+            }
     }
 
     compileOptions {
@@ -42,5 +54,7 @@ android {
         implementation 'com.github.chrisbanes:PhotoView:2.0.0'
         implementation 'com.airbnb.android:lottie:3.7.0'
         implementation 'com.github.javiersantos:AppUpdater:2.7'
+        // debugImplementation because LeakCanary should only run in debug builds.
+        debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
     }
 }
