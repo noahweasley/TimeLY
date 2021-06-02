@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import com.projects.timely.R;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.projects.timely.R;
+import com.projects.timely.core.PreferenceUtils;
 
 public class SplashScreen extends AppCompatActivity {
     private static final int TIMEOUT = 5000;
@@ -49,8 +50,12 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void launch() {
-        startActivity(new Intent(this, IntroPageActivity.class));
-        finish();
+        boolean isFirstLaunch = PreferenceUtils.getFirstLaunchKey(getApplicationContext());
+        // start next screen based on the app's first time launch saved preference
+        Intent launchIntent = new Intent(this, isFirstLaunch ?
+                                               IntroPageActivity.class : MainActivity.class);
+        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(launchIntent);
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.projects.timely.alarms.AlarmHolderFragment;
 import com.projects.timely.alarms.TimeChangeDetector;
 import com.projects.timely.assignment.AssignmentFragment;
 import com.projects.timely.core.Constants;
+import com.projects.timely.core.PreferenceUtils;
 import com.projects.timely.core.SchoolDatabase;
 import com.projects.timely.courses.CoursesFragment;
 import com.projects.timely.exam.ExamFragment;
@@ -72,6 +73,8 @@ public class MainActivity
 
     @Override
     protected void onDestroy() {
+        // TimeLY is being exited, set the first launch key to false
+        PreferenceUtils.setFirstLaunchKey(getApplicationContext(), false);
         tryActivateTimeChangeDetector(); // cannot activate, stop OS time and date detection
         super.onDestroy();
     }
