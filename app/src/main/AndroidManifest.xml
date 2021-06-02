@@ -11,6 +11,7 @@
         android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
@@ -101,11 +102,25 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
 
-        <receiver android:name=".alarms.AlarmReceiver" />
+        <receiver
+            android:name=".alarms.AlarmReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".timetable.TimetableNotifier"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".alarms.NotificationActionReceiver" />
         <receiver android:name=".assignment.Reminder" />
         <receiver android:name=".assignment.SubmissionNotifier" />
-        <receiver android:name=".timetable.TimetableNotifier" />
         <receiver android:name=".scheduled.ScheduledTaskNotifier" />
 
         <receiver android:name=".alarms.TimeChangeReceiver">
