@@ -25,6 +25,7 @@ import com.projects.timely.core.MultiUpdateMessage;
 import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,7 +48,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.core.AppUtils.DAYS;
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings({"ConstantConditions"})
 public class DaysFragment extends Fragment implements ActionMode.Callback {
@@ -69,7 +69,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
     private RecyclerView rV_timetable;
     private SchoolDatabase database;
     private CoordinatorLayout coordinator;
-    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
+    private final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
 
     public static DaysFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -104,7 +104,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
                 resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
-        runBackgroundTask(() -> {
+        ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             tList = database.getTimeTableData(getCurrentTableDay());
             // Sort according to classes' start time
@@ -403,7 +403,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
          * Deletes multiple images from the list of selected items
          */
         public void deleteMultiple() {
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                     .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())

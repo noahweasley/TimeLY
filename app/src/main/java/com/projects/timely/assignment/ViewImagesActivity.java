@@ -132,7 +132,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                RequestRunner runner = RequestRunner.getInstance();
+                RequestRunner runner = RequestRunner.createInstance();
                 RequestRunner.Builder builder = new RequestRunner.Builder();
                 builder.setOwnerContext(ViewImagesActivity.this)
                         .setMediaUris(mediaUris)
@@ -349,7 +349,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
          * Deletes multiple images from the list of selected items
          */
         public void deleteMultiple() {
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(ViewImagesActivity.this)
                     .setAdapter(imageAdapter)

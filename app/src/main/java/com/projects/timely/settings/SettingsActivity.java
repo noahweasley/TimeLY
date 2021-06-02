@@ -2,6 +2,7 @@ package com.projects.timely.settings;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -11,6 +12,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.projects.timely.R;
+import com.projects.timely.alarms.TimeChangeDetector;
+import com.projects.timely.core.Time;
 import com.projects.timely.core.TimeRefreshEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,7 +52,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat
             implements Preference.OnPreferenceChangeListener {
-        Preference pref_EnableNotifications, pref_TimeFormat, pref_eTone,
+
+        @SuppressWarnings("FieldCanBeLocal")
+        private Preference pref_EnableNotifications, pref_TimeFormat, pref_eTone,
                 pref_DateFormat, pref_SnoozeTime, pref_snoozeOnStop,
                 pref_uriType, pref_weekNum, pref_ringtoneType;
 
@@ -85,14 +90,15 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void initialize() {
-            String prefValue = String.valueOf(pref_EnableNotifications.getSharedPreferences()
-                                                      .getBoolean(pref_EnableNotifications.getKey(),
-                                                                  true));
+            String prefValue
+                    = String.valueOf(pref_EnableNotifications
+                                             .getSharedPreferences()
+                                             .getBoolean(pref_EnableNotifications.getKey(), true));
             updatePreferenceSummary(pref_EnableNotifications, prefValue);
 
             prefValue = String.valueOf(pref_TimeFormat.getSharedPreferences()
-                                               .getBoolean(pref_TimeFormat.getKey(),
-                                                           true));
+                                                      .getBoolean(pref_TimeFormat.getKey(),
+                                                                  true));
             updatePreferenceSummary(pref_TimeFormat, prefValue);
 
             prefValue = pref_DateFormat.getSharedPreferences().getString(pref_DateFormat.getKey(),
@@ -102,21 +108,21 @@ public class SettingsActivity extends AppCompatActivity {
             prefValue = pref_SnoozeTime.getSharedPreferences().getString(pref_SnoozeTime.getKey(),
                                                                          "5");
             updatePreferenceSummary(pref_SnoozeTime, prefValue);
-            prefValue = pref_snoozeOnStop.getSharedPreferences().getString(
-                    pref_snoozeOnStop.getKey(),
-                    "Snooze");
+            prefValue =
+                    pref_snoozeOnStop.getSharedPreferences()
+                                     .getString(pref_snoozeOnStop.getKey(), "Snooze");
             updatePreferenceSummary(pref_snoozeOnStop, prefValue);
 
             prefValue = pref_uriType.getSharedPreferences()
-                    .getString(pref_uriType.getKey(), "TimeLY's Default");
+                                    .getString(pref_uriType.getKey(), "TimeLY's Default");
             updatePreferenceSummary(pref_uriType, prefValue);
 
             prefValue = pref_weekNum.getSharedPreferences()
-                    .getString(pref_weekNum.getKey(), "8");
+                                    .getString(pref_weekNum.getKey(), "8");
             updatePreferenceSummary(pref_weekNum, prefValue);
 
             prefValue = pref_ringtoneType.getSharedPreferences()
-                    .getString(pref_ringtoneType.getKey(), "TimeLY's Default");
+                                         .getString(pref_ringtoneType.getKey(), "TimeLY's Default");
             updatePreferenceSummary(pref_ringtoneType, prefValue);
 
             onStart = false;
@@ -138,14 +144,12 @@ public class SettingsActivity extends AppCompatActivity {
                                 = "Turning this " + (b_state ? "OFF" : "ON") + " will ensure that "
                                 + (b_state ? "12" : "24") + "-hours format is used";
                         pref.setSummary(append);
-                        // Perform time refresh
-                        EventBus.getDefault().post(new TimeRefreshEvent());
+                        performTimeRefresh();
                     }
                     break;
                     case "date_format":
                         pref.setSummary(state);
-                        // Perform time refresh
-                        EventBus.getDefault().post(new TimeRefreshEvent());
+                        performTimeRefresh();
                         break;
                     case "snooze_time": {
                         pref.setSummary("All alarms will be snoozed for " + state + " minute"
@@ -171,6 +175,14 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
                 }
             }
+        }
+
+        // Perform time refresh
+        private void performTimeRefresh() {
+            Time time = TimeChangeDetector.requestImmediateTime(getContext());
+            Log.d(getClass().getSimpleName(), "Use 24 hours: " + time.isMilitaryTime());
+            EventBus.getDefault().post(new TimeRefreshEvent());
+            EventBus.getDefault().post(time);
         }
 
         @Override

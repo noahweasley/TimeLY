@@ -11,8 +11,11 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.text.Html;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.text.HtmlCompat;
+import androidx.preference.PreferenceManager;
 
 import com.projects.timely.R;
 import com.projects.timely.main.MainActivity;
@@ -20,10 +23,6 @@ import com.projects.timely.main.MainActivity;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.text.HtmlCompat;
-import androidx.preference.PreferenceManager;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -36,54 +35,63 @@ public class ScheduledTaskNotifier extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String course = intent.getStringExtra(ARG_COURSE);
-        String time = intent.getStringExtra(ARG_TIME);
-        int calendarDay = intent.getIntExtra(ARG_DAY, -1);
+        if (intent.getAction() != null) {
+            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+                // Reset the alarm here.
+                Log.d(getClass().getSimpleName(), "Boot completed");
+            }
+        } else {
+            String course = intent.getStringExtra(ARG_COURSE);
+            String time = intent.getStringExtra(ARG_TIME);
+            int calendarDay = intent.getIntExtra(ARG_DAY, -1);
 
-        NotificationManager manager
-                = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        String CHANNEL = "TimeLY's Scheduled Classes";
-        String ID = "com.projects.timely.scheduled";
+            NotificationManager manager
+                    = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+            String CHANNEL = "TimeLY's Scheduled Classes";
+            String ID = "com.projects.timely.scheduled";
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-                manager.getNotificationChannel(CHANNEL) == null) {
-            manager.createNotificationChannel(
-                    new NotificationChannel(ID, CHANNEL, NotificationManager.IMPORTANCE_DEFAULT));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                    manager.getNotificationChannel(CHANNEL) == null) {
+                manager.createNotificationChannel(
+                        new NotificationChannel(ID, CHANNEL,
+                                                NotificationManager.IMPORTANCE_DEFAULT));
+            }
+
+            Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Uri APP_DEFAULT = new Uri.Builder()
+                    .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                    .authority(context.getPackageName())
+                    .path(String.valueOf(R.raw.arpeggio1))
+                    .build();
+
+            String type = PreferenceManager.getDefaultSharedPreferences(context)
+                                           .getString("Uri Type", "TimeLY's Default");
+
+            final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null
+                                    ? APP_DEFAULT : SYSTEM_DEFAULT;
+
+            Intent sIntent = new Intent(context, MainActivity.class)
+                    .setAction("com.projects.timely.scheduled");
+            PendingIntent pi = PendingIntent.getActivity(context, 1156, sIntent,
+                                                         PendingIntent.FLAG_UPDATE_CURRENT);
+            // Notification message
+            String message = "You have a scheduled class, <b>" + course + "</b> in <b>10 " +
+                    "minutes</b>";
+            CharSequence spannedMessage
+                    = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(spannedMessage))
+                   .setContentTitle("Scheduled class reminder")
+                   .setContentText(spannedMessage)
+                   .setAutoCancel(true)
+                   .setSmallIcon(R.drawable.ic_scheduled_black)
+                   .setSound(DEFAULT_URI)
+                   .setContentIntent(pi);
+            manager.notify(-299, builder.build());
+
+            scheduleFuture(context, time, course, calendarDay);     // schedule next alarm
         }
-
-        Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Uri APP_DEFAULT = new Uri.Builder()
-                .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-                .authority(context.getPackageName())
-                .path(String.valueOf(R.raw.arpeggio1))
-                .build();
-
-        String type = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString("Uri Type", "TimeLY's Default");
-
-        final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null
-                                ? APP_DEFAULT : SYSTEM_DEFAULT;
-
-        Intent sIntent = new Intent(context, MainActivity.class)
-                .setAction("com.projects.timely.scheduled");
-        PendingIntent pi = PendingIntent.getActivity(context, 1156, sIntent,
-                                                     PendingIntent.FLAG_UPDATE_CURRENT);
-        // Notification message
-        String message = "You have a scheduled class, <b>" + course + "</b> in <b>10 minutes</b>";
-        CharSequence spannedMessage
-                = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
-        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(spannedMessage))
-                .setContentTitle("Scheduled class reminder")
-                .setContentText(spannedMessage)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_scheduled_black)
-                .setSound(DEFAULT_URI)
-                .setContentIntent(pi);
-        manager.notify(-299, builder.build());
-
-        scheduleFuture(context, time, course, calendarDay);     // schedule next alarm
     }
 
     private void scheduleFuture(Context context, String time, String courseCode, int day) {

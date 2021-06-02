@@ -3,6 +3,7 @@ package com.projects.timely.alarms;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import androidx.fragment.app.Fragment;
 
 import com.projects.timely.R;
 import com.projects.timely.core.Time;
-import com.projects.timely.core.TimeRefreshEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,7 +26,6 @@ import org.greenrobot.eventbus.ThreadMode;
 public class AlarmTimeFragment extends Fragment {
     private ImageView img_dayAndNight;
     private TextView alarmDate, alarmMin, alarmHour, am_pm;
-    private boolean is24;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle) {
@@ -61,7 +60,7 @@ public class AlarmTimeFragment extends Fragment {
     // avoid glitch by setting the icon before starting timer
     private void instantiateTime() {
         Time time = TimeChangeDetector.requestImmediateTime(getContext());
-        this.is24 = time.isMilitaryTime();
+        boolean isMilitaryTime = time.isMilitaryTime();
         doTimeUpdate(time);
         setDayIcon(time);
         alarmDate.setText(time.getDate());
@@ -89,45 +88,34 @@ public class AlarmTimeFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doTimeUpdate(Time time) {
+    public void doTimeUpdate(@NonNull Time time) {
+        Log.d(getClass().getSimpleName(), "Time: " + time.toString());
         alarmDate.setText(time.getDate());
         alarmHour.setText(time.getHour());
         alarmMin.setText(time.getMinutes());
         am_pm.setText(time.isForenoon() ? "AM" : "PM");
-        am_pm.setVisibility(is24 ? View.GONE : View.VISIBLE);
+        am_pm.setVisibility(time.isMilitaryTime() ? View.GONE : View.VISIBLE);
         setDayIcon(time);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doLayoutRefresh(TimeRefreshEvent refreshLayoutEvent) {
-        instantiateTime();
-    }
-
-    private void setDayIcon(Time time) {
-
-        boolean isForeNoon = time.isForenoon();
-        int hourNum = Integer.parseInt(time.getHour());
-
-        /////////////////////   CODE DUPLICATION, TO BE UPDATED  ///////////////////////////////
-
-        if (isForeNoon && !is24) {
-            img_dayAndNight.setImageResource(R.drawable.ic_day_full);
-        } else if (!isForeNoon && !is24) {
-            if (hourNum == 12 || (hourNum >= 1 && hourNum <= 4)) {
+    private void setDayIcon(@NonNull Time time) {
+        // set day part icon
+        switch (time.getCurrentDayPart()) {
+            case MORNING:
                 img_dayAndNight.setImageResource(R.drawable.ic_day_full);
-            } else {
+                Log.d(getClass().getSimpleName(), "Morning");
+                break;
+            case AFTERNOON:
+                img_dayAndNight.setImageResource(R.drawable.ic_day_full);
+                Log.d(getClass().getSimpleName(), "Afternoon");
+                break;
+            case EVENING:
                 img_dayAndNight.setImageResource(R.drawable.ic_night_icon);
                 img_dayAndNight.setBackgroundResource(R.drawable.night);
-            }
-        } else if (is24) {
-            if (hourNum >= 0 && hourNum < 12) {
-                img_dayAndNight.setImageResource(R.drawable.ic_day_full);
-            } else if (hourNum >= 12 && hourNum <= 16) {
-                img_dayAndNight.setImageResource(R.drawable.ic_day_full);
-            } else {
-                img_dayAndNight.setImageResource(R.drawable.ic_night_icon);
-                img_dayAndNight.setBackgroundResource(R.drawable.night);
-            }
+                Log.d(getClass().getSimpleName(), "Evening");
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + time.getCurrentDayPart());
         }
     }
 }

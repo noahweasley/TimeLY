@@ -16,22 +16,22 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.projects.timely.R;
-import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.error.ErrorDialog;
-
-import org.greenrobot.eventbus.EventBus;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.projects.timely.R;
+import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.error.ErrorDialog;
+
+import org.greenrobot.eventbus.EventBus;
+
 import static com.projects.timely.core.AppUtils.Alert;
 import static com.projects.timely.core.AppUtils.DAYS_3;
 import static com.projects.timely.core.AppUtils.playAlertTone;
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
 public class AddExamDialog extends DialogFragment implements View.OnClickListener {
@@ -117,7 +117,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
 
         Context context = getContext();
         if (database.isExamAbsent(examWeek, exam)) {
-            runBackgroundTask(() -> {
+            ThreadUtils.runBackgroundTask(() -> {
                 int[] data = database.addExam(exam, examWeek);
                 if (data[1] != -1) {
                     exam.setId(data[1]);

@@ -33,6 +33,7 @@ import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.RequestUpdateEvent;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,8 +42,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
 public class SemesterFragment extends Fragment implements ActionMode.Callback {
@@ -91,7 +90,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         context = (AppCompatActivity) getActivity();
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
         boolean isPage1 = getArguments().getInt(ARG_POSITION) == 0;
-        runBackgroundTask(() -> {
+        ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             cList = database.getCoursesData((isPage1 ? SchoolDatabase.FIRST_SEMESTER
                                                      : SchoolDatabase.SECOND_SEMESTER));
@@ -396,7 +395,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
          * Deletes multiple images from the list of selected items
          */
         public void deleteMultiple() {
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                     .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())

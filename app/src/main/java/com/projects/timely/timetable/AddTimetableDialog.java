@@ -22,8 +22,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.projects.timely.R;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
 import com.projects.timely.error.ErrorDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,16 +39,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
 import static com.projects.timely.core.AppUtils.Alert.COURSE;
 import static com.projects.timely.core.AppUtils.DAYS;
 import static com.projects.timely.core.AppUtils.playAlertTone;
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 import static com.projects.timely.timetable.DaysFragment.ARG_CHRONOLOGY;
 import static com.projects.timely.timetable.DaysFragment.ARG_CLASS;
 import static com.projects.timely.timetable.DaysFragment.ARG_DATA;
@@ -170,7 +170,7 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
         } else {
             Context context = getContext();
             if (database.isTimeTableAbsent(timetable.getDay(), timetable)) {
-                runBackgroundTask(() -> {
+                ThreadUtils.runBackgroundTask(() -> {
                     Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                     int[] insertData = database.addTimeTableData(timetable, timetable.getDay());
                     if (insertData[1] != -1) {

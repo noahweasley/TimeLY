@@ -29,7 +29,6 @@ public class TimeChangeDetector extends Thread {
     private String min = "";
     private volatile boolean wantToStopOperation;
     private Context mContext;
-    private static boolean wmt = true;
     private static String prevDateFormat;
 
     /**
@@ -38,10 +37,11 @@ public class TimeChangeDetector extends Thread {
      * @return the current OS time immediately
      */
     public static Time requestImmediateTime(Context mContext) {
-        Time calculatedTime = getCalculatedTime(mContext);
-        wmt = calculatedTime.isMilitaryTime();
-        prevDateFormat = calculatedTime.getDateFormat();
-        return calculatedTime;
+        // mPreferences can be null when time or date changes but TimeLY is not in use
+        if (mPreferences == null)
+            mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        return getCalculatedTime(mContext);
     }
 
     /**
@@ -79,8 +79,6 @@ public class TimeChangeDetector extends Thread {
                         eventBus.post(calculatedTime);
 
                     this.min = calculatedTime.getMinutes();
-                    wmt = calculatedTime.isMilitaryTime();
-                    prevDateFormat = calculatedTime.getDateFormat();
                 }
             }
         }
@@ -88,7 +86,8 @@ public class TimeChangeDetector extends Thread {
 
     // retrieves calculated time
     private static Time getCalculatedTime(Context mContext) {
-        boolean is24 = isUserPreferred24Hours(mContext);
+
+        boolean isMilitaryTime = isUserPreferred24Hours(mContext);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -103,7 +102,8 @@ public class TimeChangeDetector extends Thread {
 
         String timeView;
         Date calendarTime = calendar.getTime();
-        timeView = is24 ? timeFormat24.format(calendarTime) : timeFormat12.format(calendarTime);
+        timeView = isMilitaryTime ? timeFormat24.format(calendarTime)
+                                  : timeFormat12.format(calendarTime);
 
         String[] splitTime = timeView.split(":");
         String hour = splitTime[0];
@@ -125,6 +125,6 @@ public class TimeChangeDetector extends Thread {
                         = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
         }
 
-        return new Time(dateFormat, formattedDate, hour, min, is24, isForenoon);
+        return new Time(dateFormat, formattedDate, hour, min, isMilitaryTime, isForenoon);
     }
 }

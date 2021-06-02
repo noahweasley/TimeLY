@@ -37,6 +37,7 @@ import com.projects.timely.core.MultiUpdateMessage;
 import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
 import com.projects.timely.main.MainActivity;
 import com.projects.timely.timetable.TimeTableRowHolder;
 import com.projects.timely.timetable.TimetableModel;
@@ -49,8 +50,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings({"ConstantConditions"})
 public class ScheduledTimetableFragment extends Fragment implements ActionMode.Callback {
@@ -98,7 +97,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
                 resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
-        runBackgroundTask(() -> {
+        ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             tList = database.getTimeTableData(SchoolDatabase.SCHEDULED_TIMETABLE);
             // Sort the timetable according to the day and start time
@@ -142,7 +141,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 // post a delete request on the assignment database
-                RequestRunner runner = RequestRunner.getInstance();
+                RequestRunner runner = RequestRunner.createInstance();
                 Snackbar.make(coordinator, "Timetable Deleted", Snackbar.LENGTH_LONG)
                         .setAction("undo", (view) -> runner.undoRequest())
                         .setActionTextColor(Color.YELLOW)
@@ -413,7 +412,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
          * Deletes multiple images from the list of selected items
          */
         public void deleteMultiple() {
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                     .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())

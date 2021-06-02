@@ -3,10 +3,10 @@ package com.projects.timely.alarms;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.projects.timely.R;
 import com.projects.timely.core.SchoolDatabase;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.core.AppUtils.DAYS_2;
 
@@ -16,7 +16,7 @@ class ButtonListHolder extends RecyclerView.ViewHolder implements View.OnClickLi
     private int btnPos;
     private int alarmPosition;
     private SchoolDatabase database;
-    private Button button;
+    private final Button button;
     private boolean disabled;
 
 

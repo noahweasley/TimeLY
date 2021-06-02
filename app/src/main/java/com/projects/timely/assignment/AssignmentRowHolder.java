@@ -252,7 +252,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
     private void doDeleteAssignment() {
         // post a delete request on the assignment database7
-        RequestRunner runner = RequestRunner.getInstance();
+        RequestRunner runner = RequestRunner.createInstance();
         Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted",
                                           Snackbar.LENGTH_LONG)
                 .setAction("undo", (view) -> runner.undoRequest())

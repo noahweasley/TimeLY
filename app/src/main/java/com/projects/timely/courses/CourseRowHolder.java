@@ -6,6 +6,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
 import com.projects.timely.core.DataModel;
@@ -13,12 +19,6 @@ import com.projects.timely.core.RequestRunner;
 import com.projects.timely.courses.SemesterFragment.CourseAdapter;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.TooltipCompat;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class CourseRowHolder extends RecyclerView.ViewHolder {
     public static final String DELETE_REQUEST = "Delete course";
@@ -38,10 +38,10 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
     private List<DataModel> cList;
     private CourseModel cModel;
     private CoordinatorLayout coordinator;
-    private View lIndicator;
-    private ImageButton btn_deleteCourse;
-    private TextView tv_courseCode, tv_courseName, tv_credits;
-    private View v_selectionOverlay;
+    private final View lIndicator;
+    private final ImageButton btn_deleteCourse;
+    private final TextView tv_courseCode, tv_courseName, tv_credits;
+    private final View v_selectionOverlay;
     private boolean isChecked;
     private CourseModel course;
 
@@ -55,7 +55,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
         v_selectionOverlay = rootView.findViewById(R.id.checked_overlay);
 
         btn_deleteCourse.setOnClickListener(v -> {
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(user.getActivity())
                     .setAdapterPosition(getAbsoluteAdapterPosition())

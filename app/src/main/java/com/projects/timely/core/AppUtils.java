@@ -35,17 +35,6 @@ public class AppUtils {
     }
 
     /**
-     * Use this function to spawn up background task quickly, and eliminate <strong>jank</strong>
-     * caused by running long task on the UI thread
-     *
-     * @param target the task to spawn
-     */
-    public static void runBackgroundTask(Runnable target) {
-        Thread thread1 = new Thread(target);
-        thread1.start();
-    }
-
-    /**
      * Get the user preferred settings for time format
      *
      * @return true if user preferred 24 hours, false otherwise. Default value "true"

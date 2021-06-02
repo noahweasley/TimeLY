@@ -7,6 +7,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.projects.timely.R;
 import com.projects.timely.core.DataModel;
@@ -15,11 +20,6 @@ import com.projects.timely.error.ErrorDialog;
 
 import java.util.List;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 
@@ -37,12 +37,12 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
     private ExamTimetableFragment.ExamRowAdapter examRowAdapter;
     private List<DataModel> eList;
     private CoordinatorLayout coordinator;
-    private View leftIndicator, rightIndicator;
-    private TextView tv_time, tv_courseName, tv_courseCode, tv_examDay;
-    private View v_selectionOverlay;
+    private final View leftIndicator, rightIndicator;
+    private final TextView tv_time, tv_courseName, tv_courseCode, tv_examDay;
+    private final View v_selectionOverlay;
     private boolean isChecked;
     private ExamModel exam;
-    private ImageButton btn_deleteExam;
+    private final ImageButton btn_deleteExam;
 
     public ExamRowHolder(@NonNull View rootView) {
         super(rootView);
@@ -56,7 +56,7 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
         btn_deleteExam = rootView.findViewById(R.id.delete_exam);
 
         btn_deleteExam.setOnClickListener(v -> {
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(user.getActivity())
                     .setModelList(eList)

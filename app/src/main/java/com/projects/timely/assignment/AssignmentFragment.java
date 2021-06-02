@@ -13,27 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.projects.timely.R;
-import com.projects.timely.core.DataModel;
-import com.projects.timely.core.DataMultiChoiceMode;
-import com.projects.timely.core.EmptyListEvent;
-import com.projects.timely.core.MultiUpdateMessage;
-import com.projects.timely.core.PositionMessageEvent;
-import com.projects.timely.core.RequestParams;
-import com.projects.timely.core.RequestRunner;
-import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ChoiceMode;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,7 +24,27 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.projects.timely.R;
+import com.projects.timely.core.ChoiceMode;
+import com.projects.timely.core.DataModel;
+import com.projects.timely.core.DataMultiChoiceMode;
+import com.projects.timely.core.EmptyListEvent;
+import com.projects.timely.core.MultiUpdateMessage;
+import com.projects.timely.core.PositionMessageEvent;
+import com.projects.timely.core.RequestParams;
+import com.projects.timely.core.RequestRunner;
+import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("ConstantConditions")
 public class AssignmentFragment extends Fragment implements ActionMode.Callback {
@@ -65,7 +64,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     private RecyclerView rV_assignmentList;
     private ActionMode actionMode;
     private AppCompatActivity context;
-    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
+    private final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
 
     public static AssignmentFragment newInstance() {
         return new AssignmentFragment();
@@ -96,7 +95,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         noAssignmentView = view.findViewById(R.id.no_assignment_view);
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
 
-        runBackgroundTask(() -> {
+        ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             aList = database.getAssignmentData();
             if (isAdded())
@@ -139,7 +138,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 // post a delete request to the assignment database
-                RequestRunner runner = RequestRunner.getInstance();
+                RequestRunner runner = RequestRunner.createInstance();
                 Snackbar snackbar
                         = Snackbar.make(coordinator, "Assignment Deleted", Snackbar.LENGTH_LONG)
                         .setAction("undo", (view) -> runner.undoRequest())
@@ -448,7 +447,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
          * Deletes multiple images from the list of selected items
          */
         public void deleteMultiple() {
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                     .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())

@@ -10,18 +10,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.projects.timely.R;
-import com.projects.timely.VerticalTextView;
-import com.projects.timely.core.DataModel;
-import com.projects.timely.core.RequestRunner;
-import com.projects.timely.error.ErrorDialog;
-import com.projects.timely.scheduled.AddScheduledDialog;
-import com.projects.timely.scheduled.ScheduledTimetableFragment;
-
-import java.util.List;
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -29,6 +17,18 @@ import androidx.core.content.ContextCompat;
 import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.projects.timely.R;
+import com.projects.timely.core.DataModel;
+import com.projects.timely.core.RequestRunner;
+import com.projects.timely.custom.VerticalTextView;
+import com.projects.timely.error.ErrorDialog;
+import com.projects.timely.scheduled.AddScheduledDialog;
+import com.projects.timely.scheduled.ScheduledTimetableFragment;
+
+import java.util.List;
+import java.util.Locale;
 
 import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 
@@ -65,7 +65,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
     private RecyclerView.Adapter<?> rowAdapter;
     private CoordinatorLayout coordinator;
     private String timetable;
-    private View v_selectionOverlay;
+    private final View v_selectionOverlay;
     private boolean isChecked;
 
     public TimeTableRowHolder(@NonNull View rootView) {
@@ -88,7 +88,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                     = user instanceof ScheduledTimetableFragment
                       ? ScheduledTimetableFragment.DELETE_REQUEST : DaysFragment.DELETE_REQUEST;
 
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(user.getActivity())
                     .setAdapterPosition(getAbsoluteAdapterPosition())
@@ -136,15 +136,14 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                 rowAdapter.setMultiSelectionEnabled(
                         !rowAdapter.isMultiSelectionEnabled()
                                 || rowAdapter.getCheckedCoursesCount() != 0);
-                trySelectTimetable();
             } else {
                 ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
                         = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
                 rowAdapter.setMultiSelectionEnabled(
                         !rowAdapter.isMultiSelectionEnabled()
                                 || rowAdapter.getCheckedCoursesCount() != 0);
-                trySelectTimetable();
             }
+            trySelectTimetable();
 
             return true;
         });

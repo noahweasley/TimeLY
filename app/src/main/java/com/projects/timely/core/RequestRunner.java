@@ -63,7 +63,7 @@ public class RequestRunner extends Thread {
     private Context appContext;
 
     /**
-     * Use {@link RequestRunner#getInstance()} instead, to get the instance of the
+     * Use {@link RequestRunner#createInstance()} instead, to get the instance of the
      * <strong>RequestRunner</strong>. This convenience method is just to improve readability.
      */
     private RequestRunner() {
@@ -72,7 +72,7 @@ public class RequestRunner extends Thread {
     /**
      * @return an instance of A <strong>RequestRunner</strong>
      */
-    public static RequestRunner getInstance() {
+    public static RequestRunner createInstance() {
         return new RequestRunner();
     }
 

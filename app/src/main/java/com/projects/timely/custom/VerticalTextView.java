@@ -1,4 +1,4 @@
-package com.projects.timely;
+package com.projects.timely.custom;
 
 import android.content.Context;
 import android.graphics.Canvas;

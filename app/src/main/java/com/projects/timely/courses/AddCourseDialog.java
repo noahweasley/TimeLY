@@ -16,21 +16,21 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.projects.timely.R;
-import com.projects.timely.core.AppUtils.Alert;
-import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.error.ErrorDialog;
-
-import org.greenrobot.eventbus.EventBus;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.projects.timely.R;
+import com.projects.timely.core.AppUtils.Alert;
+import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.error.ErrorDialog;
+
+import org.greenrobot.eventbus.EventBus;
+
 import static com.projects.timely.core.AppUtils.playAlertTone;
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 import static com.projects.timely.courses.SemesterFragment.ARG_POSITION;
 
 @SuppressWarnings("ConstantConditions")
@@ -111,7 +111,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
         Context context = getContext();
 
         if (database.isCourseAbsent(model)) {
-            runBackgroundTask(() -> {
+            ThreadUtils.runBackgroundTask(() -> {
                 int[] data = database.addCourse(model, semester);
                 int addPos = data[1];
                 if (addPos != -1) {

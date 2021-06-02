@@ -11,6 +11,9 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
+
 import com.projects.timely.alarms.AlarmModel;
 import com.projects.timely.assignment.AssignmentModel;
 import com.projects.timely.courses.CourseModel;
@@ -24,11 +27,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.preference.PreferenceManager;
-
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 /**
  * Sort order of list's in the database
@@ -716,7 +714,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         int resultCode = db.delete(ALARMS_TABLE, whereClause, whereArg);
         // after delete, re-arrange alarm position. This is a background task
-        runBackgroundTask(this::re_arrangeAlarmPosition);
+        ThreadUtils.runBackgroundTask(this::re_arrangeAlarmPosition);
         return resultCode != -1;
     }
 
@@ -1466,7 +1464,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * Removes redundant exam timetables from TimeLY's database
      */
     public void dropRedundantExamTables() {
-        runBackgroundTask(() -> {
+        ThreadUtils.runBackgroundTask(() -> {
             SQLiteDatabase db = getWritableDatabase();
             // First get the user preference for the number of weeks, which corresponds to the
             // number of tables in database.

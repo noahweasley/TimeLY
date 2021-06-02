@@ -34,6 +34,7 @@ import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.RequestUpdateEvent;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,8 +44,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 
 @SuppressWarnings("ConstantConditions")
 public class ExamTimetableFragment extends Fragment implements ActionMode.Callback {
@@ -59,7 +58,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
     private CoordinatorLayout coordinator;
     private ExamRowAdapter examRowAdapter;
     private AppCompatActivity context;
-    private ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
+    private final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
 
     public static ExamTimetableFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -90,7 +89,8 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
         context = (AppCompatActivity) getActivity();
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
         int position = getArguments().getInt(ARG_POSITION);
-        runBackgroundTask(() -> {
+
+        ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             eList = database.getExamTimetableDataFor(position);
             // Sort by start time
@@ -401,7 +401,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
          * Deletes multiple images from the list of selected items
          */
         public void deleteMultiple() {
-            RequestRunner runner = RequestRunner.getInstance();
+            RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())

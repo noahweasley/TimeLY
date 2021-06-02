@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.projects.timely.R;
 import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.core.ThreadUtils;
 import com.projects.timely.error.ErrorDialog;
 import com.projects.timely.timetable.TimetableModel;
 
@@ -44,7 +45,6 @@ import static android.content.Context.ALARM_SERVICE;
 import static com.projects.timely.core.AppUtils.Alert.SCHEDULED_TIMETABLE;
 import static com.projects.timely.core.AppUtils.DAYS;
 import static com.projects.timely.core.AppUtils.playAlertTone;
-import static com.projects.timely.core.AppUtils.runBackgroundTask;
 import static com.projects.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
 import static com.projects.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
 
@@ -161,7 +161,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
 
         } else {
             if (database.isTimeTableAbsent(SchoolDatabase.SCHEDULED_TIMETABLE, newTimetable)) {
-                runBackgroundTask(() -> {
+                ThreadUtils.runBackgroundTask(() -> {
                     Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                     int[] insertData = database.addTimeTableData(newTimetable,
                                                                  SchoolDatabase.SCHEDULED_TIMETABLE);

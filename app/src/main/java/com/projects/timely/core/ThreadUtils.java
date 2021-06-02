@@ -1,9 +1,14 @@
 package com.projects.timely.core;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Set of utility methods to be used to efficiently manage Thread execution.
  */
 public class ThreadUtils {
+
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     /**
      * Utility method to inline background threads with normal program execution
@@ -11,7 +16,8 @@ public class ThreadUtils {
      * @param target the task to be run
      */
     public static void runBackgroundTask(Runnable target) {
-        Thread thread = new Thread(target);
-        thread.start();
+        executorService.execute(target);
     }
+
+
 }
