@@ -62,6 +62,7 @@ public class AppUtils {
             alertPlayer = MediaPlayer.create(context, R.raw.echoed_ding1);
         else
             alertPlayer = MediaPlayer.create(context, R.raw.accomplished1);
+
         alertPlayer.start();
     }
 
