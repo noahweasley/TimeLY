@@ -34,7 +34,7 @@ import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.RequestUpdateEvent;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

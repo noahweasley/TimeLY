@@ -1,4 +1,4 @@
-package com.projects.timely.core;
+package com.projects.timely.util;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,5 +19,10 @@ public class ThreadUtils {
         executorService.execute(target);
     }
 
-
+    /**
+     * Shutdown all tasks
+     */
+    public static void shutdownAllTasks() {
+        executorService.shutdown();
+    }
 }
