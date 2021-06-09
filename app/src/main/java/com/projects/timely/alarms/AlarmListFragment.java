@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ import com.projects.timely.core.AppUtils.Alert;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.EmptyListEvent;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.util.ThreadUtils;
 import com.projects.timely.core.TimeRefreshEvent;
 import com.projects.timely.error.ErrorDialog;
 
@@ -43,11 +44,13 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Locale;
 
 import static com.projects.timely.alarms.AlarmReceiver.ALARM_POS;
+import static com.projects.timely.alarms.AlarmReceiver.REPEAT_DAYS;
 import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 import static com.projects.timely.core.AppUtils.playAlertTone;
 
@@ -239,7 +242,6 @@ public class AlarmListFragment extends Fragment {
                 ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
                 errorBuilder.setShowSuggestions(true)
                             .setDialogMessage(String.format("Alarm for %s exists", sTime))
-                            .setShowSuggestions(true)
                             .setSuggestionCount(2)
                             .setSuggestion1("Consider editing former alarm")
                             .setSuggestion2("Delete former alarm");
@@ -261,7 +263,7 @@ public class AlarmListFragment extends Fragment {
             newAlarm.setOn(true);
             newAlarm.setTime(alarmTime);
             newAlarm.setVibrate(true);
-            newAlarm.setRepeatDays(new Boolean[7]);
+            newAlarm.setRepeatDays(new Boolean[]{true, true, true, true, true, true, true});
             newAlarm.setPosition((DB_initialPos = ++lastId));
             newAlarm.setInitialPosition(DB_initialPos);
 
@@ -307,6 +309,9 @@ public class AlarmListFragment extends Fragment {
                 alarmReceiverIntent.putExtra(ALARM_POS, DB_initialPos);
                 alarmReceiverIntent.putExtra("Time", alarmTime);
 
+                boolean[] repeatDays = convertToPrimitive(newAlarm.getRepeatDays());
+                alarmReceiverIntent.putExtra(REPEAT_DAYS, repeatDays);
+
                 alarmReceiverIntent.addCategory("com.projects.timely.alarm.category");
                 alarmReceiverIntent.setAction("com.projects.timely.alarm.cancel");
                 alarmReceiverIntent.setDataAndType(
@@ -349,6 +354,16 @@ public class AlarmListFragment extends Fragment {
                 Toast.makeText(mActivity, "A problem occurred", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    // convert to primitive boolean array
+    private boolean[] convertToPrimitive(Boolean[] source) {
+        boolean[] dest = new boolean[source.length];
+        for (int i = 0; i < source.length; i++) {
+            dest[i] = source[i];
+        }
+        Log.d(getClass().getSimpleName(), "Copied: " + Arrays.toString(dest));
+        return dest;
     }
 
     // The layout for the alarms occupying the alarm_list RecyclerView

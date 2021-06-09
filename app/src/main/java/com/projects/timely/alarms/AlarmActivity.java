@@ -102,12 +102,6 @@ public class AlarmActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
     // GreenRobot EventBuses was used here because it was impossible to finish this activity
     // because the action is from a service and the data that is needed is not supplied to this
     // activity when it start up.
@@ -124,5 +118,13 @@ public class AlarmActivity extends AppCompatActivity {
         sendBroadcast(backIsDismiss ? receiverDismiss : receiverSnooze);
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        receiverDismiss = null;
+        receiverSnooze = null;
+        super.onDestroy();
     }
 }
