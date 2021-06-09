@@ -24,7 +24,11 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d">
+        <schema name="main" object-types="table, view" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d">
@@ -38,6 +42,9 @@
     <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Registered_Courses" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Alarms" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Monday" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Assignment" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">

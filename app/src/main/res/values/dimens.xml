@@ -32,4 +32,6 @@
 	<dimen name="secondary_card_margin_bottom">16dp</dimen>
 	<dimen name = "drawable_padding">8dp</dimen>
 	<dimen name = "count_size">6sp</dimen>
+    <dimen name="normal_dialog_width">360dp</dimen>
+	<dimen name="normal_dialog_height">370dp</dimen>
 </resources>

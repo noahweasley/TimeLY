@@ -153,4 +153,10 @@
 	<string name="manage_assignments">Manage class assignments</string>
 	<string name="manage_exams">Be prepared for exams</string>
 	<string name="introduction">Introduction</string>
+    <string name="noticeTitle">Notice</string>
+	<string name="noticeMessage">Remove restriction on alarms to make TimeLY function properly
+		. TimeLY optimizes battery usage for you</string>
+    <string name="go">GO</string>
+    <string name="report_message">You will be re-directed to Whatspap to report this bug, Continue?</string>
+	<string name="report_title">Report Bug</string>
 </resources>
