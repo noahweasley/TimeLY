@@ -3,6 +3,9 @@ package com.projects.timely.main;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -240,7 +243,24 @@ public class MainActivity
     private void reportAction(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             // start WhatsApp
-            Toast.makeText(this, "Operation Successful", Toast.LENGTH_LONG).show();
+            PackageManager packageManager = getPackageManager();
+            try {
+                PackageInfo packageInfo = packageManager.getPackageInfo("com.whatsapp",
+                                                                        PackageManager.GET_META_DATA);
+
+                String developersContact = "+2347065478947";
+                String message = "Hello Noah, TimeLY is a nice app. However, I would like to " +
+                        "report a bug [...]";
+                String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s",
+                                                  developersContact,
+                                                  message);
+
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataString)));
+
+            } catch (PackageManager.NameNotFoundException e) {
+                Toast.makeText(this, "Whatsapp not installed", Toast.LENGTH_LONG).show();
+            }
+
         }
         // whatever the button clicked, close dialog
         dialog.cancel();
