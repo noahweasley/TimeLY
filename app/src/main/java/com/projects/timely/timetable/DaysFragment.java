@@ -14,28 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.projects.timely.R;
-import com.projects.timely.core.ChoiceMode;
-import com.projects.timely.core.CountEvent;
-import com.projects.timely.core.DataModel;
-import com.projects.timely.core.DataMultiChoiceMode;
-import com.projects.timely.core.EmptyListEvent;
-import com.projects.timely.core.MultiUpdateMessage;
-import com.projects.timely.core.RequestParams;
-import com.projects.timely.core.RequestRunner;
-import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ThreadUtils;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +25,28 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.projects.timely.R;
+import com.projects.timely.core.ChoiceMode;
+import com.projects.timely.core.CountEvent;
+import com.projects.timely.core.DataModel;
+import com.projects.timely.core.DataMultiChoiceMode;
+import com.projects.timely.core.EmptyListEvent;
+import com.projects.timely.core.MultiUpdateMessage;
+import com.projects.timely.core.RequestParams;
+import com.projects.timely.core.RequestRunner;
+import com.projects.timely.core.SchoolDatabase;
+import com.projects.timely.util.ThreadUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+
 import static com.projects.timely.core.AppUtils.DAYS;
 
 @SuppressWarnings({"ConstantConditions"})
@@ -55,9 +55,9 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
     public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Timetable";
     public static final String ARG_POSITION = "List position";
     public static final String ARG_CLASS = "Current class";
-    static final String ARG_PAGE_POSITION = "Tab position";
-    static final String ARG_DAY = "Schedule Day";
-    static final String ARG_TIME = "Schedule Time";
+    public static final String ARG_PAGE_POSITION = "Tab position";
+    public static final String ARG_DAY = "Schedule Day";
+    public static final String ARG_TIME = "Schedule Time";
     static final String ARG_TO_EDIT = "Editor stat";
     static final String ARG_DATA = "Timetable Data";
     static final String ARG_CHRONOLOGY = "Chronological Order";
@@ -348,36 +348,36 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
         }
 
         /**
-         * @return the number of images that was selected
+         * @return the number of timetables that was selected
          */
-        public int getCheckedCoursesCount() {
+        public int getCheckedTimetablesCount() {
             return choiceMode.getCheckedChoiceCount();
         }
 
         /**
          * @return an array of the checked indices as seen by database
          */
-        public Integer[] getCheckedCoursesPositions() {
+        public Integer[] getCheckedTimetablesPositions() {
             return choiceMode.getCheckedChoicePositions();
         }
 
         /**
          * @return an array of the checked indices
          */
-        private Integer[] getCheckedCoursesIndices() {
+        private Integer[] getCheckedTimetableIndices() {
             return choiceMode.getCheckedChoicesIndices();
         }
 
         /**
          * @param position           the position where the change occurred
          * @param state              the new state of the change
-         * @param assignmentPosition the position of the assignment in database.
+         * @param timetablePosition the position of the timetable in database.
          */
-        public void onChecked(int position, boolean state, int assignmentPosition) {
+        public void onChecked(int position, boolean state, int timetablePosition) {
             boolean isFinished = false;
 
             DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
-            dmcm.setChecked(position, state, assignmentPosition);
+            dmcm.setChecked(position, state, timetablePosition);
 
             int choiceCount = dmcm.getCheckedChoiceCount();
 
@@ -411,14 +411,14 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
                     .setModelList(tList)
                     .setTimetable(getCurrentTableDay())
                     .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
-                    .setItemIndices(getCheckedCoursesIndices())
-                    .setPositionIndices(getCheckedCoursesPositions())
+                    .setItemIndices(getCheckedTimetableIndices())
+                    .setPositionIndices(getCheckedTimetablesPositions())
                     .setDataProvider(TimetableModel.class);
 
             runner.setRequestParams(builder.getParams())
                     .runRequest(MULTIPLE_DELETE_REQUEST);
 
-            final int count = getCheckedCoursesCount();
+            final int count = getCheckedTimetablesCount();
             Snackbar snackbar
                     = Snackbar.make(coordinator,
                                     count + " Course" + (count > 1 ? "s" : "") + " Deleted",

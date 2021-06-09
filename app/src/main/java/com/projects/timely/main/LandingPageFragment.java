@@ -67,13 +67,8 @@ public class LandingPageFragment extends Fragment {
         view.findViewById(R.id.discover).setOnClickListener(
                 (v) -> ((MainActivity) getActivity()).drawer.openDrawer(GravityCompat.START));
         tv_gText = view.findViewById(R.id.greeting_text);
-        doUpdateGreeting(TimeChangeDetector.requestImmediateTime(getContext()));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
         EventBus.getDefault().register(this);
+        doUpdateGreeting(TimeChangeDetector.requestImmediateTime(getContext()));
     }
 
     @Override
@@ -87,4 +82,5 @@ public class LandingPageFragment extends Fragment {
         super.onDetach();
         EventBus.getDefault().unregister(this);
     }
+
 }

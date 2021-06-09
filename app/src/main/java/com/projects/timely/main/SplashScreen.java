@@ -36,6 +36,7 @@ public class SplashScreen extends AppCompatActivity {
         // Display main screen after the splash screen
         (handler = new Handler(getMainLooper()))
                 .postDelayed(startMain = this::launch, TIMEOUT);
+
     }
 
     private void skipSplashScreen(View v) {

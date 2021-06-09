@@ -11,11 +11,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Process;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -31,7 +31,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -41,7 +40,7 @@ import com.projects.timely.R;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.util.ThreadUtils;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -56,7 +55,6 @@ import static com.projects.timely.core.AppUtils.Alert;
 import static com.projects.timely.core.AppUtils.isUserPreferred24Hours;
 import static com.projects.timely.core.AppUtils.playAlertTone;
 
-@SuppressWarnings("ConstantConditions")
 class AlarmListHolder extends RecyclerView.ViewHolder {
     public static final String DELETE_REQUEST = "delete alarm";
     // array of drawables to be cached, declared here for easy access
@@ -71,7 +69,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             R.drawable.round_od,
             R.drawable.round_rl
     };
-    private static ExpansionDetails details;
+
     private final ExpandableLayout detailLayout;
     private final ImageView expandStatus;
     private final Calendar calendar = Calendar.getInstance();
@@ -82,13 +80,30 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     private CoordinatorLayout coordinator;
     private List<DataModel> alarmModelList;
     private AlarmListFragment.AlarmAdapter alarmAdapter;
-    private final RecyclerView rV_buttonRow;
     private SchoolDatabase database;
     private final CheckBox cbx_Repeat, cbx_Vibrate;
     private final ImageButton btn_deleteRow;
     private final TextView tv_label;
     private final View decoration;
     private AlarmModel thisAlarm;
+    private final ViewGroup vg_buttonRow;
+    private final TextView btn_sunday, btn_monday, btn_tuesday, btn_wednesday, btn_thursday,
+            btn_friday, btn_saturday;
+    private Boolean[] selectedDays = new Boolean[7];
+
+
+    AlarmListHolder with(FragmentActivity activity, CoordinatorLayout coordinator,
+                         List<DataModel> alarmModelList, SchoolDatabase database,
+                         AlarmListFragment.AlarmAdapter alarmAdapter) {
+        this.mActivity = activity;
+        this.mgr = activity.getSupportFragmentManager();
+        this.coordinator = coordinator;
+        this.alarmModelList = alarmModelList;
+        this.database = database;
+        this.alarmAdapter = alarmAdapter;
+        this.thisAlarm = (AlarmModel) alarmModelList.get(getAbsoluteAdapterPosition());
+        return this;
+    }
 
     AlarmListHolder(@NonNull View rootView) {
         super(rootView);
@@ -96,7 +111,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         decoration = rootView.findViewById(R.id.decoration);
         alarmStatus = rootView.findViewById(R.id.alarm_status);
         tv_alarmTime = rootView.findViewById(R.id.alarm_list_time);
-        rV_buttonRow = rootView.findViewById(R.id.row_of_buttons);
         cbx_Repeat = rootView.findViewById(R.id.checkbox_repeat);
         cbx_Vibrate = rootView.findViewById(R.id.checkbox_vibrate);
         btn_deleteRow = rootView.findViewById(R.id.delete_row);
@@ -106,41 +120,27 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         expandStatus = rootView.findViewById(R.id.expand_status);
         btn_rngPicker = rootView.findViewById(R.id.ringtone_picker);
         am_pm = rootView.findViewById(R.id.am_pm);
+        vg_buttonRow = rootView.findViewById(R.id.button_row);
+        btn_sunday = rootView.findViewById(R.id.sunday);
+        btn_monday = rootView.findViewById(R.id.monday);
+        btn_tuesday = rootView.findViewById(R.id.tuesday);
+        btn_wednesday = rootView.findViewById(R.id.wednesday);
+        btn_thursday = rootView.findViewById(R.id.thursday);
+        btn_friday = rootView.findViewById(R.id.friday);
+        btn_saturday = rootView.findViewById(R.id.saturday);
 
         registerAllListeners(rootView);
     }
 
     private void registerAllListeners(View rootView) {
-        // now deal with when the user wants to expand or collapse one of the alarm row
-        rootView.setOnClickListener(v -> {
-            detailLayout.toggle();
-            details = new ExpansionDetails();
-            details.setPreviousExpandedPos(getAbsoluteAdapterPosition());
-            details.setExpanded(detailLayout.isExpanded());
-            // When detailLayout expansion state has changed, rotate arrow and change
-            // background color.
-            final boolean isExpanded = detailLayout.isExpanded();
-            rootView.setActivated(isExpanded);
-            expandStatus.animate()
-                        .rotation(isExpanded ? 180 : 0)
-                        .setInterpolator(new BounceInterpolator())
-                        .setDuration(detailLayout.getDuration());
-        });
-
-        // display the days to repeat if repeat checkbox is checked
-        alarmStatus.setOnClickListener(v -> {
-            if (database != null) {
-                // Disable alarm if checkbox is unchecked but still keep the PendingIntent alive
-                String ss = tv_label.getText().toString();
-                String label = ss.equals("Label") ? null : ss;
-                String[] time = thisAlarm.getTime().split(":");
-
-                if (alarmStatus.isChecked()) rescheduleAlarm(label, time);
-                else cancelAlarm(label, time);
-                // now update the alarm status when user toggles the state of the switch
-                database.updateAlarmState(getAbsoluteAdapterPosition(), alarmStatus.isChecked());
-            }
-        });
+        // repeat buttons
+        btn_sunday.setOnClickListener(this::onRepeatButtonClick);
+        btn_monday.setOnClickListener(this::onRepeatButtonClick);
+        btn_tuesday.setOnClickListener(this::onRepeatButtonClick);
+        btn_wednesday.setOnClickListener(this::onRepeatButtonClick);
+        btn_thursday.setOnClickListener(this::onRepeatButtonClick);
+        btn_friday.setOnClickListener(this::onRepeatButtonClick);
+        btn_saturday.setOnClickListener(this::onRepeatButtonClick);
 
         tv_label.setOnClickListener(this::onLabelClick);
 
@@ -148,25 +148,55 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
         btn_rngPicker.setOnClickListener(this::onSelectRingtone);
 
-        cbx_Repeat.setOnClickListener(v -> {
-            final int dataPos   // dataPos now refers to the alarms id in the database
-                    = getAbsoluteAdapterPosition();
-            rV_buttonRow.setVisibility(cbx_Repeat.isChecked() ? View.VISIBLE : View.GONE);
+        // now deal with when the user wants to expand or collapse one of the alarm row
+        rootView.setOnClickListener(v -> {
+            detailLayout.toggle();
+            // When detailLayout expansion state has changed, rotate arrow and change
+            // background color.
+            final boolean isExpanded = detailLayout.isExpanded();
+            rootView.setActivated(isExpanded);
+            expandStatus.animate()
+                        .rotation(isExpanded ? 180 : 0)
+                        .setDuration(detailLayout.getDuration());
+        });
+
+        // display the days to repeat if repeat checkbox is checked
+        alarmStatus.setOnClickListener((view) -> {
             if (database != null) {
-                // now update the current alarm's repeat status when user toggles the current
-                // state of the checkbox
-                database.updateAlarmRepeatStatus(dataPos, cbx_Repeat.isChecked());
+                // Disable alarm if checkbox is unchecked but still keep the PendingIntent alive
+                String ss = tv_label.getText().toString();
+                String label = ss.equals("Label") ? null : ss;
+                String[] time = thisAlarm.getTime().split(":");
+
+                // re-schedule alarm base on alarm ON state
+                boolean checkedState = alarmStatus.isChecked();
+                if (checkedState) rescheduleAlarm(label, time);
+                else cancelAlarm(label, time);
+                // now update the alarm status when user toggles the state of the switch
+                database.updateAlarmState(getAbsoluteAdapterPosition(), checkedState);
             }
         });
 
-        cbx_Vibrate.setOnClickListener(v -> {
+        cbx_Repeat.setOnCheckedChangeListener((v, checkedStatus) -> {
+            final int dataPos   // dataPos now refers to the alarms id in the database
+                    = getAbsoluteAdapterPosition();
+            // hide or show rows of button
+            vg_buttonRow.setVisibility(checkedStatus ? View.VISIBLE : View.GONE);
+
+            if (database != null) {
+                // now update the current alarm's repeat status when user toggles the current
+                // state of the checkbox
+                database.updateAlarmRepeatStatus(dataPos, checkedStatus);
+            }
+        });
+
+        cbx_Vibrate.setOnCheckedChangeListener((v, checkedStatus) -> {
             final int dataPos   // dataPos now refers to the alarms id in the database
                     = getAbsoluteAdapterPosition();
             if (database != null) {
                 // now update the current alarm's vibrate status when user toggles the current
                 // state of the checkbox
-                boolean isUpdated
-                        = database.updateAlarmVibrateStatus(dataPos, cbx_Vibrate.isChecked());
+                boolean isUpdated = database.updateAlarmVibrateStatus(dataPos, checkedStatus);
             }
         });
 
@@ -197,25 +227,77 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    AlarmListHolder with(FragmentActivity activity, CoordinatorLayout coordinator,
-                         List<DataModel> alarmModelList, SchoolDatabase database,
-                         AlarmListFragment.AlarmAdapter alarmAdapter) {
-        this.mActivity = activity;
-        this.mgr = activity.getSupportFragmentManager();
-        this.coordinator = coordinator;
-        this.alarmModelList = alarmModelList;
-        this.database = database;
-        this.alarmAdapter = alarmAdapter;
-        this.thisAlarm = (AlarmModel) alarmModelList.get(getAbsoluteAdapterPosition());
-        return this;
+    private void onRepeatButtonClick(View view) {
+        int buttonId = view.getId();
+
+        int alarmPosition = getAbsoluteAdapterPosition();
+
+        if (buttonId == R.id.sunday) {
+            selectedDays[0] = !selectedDays[0];
+            btn_sunday.setBackgroundResource(!selectedDays[0] ? R.drawable.disabled_round_button
+                                                              : R.drawable.enabled_round_button);
+        } else if (buttonId == R.id.monday) {
+            selectedDays[1] = !selectedDays[1];
+            btn_monday.setBackgroundResource(!selectedDays[1] ? R.drawable.disabled_round_button
+                                                              : R.drawable.enabled_round_button);
+        } else if (buttonId == R.id.tuesday) {
+            selectedDays[2] = !selectedDays[2];
+            btn_tuesday.setBackgroundResource(!selectedDays[2] ? R.drawable.disabled_round_button
+                                                               : R.drawable.enabled_round_button);
+        } else if (buttonId == R.id.wednesday) {
+            selectedDays[3] = !selectedDays[3];
+            btn_wednesday.setBackgroundResource(!selectedDays[3] ? R.drawable.disabled_round_button
+                                                                 : R.drawable.enabled_round_button);
+        } else if (buttonId == R.id.thursday) {
+            selectedDays[4] = !selectedDays[4];
+            btn_thursday.setBackgroundResource(!selectedDays[4] ? R.drawable.disabled_round_button
+                                                                : R.drawable.enabled_round_button);
+        } else if (buttonId == R.id.friday) {
+            selectedDays[5] = !selectedDays[5];
+            btn_friday.setBackgroundResource(!selectedDays[5] ? R.drawable.disabled_round_button
+                                                              : R.drawable.enabled_round_button);
+        } else if (buttonId == R.id.saturday) {
+            selectedDays[6] = !selectedDays[6];
+            btn_saturday.setBackgroundResource(!selectedDays[6] ? R.drawable.disabled_round_button
+                                                                : R.drawable.enabled_round_button);
+        }
+
+        boolean updated = database.updateSelectedDays(alarmPosition, selectedDays);
+        if (updated) {
+            updatePendingAlarms();
+        }
+    }
+
+    //
+    private void updatePendingAlarms() {
+
     }
 
     void bindView() {
-        if (details != null) {
-            if (details.getPreviousExpandedPos() == getAbsoluteAdapterPosition()) {
-                detailLayout.setExpanded(details.isExpanded(), false);
-            }
-        }
+
+        selectedDays = thisAlarm.getRepeatDays();
+
+        btn_sunday.setBackgroundResource(!selectedDays[0] ? R.drawable.disabled_round_button
+                                                          : R.drawable.enabled_round_button);
+
+        btn_monday.setBackgroundResource(!selectedDays[1] ? R.drawable.disabled_round_button
+                                                          : R.drawable.enabled_round_button);
+
+        btn_tuesday.setBackgroundResource(!selectedDays[2] ? R.drawable.disabled_round_button
+                                                           : R.drawable.enabled_round_button);
+
+        btn_wednesday.setBackgroundResource(!selectedDays[3] ? R.drawable.disabled_round_button
+                                                             : R.drawable.enabled_round_button);
+
+        btn_thursday.setBackgroundResource(!selectedDays[4] ? R.drawable.disabled_round_button
+                                                            : R.drawable.enabled_round_button);
+
+        btn_friday.setBackgroundResource(!selectedDays[5] ? R.drawable.disabled_round_button
+                                                          : R.drawable.enabled_round_button);
+
+        btn_saturday.setBackgroundResource(!selectedDays[6] ? R.drawable.disabled_round_button
+                                                            : R.drawable.enabled_round_button);
+
         AlarmModel thisAlarm = (AlarmModel) alarmModelList.get(getAbsoluteAdapterPosition());
 
         // bind data to views in row layout, as received from the database.
@@ -246,17 +328,13 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
         alarmStatus.setChecked(thisAlarm.isOn());
         cbx_Repeat.setChecked(thisAlarm.isRepeated());
+
+        vg_buttonRow.setVisibility(cbx_Repeat.isChecked() ? View.VISIBLE : View.GONE);
+
         cbx_Vibrate.setChecked(thisAlarm.isVibrate());
         btn_rngPicker.setText(thisAlarm.getRingTone());
         int rowDrawable = DRAWABLES[getAbsoluteAdapterPosition() % DRAWABLES.length];
         decoration.setBackground(ContextCompat.getDrawable(mActivity, rowDrawable));
-
-        rV_buttonRow.setVisibility(cbx_Repeat.isChecked() ? View.VISIBLE : View.GONE);
-        rV_buttonRow.setHasFixedSize(true);
-        rV_buttonRow.setLayoutManager(new LinearLayoutManager(mActivity,
-                                                              LinearLayoutManager.HORIZONTAL,
-                                                              false));
-        rV_buttonRow.setAdapter(new ButtonListAdapter());
     }
 
     /*
@@ -265,6 +343,9 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
      * the former alarm, just cancel it with this method !!
      */
     private void cancelAlarm(String label, String[] time) {
+
+        String t = TextUtils.join(":", time);
+        Log.d(getClass().getSimpleName(), "Cancelling alarm for: " + t);
 
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
@@ -463,27 +544,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                }).show();
     }
 
-    private static class ExpansionDetails {
-        private int previousExpandedPos;
-        private boolean isExpanded;
-
-        public int getPreviousExpandedPos() {
-            return previousExpandedPos;
-        }
-
-        public void setPreviousExpandedPos(int previousExpandedPos) {
-            this.previousExpandedPos = previousExpandedPos;
-        }
-
-        public boolean isExpanded() {
-            return isExpanded;
-        }
-
-        public void setExpanded(boolean expanded) {
-            isExpanded = expanded;
-        }
-    }
-
     // This class will handle everything related to alarms.
     // I also tried avoided naming this class; AlarmManager :)
     private class TimeManager implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
@@ -522,6 +582,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          */
         @Override
         public void onTimeSet(TimePicker v, int hourOfDay, int minute) {
+            alarmStatus.setChecked(true);
+
             AlarmModel thisAlarm = (AlarmModel) database.getAlarmAt(getAbsoluteAdapterPosition());
             String ll = tv_label.getText().toString();
             String[] ts = thisAlarm.getTime().split(":");
@@ -587,29 +649,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
             playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
         }
-
     }
 
-    class ButtonListAdapter extends RecyclerView.Adapter<ButtonListHolder> {
-
-        @NonNull
-        @Override
-        public ButtonListHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            return new ButtonListHolder(
-                    LayoutInflater.from(mActivity).inflate(R.layout.button_row, viewGroup, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ButtonListHolder viewHolder, int btn_pos) {
-            viewHolder.with(btn_pos,
-                            getAbsoluteAdapterPosition(),
-                            database)
-                      .bindView();
-        }
-
-        @Override
-        public int getItemCount() {
-            return 7;
-        }
-    }
 }

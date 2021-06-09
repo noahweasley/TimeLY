@@ -20,6 +20,8 @@ import com.projects.timely.courses.CourseModel;
 import com.projects.timely.exam.ExamModel;
 import com.projects.timely.gallery.Image;
 import com.projects.timely.timetable.TimetableModel;
+import com.projects.timely.util.CollectionUtils;
+import com.projects.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,13 +30,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Sort order of list's in the database
- */
-@SuppressWarnings("unused")
-enum SortOrder {
-    NATURAL_ORDER, UNORDERED, REVERSED_ORDERED
-}
+import static com.projects.timely.util.CollectionUtils.linearSearch;
 
 /**
  * TimeLY's database manager
@@ -52,6 +48,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public static final String SECOND_SEMESTER = "Second_Semester";
     public static final String COLUMN_INITIAL_POS = "Initial_Position";
     public static final String REGISTERED_COURSES = "Registered_Courses";
+    public static final String ALL_TIMETABLE = "All Timetables";
 
     private static final String ASSIGNMENT_TABLE = "Assignment";
     private static final String COLUMN_LECTURER_NAME = "Lecturer_Name";
@@ -87,13 +84,22 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_WEEK = "Exam_Week";
     private static final String COLUMN_OFFSET_TIME = "Offset_Time";
 
-    private final String TAG = this.getClass().getSimpleName();
+    private final String TAG = "SchoolDatabase";
 
     private final Context context;
 
     public SchoolDatabase(@Nullable Context context) {
         super(context, "SchoolDatabase.db", null, 1);
         this.context = context;
+    }
+
+    /**
+     * Sort order of list's in the database
+     */
+    @SuppressWarnings("unused")
+    public
+    enum SortOrder {
+        NATURAL_ORDER, UNORDERED, REVERSED_ORDERED
     }
 
     public Context getContext() {
@@ -239,9 +245,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                     COLUMN_ID + " INTEGER ," +
                     COLUMN_CLASS_OVER_STAT + " TEXT, " +
                     COLUMN_FULL_COURSE_NAME + " TEXT, " +
-                    COLUMN_COURSE_CODE + ", " +
+                    COLUMN_COURSE_CODE + " TEXT, " +
                     COLUMN_END_TIME + " TEXT , " +
-                    COLUMN_START_TIME + " TEXT "
+                    COLUMN_START_TIME + " TEXT, " +
+                    COLUMN_DAY + " TEXT "
                     + ")";
         }
 
@@ -324,9 +331,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         timeTableData.put(COLUMN_END_TIME, timetable.getEndTime());
         timeTableData.put(COLUMN_START_TIME, timetable.getStartTime());
         timeTableData.put(COLUMN_COURSE_CODE, timetable.getCourseCode());
+        timeTableData.put(COLUMN_DAY, timetable.getDay());
 
         if (timetableName.equals(SCHEDULED_TIMETABLE)) {
-            timeTableData.put(COLUMN_DAY, timetable.getDay());
             timeTableData.put(COLUMN_IMPORTANCE, timetable.getImportance());
             timeTableData.put(COLUMN_LECTURER_NAME, sanitizeEntry(timetable.getLecturerName()));
         }
@@ -479,6 +486,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 AssignmentModel assignment = new AssignmentModel();
                 assignment.setTitle(retrieveEntry(title));
                 assignment.setDate(date);
+                assignment.setSubmissionDate(date);
                 assignment.setDescription(retrieveEntry(description));
                 assignment.setLecturerName(retrieveEntry(lecturerName));
                 assignment.setCourseCode(course);
@@ -494,6 +502,54 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         return data;
     }
 
+    /**
+     * @return a list of the combination of all normal timetables; MONDAY, TUESDAY, WEDNESDAY,
+     * THURSDAY, FRIDAY AND SATURDAY
+     */
+    public List<DataModel> getAllNormalSchoolTimetable() {
+        SQLiteDatabase db = getReadableDatabase();
+
+        List<DataModel> data = new ArrayList<>(); // timetable list to be retrieved
+
+        // query database, merge all normal timetables together all into one
+        String selectStmt = "SELECT * "
+                + " FROM " + TIMETABLE_MONDAY
+                + " UNION ALL " +
+                " SELECT * "
+                + " FROM " + TIMETABLE_TUESDAY
+                + " UNION ALL " +
+                " SELECT * "
+                + " FROM " + TIMETABLE_WEDNESDAY
+                + " UNION ALL " +
+                " SELECT *"
+                + " FROM " + TIMETABLE_THURSDAY
+                + " UNION ALL " +
+                " SELECT * "
+                + " FROM " + TIMETABLE_FRIDAY
+                + " UNION ALL " +
+                " SELECT * "
+                + " FROM " + TIMETABLE_SATURDAY;
+
+        Cursor result = db.rawQuery(selectStmt, null);
+
+        // query cursor, retrieving  column data, incrementing rows
+        while (result.moveToNext()) {
+
+            TimetableModel model = new TimetableModel();
+            model.setId(result.getInt(0));
+            model.setClassOver(Boolean.parseBoolean(result.getString(1)));
+            model.setFullCourseName(result.getString(2));
+            model.setCourseCode(result.getString(3));
+            model.setEndTime(result.getString(4));
+            model.setStartTime(result.getString(5));
+            model.setDay(result.getString(6));
+            // after query, add to the list of timetables to be retrieved
+            data.add(model);
+        }
+
+        result.close();
+        return data;
+    }
 
     /**
      * retrieves a List of all the timetable entries added to the database
@@ -507,7 +563,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         List<DataModel> data = new ArrayList<>();
         String selectStmt;
 
-        if (timetableName.equals(SchoolDatabase.SCHEDULED_TIMETABLE))
+        if (timetableName.equals(SchoolDatabase.SCHEDULED_TIMETABLE)) {
             selectStmt = "SELECT " + COLUMN_LECTURER_NAME + ", "
                     + COLUMN_START_TIME + ", "
                     + COLUMN_END_TIME + ", " +
@@ -517,7 +573,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                     COLUMN_IMPORTANCE + ", " +
                     COLUMN_DAY + " FROM " + timetableName;
 
-        else
+        } else {
             selectStmt = "SELECT "
                     + COLUMN_START_TIME + ", "
                     + COLUMN_END_TIME + ", " +
@@ -526,6 +582,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                     COLUMN_ID + ", " +
                     COLUMN_CLASS_OVER_STAT +
                     " FROM " + timetableName;
+        }
 
         Cursor result = db.rawQuery(selectStmt, null);
         if (result.moveToFirst()) {
@@ -1505,7 +1562,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      *
      * @param exam     the exam to be added to database
      * @param examWeek the week in which that exam would be added
-     * @return the position at which the exam was added and the position it would appear in the list.
+     * @return the position at which the exam was added and the position it would appear in the
+     * list.
      */
     public int[] addExam(ExamModel exam, String examWeek) {
         SQLiteDatabase db = getWritableDatabase();
@@ -1557,12 +1615,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         // impossible to sort exams, linear-search instead
         return resultCode != -1 ? new int[]{linearSearch(exams, exam, idComparator), exam.getId()}
                                 : new int[]{-1, -1};
-    }
-
-    private <T> int linearSearch(List<? extends T> list, T key, Comparator<? super T> c) {
-        for (int i = 0; i < list.size(); i++)
-            if (c.compare(list.get(i), key) == 0) return i;
-        return -1;
     }
 
     /**
@@ -1862,5 +1914,20 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         }
 
         return resCode;
+    }
+
+    /**
+     * @return list of  alarms currently be in their active states
+     */
+    public List<DataModel> getActiveAlarms() {
+        return CollectionUtils.filterList(getAlarms(), model -> ((AlarmModel) model).isOn());
+    }
+
+    /**
+     * @return a list of pending assignments
+     */
+    public List<DataModel> getPendingAssignments() {
+        return CollectionUtils.filterList(getAssignmentData(),
+                                          model -> !((AssignmentModel) model).isSubmitted());
     }
 }

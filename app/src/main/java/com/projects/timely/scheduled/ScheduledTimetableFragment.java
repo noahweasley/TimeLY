@@ -37,7 +37,7 @@ import com.projects.timely.core.MultiUpdateMessage;
 import com.projects.timely.core.RequestParams;
 import com.projects.timely.core.RequestRunner;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.util.ThreadUtils;
 import com.projects.timely.main.MainActivity;
 import com.projects.timely.timetable.TimeTableRowHolder;
 import com.projects.timely.timetable.TimetableModel;
