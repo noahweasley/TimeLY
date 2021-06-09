@@ -10,6 +10,7 @@
         android:smallScreens="false"
         android:xlargeScreens="true" />
 
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
@@ -29,6 +30,11 @@
 
         <service
             android:name=".alarms.AlarmNotificationService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".alarms.AlarmReSchedulerService"
             android:enabled="true"
             android:exported="false" />
 
@@ -103,21 +109,21 @@
             android:screenOrientation="portrait" />
 
         <receiver
-            android:name=".alarms.AlarmReceiver"
-            android:enabled="false">
+            android:name=".alarms.AlarmReScheduler"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
+                <action android:name="com.projects.timely.alarm.testing" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <!--For HTC devices-->
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".timetable.TimetableNotifier"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
+        <receiver android:name=".timetable.TimetableNotifier" />
+        <receiver android:name=".alarms.AlarmReceiver" />
         <receiver android:name=".alarms.NotificationActionReceiver" />
         <receiver android:name=".assignment.Reminder" />
         <receiver android:name=".assignment.SubmissionNotifier" />
