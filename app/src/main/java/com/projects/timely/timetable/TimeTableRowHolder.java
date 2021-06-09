@@ -135,7 +135,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                         = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
                 rowAdapter.setMultiSelectionEnabled(
                         !rowAdapter.isMultiSelectionEnabled()
-                                || rowAdapter.getCheckedCoursesCount() != 0);
+                                || rowAdapter.getCheckedTimetablesCount() != 0);
             } else {
                 ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
                         = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
@@ -155,7 +155,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
                 if (rowAdapter.isMultiSelectionEnabled()) {
                     trySelectTimetable();
-                    if (rowAdapter.getCheckedCoursesCount() == 0) {
+                    if (rowAdapter.getCheckedTimetablesCount() == 0) {
                         rowAdapter.setMultiSelectionEnabled(false);
                     }
                 }
