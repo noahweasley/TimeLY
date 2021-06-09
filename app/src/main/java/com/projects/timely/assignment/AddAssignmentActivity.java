@@ -17,6 +17,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.projects.timely.R;
@@ -31,10 +35,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.widget.TooltipCompat;
-
 import static com.projects.timely.assignment.AssignmentFragment.DATE;
 import static com.projects.timely.assignment.AssignmentFragment.DESCRIPTION;
 import static com.projects.timely.assignment.AssignmentFragment.LECTURER_NAME;
@@ -47,9 +47,9 @@ public class AddAssignmentActivity extends AppCompatActivity {
     public static final String SCHEDULE_POS = "Schedule position";
     public static final String ADD_NEW = "com.projects.timely.addAssignmentActivity.add_new";
     static final String EDIT_POS = "Edit Position";
-    static final String NEXT_ALARM = "next alarm";
+    public static final String NEXT_ALARM = "next alarm";
     public static List<Uri> mediaUris = new ArrayList<>();
-    static String POSITION = "database position";
+    public static String POSITION = "database position";
     private List<String> courseList;
     private EditText edt_lecturerName, edt_title, edt_description, edt_date;
     private String courseCode, tmpCourseCode;
@@ -176,7 +176,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
         boolean errorOccurred = false;
 
         if (!dateInput.matches(datePattern)) {
-            dateBox.setError("Date format : dd/mm//yyyy");
+            dateBox.setError("Date format : dd/mm/yyyy");
             errorOccurred = true;
         }
 
