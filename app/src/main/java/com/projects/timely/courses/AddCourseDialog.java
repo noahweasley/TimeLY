@@ -25,7 +25,7 @@ import androidx.fragment.app.FragmentManager;
 import com.projects.timely.R;
 import com.projects.timely.core.AppUtils.Alert;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.util.ThreadUtils;
 import com.projects.timely.error.ErrorDialog;
 
 import org.greenrobot.eventbus.EventBus;

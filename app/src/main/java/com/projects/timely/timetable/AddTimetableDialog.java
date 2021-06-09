@@ -30,7 +30,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.projects.timely.R;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.core.ThreadUtils;
+import com.projects.timely.util.ThreadUtils;
 import com.projects.timely.error.ErrorDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,7 +76,8 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
     /**
      * Make this dialog visible to the user
      *
-     * @param context   the context in which the dialog is going to use to be added to the activity's
+     * @param context   the context in which the dialog is going to use to be added to the
+     *                  activity's
      *                  fragment manager
      * @param toEdit    flag to be checked if it is an edit operation
      * @param timetable the former timetable data
@@ -189,7 +190,7 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
                 // Error message
                 ErrorDialog.Builder builder = new ErrorDialog.Builder();
                 builder.setDialogMessage("Duplicate start time present")
-                        .setShowSuggestions(false);
+                       .setShowSuggestions(false);
                 new ErrorDialog().showErrorMessage(context, builder.build());
             }
         }
@@ -215,9 +216,10 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent timetableIntent = new Intent(context, TimetableNotifier.class);
         timetableIntent.addCategory("com.projects.timely.timetable")
-                .setAction("com.projects.timely.timetable.addAction")
-                .setDataAndType(Uri.parse("content://com.projects.timely.add." + timeInMillis),
-                                "com.projects.timely.dataType");
+                       .setAction("com.projects.timely.timetable.addAction")
+                       .setDataAndType(
+                               Uri.parse("content://com.projects.timely.add." + timeInMillis),
+                               "com.projects.timely.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
@@ -249,14 +251,15 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
 
         Intent timetableIntent = new Intent(context, TimetableNotifier.class);
         timetableIntent.putExtra(ARG_TIME, time)
-                .putExtra(ARG_CLASS, course)
-                .putExtra(ARG_DAY, timetable.getCalendarDay())
-                .putExtra(ARG_POSITION, position)
-                .putExtra(ARG_PAGE_POSITION, pagePosition)
-                .addCategory("com.projects.timely.timetable")
-                .setAction("com.projects.timely.timetable.addAction")
-                .setDataAndType(Uri.parse("content://com.projects.timely.add." + timeInMillis),
-                                "com.projects.timely.dataType");
+                       .putExtra(ARG_CLASS, course)
+                       .putExtra(ARG_DAY, timetable.getCalendarDay())
+                       .putExtra(ARG_POSITION, position)
+                       .putExtra(ARG_PAGE_POSITION, pagePosition)
+                       .addCategory("com.projects.timely.timetable")
+                       .setAction("com.projects.timely.timetable.addAction")
+                       .setDataAndType(
+                               Uri.parse("content://com.projects.timely.add." + timeInMillis),
+                               "com.projects.timely.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
                                                       PendingIntent.FLAG_UPDATE_CURRENT);
