@@ -10,13 +10,13 @@
         android:smallScreens="false"
         android:xlargeScreens="true" />
 
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -42,7 +42,8 @@
             android:name=".main.SplashScreen"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/FullscreenTheme"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -55,58 +56,67 @@
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.SlideVertical_caller"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".settings.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="Settings"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".gallery.ImageGallery"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".alarms.AlarmActivity"
             android:configChanges="orientation|keyboardHidden"
             android:excludeFromRecents="true"
-            android:label="@string/alarms"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".gallery.ImageDirectory"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".assignment.AddAssignmentActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.SlideVertical_recipient"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".assignment.ViewImagesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".gallery.ImageSlideActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/ImageViewerTheme" />
+            android:theme="@style/ImageViewerTheme"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".gallery.StorageViewer"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".main.IntroPageActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <receiver
             android:name=".alarms.AlarmReScheduler"
