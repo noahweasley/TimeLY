@@ -13,7 +13,7 @@
 	<string name = "timetable">Timetable</string>
 	<string name = "courses">Courses</string>
 	<string name = "classes">Scheduled Classes</string>
-	<string name = "about">About developer</string>
+	<string name = "about">About</string>
 	<string name = "open">Open drawer</string>
 	<string name = "close">Close drawer</string>
 	<string name = "info">Hello</string>
@@ -157,6 +157,9 @@
 	<string name="noticeMessage">Remove restriction on alarms to make TimeLY function properly
 		. TimeLY optimizes battery usage for you</string>
     <string name="go">GO</string>
-    <string name="report_message">You will be re-directed to Whatspap to report this bug, Continue?</string>
+    <string name="report_message">You will be re-directed to Whatsapp to report this bug,
+		Continue?</string>
 	<string name="report_title">Report Bug</string>
+    <string name="yes">Yes</string>
+    <string name="version">v1.0.0</string>
 </resources>
