@@ -40,7 +40,6 @@ public class ImageSlideActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.slide_enter, R.anim.slide_exit);
         setContentView(R.layout.image_silder);
         ViewPager2 pager = findViewById(R.id.pager);
         pager.setAdapter(new ImageAdapter(this));

@@ -50,7 +50,6 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
         super.onCreate(savedInstanceState);
 
         folder = getIntent().getStringExtra("folder");
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.image_gallery);
 
         Toolbar toolbar = findViewById(R.id.toolbar);

@@ -34,7 +34,6 @@ public class AlarmActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.alarm_view);
 
         Intent starterIntent = getIntent();
@@ -117,7 +116,6 @@ public class AlarmActivity extends AppCompatActivity {
         boolean backIsDismiss = preferences.getBoolean("dismiss", true);
         sendBroadcast(backIsDismiss ? receiverDismiss : receiverSnooze);
         super.onBackPressed();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

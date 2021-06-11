@@ -56,7 +56,6 @@ public class MainActivity
         // FIXME: 6/7/2021 Remove this section of code when app is released
         startService(new Intent(this, AlarmReSchedulerService.class));
 
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -152,7 +151,6 @@ public class MainActivity
             drawer.closeDrawer(GravityCompat.START);
         else {
             finish();
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 
@@ -167,7 +165,7 @@ public class MainActivity
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            open_upSetting();
         } else if (id == R.id.update) {
             Toast.makeText(this, "No action yet", Toast.LENGTH_LONG).show();
         }
@@ -209,7 +207,7 @@ public class MainActivity
 
         } else if (menuItemId == R.id.settings) {
 
-            startActivity(new Intent(this, SettingsActivity.class));
+           open_upSetting();
 
         } else if (menuItemId == R.id.whats_new) {
 
@@ -224,8 +222,8 @@ public class MainActivity
             new AlertDialog.Builder(this)
                     .setTitle(R.string.report_title)
                     .setMessage(R.string.report_message)
-                    .setPositiveButton(android.R.string.yes, this::reportAction)
-                    .setNegativeButton(android.R.string.no, this::reportAction)
+                    .setPositiveButton(R.string.yes, this::reportAction)
+                    .setNegativeButton(android.R.string.cancel, this::reportAction)
                     .create().show();
 
         } else if (menuItemId == R.id.about) {
@@ -295,6 +293,11 @@ public class MainActivity
             // Loads landing page on start up.
             loadFragment(LandingPageFragment.newInstance());
         }
+    }
+
+    // open up settings with a custom animation
+    private void open_upSetting() {
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     private void loadFragment(Fragment fragment) {

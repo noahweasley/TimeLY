@@ -43,7 +43,6 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.image_gallery);
         Toolbar toolbar = findViewById(R.id.toolbar);
         imageList = findViewById(R.id.imageList);
@@ -80,7 +79,6 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
     @Override
     public void onBackPressed() {
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         startActivity(new Intent(this, StorageViewer.class));
         finish();
     }

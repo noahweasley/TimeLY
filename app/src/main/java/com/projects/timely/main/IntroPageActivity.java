@@ -23,7 +23,6 @@ public class IntroPageActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.intro);
 
         Button start = findViewById(R.id.start);
@@ -53,12 +52,6 @@ public class IntroPageActivity extends AppCompatActivity implements View.OnClick
         });
         // navigate to landing page
         start.setOnClickListener(this);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

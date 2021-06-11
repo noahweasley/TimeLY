@@ -25,7 +25,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_settings);
         Toolbar toolbar = findViewById(R.id.s_toolbar);
         setSupportActionBar(toolbar);

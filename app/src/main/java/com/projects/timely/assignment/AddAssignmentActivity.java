@@ -63,7 +63,6 @@ public class AddAssignmentActivity extends AppCompatActivity {
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
         database = new SchoolDatabase(this);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         setContentView(R.layout.add_assignment);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -137,12 +136,6 @@ public class AddAssignmentActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
