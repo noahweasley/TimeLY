@@ -91,7 +91,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             btn_friday, btn_saturday;
     private Boolean[] selectedDays = new Boolean[7];
 
-
     AlarmListHolder with(FragmentActivity activity, CoordinatorLayout coordinator,
                          List<DataModel> alarmModelList, SchoolDatabase database,
                          AlarmListFragment.AlarmAdapter alarmAdapter) {
@@ -108,6 +107,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     AlarmListHolder(@NonNull View rootView) {
         super(rootView);
         rootView.setActivated(false);
+
         decoration = rootView.findViewById(R.id.decoration);
         alarmStatus = rootView.findViewById(R.id.alarm_status);
         tv_alarmTime = rootView.findViewById(R.id.alarm_list_time);
@@ -154,6 +154,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             // When detailLayout expansion state has changed, rotate arrow and change
             // background color.
             final boolean isExpanded = detailLayout.isExpanded();
+            int position = isExpanded ? getAbsoluteAdapterPosition() : -1;
             rootView.setActivated(isExpanded);
             expandStatus.animate()
                         .rotation(isExpanded ? 180 : 0)
@@ -166,14 +167,24 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                 // Disable alarm if checkbox is unchecked but still keep the PendingIntent alive
                 String ss = tv_label.getText().toString();
                 String label = ss.equals("Label") ? null : ss;
-                String[] time = thisAlarm.getTime().split(":");
+                int position = getAbsoluteAdapterPosition();
+
+                String[] alarmSnoozeState = database.getAlarmSnoozeStateAt(position);
+                boolean isAlarmSnoozed = Boolean.parseBoolean(alarmSnoozeState[0]);
+
+                String[] time;
+                if (isAlarmSnoozed) {
+                    time = alarmSnoozeState[1].split(":");
+                } else {
+                    time = thisAlarm.getTime().split(":");
+                }
 
                 // re-schedule alarm base on alarm ON state
                 boolean checkedState = alarmStatus.isChecked();
                 if (checkedState) rescheduleAlarm(label, time);
                 else cancelAlarm(label, time);
                 // now update the alarm status when user toggles the state of the switch
-                database.updateAlarmState(getAbsoluteAdapterPosition(), checkedState);
+                database.updateAlarmState(position, checkedState);
             }
         });
 
@@ -206,6 +217,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             String ss = tv_label.getText().toString();
             String label = ss.equals("Label") ? null : ss;
             String[] time = thisAlarm.getTime().split(":");
+
+            Log.d(getClass().getSimpleName(), "Cancelling alarm for:" + TextUtils.join(":", time));
 
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
@@ -263,9 +276,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         }
 
         boolean updated = database.updateSelectedDays(alarmPosition, selectedDays);
-        if (updated) {
-            updatePendingAlarms();
-        }
+        if (updated) updatePendingAlarms();
     }
 
     //
@@ -595,8 +606,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 
-            //////////////////////////////  Code duplication  ///////////////////////////////////
-
             boolean isUserPreferred24HourView = isUserPreferred24Hours(mActivity);
 
             Resources timePickerResources = v.getContext().getResources();
@@ -610,7 +619,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
             currentTime = isUserPreferred24HourView ? timeFormat24.format(calendar.getTime())
                                                     : timeFormat12.format(calendar.getTime());
-            ////////////////////////////////////////////////////////////////////////////////////////
+
             boolean isAM = hourOfDay >= 0 && hourOfDay < 12;
             tv_alarmTime.setText(currentTime);
             am_pm.setText(isAM ? "AM" : "PM");

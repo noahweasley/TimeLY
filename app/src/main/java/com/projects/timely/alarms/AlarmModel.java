@@ -15,6 +15,8 @@ public class AlarmModel extends DataModel {
     private boolean vibrate;
     private String label;
     private int initialPosition;
+    private boolean snoozed;
+    private String snoozedTime;
 
     public AlarmModel(int position, String time, boolean isOn, boolean isRepeated, String ringTone,
                       String[] repeatDays, boolean vibrate, String label) {
@@ -27,8 +29,25 @@ public class AlarmModel extends DataModel {
         this.vibrate = vibrate;
         this.label = label;
     }
+
     public AlarmModel() {
 
+    }
+
+    public boolean isSnoozed() {
+        return snoozed;
+    }
+
+    public void setSnoozed(boolean snoozed) {
+        this.snoozed = snoozed;
+    }
+
+    public String getSnoozedTime() {
+        return snoozedTime;
+    }
+
+    public void setSnoozedTime(String snoozedTime) {
+        this.snoozedTime = snoozedTime;
     }
 
     public int getInitialPosition() {

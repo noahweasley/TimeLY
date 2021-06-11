@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,16 +34,15 @@ import com.projects.timely.core.AppUtils.Alert;
 import com.projects.timely.core.DataModel;
 import com.projects.timely.core.EmptyListEvent;
 import com.projects.timely.core.SchoolDatabase;
-import com.projects.timely.util.ThreadUtils;
 import com.projects.timely.core.TimeRefreshEvent;
 import com.projects.timely.error.ErrorDialog;
+import com.projects.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -113,11 +111,9 @@ public class AlarmListFragment extends Fragment {
         });
 
         FloatingActionButton fab_add_new = view.findViewById(R.id.add_alarm);
-
         fab_add_new.setOnClickListener(new TimeManager());
 
         rV_AlarmList.setHasFixedSize(true);
-//        alarmAdapter.setHasStableIds(true);
         rV_AlarmList.setAdapter(alarmAdapter);
         rV_AlarmList.addItemDecoration(
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
@@ -263,6 +259,7 @@ public class AlarmListFragment extends Fragment {
             newAlarm.setOn(true);
             newAlarm.setTime(alarmTime);
             newAlarm.setVibrate(true);
+            newAlarm.setSnoozed(false);
             newAlarm.setRepeatDays(new Boolean[]{true, true, true, true, true, true, true});
             newAlarm.setPosition((DB_initialPos = ++lastId));
             newAlarm.setInitialPosition(DB_initialPos);
@@ -362,7 +359,6 @@ public class AlarmListFragment extends Fragment {
         for (int i = 0; i < source.length; i++) {
             dest[i] = source[i];
         }
-        Log.d(getClass().getSimpleName(), "Copied: " + Arrays.toString(dest));
         return dest;
     }
 
@@ -372,8 +368,8 @@ public class AlarmListFragment extends Fragment {
         @NonNull
         @Override
         public AlarmListHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            return new AlarmListHolder(getLayoutInflater().inflate(R.layout.alarms_row,
-                                                                   viewGroup, false));
+            View rowView = getLayoutInflater().inflate(R.layout.alarms_row, viewGroup, false);
+            return new AlarmListHolder(rowView);
         }
 
         @Override

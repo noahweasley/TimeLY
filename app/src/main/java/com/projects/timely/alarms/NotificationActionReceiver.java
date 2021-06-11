@@ -129,8 +129,9 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         Locale currentLocale = ConfigurationCompat.getLocales(config).get(0);
 
         SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", currentLocale);
-        database.updateTime(dataPos, timeFormat24.format(calendar.getTime()));
-        // post a UI update event to the alarm list fragment
+
+        // after snoozing alarm, still update it's snooze status and time in database
+        database.updateSnoozedTime(dataPos, timeFormat24.format(calendar.getTime()));
     }
 
 }

@@ -1,6 +1,5 @@
 package com.projects.timely.alarms;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.os.ConfigurationCompat;
@@ -28,7 +26,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     static final String REPEAT_DAYS = "Alarm Repeat Days";
     public static String ALARM_POS = "com.projects.timely.position";
 
-    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
         SchoolDatabase database = new SchoolDatabase(context);
@@ -40,7 +37,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String action = intent.getStringExtra("action");
         boolean is24 = isUserPreferred24Hours(context);
 
-        String _24H = database.getTimeAtInitialPosition(dataPos);
+        String _24H = database.getSnoozedTimeAtInitialPosition(dataPos);
 
         String[] time = _24H.split(":");
         int hh = Integer.parseInt(time[0]);
@@ -80,7 +77,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (action != null)
             isSnoozeAction = action.equals("snooze");
-        Log.d(getClass().getSimpleName(), "Sending: ]" + _24H);
+
         Intent viewAlarmIntent = new Intent(context, AlarmActivity.class)
                 .putExtra("time", is24 ? _24H : _12H)
                 .putExtra(ALARM_POS, dataPos)
@@ -118,16 +115,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                                         + (isSnoozeAction ? " (Snoozed)" : ""))
                .setContentText(alarmLabel)
                .setSmallIcon(R.drawable.ic_alarm_black)
+               .setFullScreenIntent(pi, true)
                .addAction(new NotificationCompat.Action(R.drawable.ic_snooze_black,
                                                         "Snooze",
                                                         actionSnooze))
                .addAction(new NotificationCompat.Action(R.drawable.ic_cancel,
                                                         "Dismiss",
-                                                        actionDismiss))
-               .setFullScreenIntent(pi, true);
+                                                        actionDismiss));
 
         manager.notify(NOTIFICATION_ID, builder.build());
-        // start playing music using the AlarmNotificationService
+        // start playing alarm tone using the AlarmNotificationService
         context.startService(new Intent(context, AlarmNotificationService.class)
                                      .putExtra(ID, NOTIFICATION_ID)
                                      .putExtra(ALARM_POS, dataPos));

@@ -83,6 +83,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     private static final String PREFERENCE_TABLE = "Preferences";
     private static final String COLUMN_WEEK = "Exam_Week";
     private static final String COLUMN_OFFSET_TIME = "Offset_Time";
+    private static final String COLUMN_SNOOZED_TIME = "Snoozed_Time";
+    private static final String COLUMN_SNOOZE_STAT = "Snoozed";
 
     private final String TAG = "SchoolDatabase";
 
@@ -171,7 +173,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 COLUMN_RINGTONE_NAME + " TEXT, " +
                 COLUMN_REPEAT_STAT + " TEXT, " +
                 COLUMN_LABEL + " TEXT, " +
-                COLUMN_RINGTONE_URI + " TEXT"
+                COLUMN_RINGTONE_URI + " TEXT, " +
+                COLUMN_SNOOZE_STAT + " TEXT, " +
+                COLUMN_SNOOZED_TIME + " TEXT "
                 + ")";
 
         // CREATE PREFS TABLE
@@ -676,6 +680,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         alarmData.put(COLUMN_REPEAT_STAT, String.valueOf(alarm.isRepeated()));
         alarmData.put(COLUMN_VIBRATE_STAT, String.valueOf(alarm.isVibrate()));
         alarmData.put(COLUMN_REPEAT_DAYS, TextUtils.join(",", alarm.getRepeatDays()));
+        alarmData.put(COLUMN_SNOOZE_STAT, "false");
 
         long isInserted = db.insertOrThrow(ALARMS_TABLE, null, alarmData);
         return isInserted != -1;
@@ -699,6 +704,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                         + ", " + COLUMN_REPEAT_DAYS
                         + ", " + COLUMN_VIBRATE_STAT
                         + ", " + COLUMN_LABEL
+                        + ", " + COLUMN_SNOOZE_STAT
+                        + ", " + COLUMN_SNOOZED_TIME
                         + " FROM " + ALARMS_TABLE;
 
         Cursor alarmCursor = db.rawQuery(alarmsQuery_stmt, null);
@@ -713,16 +720,45 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             boolean onStat = Boolean.parseBoolean(alarmCursor.getString(2));
             boolean repeatStat = Boolean.parseBoolean(alarmCursor.getString(3));
             String label = alarmCursor.getString(7);
+            boolean isSnoozed = Boolean.parseBoolean(alarmCursor.getString(8));
+            String snoozedTime = alarmCursor.getString(9);
 
             if (!TextUtils.isEmpty(label)) retrieveEntry(label);
 
             AlarmModel alarmModel = new AlarmModel(pos, time, onStat, repeatStat, ringtone,
                                                    repeatDays, vibrate, label);
+            alarmModel.setSnoozed(isSnoozed);
+            alarmModel.setSnoozedTime(snoozedTime);
             alarms.add(alarmModel);
         }
 
         alarmCursor.close();
         return alarms;
+    }
+
+    /**
+     * Gets the snoozed state of a particular alarm at position specified by <code>position</code>
+     *
+     * @param position the position of the alarm in alarm database
+     * @return the snoozed state
+     */
+    public String[] getAlarmSnoozeStateAt(int position) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor stateCursor =
+                db.rawQuery("SELECT " + COLUMN_SNOOZE_STAT + ", "
+                                    + COLUMN_SNOOZED_TIME +
+                                    " FROM " + ALARMS_TABLE +
+                                    " WHERE " + COLUMN_POS + " = " + position, null);
+
+        String snoozedState = null, snoozedTime = null;
+
+        while (stateCursor.moveToNext()) {
+            snoozedState = stateCursor.getString(0);
+            snoozedTime = stateCursor.getString(1);
+        }
+
+        stateCursor.close();
+        return new String[]{snoozedState, snoozedTime};
     }
 
     /**
@@ -931,6 +967,27 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     }
 
     /**
+     * Update the former alarm's snooze time to the current one specified by time. At the same
+     * time, this would set the alarm's status specified at <code>pos</code> to be snoozed.
+     *
+     * @param pos  the position in the database
+     * @param time the time to insert into the database
+     * @author Noah
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean updateSnoozedTime(int pos, String time) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SNOOZED_TIME, time);
+        values.put(COLUMN_SNOOZE_STAT, "true");
+
+        long resCode = db.update(ALARMS_TABLE, values, COLUMN_POS + " = " + pos, null);
+        db.close();
+        return resCode != -1;
+    }
+
+    /**
      * Update the former alarm's ringtone to the current selected ringtone
      *
      * @param pos          the position in the database
@@ -1109,6 +1166,43 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     }
 
     /**
+     * Get the required alarm database's snoozed time at the specified index.
+     * Because of alarm delete operation, position of the alarm might change and this index is
+     * invalid, so I saved the initial index in {@link SchoolDatabase#COLUMN_INITIAL_POS}, so that
+     * when alarm tries to get the time of the set alarm, it refers to the initial version used
+     * to trigger the alarm. <b>Clever, right ??</b> :). The only difference between this function
+     * and {@link SchoolDatabase#getTimeAtInitialPosition(int)} is that, it returns the snoozed
+     * alarm time if the alarm was previously snoozed, but returns the original time if the alarm
+     * wasn't snoozed.
+     *
+     * @param pos the initial position of the time string in the database to be retrieved
+     * @return the time string at the specified initial position
+     */
+
+    public String getSnoozedTimeAtInitialPosition(int pos) {
+        SQLiteDatabase db = getReadableDatabase();
+        String getStmt
+                = "SELECT " + COLUMN_SNOOZE_STAT + ", " + COLUMN_SNOOZED_TIME + ", " + COLUMN_TIME
+                + " FROM " + ALARMS_TABLE
+                + " WHERE " + COLUMN_INITIAL_POS + " = " + pos;
+
+        String originalTime = null, snoozedTime = null;
+        boolean isAlarmSnoozed = false;
+
+        Cursor getCursor = db.rawQuery(getStmt, null);
+
+        if (getCursor.moveToFirst()) {
+            isAlarmSnoozed = Boolean.parseBoolean(getCursor.getString(0));
+            snoozedTime = getCursor.getString(1);
+            originalTime = getCursor.getString(2);
+        }
+
+        getCursor.close();
+
+        return isAlarmSnoozed ? snoozedTime : originalTime;
+    }
+
+    /**
      * Another variation of {@link SchoolDatabase#updateAlarmState(int, boolean)}, but doesn't
      * update at the position specified by <code>pos</code>, but instead this <code>pos</code>
      * represents the former position used to set the alarm, which is final and will not change
@@ -1122,6 +1216,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         ContentValues statValue = new ContentValues();
         statValue.put(COLUMN_ON_STAT, String.valueOf(state));
+        statValue.put(COLUMN_SNOOZE_STAT, "false");
 
         db.update(ALARMS_TABLE, statValue, COLUMN_INITIAL_POS + " = " + pos, null);
     }
