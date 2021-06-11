@@ -1,9 +1,11 @@
 package com.projects.timely.main;
 
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.projects.timely.BuildConfig;
 import com.projects.timely.R;
 import com.projects.timely.core.PreferenceUtils;
 
@@ -23,15 +26,21 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
-        TextView tv_appName, tv_company;
+        TextView tv_appName, tv_version;
         tv_appName = findViewById(R.id.app_name);
-        tv_company = findViewById(R.id.company);
+        tv_version = findViewById(R.id.version);
         findViewById(R.id.skip).setOnClickListener(this::skipSplashScreen);
 
-        // Used the non-italic version here, even when VISIONPHIX font is the italics version
-        tv_company.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Modern Machine.ttf"));
+        String version = BuildConfig.VERSION_NAME;
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.w(getClass().getSimpleName(), "Using build version: " + version);       }
+
+        tv_version.setText(String.format("Version %s", version));
         // Load all animations
-        tv_company.startAnimation(AnimationUtils.loadAnimation(this, R.anim.cn_anim));
+        tv_version.startAnimation(AnimationUtils.loadAnimation(this, R.anim.cn_anim));
         tv_appName.startAnimation(AnimationUtils.loadAnimation(this, R.anim.an_anim));
         // Display main screen after the splash screen
         (handler = new Handler(getMainLooper()))
