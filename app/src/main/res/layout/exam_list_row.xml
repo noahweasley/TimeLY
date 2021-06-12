@@ -24,7 +24,7 @@
 			external:layout_constraintStart_toStartOf = "parent"
 			external:layout_constraintTop_toTopOf = "parent" />
 
-		<com.projects.timely.custom.VerticalTextView
+		<com.noah.timely.custom.VerticalTextView
 			android:id = "@+id/exam_day"
 			android:layout_width = "wrap_content"
 			android:layout_height = "wrap_content"

@@ -33,7 +33,7 @@
 	        android:layout_height = "match_parent"
 	        android:background = "@color/pink" />
 
-         <com.projects.timely.custom.VerticalTextView
+         <com.noah.timely.custom.VerticalTextView
 	         android:id = "@+id/vertical_text"
 	         android:layout_width = "wrap_content"
 	         android:layout_height = "wrap_content"

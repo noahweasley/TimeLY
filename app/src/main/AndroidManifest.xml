@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.projects.timely">
+    package="com.noah.timely">
 
     <supports-screens
         android:anyDensity="true"
@@ -29,17 +29,17 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".alarms.AlarmNotificationService"
+            android:name="com.noah.timely.alarms.AlarmNotificationService"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".alarms.AlarmReSchedulerService"
+            android:name="com.noah.timely.alarms.AlarmReSchedulerService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name=".main.SplashScreen"
+            android:name="com.noah.timely.main.SplashScreen"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
@@ -52,7 +52,7 @@
         </activity>
 
         <activity
-            android:name=".main.MainActivity"
+            android:name="com.noah.timely.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -60,32 +60,32 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name="com.noah.timely.settings.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".gallery.ImageGallery"
+            android:name="com.noah.timely.gallery.ImageGallery"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".alarms.AlarmActivity"
+            android:name="com.noah.timely.alarms.AlarmActivity"
             android:configChanges="orientation|keyboardHidden"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".gallery.ImageDirectory"
+            android:name="com.noah.timely.gallery.ImageDirectory"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".assignment.AddAssignmentActivity"
+            android:name="com.noah.timely.assignment.AddAssignmentActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -93,33 +93,33 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".assignment.ViewImagesActivity"
+            android:name="com.noah.timely.assignment.ViewImagesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".gallery.ImageSlideActivity"
+            android:name="com.noah.timely.gallery.ImageSlideActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/ImageViewerTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".gallery.StorageViewer"
+            android:name="com.noah.timely.gallery.StorageViewer"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".main.IntroPageActivity"
+            android:name="com.noah.timely.main.IntroPageActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <receiver
-            android:name=".alarms.AlarmReScheduler"
+            android:name="com.noah.timely.alarms.AlarmReScheduler"
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="com.projects.timely.alarm.testing" />
@@ -132,14 +132,14 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".timetable.TimetableNotifier" />
-        <receiver android:name=".alarms.AlarmReceiver" />
-        <receiver android:name=".alarms.NotificationActionReceiver" />
-        <receiver android:name=".assignment.Reminder" />
-        <receiver android:name=".assignment.SubmissionNotifier" />
-        <receiver android:name=".scheduled.ScheduledTaskNotifier" />
+        <receiver android:name="com.noah.timely.timetable.TimetableNotifier" />
+        <receiver android:name="com.noah.timely.alarms.AlarmReceiver" />
+        <receiver android:name="com.noah.timely.alarms.NotificationActionReceiver" />
+        <receiver android:name="com.noah.timely.assignment.Reminder" />
+        <receiver android:name="com.noah.timely.assignment.SubmissionNotifier" />
+        <receiver android:name="com.noah.timely.scheduled.ScheduledTaskNotifier" />
 
-        <receiver android:name=".alarms.TimeChangeReceiver">
+        <receiver android:name="com.noah.timely.alarms.TimeChangeReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
