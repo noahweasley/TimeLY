@@ -241,19 +241,22 @@ public class MainActivity
     private void reportAction(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             // start WhatsApp
+            String whatsappPkgName = "com.whatsapp";
             PackageManager packageManager = getPackageManager();
             try {
-                PackageInfo packageInfo = packageManager.getPackageInfo("com.whatsapp",
+                PackageInfo packageInfo = packageManager.getPackageInfo(whatsappPkgName,
                                                                         PackageManager.GET_META_DATA);
 
                 String developersContact = "+2347065478947";
                 String message = "Hello Noah, TimeLY is a nice app. However, I would like to " +
-                        "report a bug [...]";
+                        "report a bug [ ... ]. My name is [ ... ] by the way.";
                 String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s",
                                                   developersContact,
                                                   message);
 
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataString)));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataString));
+                intent.setPackage(whatsappPkgName);
+                startActivity(intent);
 
             } catch (PackageManager.NameNotFoundException e) {
                 Toast.makeText(this, "Whatsapp not installed", Toast.LENGTH_LONG).show();

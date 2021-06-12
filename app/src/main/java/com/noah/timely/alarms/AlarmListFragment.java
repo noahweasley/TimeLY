@@ -2,7 +2,6 @@ package com.noah.timely.alarms;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +22,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +36,7 @@ import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.core.TimeRefreshEvent;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.ThreadUtils;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -199,12 +199,14 @@ public class AlarmListFragment extends Fragment {
         public void onClick(View v) {
             boolean is24 = isUserPreferred24Hours(getContext());
             Calendar calendar = Calendar.getInstance();
-            new TimePickerDialog(getContext(),
-                                 this,
-                                 calendar.get(Calendar.HOUR_OF_DAY),
-                                 calendar.get(Calendar.MINUTE),
-                                 is24)
-                    .show();
+
+            FragmentManager manager = mActivity.getSupportFragmentManager();
+            TimePickerDialog dpd = TimePickerDialog.newInstance(this,
+                                                                calendar.get(Calendar.HOUR_OF_DAY),
+                                                                calendar.get(Calendar.MINUTE),
+                                                                is24);
+            dpd.setVersion(TimePickerDialog.Version.VERSION_2);
+            dpd.show(manager, "TimePickerDialog");
         }
 
         /**
@@ -216,8 +218,10 @@ public class AlarmListFragment extends Fragment {
          * @param hourOfDay the hour that was set
          * @param minute    the minute that was set
          */
+
         @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute);

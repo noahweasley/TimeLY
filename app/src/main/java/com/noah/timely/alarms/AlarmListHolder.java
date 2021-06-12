@@ -2,7 +2,6 @@ package com.noah.timely.alarms;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,7 +19,6 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtoneUtils;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.noah.timely.R;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.RequestRunner;
@@ -557,7 +556,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
     // This class will handle everything related to alarms.
     // I also tried avoided naming this class; AlarmManager :)
-    private class TimeManager implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
+    private class TimeManager implements View.OnClickListener,
+            com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener {
 
         /**
          * Called when the alarm_time text string has been clicked.
@@ -571,15 +571,17 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
         // display the time picker dialog to set time for alarm
         private void chooseTime() {
-            boolean isUserPreferred24HourView = isUserPreferred24Hours(mActivity);
+            boolean is24 = isUserPreferred24Hours(mActivity);
             Calendar calendar = Calendar.getInstance();
 
-            new TimePickerDialog(tv_alarmTime.getContext(),
-                                 this,
-                                 calendar.get(Calendar.HOUR_OF_DAY),
-                                 calendar.get(Calendar.MINUTE),
-                                 isUserPreferred24HourView)
-                    .show();
+            FragmentManager manager = mActivity.getSupportFragmentManager();
+            TimePickerDialog dpd = TimePickerDialog.newInstance(this,
+                                                                calendar.get(Calendar.HOUR_OF_DAY),
+                                                                calendar.get(Calendar.MINUTE),
+                                                                is24);
+            dpd.setVersion(TimePickerDialog.Version.VERSION_2);
+            dpd.show(manager, "TimePickerDialog");
+
 
         }
 
@@ -587,12 +589,13 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          * Called when the user is done setting a new time and the dialog has
          * closed.
          *
-         * @param v         the view associated with this listener
+         * @param view      the view associated with this listener
          * @param hourOfDay the hour that was set
          * @param minute    the minute that was set
          */
         @Override
-        public void onTimeSet(TimePicker v, int hourOfDay, int minute) {
+        public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+
             alarmStatus.setChecked(true);
 
             AlarmModel thisAlarm = (AlarmModel) database.getAlarmAt(getAbsoluteAdapterPosition());
@@ -608,7 +611,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
             boolean isUserPreferred24HourView = isUserPreferred24Hours(mActivity);
 
-            Resources timePickerResources = v.getContext().getResources();
+            Resources timePickerResources = view.getContext().getResources();
             Configuration config = timePickerResources.getConfiguration();
             Locale currentLocale = ConfigurationCompat.getLocales(config).get(0);
 
@@ -629,11 +632,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                 updateAlarm(ll.equals("Label") ? null : ll, currentTime);
                 database.updateTime(getAbsoluteAdapterPosition(), currentTime);
             });
-            notify(v); // notify the user
+            notify(view); // notify the user
         }
 
         // Notify user that he/she has changed the state of the alarm
-        private void notify(TimePicker view) {
+        private void notify(TimePickerDialog view) {
             long calendarTime = calendar.getTimeInMillis();
             boolean isNextDay = System.currentTimeMillis() > calendarTime;
 
@@ -658,6 +661,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
             playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
         }
+
     }
 
 }

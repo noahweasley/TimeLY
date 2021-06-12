@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import com.noah.timely.R;
 
 public class TimelyBasicInfoDialog extends DialogFragment {
+
     @SuppressWarnings("FieldCanBeLocal")
     public static final String TAG = "com.noah.timely.about.TimelyInfoDialog";
 
