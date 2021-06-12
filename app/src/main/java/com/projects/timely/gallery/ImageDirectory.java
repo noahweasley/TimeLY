@@ -80,7 +80,8 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, StorageViewer.class));
-        finish();
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

@@ -36,7 +36,8 @@ public class SplashScreen extends AppCompatActivity {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             version = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.w(getClass().getSimpleName(), "Using build version: " + version);       }
+            Log.w(getClass().getSimpleName(), "Using build version: " + version);
+        }
 
         tv_version.setText(String.format("Version %s", version));
         // Load all animations

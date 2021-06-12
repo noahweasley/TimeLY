@@ -49,7 +49,13 @@ public class StorageViewer extends AppCompatActivity implements View.OnClickList
 
     @Override
     public boolean onSupportNavigateUp() {
-        super.onBackPressed();
+        onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }

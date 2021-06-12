@@ -88,9 +88,11 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
     @Override
     public void onBackPressed() {
+        String extraRoot = getIntent().getStringExtra(STORAGE_ACCESS_ROOT);
         startActivity(new Intent(this, ImageDirectory.class)
-                .putExtra(STORAGE_ACCESS_ROOT, getIntent().getStringExtra(STORAGE_ACCESS_ROOT)));
-        finish();
+                              .putExtra(STORAGE_ACCESS_ROOT, extraRoot));
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     // will be replaced with a cursor loader
@@ -100,7 +102,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
         Uri storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         if (root_extra != null) {
             storageUri = root_extra.equals(EXTERNAL) ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                    : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+                                                     : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
         }
 
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
@@ -172,10 +174,10 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
             // FIXME: 2/23/2021 Find the cause of the additional images
             startActivity(new Intent(this, ViewImagesActivity.class)
-                    .putExtra(ARG_URI_LIST, imageMultiChoiceMode.getUriList()));
+                                  .putExtra(ARG_URI_LIST, imageMultiChoiceMode.getUriList()));
         } else {
             startActivity(new Intent(this, AddAssignmentActivity.class)
-                    .putExtra(ARG_FILES_COUNT, imageAdapter.getCheckedImageCount()));
+                                  .putExtra(ARG_FILES_COUNT, imageAdapter.getCheckedImageCount()));
         }
         finish();
         return true;

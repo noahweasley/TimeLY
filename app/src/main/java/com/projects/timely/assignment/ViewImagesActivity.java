@@ -91,6 +91,12 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    @Override
     @SuppressLint("DefaultLocale")
     @SuppressWarnings("unchecked")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
