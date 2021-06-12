@@ -13,6 +13,16 @@ android {
         vectorDrawables.useSupportLibrary = true
 
     }
+
+    signingConfigs {
+        release {
+            storeFile file('android.keystore')
+            storePassword "1189765"
+            keyAlias "upload"
+            keyPassword "1189765"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -54,5 +64,9 @@ android {
         implementation 'com.github.chrisbanes:PhotoView:2.0.0'
         implementation 'com.airbnb.android:lottie:3.7.0'
         implementation 'com.github.javiersantos:AppUpdater:2.7'
+        implementation ('com.wdullaer:materialdatetimepicker:4.2.3') {
+            exclude group: 'androidx.appcompat'
+            exclude group: 'androidx.recyclerview'
+        }
     }
 }
