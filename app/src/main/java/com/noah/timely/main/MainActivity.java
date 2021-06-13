@@ -35,7 +35,7 @@ import com.noah.timely.alarms.AlarmReSchedulerService;
 import com.noah.timely.alarms.TimeChangeDetector;
 import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.core.Constants;
-import com.noah.timely.core.PreferenceUtils;
+import com.noah.timely.util.PreferenceUtils;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
 import com.noah.timely.exam.ExamFragment;
@@ -207,7 +207,7 @@ public class MainActivity
 
         } else if (menuItemId == R.id.settings) {
 
-           open_upSetting();
+            open_upSetting();
 
         } else if (menuItemId == R.id.whats_new) {
 
@@ -241,25 +241,47 @@ public class MainActivity
     private void reportAction(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             // start WhatsApp
-            String whatsappPkgName = "com.whatsapp";
+            String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp";
             PackageManager packageManager = getPackageManager();
+            String developersContact = "+2347065478947";
+
+            // send message with emojis
+            int waveEmojiUnicode = 0x1F44B,
+                    clapEmojiUnicode = 0x1F44F,
+                    faceTongueEmojiUnicode = 0x1F60B;
+
+            char[] waveEmojiChars = Character.toChars(waveEmojiUnicode);
+            char[] clapEmojiChars = Character.toChars(clapEmojiUnicode);
+            char[] faceTongueEmojiChars = Character.toChars(faceTongueEmojiUnicode);
+
+            String s1 = "Hi Noah ", s2 = ", TimeLY is a nice app ", s3 = ". However, I would like" +
+                    " to report a bug [ ... ]. My name is [ ... ] by the way.";
+
+            String message = s1 + String.valueOf(waveEmojiChars) + s2
+                    + String.valueOf(clapEmojiChars) + s3 + String.valueOf(faceTongueEmojiChars);
+
+            String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s",
+                                              developersContact,
+                                              message);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataString));
             try {
                 PackageInfo packageInfo = packageManager.getPackageInfo(whatsappPkgName,
                                                                         PackageManager.GET_META_DATA);
 
-                String developersContact = "+2347065478947";
-                String message = "Hello Noah, TimeLY is a nice app. However, I would like to " +
-                        "report a bug [ ... ]. My name is [ ... ] by the way.";
-                String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s",
-                                                  developersContact,
-                                                  message);
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataString));
                 intent.setPackage(whatsappPkgName);
                 startActivity(intent);
 
             } catch (PackageManager.NameNotFoundException e) {
-                Toast.makeText(this, "Whatsapp not installed", Toast.LENGTH_LONG).show();
+                // if whatsapp not installed, try to open GBWhatsapp
+                try {
+                    PackageInfo packageInfo = packageManager.getPackageInfo(gbwhatsappPkgName,
+                                                                            PackageManager.GET_META_DATA);
+                    intent.setPackage(gbwhatsappPkgName);
+                    startActivity(intent);
+                } catch (PackageManager.NameNotFoundException nameNotFoundException) {
+                    Toast.makeText(this, "Whatsapp not installed", Toast.LENGTH_LONG).show();
+                }
             }
 
         }
