@@ -55,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         @SuppressWarnings("FieldCanBeLocal")
         private Preference pref_EnableNotifications, pref_TimeFormat, pref_eTone,
                 pref_DateFormat, pref_SnoozeTime, pref_snoozeOnStop,
-                pref_uriType, pref_weekNum, pref_ringtoneType;
+                pref_uriType, pref_weekNum, pref_ringtoneType, pref_prefer_dialog;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -69,6 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
             pref_uriType = findPreference("Uri Type");
             pref_weekNum = findPreference("exam weeks");
             pref_ringtoneType = findPreference("Alarm Ringtone");
+            pref_prefer_dialog = findPreference("prefer_dialog");
 
             pref_DateFormat.setOnPreferenceChangeListener(this);
             pref_EnableNotifications.setOnPreferenceChangeListener(this);
@@ -79,6 +80,8 @@ public class SettingsActivity extends AppCompatActivity {
             pref_uriType.setOnPreferenceChangeListener(this);
             pref_weekNum.setOnPreferenceChangeListener(this);
             pref_ringtoneType.setOnPreferenceChangeListener(this);
+            pref_prefer_dialog.setOnPreferenceChangeListener(this);
+
             initialize();
         }
 

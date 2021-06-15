@@ -1,6 +1,8 @@
 package com.noah.timely.timetable;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -16,6 +18,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -26,11 +29,14 @@ import com.noah.timely.custom.VerticalTextView;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.scheduled.AddScheduledDialog;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
+import com.noah.timely.util.DeviceInfoUtil;
 
 import java.util.List;
 import java.util.Locale;
 
 import static com.noah.timely.core.AppUtils.isUserPreferred24Hours;
+import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
+import static com.noah.timely.timetable.DaysFragment.ARG_TO_EDIT;
 
 @SuppressWarnings("ConstantConditions")
 public class TimeTableRowHolder extends RecyclerView.ViewHolder {
@@ -91,13 +97,13 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(user.getActivity())
-                    .setAdapterPosition(getAbsoluteAdapterPosition())
-                    .setAdapter(rowAdapter)
-                    .setModelList(tList)
-                    .setTimetable(timetable);
+                   .setAdapterPosition(getAbsoluteAdapterPosition())
+                   .setAdapter(rowAdapter)
+                   .setModelList(tList)
+                   .setTimetable(timetable);
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(deleteRequest);
+                  .runRequest(deleteRequest);
 
             Snackbar.make(coordinator, "Timetable Deleted", Snackbar.LENGTH_LONG)
                     .setActionTextColor(Color.YELLOW)
@@ -109,7 +115,37 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             tModel.setChronologicalOrder(getAbsoluteAdapterPosition());
             if (user instanceof DaysFragment) {
                 tModel.setDay(timetable);
-                new AddTimetableDialog().show(user.getContext(), true, tModel);
+                // for  normal timetable
+                Context context = user.getContext();
+                float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
+                float requiredWidthDP = 368, requiredHeightDP = 750;
+
+                SharedPreferences preferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+
+                boolean useDialog = preferences.getBoolean("prefer_dialog", true);
+
+                // choose what kind of task-add method to use base on device width and user pref
+                if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
+
+                    context.startActivity(new Intent(context, AddTimetableActivity.class)
+                                                  .putExtra(ARG_POSITION, tModel.getDayIndex())
+                                                  .putExtra(ARG_TO_EDIT, true));
+
+                } else {
+
+                    if (useDialog) {
+
+                        new AddTimetableDialog().show(user.getContext(), true, tModel);
+
+                    } else {
+
+                        context.startActivity(new Intent(context, AddTimetableActivity.class)
+                                                      .putExtra(ARG_POSITION, tModel.getDayIndex())
+                                                      .putExtra(ARG_TO_EDIT, true));
+
+                    }
+                }
             } else {
                 new AddScheduledDialog().show(user.getContext(), true, tModel);
             }
@@ -119,10 +155,10 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             if (TextUtils.equals(tv_course.getText(), "NIL")) {
                 ErrorDialog.Builder builder = new ErrorDialog.Builder();
                 builder.setDialogMessage("No matching course code found")
-                        .setShowSuggestions(true)
-                        .setSuggestionCount(2)
-                        .setSuggestion1("Register courses first")
-                        .setSuggestion2("After registration, use that course title");
+                       .setShowSuggestions(true)
+                       .setSuggestionCount(2)
+                       .setSuggestion1("Register courses first")
+                       .setSuggestion2("After registration, use that course title");
                 new ErrorDialog().showErrorMessage(user.getContext(), builder.build());
             }
         });
@@ -141,7 +177,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                         = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
                 rowAdapter.setMultiSelectionEnabled(
                         !rowAdapter.isMultiSelectionEnabled()
-                                || rowAdapter.getCheckedCoursesCount() != 0);
+                                || rowAdapter.getCheckedTimetablesCount() != 0);
             }
             trySelectTimetable();
 
@@ -165,7 +201,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
                 if (rowAdapter.isMultiSelectionEnabled()) {
                     trySelectTimetable();
-                    if (rowAdapter.getCheckedCoursesCount() == 0) {
+                    if (rowAdapter.getCheckedTimetablesCount() == 0) {
                         rowAdapter.setMultiSelectionEnabled(false);
                     }
                 }
@@ -322,7 +358,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
         String[] nameTokens = fullName.split(" ");
 
         String[] titles = {"Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr", "Mr",
-                "Mister", "Mrs", "Ms", "Prof", "Professor"};
+                           "Mister", "Mrs", "Ms", "Prof", "Professor"};
 
         StringBuilder nameBuilder = new StringBuilder();
         int iMax = nameTokens.length - 1;

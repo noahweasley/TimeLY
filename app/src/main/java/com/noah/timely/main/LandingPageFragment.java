@@ -1,7 +1,6 @@
 package com.noah.timely.main;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,20 +36,18 @@ public class LandingPageFragment extends Fragment {
                 case MORNING:
                     if (tv_gText != null)
                         tv_gText.setText(R.string.morning);
-                    Log.d(getClass().getSimpleName(), "Morning");
                     break;
                 case AFTERNOON:
                     if (tv_gText != null)
                         tv_gText.setText(R.string.afternoon);
-                    Log.d(getClass().getSimpleName(), "Afternoon");
                     break;
                 case EVENING:
                     if (tv_gText != null)
                         tv_gText.setText(R.string.evening);
-                    Log.d(getClass().getSimpleName(), "Evening");
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + time.getCurrentDayPart());
+                    throw new IllegalStateException(
+                            "Unexpected value: " + time.getCurrentDayPart());
             }
         }
         lastDayPart = time.getCurrentDayPart();

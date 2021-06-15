@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.noah.timely.BuildConfig;
 import com.noah.timely.R;
-import com.noah.timely.core.PreferenceUtils;
+import com.noah.timely.util.PreferenceUtils;
 
 public class SplashScreen extends AppCompatActivity {
     private static final int TIMEOUT = 5000;

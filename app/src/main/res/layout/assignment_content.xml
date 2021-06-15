@@ -45,7 +45,7 @@
 	    android:layout_width = "wrap_content"
 	    android:layout_height = "wrap_content"
 	    android:layout_marginTop = "8dp"
-	    android:fontFamily = "@font/righteous"
+	    android:fontFamily = "@font/roboto_black"
 	    android:text = "@string/no_assignments_yet"
 	    android:textColor = "@color/colorPrimaryDark"
 	    android:textSize = "@dimen/no_task_text_size"

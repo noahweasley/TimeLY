@@ -48,7 +48,7 @@
 	          android:layout_marginTop = "8dp"
 	          android:text = "@string/no_course"
 	          android:textColor = "@color/colorPrimaryDark"
-	          android:fontFamily="@font/righteous"
+	          android:fontFamily="@font/roboto_black"
 	          android:textSize = "@dimen/no_task_text_size"
 	          external:layout_constraintBottom_toTopOf = "@id/img_no_event"
 	          external:layout_constraintEnd_toEndOf = "parent"

@@ -39,6 +39,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
     private RadioGroup grp_semesterGroup;
     private int mCredits;
     private CheckBox cbx_clear;
+    private SchoolDatabase database;
 
     public void show(Context context, int pagePosition) {
         Bundle bundle = new Bundle();
@@ -51,6 +52,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        database = new SchoolDatabase(getContext());
         return new ACDialog(getContext());
     }
 
@@ -76,7 +78,6 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
     }
 
     private boolean registerCourse() {
-        SchoolDatabase database = new SchoolDatabase(getContext());
         String courseName = edt_courseName.getText().toString();
         String courseCode = edt_courseCode.getText().toString();
         int credit = mCredits;
@@ -126,12 +127,17 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
             });
         } else {
             ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
-            errorBuilder.setDialogMessage("Duplicate course found");
-            errorBuilder.setShowSuggestions(false);
+            errorBuilder.setDialogMessage("Duplicate course found")
+                        .setShowSuggestions(false);
             new ErrorDialog().showErrorMessage(context, errorBuilder.build());
         }
-        database.close();
         return true;
+    }
+
+    @Override
+    public void onDestroyView() {
+        database.close();
+        super.onDestroyView();
     }
 
     private class ACDialog extends Dialog {

@@ -1,5 +1,8 @@
 package com.noah.timely.exam;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
@@ -20,6 +23,7 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +38,8 @@ import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.RequestUpdateEvent;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.courses.AddCourseActivity;
+import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -115,13 +121,37 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                 });
             }
         });
+
         noExamView = view.findViewById(R.id.no_exams_view);
         rv_Exams = view.findViewById(R.id.exams);
         coordinator = view.findViewById(R.id.coordinator);
 
         int pagePos = getArguments().getInt(ARG_POSITION);
-        view.findViewById(R.id.add_exams)
-            .setOnClickListener(v -> new AddExamDialog().show(getContext(), pagePos));
+
+        view.findViewById(R.id.add_exams).setOnClickListener(v -> {
+            Context context = getContext();
+            float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
+            float requiredWidthDP = 368, requiredHeightDP = 750;
+
+            SharedPreferences preferences =
+                    PreferenceManager.getDefaultSharedPreferences(context);
+
+            boolean useDialog = preferences.getBoolean("prefer_dialog", true);
+
+            // choose what kind of task-add method to use base on device width and user pref
+            if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
+                startActivity(new Intent(context, AddExamActivity.class)
+                                      .putExtra(ARG_POSITION, pagePos));
+            } else {
+                if (useDialog) {
+                    new AddExamDialog().show(getContext(), pagePos);
+                } else {
+                    startActivity(new Intent(context, AddExamActivity.class)
+                                          .putExtra(ARG_POSITION, pagePos));
+                }
+            }
+        });
+
         // set  list to have a fixed size to increase performance and set stable id, to use same
         // view holder on adapter change
         rv_Exams.setHasFixedSize(true);
@@ -249,8 +279,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                     examRowAdapter.notifyItemChanged(changePos);
                 }
             } else {
-                Log.w(getClass().getSimpleName(),
-                      "Couldn't update list for position: " + changePos);
+                Log.w(getClass().getSimpleName(), "Couldn't update list for position: " + changePos);
             }
         }
     }

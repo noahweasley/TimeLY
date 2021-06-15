@@ -1,4 +1,4 @@
-package com.noah.timely.core;
+package com.noah.timely.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -43,4 +43,5 @@ public class PreferenceUtils {
         // apply changes
         spEditor.apply();
     }
+
 }

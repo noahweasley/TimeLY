@@ -9,13 +9,13 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.noah.timely.R;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+
+import com.noah.timely.R;
 
 public class ErrorDialog extends DialogFragment implements View.OnClickListener {
     private ErrorMessage err;
@@ -44,7 +44,7 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
      */
     @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
-        private ErrorMessage e = new ErrorMessage();
+        private final ErrorMessage e = new ErrorMessage();
 
         public Builder setDialogMessage(String dialogMessage) {
             e.setDialogMessage(dialogMessage);
@@ -108,7 +108,7 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
             if (err.isShowSuggestions()) {
                 suggestion1.setVisibility(View.VISIBLE);
                 suggestionTitle.setVisibility(View.VISIBLE);
-                suggestion1.setText(err.getSuggestion2());
+                suggestion1.setText(err.getSuggestion1());
 
                 if (err.getSuggestionCount() == 1) suggestion2.setVisibility(View.GONE);
                 else {

@@ -1,5 +1,8 @@
 package com.noah.timely.scheduled;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -21,6 +24,7 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,10 +41,11 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.ThreadUtils;
 import com.noah.timely.main.MainActivity;
 import com.noah.timely.timetable.TimeTableRowHolder;
 import com.noah.timely.timetable.TimetableModel;
+import com.noah.timely.util.DeviceInfoUtil;
+import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -149,12 +154,12 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
 
                 RequestRunner.Builder builder = new RequestRunner.Builder();
                 builder.setOwnerContext(getActivity())
-                        .setAdapter(tableRowAdapter)
-                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
-                        .setModelList(tList);
+                       .setAdapter(tableRowAdapter)
+                       .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                       .setModelList(tList);
 
                 runner.setRequestParams(builder.getParams())
-                        .runRequest(DELETE_REQUEST);
+                      .runRequest(DELETE_REQUEST);
             }
         });
 
@@ -166,11 +171,31 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
             rV_timetable.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         } else {
             rV_timetable.setLayoutManager(new LinearLayoutManager(getActivity(),
-                    LinearLayoutManager.VERTICAL,
-                    false));
+                                                                  LinearLayoutManager.VERTICAL,
+                                                                  false));
         }
-        view.findViewById(R.id.fab_add_new)
-                .setOnClickListener(v -> new AddScheduledDialog().show(getContext()));
+        view.findViewById(R.id.fab_add_new).setOnClickListener(v -> {
+            Context context = getContext();
+
+            float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
+            float requiredWidthDP = 368, requiredHeightDP = 750;
+
+            SharedPreferences preferences =
+                    PreferenceManager.getDefaultSharedPreferences(context);
+
+            boolean useDialog = preferences.getBoolean("prefer_dialog", true);
+
+            // choose what kind of task-add method to use base on device width and user pref
+            if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
+                startActivity(new Intent(context, AddScheduledActivity.class));
+            } else {
+                if (useDialog) {
+                    new AddScheduledDialog().show(context);
+                } else {
+                    startActivity(new Intent(context, AddScheduledActivity.class));
+                }
+            }
+        });
     }
 
     @Override
@@ -250,9 +275,9 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
     private void dismissProgressbar(ProgressBar progressBar, boolean empty) {
         if (empty) progressBar.setVisibility(View.GONE);
         else progressBar.animate()
-                .scaleX(0.0f)
-                .scaleY(0.0f)
-                .setDuration(1000);
+                        .scaleX(0.0f)
+                        .scaleY(0.0f)
+                        .setDuration(1000);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -304,15 +329,15 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         @Override
         public TimeTableRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int ignored) {
             View view = getLayoutInflater().inflate(R.layout.scheduled_timetable_row, viewGroup,
-                    false);
+                                                    false);
             return (rowHolder = new TimeTableRowHolder(view));
         }
 
         @Override
         public void onBindViewHolder(@NonNull TimeTableRowHolder timeTableRowHolder, int position) {
             timeTableRowHolder.with(ScheduledTimetableFragment.this, tableRowAdapter, tList,
-                    coordinator, position)
-                    .bindView();
+                                    coordinator, position)
+                              .bindView();
         }
 
         @Override
@@ -350,43 +375,43 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
 
         /**
          * @param adapterPosition the position of the view holder
-         * @return the checked status of a particular image int he list
+         * @return the checked status of a particular timetable in the list
          */
         public boolean isChecked(int adapterPosition) {
             return choiceMode.isChecked(adapterPosition);
         }
 
         /**
-         * @return the number of images that was selected
+         * @return the number of timetables that was selected
          */
-        public int getCheckedCoursesCount() {
+        public int getCheckedTimetablesCount() {
             return choiceMode.getCheckedChoiceCount();
         }
 
         /**
          * @return an array of the checked indices as seen by database
          */
-        public Integer[] getCheckedCoursesPositions() {
+        public Integer[] getCheckedTimetablesPositions() {
             return choiceMode.getCheckedChoicePositions();
         }
 
         /**
          * @return an array of the checked indices
          */
-        private Integer[] getCheckedCoursesIndices() {
+        private Integer[] getCheckedTimetablesIndices() {
             return choiceMode.getCheckedChoicesIndices();
         }
 
         /**
-         * @param position           the position where the change occurred
-         * @param state              the new state of the change
-         * @param assignmentPosition the position of the assignment in database.
+         * @param position          the position where the change occurred
+         * @param state             the new state of the change
+         * @param timetablePosition the position of the timetable in database.
          */
-        public void onChecked(int position, boolean state, int assignmentPosition) {
+        public void onChecked(int position, boolean state, int timetablePosition) {
             boolean isFinished = false;
 
             DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
-            dmcm.setChecked(position, state, assignmentPosition);
+            dmcm.setChecked(position, state, timetablePosition);
 
             int choiceCount = dmcm.getCheckedChoiceCount();
 
@@ -409,29 +434,29 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         }
 
         /**
-         * Deletes multiple images from the list of selected items
+         * Deletes multiple items from checked
          */
         public void deleteMultiple() {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
-                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                    .setAdapter(tableRowAdapter)
-                    .setModelList(tList)
-                    .setTimetable(SchoolDatabase.SCHEDULED_TIMETABLE)
-                    .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
-                    .setItemIndices(getCheckedCoursesIndices())
-                    .setPositionIndices(getCheckedCoursesPositions())
-                    .setDataProvider(TimetableModel.class);
+                   .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                   .setAdapter(tableRowAdapter)
+                   .setModelList(tList)
+                   .setTimetable(SchoolDatabase.SCHEDULED_TIMETABLE)
+                   .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
+                   .setItemIndices(getCheckedTimetablesIndices())
+                   .setPositionIndices(getCheckedTimetablesPositions())
+                   .setDataProvider(TimetableModel.class);
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(MULTIPLE_DELETE_REQUEST);
+                  .runRequest(MULTIPLE_DELETE_REQUEST);
 
-            final int count = getCheckedCoursesCount();
+            final int count = getCheckedTimetablesCount();
             Snackbar snackbar
                     = Snackbar.make(coordinator,
-                    count + " Course" + (count > 1 ? "s" : "") + " Deleted",
-                    Snackbar.LENGTH_LONG);
+                                    count + " Course" + (count > 1 ? "s" : "") + " Deleted",
+                                    Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());

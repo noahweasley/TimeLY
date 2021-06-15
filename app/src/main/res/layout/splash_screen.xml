@@ -21,19 +21,19 @@
 		tools:ignore = "HardcodedText" />
 
 	<TextView
-		android:id = "@+id/app_name"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:fontFamily="sans-serif-black"
-		android:text = "@string/app_name"
-		android:textColor = "@android:color/white"
-		android:textSize = "52sp"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toBottomOf = "@+id/app_icon"
-		external:layout_constraintVertical_bias = "0.19"
-		tools:text = "@string/app_name" />
+		android:id="@+id/app_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:fontFamily="@font/roboto_black"
+		android:text="@string/app_name"
+		android:textColor="@android:color/white"
+		android:textSize="52sp"
+		external:layout_constraintBottom_toBottomOf="parent"
+		external:layout_constraintEnd_toEndOf="parent"
+		external:layout_constraintStart_toStartOf="parent"
+		external:layout_constraintTop_toBottomOf="@+id/app_icon"
+		external:layout_constraintVertical_bias="0.19"
+		tools:text="@string/app_name" />
 
 	<ImageButton
 		android:id = "@+id/skip"

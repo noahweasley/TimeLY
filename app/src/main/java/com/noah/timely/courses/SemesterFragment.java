@@ -1,5 +1,8 @@
 package com.noah.timely.courses;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
@@ -19,6 +22,7 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +37,7 @@ import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.RequestUpdateEvent;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -109,9 +114,31 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         noCourseView = view.findViewById(R.id.no_courses_view);
         rv_Courses = view.findViewById(R.id.courses);
         coordinator = view.findViewById(R.id.coordinator);
-        view.findViewById(R.id.add_course)
-                .setOnClickListener(
-                        v -> new AddCourseDialog().show(getContext(), getPagePosition()));
+
+        view.findViewById(R.id.add_course).setOnClickListener(v -> {
+                Context context = getContext();
+                float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
+                float requiredWidthDP = 368, requiredHeightDP = 750;
+
+                SharedPreferences preferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+
+                boolean useDialog = preferences.getBoolean("prefer_dialog", true);
+
+                // choose what kind of task-add method to use base on device width and user pref
+                if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
+                    startActivity(new Intent(context, AddCourseActivity.class)
+                                          .putExtra(ARG_POSITION, getPagePosition()));
+                } else {
+                    if (useDialog) {
+                        new AddCourseDialog().show(context, getPagePosition());
+                    } else {
+                        startActivity(new Intent(context, AddCourseActivity.class)
+                                              .putExtra(ARG_POSITION, getPagePosition()));
+                    }
+                }
+            });
+
         // set  list to have a fixed size to increase performance and set stable id, to use same
         // view holder on adapter change
         rv_Courses.setHasFixedSize(true);
@@ -138,7 +165,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         // could have used ViewPager.OnPageChangedListener to increase code readability, but
         // this was used to reduce code size as there is not much work to be done when ViewPager
         // scrolls
-        if(actionMode != null) actionMode.finish();
+        if (actionMode != null) actionMode.finish();
         super.onResume();
     }
 
@@ -180,9 +207,9 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     private void dismissProgressbar(ProgressBar progressBar, boolean isEmpty) {
         if (isEmpty) progressBar.setVisibility(View.GONE);
         else progressBar.animate()
-                .scaleX(0.0f)
-                .scaleY(0.0f)
-                .setDuration(1000);
+                        .scaleX(0.0f)
+                        .scaleY(0.0f)
+                        .setDuration(1000);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -294,7 +321,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         @Override
         public void onBindViewHolder(@NonNull CourseRowHolder viewHolder, int position) {
             viewHolder.with(SemesterFragment.this, courseAdapter, cList, coordinator)
-                    .bindView();
+                      .bindView();
         }
 
         @Override
@@ -363,8 +390,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         }
 
         /**
-         * @param position           the position where the change occurred
-         * @param state              the new state of the change
+         * @param position       the position where the change occurred
+         * @param state          the new state of the change
          * @param coursePosition the position of the assignment in database.
          */
         public void onChecked(int position, boolean state, int coursePosition) {
@@ -398,17 +425,17 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
-                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                    .setAdapter(courseAdapter)
-                    .setModelList(cList)
-                    .setCourseSemester(SemesterFragment.this.getSemester())
-                    .setMetadataType(RequestParams.MetaDataType.COURSE)
-                    .setItemIndices(getCheckedCoursesIndices())
-                    .setPositionIndices(getCheckedCoursesPositions())
-                    .setDataProvider(CourseModel.class);
+                   .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                   .setAdapter(courseAdapter)
+                   .setModelList(cList)
+                   .setCourseSemester(SemesterFragment.this.getSemester())
+                   .setMetadataType(RequestParams.MetaDataType.COURSE)
+                   .setItemIndices(getCheckedCoursesIndices())
+                   .setPositionIndices(getCheckedCoursesPositions())
+                   .setDataProvider(CourseModel.class);
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(MULTIPLE_DELETE_REQUEST);
+                  .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedCoursesCount();
             Snackbar snackbar

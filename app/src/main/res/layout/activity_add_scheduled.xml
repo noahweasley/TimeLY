@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_light">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toTopOf="parent"
+        external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        external:subtitleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        external:layout_constraintBottom_toTopOf="@id/multiple"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <AutoCompleteTextView
+                android:id="@+id/course_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/bg_dialog_form"
+                android:hint="@string/name_hint"
+                android:maxLines="2"
+                android:minLines="2"
+                tools:ignore="Autofill,TextFields" />
+
+            <EditText
+                android:id="@+id/lecturer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/bg_dialog_form"
+                android:hint="@string/lecturer_hint"
+                android:maxLines="1"
+                tools:ignore="Autofill,TextFields" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/start_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="5"
+                    android:background="@drawable/bg_dialog_form"
+                    android:hint="@string/start_time_hint"
+                    android:inputType="time"
+                    android:maxLength="5"
+                    android:maxLines="1"
+                    tools:ignore="Autofill,TextFields" />
+
+                <EditText
+                    android:id="@+id/end_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="5"
+                    android:background="@drawable/bg_dialog_form"
+                    android:hint="@string/end_time_hint"
+                    android:inputType="time"
+                    android:maxLength="5"
+                    android:maxLines="1"
+                    tools:ignore="Autofill,TextFields" />
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/day_spin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/importance_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    external:layout_constraintEnd_toEndOf="parent"
+                    external:layout_constraintTop_toTopOf="parent">
+
+                    <RadioButton
+                        android:id="@+id/not_important"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/imp_space"
+                        android:checked="true"
+                        android:text="@string/not_important" />
+
+                    <RadioButton
+                        android:id="@+id/less_important"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/imp_space"
+                        android:text="@string/less_important" />
+
+                    <RadioButton
+                        android:id="@+id/very_important"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/imp_space"
+                        android:text="@string/very_important" />
+
+                </RadioGroup>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <CheckBox
+        android:id="@+id/multiple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:checked="true"
+        android:text="@string/multiple"
+        external:layout_constraintBottom_toTopOf="@id/register"
+        external:layout_constraintEnd_toEndOf="parent" />
+
+    <CheckBox
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/clear_data"
+        external:layout_constraintBottom_toTopOf="@id/register"
+        external:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_submit"
+        android:text="@string/register"
+        android:layout_margin="8dp"
+        android:textColor="@android:color/white"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

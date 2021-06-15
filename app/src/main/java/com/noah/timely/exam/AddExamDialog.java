@@ -40,6 +40,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
     private EditText edt_startTime, edt_endTime;
     private CheckBox cbx_clear;
     private String examDay;
+    private SchoolDatabase database;
 
     /**
      * Make this dialog visible to the user
@@ -59,6 +60,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        database = new SchoolDatabase(getContext());
         return new AETDialog(getContext());
     }
 
@@ -79,9 +81,13 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
         return registered;
     }
 
-    @SuppressWarnings("unused")
+    @Override
+    public void onDestroyView() {
+        database.close();
+        super.onDestroyView();
+    }
+
     private boolean registerExam() {
-        SchoolDatabase database = new SchoolDatabase(getContext());
         String course = atv_courseName.getText().toString();
         String end = edt_endTime.getText().toString();
         String start = edt_startTime.getText().toString();
@@ -133,10 +139,9 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
         } else {
             ErrorDialog.Builder builder = new ErrorDialog.Builder();
             builder.setShowSuggestions(false)
-                    .setDialogMessage("Duplicate Exam Found");
+                   .setDialogMessage("Duplicate Exam Found");
             new ErrorDialog().showErrorMessage(getContext(), builder.build());
         }
-        database.close();
         return true;
     }
 

@@ -62,7 +62,7 @@
 	<string name = "exception">Something went wrong</string>
 	<string name = "choose_day">SCHEDULED DAY</string>
 	<string name = "no_timetable">No Timetable yet</string>
-	<string name = "alarms">Alarms</string>
+	<string name = "alarms">Study Alarms</string>
 	<string name = "default_number">114</string>
 	<string name = "default_folder">Downloads</string>
 	<string name = "preview_prompt">Click an image to preview</string>
@@ -162,4 +162,8 @@
 	<string name="report_title">Report Bug</string>
     <string name="yes">Yes</string>
     <string name="version">v1.0.0</string>
+    <string name="dialog_pref">Use dialogs to add new task and reminders. This won\'t work
+		for smaller screen sizes</string>
+    <string name="add_timetable">Add timetable</string>
+    <string name="add_exam">add exams</string>
 </resources>

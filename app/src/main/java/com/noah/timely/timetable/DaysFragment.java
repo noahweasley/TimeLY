@@ -1,5 +1,8 @@
 package com.noah.timely.timetable;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -21,6 +24,7 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +40,7 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,7 +54,6 @@ import java.util.Locale;
 
 import static com.noah.timely.core.AppUtils.DAYS;
 
-@SuppressWarnings({"ConstantConditions"})
 public class DaysFragment extends Fragment implements ActionMode.Callback {
     public static final String DELETE_REQUEST = "delete timetable";
     public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Timetable";
@@ -141,8 +145,32 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
         }
 
         int pagePos = getArguments().getInt(ARG_POSITION);
-        view.findViewById(R.id.fab_add_new)
-                .setOnClickListener(v -> new AddTimetableDialog().show(getContext(), pagePos));
+
+        view.findViewById(R.id.fab_add_new).setOnClickListener(v -> {
+
+                    Context context = getContext();
+                    float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
+                    float requiredWidthDP = 368, requiredHeightDP = 750;
+
+                    SharedPreferences preferences =
+                            PreferenceManager.getDefaultSharedPreferences(context);
+
+                    boolean useDialog = preferences.getBoolean("prefer_dialog", true);
+
+                    // choose what kind of task-add method to use base on device width and user pref
+                    if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
+                        startActivity(new Intent(context, AddTimetableActivity.class)
+                                              .putExtra(ARG_PAGE_POSITION, pagePos));
+                    } else {
+                        if (useDialog) {
+                            new AddTimetableDialog().show(getContext(), pagePos);
+                        } else {
+                            startActivity(new Intent(context, AddTimetableActivity.class)
+                                                  .putExtra(ARG_PAGE_POSITION, pagePos));
+                        }
+                    }
+
+                });
     }
 
     @Override

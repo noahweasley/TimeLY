@@ -53,7 +53,7 @@
 	          android:text = "@string/no_timetable"
 	          android:textColor = "@color/colorPrimaryDark"
 	          android:textSize = "@dimen/no_task_text_size"
-	          android:fontFamily="@font/righteous"
+	          android:fontFamily="@font/roboto_black"
 	          external:layout_constraintBottom_toTopOf = "@id/img_no_event"
 	          external:layout_constraintEnd_toEndOf = "parent"
 	          external:layout_constraintStart_toStartOf = "parent"
@@ -91,7 +91,8 @@
 	    android:layout_height = "wrap_content"
 	    android:layout_gravity = "bottom|center_horizontal"
 	    android:layout_margin = "@dimen/fab_margin"
-	    external:srcCompat = "@drawable/ic_add" />
+	    external:srcCompat = "@drawable/ic_add"
+		android:contentDescription="@string/add_timetable" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
