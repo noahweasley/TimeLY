@@ -19,6 +19,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Random;
+
 @SuppressWarnings({"ConstantConditions"})
 public class LandingPageFragment extends Fragment {
     private TextView tv_gText;
@@ -45,24 +47,48 @@ public class LandingPageFragment extends Fragment {
                     if (tv_gText != null)
                         tv_gText.setText(R.string.evening);
                     break;
+                case NIGHT:
+                    if (tv_gText != null)
+                        tv_gText.setText(R.string.night);
+                    break;
+                case SLEEP_TIME:
+                    if (tv_gText != null)
+                        tv_gText.setText(R.string.sleep);
+                    break;
+                case DAY_START_ACTIVE_PERIOD:
+                    if(tv_gText != null)
+                        tv_gText.setText(R.string.rise);
+                    break;
+                case DEFAULT_INTERVAL_DAY:
+                    if(tv_gText != null) {
+                        // use an array of arbitrary greeting text
+                        String[] gs = {"Hi there!", "Good Day!", "Hello"};
+                        int r = new Random(System.currentTimeMillis()).nextInt(4) ;
+                        String text;
+
+                        if(r == 0) text = gs[0];
+                        else if(r == 1) text = gs[1];
+                        else text = gs[2];
+
+                        tv_gText.setText(text);
+                    }
                 default:
-                    throw new IllegalStateException(
-                            "Unexpected value: " + time.getCurrentDayPart());
+                    throw new IllegalStateException("Unexpected value: " + time.getCurrentDayPart());
             }
         }
         lastDayPart = time.getCurrentDayPart();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
-                             Bundle savedState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedState) {
         return inflater.inflate(R.layout.landing_page, parent, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle state) {
-        view.findViewById(R.id.discover).setOnClickListener(
-                (v) -> ((MainActivity) getActivity()).drawer.openDrawer(GravityCompat.START));
+        view.findViewById(R.id.discover)
+            .setOnClickListener((v) -> ((MainActivity) getActivity()).drawer.openDrawer(GravityCompat.START));
+
         tv_gText = view.findViewById(R.id.greeting_text);
         EventBus.getDefault().register(this);
         doUpdateGreeting(TimeChangeDetector.requestImmediateTime(getContext()));

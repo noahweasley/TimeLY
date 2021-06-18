@@ -36,8 +36,7 @@ public class AlarmTimeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle state) {
         // start blinking the colon in between the min and sec
         TextView blinkTarget = view.findViewById(R.id.blink);
-        blinkTarget
-                .startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation));
+        blinkTarget.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation));
 
         alarmDate = view.findViewById(R.id.alarm_date);
         alarmMin = view.findViewById(R.id.alarm_min);
@@ -102,6 +101,9 @@ public class AlarmTimeFragment extends Fragment {
         // set day part icon
         switch (time.getCurrentDayPart()) {
             case MORNING:
+            case SLEEP_TIME:
+            case DAY_START_ACTIVE_PERIOD:
+            case DEFAULT_INTERVAL_DAY:
                 img_dayAndNight.setImageResource(R.drawable.ic_day_full);
                 Log.d(getClass().getSimpleName(), "Morning");
                 break;
@@ -110,6 +112,8 @@ public class AlarmTimeFragment extends Fragment {
                 Log.d(getClass().getSimpleName(), "Afternoon");
                 break;
             case EVENING:
+            case NIGHT:
+            case DEFAULT_INTERVAL_NIGHT:
                 img_dayAndNight.setImageResource(R.drawable.ic_night_icon);
                 img_dayAndNight.setBackgroundResource(R.drawable.night);
                 Log.d(getClass().getSimpleName(), "Evening");

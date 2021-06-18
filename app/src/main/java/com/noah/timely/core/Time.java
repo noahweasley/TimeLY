@@ -32,33 +32,61 @@ public class Time {
      * @param isMilitaryTime military time or not
      * @param isForenoon     day or night
      */
-    public Time(String dateFormat, String date, String hour, String min,
-                boolean isMilitaryTime, boolean isForenoon) {
+    public Time(String dateFormat, String date, String hour, String min, boolean isMilitaryTime, boolean isForenoon) {
         this(date, hour, min, isMilitaryTime, isForenoon);
         this.dateFormat = dateFormat;
     }
 
     /**
-     * @return the current day part (Morning, Afternoon, Evening or Night)
+     * @return the current day part (Morning, Afternoon, Evening, Night...)
      */
     public DayPart getCurrentDayPart() {
         int __hour = Integer.parseInt(hour);
-        if (isForenoon && !isMilitaryTime) {
-            return DayPart.MORNING;
-        } else if (!isForenoon && !isMilitaryTime) {
-            if (__hour == 12 || (__hour >= 1 && __hour <= 4)) {
-                return DayPart.AFTERNOON;
-            } else
-                return DayPart.EVENING;
-        } else if (isMilitaryTime) {
-            if (__hour >= 0 && __hour < 12) {
-                return DayPart.MORNING;
-            } else if (__hour >= 12 && __hour <= 16) {
-                return DayPart.AFTERNOON;
-            } else
-                return DayPart.EVENING;
+        int __min = Integer.parseInt(min);
+
+        if (isMilitaryTime) /* for Military Time */ {
+            boolean isForenoon = __hour >= 0 && __hour < 12; // 00:00 to 11:59
+
+            if (isForenoon) /* AM */ {
+                // 00:00 to 04:59
+                if (__hour >= 0 && __hour < 5) return DayPart.SLEEP_TIME;
+                    // 05:00 to 05:59
+                else if (__hour == 5) return DayPart.DEFAULT_INTERVAL_DAY;
+                    // 06:00 to 06:59
+                else if (__hour == 6) return DayPart.DAY_START_ACTIVE_PERIOD;
+                    // if any time period exists that is not within the other condition ranges i.e 07:00 to 11:59
+                else return DayPart.MORNING;
+
+            } else /* PM */ {
+                // 12:00 to 16:59
+                if (__hour >= 12 && __hour < 17) return DayPart.AFTERNOON;
+                    // 17:00 to 22:59
+                else if (__hour >= 17 && __hour < 23) return DayPart.EVENING;
+                    // only time interval left is 23:00 to 23:59, which is night
+                else return DayPart.NIGHT;
+            }
+
+        } else  /* for Civilian Time */ {
+
+            if (this.isForenoon) /* AM */ {
+                // 12:00 am to 04:59 am
+                if (__hour == 12 || (__hour >= 1 && __hour < 5)) return DayPart.SLEEP_TIME;
+                    // 05:00 am to 05:59 am
+                else if (__hour == 5) return DayPart.DEFAULT_INTERVAL_DAY;
+                    // 06:00 am to 06:59 am
+                else if (__hour == 6) return DayPart.DAY_START_ACTIVE_PERIOD;
+                    // if any time period exists that is not within the other condition ranges i.e 07:00 am o 11:59 am
+                else return DayPart.MORNING;
+
+            } else /* PM */ {
+                // 12:00 pm to 04:59 pm
+                if (__hour == 12 || (__hour >= 1 && __hour < 5)) return DayPart.AFTERNOON;
+                // 05:00 pm to 11:00 pm
+                if (__hour >= 5 && __hour < 11) return DayPart.EVENING;
+                    // only time interval left is 11:00 am to 11:59, which is night
+                else return DayPart.NIGHT;
+            }
         }
-        return null;
     }
 
     public String getDate() {
