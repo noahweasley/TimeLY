@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_light">
+    android:background="@drawable/bg_day_and_night">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -22,7 +22,7 @@
         android:id="@+id/scroller"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        external:layout_constraintBottom_toTopOf="@id/register"
+        external:layout_constraintBottom_toTopOf="@+id/bottom_actions_container"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -98,28 +98,34 @@
 
     </ScrollView>
 
-    <CheckBox
-        android:id="@+id/multiple"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_actions_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:checked="true"
-        android:text="@string/multiple"
-        external:layout_constraintBottom_toTopOf="@id/register"
-        external:layout_constraintEnd_toEndOf="parent"/>
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintBottom_toTopOf="@id/register">
 
-    <CheckBox
-        android:id="@+id/clear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/clear_data"
-        external:layout_constraintBottom_toTopOf="@id/register"
-        external:layout_constraintStart_toStartOf="parent" />
+        <CheckBox
+            android:id="@+id/multiple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:checked="true"
+            android:text="@string/multiple"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent" />
+
+        <CheckBox
+            android:id="@+id/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/clear_data"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/register"
