@@ -3,8 +3,7 @@
 	xmlns:android = "http://schemas.android.com/apk/res/android"
 	xmlns:external = "http://schemas.android.com/apk/res-auto"
 	xmlns:tools = "http://schemas.android.com/tools"
-	android:id = "@+id/card"
-	android:layout_width = "match_parent"
+    android:layout_width = "match_parent"
 	android:layout_height = "225dp"
 	android:layout_marginBottom = "@dimen/card_margin_bottom"
 	external:cardCornerRadius = "@dimen/corner_radius"
@@ -14,8 +13,7 @@
 	external:layout_constraintTop_toTopOf = "parent">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id = "@+id/parent"
-		android:layout_width = "match_parent"
+        android:layout_width = "match_parent"
 		android:layout_height = "match_parent">
 
 		<View

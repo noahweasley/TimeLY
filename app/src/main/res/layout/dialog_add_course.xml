@@ -5,7 +5,7 @@
 	xmlns:tools = "http://schemas.android.com/tools"
 	android:layout_width = "360dp"
 	android:layout_height = "420dp"
-	android:background = "@drawable/bg_light">
+	android:background = "@drawable/bg_day_and_night">
 
 		<ImageButton
 			android:id = "@+id/cancel"

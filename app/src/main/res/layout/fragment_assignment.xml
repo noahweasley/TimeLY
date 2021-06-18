@@ -4,7 +4,7 @@
 	xmlns:external = "http://schemas.android.com/apk/res-auto"
 	android:id = "@+id/coordinator2"
 	android:layout_width = "match_parent"
-	android:background = "@drawable/bg_light"
+	android:background = "@drawable/bg_day_and_night"
 	android:layout_height = "match_parent">
 
     <include layout = "@layout/assignment_content" />

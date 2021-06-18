@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +32,6 @@ import com.noah.timely.util.ThreadUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static com.noah.timely.core.AppUtils.Alert.SCHEDULED_TIMETABLE;
@@ -116,6 +114,7 @@ public class AddScheduledActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
                 // unused, but had to implement.
             }
+
         });
 
         if (getIntent().getBooleanExtra(ARG_TO_EDIT, false)) {
@@ -189,7 +188,6 @@ public class AddScheduledActivity extends AppCompatActivity {
         }
 
         if (errorOccurred) {
-            database.close();
             return false;
         }
 
@@ -273,15 +271,12 @@ public class AddScheduledActivity extends AppCompatActivity {
         long CURRENT = calendar.getTimeInMillis();
         long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-        Log.d(getClass().getSimpleName(), "Cancelling alarm: " + new Date(timeInMillis));
-
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
         timetableIntent.addCategory("com.noah.timely.scheduled")
                        .setAction("com.noah.timely.scheduled.addAction")
-                       .setDataAndType(
-                               Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
-                               "com.noah.timely.scheduled.dataType");
+                       .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
+                                       "com.noah.timely.scheduled.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
@@ -306,8 +301,6 @@ public class AddScheduledActivity extends AppCompatActivity {
         long CURRENT = calendar.getTimeInMillis();
         long triggerTime = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-        Log.d(getClass().getSimpleName(), "Scheduling notification for: " + new Date(triggerTime));
-
         AlarmManager manager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 
         Intent scheduleIntent = new Intent(context, ScheduledTaskNotifier.class)
@@ -316,15 +309,15 @@ public class AddScheduledActivity extends AppCompatActivity {
                 .putExtra(ARG_DAY, day)
                 .addCategory("com.noah.timely.scheduled")
                 .setAction("com.noah.timely.scheduled.addAction")
-                .setDataAndType(
-                        Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
-                        "com.noah.timely.scheduled.dataType");
+                .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
+                                "com.noah.timely.scheduled.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             manager.setExact(AlarmManager.RTC, triggerTime, pi);
         manager.set(AlarmManager.RTC, triggerTime, pi);
+
         playAlertTone(context.getApplicationContext(), SCHEDULED_TIMETABLE);
     }
 

@@ -5,7 +5,7 @@
 	xmlns:tools = "http://schemas.android.com/tools"
 	android:layout_width = "300dp"
 	android:layout_height = "wrap_content"
-	android:background = "@drawable/bg_light"
+	android:background = "@drawable/bg_day_and_night"
 	android:paddingBottom = "16dp">
 
 	<ImageView

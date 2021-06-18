@@ -106,9 +106,11 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                 // animate progress bar dismissal
                 dismissProgressbar(indeterminateProgress, isEmpty);
                 courseAdapter.notifyDataSetChanged();
+
                 if (itemCount != null)
                     itemCount.setText(String.valueOf(cList.size()));
             });
+
         });
 
         noCourseView = view.findViewById(R.id.no_courses_view);
@@ -116,12 +118,12 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         coordinator = view.findViewById(R.id.coordinator);
 
         view.findViewById(R.id.add_course).setOnClickListener(v -> {
+
                 Context context = getContext();
                 float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
                 float requiredWidthDP = 368, requiredHeightDP = 750;
 
-                SharedPreferences preferences =
-                        PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
                 boolean useDialog = preferences.getBoolean("prefer_dialog", true);
 

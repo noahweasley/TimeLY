@@ -5,11 +5,10 @@
 	xmlns:tools = "http://schemas.android.com/tools"
 	android:layout_width = "match_parent"
 	android:layout_height = "match_parent"
-	android:background = "@drawable/bg_light">
+	android:background = "@drawable/bg_day_and_night">
 
     <View
-	    android:id = "@+id/alarm_view"
-	    android:layout_width = "0dp"
+        android:layout_width = "0dp"
 	    android:layout_height = "0dp"
 	    android:background = "@drawable/alarm_view_background"
 	    external:layout_constraintBottom_toBottomOf = "parent"
@@ -19,8 +18,7 @@
 	    external:layout_constraintVertical_bias = "0.82" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-	    android:id = "@+id/time_container"
-	    android:layout_width = "0dp"
+        android:layout_width = "0dp"
 	    android:layout_height = "0dp"
 	    external:layout_constraintBottom_toTopOf = "@id/alarm_date"
 	    external:layout_constraintEnd_toEndOf = "parent"

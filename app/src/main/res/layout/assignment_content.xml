@@ -41,8 +41,7 @@
 		external:layout_constraintTop_toTopOf = "parent">
 
     <TextView
-	    android:id = "@+id/no_task_text"
-	    android:layout_width = "wrap_content"
+        android:layout_width = "wrap_content"
 	    android:layout_height = "wrap_content"
 	    android:layout_marginTop = "8dp"
 	    android:fontFamily = "@font/roboto_black"
@@ -71,8 +70,7 @@
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
 	  <View
-		  android:id = "@+id/bottom_overlay"
-		  android:layout_width = "match_parent"
+          android:layout_width = "match_parent"
 		  android:layout_height = "90dp"
 		  android:background = "@drawable/shadow_gradient"
 		  external:layout_constraintBottom_toBottomOf = "parent"

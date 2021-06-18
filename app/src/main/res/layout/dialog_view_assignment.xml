@@ -4,7 +4,7 @@
 	xmlns:external = "http://schemas.android.com/apk/res-auto"
 	android:layout_width = "360dp"
 	android:layout_height = "400dp"
-	android:background = "@drawable/bg_light">
+	android:background = "@drawable/bg_day_and_night">
 
 	<ScrollView
 		android:layout_width = "0dp"
@@ -33,8 +33,7 @@
 				android:textStyle = "bold" />
 
 			<TextView
-				android:id = "@+id/from"
-				android:layout_width = "match_parent"
+                android:layout_width = "match_parent"
 				android:layout_height = "wrap_content"
 				android:fontFamily = "serif-monospace"
 				android:gravity = "center"

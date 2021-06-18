@@ -2,8 +2,7 @@
 <menu xmlns:android = "http://schemas.android.com/apk/res/android">
 
   <item
-	  android:id="@+id/deleted"
-	  android:icon = "@drawable/ic_baseline_delete_24"
+      android:icon = "@drawable/ic_baseline_delete_24"
 	  android:title = ""/>
 
 </menu>

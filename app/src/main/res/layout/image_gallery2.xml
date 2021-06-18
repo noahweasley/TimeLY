@@ -4,7 +4,7 @@
 	xmlns:external = "http://schemas.android.com/apk/res-auto"
 	android:layout_width = "match_parent"
 	android:layout_height = "match_parent"
-	android:background = "@drawable/bg_light">
+	android:background = "@drawable/bg_day_and_night">
 
 	<androidx.appcompat.widget.Toolbar
 		android:id = "@+id/toolbar"
@@ -60,11 +60,10 @@
 		external:layout_constraintTop_toTopOf = "parent">
 
 		<TextView
-			android:id = "@+id/no_task_text"
-			android:layout_width = "wrap_content"
+            android:layout_width = "wrap_content"
 			android:layout_height = "wrap_content"
 			android:text = "@string/no_media"
-			android:fontFamily="@font/righteous"
+			android:fontFamily="@font/roboto_black"
 			android:textColor = "@color/colorPrimaryDark"
 			android:textSize = "35sp"
 			external:layout_constraintBottom_toTopOf = "@id/img_no_event"

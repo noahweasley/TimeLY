@@ -36,11 +36,8 @@ public class AddCourseActivity extends AppCompatActivity {
     private RadioGroup grp_semesterGroup;
     private int mCredits;
     private CheckBox cbx_clear;
-    private final Integer[] credits = {
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-            31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
+    private final Integer[] credits = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,13 +76,14 @@ public class AddCourseActivity extends AppCompatActivity {
         });
 
         Spinner spin_credits = findViewById(R.id.credits);
-        ArrayAdapter<Integer> creditAdapter
-                = new ArrayAdapter<>(this,
-                                     android.R.layout.simple_spinner_item,
-                                     credits);
+        ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(this,
+                                                                 android.R.layout.simple_spinner_item,
+                                                                 credits);
         creditAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         spin_credits.setAdapter(creditAdapter);
+
         spin_credits.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position,
                                        long id) {
@@ -141,6 +139,7 @@ public class AddCourseActivity extends AppCompatActivity {
             ThreadUtils.runBackgroundTask(() -> {
                 int[] data = database.addCourse(model, semester);
                 int addPos = data[1];
+
                 if (addPos != -1) {
                     model.setId(addPos);
                     model.setChronologicalOrder(data[0]);
@@ -151,12 +150,14 @@ public class AddCourseActivity extends AppCompatActivity {
                     Toast.makeText(this, "An Error occurred", Toast.LENGTH_LONG).show();
                 }
             });
+
         } else {
             ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
             errorBuilder.setDialogMessage("Duplicate course found");
             errorBuilder.setShowSuggestions(false);
             new ErrorDialog().showErrorMessage(this, errorBuilder.build());
         }
+
         return true;
     }
 

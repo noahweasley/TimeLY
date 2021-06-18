@@ -28,7 +28,7 @@
 			android:id = "@+id/frame"
 			android:layout_width = "match_parent"
 			android:layout_height = "match_parent"
-			android:background = "@drawable/bg_light" />
+			android:background = "@drawable/bg_day_and_night" />
 
 	</LinearLayout>
 
@@ -37,7 +37,7 @@
 		android:layout_width = "240dp"
 		android:layout_height = "match_parent"
 		android:layout_gravity = "start"
-		android:background = "@drawable/bg_light"
+		android:background = "@drawable/bg_day_and_night"
 		android:fitsSystemWindows = "true"
 		external:headerLayout = "@layout/nav_header"
 		external:itemBackground = "@drawable/bg_checked"

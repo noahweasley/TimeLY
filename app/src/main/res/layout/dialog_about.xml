@@ -2,6 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/normal_dialog_width"
     android:layout_height="@dimen/normal_dialog_height"
-    android:background="@drawable/bg_light">
+    android:background="@drawable/bg_day_and_night">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<integer name = "padding_right">10</integer>
-	<integer name = "drawable_padding">8</integer>
-	<integer name = "name_limit">20</integer>
+    <integer name = "name_limit">20</integer>
 </resources>

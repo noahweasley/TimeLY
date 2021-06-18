@@ -57,9 +57,7 @@
 
 	<!-- Miscellaneous category-->
 
-	<item
-		android:id = "@+id/miscellaneous"
-		android:title = "@string/miscellaneous">
+	<item android:title = "@string/miscellaneous">
 
 		<menu>
 

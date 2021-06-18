@@ -21,8 +21,7 @@
 
 	<!--to display the image directory details-->
 	<View
-		android:id = "@+id/details"
-		android:layout_width = "0dp"
+        android:layout_width = "0dp"
 		android:layout_height = "100dp"
 		android:background = "@drawable/bg_details"
 		external:layout_constraintBottom_toBottomOf = "parent"
