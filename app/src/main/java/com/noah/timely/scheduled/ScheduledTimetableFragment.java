@@ -61,7 +61,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
     public static final String DELETE_REQUEST = "delete scheduled timetable";
     public static final String MULTIPLE_DELETE_REQUEST = "delete multiple timetable";
     static final String ARG_TO_EDIT = "Editor stat";
-    static final String ARG_DATA = "Timetable Data";
+    public static final String ARG_DATA = "Timetable Data";
     private ActionMode actionMode;
     private ViewGroup noTimetableView;
     private ScheduledTimetableFragment.TimeTableRowAdapter tableRowAdapter;

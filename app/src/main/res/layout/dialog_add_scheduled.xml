@@ -140,6 +140,7 @@
                     android:id="@+id/importance_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     external:layout_constraintEnd_toEndOf="parent"
                     external:layout_constraintTop_toTopOf="parent">
 
@@ -147,12 +148,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/imp_space"
-                        android:checked="true"
                         android:text="@string/not_important" />
 
                     <RadioButton
                         android:id="@+id/less_important"
                         android:layout_width="wrap_content"
+                        android:checked="true"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/imp_space"
                         android:text="@string/less_important" />

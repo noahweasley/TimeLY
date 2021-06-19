@@ -11,6 +11,6 @@
     <dimen name="indicator_width">10dp</dimen>
     <dimen name="timetable_space">8dp</dimen>
     <dimen name="folder_img_margin">10dp</dimen>
-    <dimen name="imp_space">4dp</dimen>
+    <dimen name="imp_space">8dp</dimen>
 
 </resources>

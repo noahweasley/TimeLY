@@ -181,7 +181,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
                 // Error message
                 ErrorDialog.Builder builder = new ErrorDialog.Builder();
                 builder.setDialogMessage("Duplicate start time present")
-                        .setShowSuggestions(false);
+                       .setShowSuggestions(false);
                 new ErrorDialog().showErrorMessage(context, builder.build());
             }
         }
@@ -220,10 +220,10 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
         timetableIntent.addCategory("com.noah.timely.scheduled")
-                .setAction("com.noah.timely.scheduled.addAction")
-                .setDataAndType(
-                        Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
-                        "com.noah.timely.scheduled.dataType");
+                       .setAction("com.noah.timely.scheduled.addAction")
+                       .setDataAndType(
+                               Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
+                               "com.noah.timely.scheduled.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
@@ -285,6 +285,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
             setCanceledOnTouchOutside(false);
             cbx_clear = findViewById(R.id.clear);
             CheckBox cbx_multiple = findViewById(R.id.multiple);
+
             findViewById(R.id.cancel).setOnClickListener(AddScheduledDialog.this);
             findViewById(R.id.register).setOnClickListener(v -> {
                 boolean success = cbx_multiple.isChecked() ? registerAndClear()
@@ -308,18 +309,16 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
             imp_group = findViewById(R.id.importance_group);
 
             SchoolDatabase database = new SchoolDatabase(getContext());
-            ArrayAdapter<String> courseAdapter
-                    = new ArrayAdapter<>(getContext(),
-                                         android.R.layout.simple_dropdown_item_1line,
-                                         database.getAllRegisteredCourses());
+            ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(getContext(),
+                                                                    android.R.layout.simple_dropdown_item_1line,
+                                                                    database.getAllRegisteredCourses());
 
             atv_courseName.setAdapter(courseAdapter);
 
             Spinner spin_days = findViewById(R.id.day_spin);
-            ArrayAdapter<String> daysAdapter
-                    = new ArrayAdapter<>(getContext(),
-                                         android.R.layout.simple_spinner_item,
-                                         DAYS);
+            ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(getContext(),
+                                                                  android.R.layout.simple_spinner_item,
+                                                                  DAYS);
             daysAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
             spin_days.setAdapter(daysAdapter);
             spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

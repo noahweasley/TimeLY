@@ -104,8 +104,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         coordinator = view.findViewById(R.id.coordinator);
         Resources resources = getResources();
-        boolean isInLandscape =
-                resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        boolean isInLandscape = resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
         ThreadUtils.runBackgroundTask(() -> {
@@ -148,29 +147,29 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
 
         view.findViewById(R.id.fab_add_new).setOnClickListener(v -> {
 
-                    Context context = getContext();
-                    float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
-                    float requiredWidthDP = 368, requiredHeightDP = 750;
+            Context context = getContext();
+            float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
+            float requiredWidthDP = 368, requiredHeightDP = 750;
 
-                    SharedPreferences preferences =
-                            PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences preferences =
+                    PreferenceManager.getDefaultSharedPreferences(context);
 
-                    boolean useDialog = preferences.getBoolean("prefer_dialog", true);
+            boolean useDialog = preferences.getBoolean("prefer_dialog", true);
 
-                    // choose what kind of task-add method to use base on device width and user pref
-                    if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
-                        startActivity(new Intent(context, AddTimetableActivity.class)
-                                              .putExtra(ARG_PAGE_POSITION, pagePos));
-                    } else {
-                        if (useDialog) {
-                            new AddTimetableDialog().show(getContext(), pagePos);
-                        } else {
-                            startActivity(new Intent(context, AddTimetableActivity.class)
-                                                  .putExtra(ARG_PAGE_POSITION, pagePos));
-                        }
-                    }
+            // choose what kind of task-add method to use base on device width and user pref
+            if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
+                startActivity(new Intent(context, AddTimetableActivity.class)
+                                      .putExtra(ARG_PAGE_POSITION, pagePos));
+            } else {
+                if (useDialog) {
+                    new AddTimetableDialog().show(getContext(), pagePos);
+                } else {
+                    startActivity(new Intent(context, AddTimetableActivity.class)
+                                          .putExtra(ARG_PAGE_POSITION, pagePos));
+                }
+            }
 
-                });
+        });
     }
 
     @Override
@@ -280,9 +279,9 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
     private void dismissProgressbar(ProgressBar progressBar, boolean empty) {
         if (empty) progressBar.setVisibility(View.GONE);
         else progressBar.animate()
-                .scaleX(0.0f)
-                .scaleY(0.0f)
-                .setDuration(1000);
+                        .scaleX(0.0f)
+                        .scaleY(0.0f)
+                        .setDuration(1000);
     }
 
     @Override
@@ -330,8 +329,8 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
         @Override
         public void onBindViewHolder(@NonNull TimeTableRowHolder timeTableRowHolder, int position) {
             timeTableRowHolder.with(DaysFragment.this, rowAdapter, tList, coordinator, position)
-                    .setTimetableDay(getCurrentTableDay())
-                    .bindView();
+                              .setTimetableDay(getCurrentTableDay())
+                              .bindView();
         }
 
         @Override
@@ -397,8 +396,8 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
         }
 
         /**
-         * @param position           the position where the change occurred
-         * @param state              the new state of the change
+         * @param position          the position where the change occurred
+         * @param state             the new state of the change
          * @param timetablePosition the position of the timetable in database.
          */
         public void onChecked(int position, boolean state, int timetablePosition) {
@@ -434,17 +433,17 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
-                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                    .setAdapter(rowAdapter)
-                    .setModelList(tList)
-                    .setTimetable(getCurrentTableDay())
-                    .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
-                    .setItemIndices(getCheckedTimetableIndices())
-                    .setPositionIndices(getCheckedTimetablesPositions())
-                    .setDataProvider(TimetableModel.class);
+                   .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                   .setAdapter(rowAdapter)
+                   .setModelList(tList)
+                   .setTimetable(getCurrentTableDay())
+                   .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
+                   .setItemIndices(getCheckedTimetableIndices())
+                   .setPositionIndices(getCheckedTimetablesPositions())
+                   .setDataProvider(TimetableModel.class);
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(MULTIPLE_DELETE_REQUEST);
+                  .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedTimetablesCount();
             Snackbar snackbar

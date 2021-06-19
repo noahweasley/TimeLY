@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 /**
  * A time data model, that can store all data about time
  */
-@SuppressWarnings("unused")
 public class Time {
     //    fields
     private String date;

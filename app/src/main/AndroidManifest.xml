@@ -14,6 +14,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
         tools:ignore="ScopedStorage" />
+
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -29,17 +30,17 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name="com.noah.timely.alarms.AlarmNotificationService"
+            android:name=".alarms.AlarmNotificationService"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name="com.noah.timely.alarms.AlarmReSchedulerService"
+            android:name=".alarms.AlarmReSchedulerService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name="com.noah.timely.main.SplashScreen"
+            android:name=".main.SplashScreen"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
@@ -52,7 +53,7 @@
         </activity>
 
         <activity
-            android:name="com.noah.timely.main.MainActivity"
+            android:name=".main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -60,32 +61,32 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.noah.timely.settings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.noah.timely.gallery.ImageGallery"
+            android:name=".gallery.ImageGallery"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.noah.timely.alarms.AlarmActivity"
+            android:name=".alarms.AlarmActivity"
             android:configChanges="orientation|keyboardHidden"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.noah.timely.gallery.ImageDirectory"
+            android:name=".gallery.ImageDirectory"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.noah.timely.assignment.AddAssignmentActivity"
+            android:name=".assignment.AddAssignmentActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -93,27 +94,27 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name="com.noah.timely.assignment.ViewImagesActivity"
+            android:name=".assignment.ViewImagesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.noah.timely.gallery.ImageSlideActivity"
+            android:name=".gallery.ImageSlideActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/ImageViewerTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.noah.timely.gallery.StorageViewer"
+            android:name=".gallery.StorageViewer"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.noah.timely.main.IntroPageActivity"
+            android:name=".main.IntroPageActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -150,11 +151,8 @@
             android:theme="@style/AppTheme.SlideVertical_recipient"
             android:windowSoftInputMode="adjustResize" />
 
-        <receiver
-            android:name="com.noah.timely.alarms.AlarmReScheduler"
-            tools:ignore="ExportedReceiver">
+        <receiver android:name=".alarms.AlarmReScheduler">
             <intent-filter>
-                <action android:name="com.projects.timely.alarm.testing" />
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
@@ -164,12 +162,12 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.noah.timely.timetable.TimetableNotifier" />
-        <receiver android:name="com.noah.timely.alarms.AlarmReceiver" />
-        <receiver android:name="com.noah.timely.alarms.NotificationActionReceiver" />
-        <receiver android:name="com.noah.timely.assignment.Reminder" />
-        <receiver android:name="com.noah.timely.assignment.SubmissionNotifier" />
-        <receiver android:name="com.noah.timely.scheduled.ScheduledTaskNotifier" />
+        <receiver android:name=".timetable.TimetableNotifier" />
+        <receiver android:name=".alarms.AlarmReceiver" />
+        <receiver android:name=".alarms.NotificationActionReceiver" />
+        <receiver android:name=".assignment.Reminder" />
+        <receiver android:name=".assignment.SubmissionNotifier" />
+        <receiver android:name=".scheduled.ScheduledTaskNotifier" />
 
         <receiver android:name="com.noah.timely.alarms.TimeChangeReceiver">
             <intent-filter>

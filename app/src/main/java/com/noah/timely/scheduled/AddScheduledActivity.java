@@ -67,6 +67,7 @@ public class AddScheduledActivity extends AppCompatActivity {
         cbx_clear = findViewById(R.id.clear);
 
         CheckBox cbx_multiple = findViewById(R.id.multiple);
+
         findViewById(R.id.register).setOnClickListener(v -> {
             boolean success = cbx_multiple.isChecked() ? registerAndClear()
                                                        : registerAndClose();

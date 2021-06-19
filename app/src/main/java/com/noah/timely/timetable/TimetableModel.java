@@ -26,8 +26,7 @@ public class TimetableModel extends DataModel implements Serializable {
         this.courseCode = courseCode;
     }
 
-    public TimetableModel(String fullCourseName, String startTime, String endTime,
-                          String courseCode) {
+    public TimetableModel(String fullCourseName, String startTime, String endTime, String courseCode) {
         this(null, fullCourseName, startTime, endTime, courseCode);
     }
 
@@ -35,8 +34,8 @@ public class TimetableModel extends DataModel implements Serializable {
 
     }
 
-    public TimetableModel(String lecturer, String f_cn, String start, String end,
-                          String courseCode, String importance, String day) {
+    public TimetableModel(String lecturer, String f_cn, String start, String end, String courseCode, String importance,
+                          String day) {
         this(lecturer, f_cn, start, end, courseCode);
         this.importance = importance;
         this.day = day;
@@ -45,6 +44,11 @@ public class TimetableModel extends DataModel implements Serializable {
     public TimetableModel(String course, String start, String end, String code, boolean classOver) {
         this(course, start, end, code);
         this.isClassOver = classOver;
+    }
+
+    public TimetableModel(String course, String start, String end, String code, boolean classOver, String day) {
+        this(course, start, end, code, classOver);
+        this.day = day;
     }
 
     public int getChronologicalOrder() {

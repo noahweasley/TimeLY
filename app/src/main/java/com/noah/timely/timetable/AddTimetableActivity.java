@@ -74,19 +74,17 @@ public class AddTimetableActivity extends AppCompatActivity {
         edt_startTime = findViewById(R.id.start_time);
         edt_endTime = findViewById(R.id.end_time);
 
-        ArrayAdapter<String> courseAdapter
-                = new ArrayAdapter<>(this,
-                                     android.R.layout.simple_dropdown_item_1line,
-                                     database.getAllRegisteredCourses());
+        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
+                                                                android.R.layout.simple_dropdown_item_1line,
+                                                                database.getAllRegisteredCourses());
 
         atv_courseName.setAdapter(courseAdapter);
 
         Spinner spin_days = findViewById(R.id.day_spin);
 
-        ArrayAdapter<String> daysAdapter
-                = new ArrayAdapter<>(this,
-                                     android.R.layout.simple_spinner_item,
-                                     DAYS);
+        ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(this,
+                                                              android.R.layout.simple_spinner_item,
+                                                              DAYS);
 
         daysAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         spin_days.setAdapter(daysAdapter);
@@ -156,8 +154,7 @@ public class AddTimetableActivity extends AppCompatActivity {
 
     private boolean registerAndClose() {
         boolean isRegistered = registerTimetable();
-        if (isRegistered)
-            onBackPressed();
+        if (isRegistered) onBackPressed();
         return isRegistered;
     }
 
@@ -226,11 +223,9 @@ public class AddTimetableActivity extends AppCompatActivity {
         }
 
         int pagePosition = getPagePosition();
-        TimetableModel formerTimetable
-                = (TimetableModel) getIntent().getSerializableExtra(ARG_DATA);
+        TimetableModel formerTimetable = (TimetableModel) getIntent().getSerializableExtra(ARG_DATA);
 
-        TimetableModel timetable = new TimetableModel(course, start, end, code, false);
-        timetable.setDay(selectedDay);
+        TimetableModel timetable = new TimetableModel(course, start, end, code, false, selectedDay);
 
         if (getIntent().getBooleanExtra(ARG_TO_EDIT, false)) {
             boolean updated = database.updateTimetableData(timetable, timetable.getDay());
@@ -240,8 +235,8 @@ public class AddTimetableActivity extends AppCompatActivity {
 
                 timetable.setId(formerTimetable.getId());
                 timetable.setChronologicalOrder(formerTimetable.getChronologicalOrder());
-                EventBus.getDefault().post(new UpdateMessage(timetable, pagePosition,
-                                                             UpdateMessage.EventType.UPDATE_CURRENT));
+                EventBus.getDefault()
+                        .post(new UpdateMessage(timetable, pagePosition, UpdateMessage.EventType.UPDATE_CURRENT));
 
                 scheduleTimetableAlarm(this, timetable, pagePosition);
 
@@ -310,8 +305,7 @@ public class AddTimetableActivity extends AppCompatActivity {
     }
 
     // schedule timetable
-    private void scheduleTimetableAlarm(Context context, TimetableModel timetable,
-                                        int pagePosition) {
+    private void scheduleTimetableAlarm(Context context, TimetableModel timetable, int pagePosition) {
         int position = timetable.getChronologicalOrder();
         String time = timetable.getStartTime();
         String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";

@@ -24,8 +24,7 @@ public class AlarmReScheduler extends BroadcastReceiver {
                 || /* on TimeLY upgrade */ action.equals("android.intent.action.PACKAGE_REPLACED")
                 || /* Device locked */ action.equals("android.intent.action.LOCKED_BOOT_COMPLETED")
                 || /* quick boot */ action.equals("android.intent.action.QUICKBOOT_POWERON")
-                || /* htc devices */ action.equals("com.htc.intent.action.QUICKBOOT_POWERON")
-                || /* debugging mode */ action.equals("com.noah.timely.alarm.testing");
+                || /* htc devices */ action.equals("com.htc.intent.action.QUICKBOOT_POWERON");
 
         if (isValidBootAction) {
             context.startService(new Intent(context, AlarmReSchedulerService.class));

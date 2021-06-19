@@ -27,6 +27,7 @@ import com.noah.timely.core.DataModel;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.custom.VerticalTextView;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.scheduled.AddScheduledActivity;
 import com.noah.timely.scheduled.AddScheduledDialog;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.util.DeviceInfoUtil;
@@ -90,9 +91,9 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
         btn_edit = rootView.findViewById(R.id.editButton);
 
         btn_delete.setOnClickListener(v -> {
-            String deleteRequest
-                    = user instanceof ScheduledTimetableFragment
-                      ? ScheduledTimetableFragment.DELETE_REQUEST : DaysFragment.DELETE_REQUEST;
+            String deleteRequest =
+                    user instanceof ScheduledTimetableFragment ? ScheduledTimetableFragment.DELETE_REQUEST
+                                                               : DaysFragment.DELETE_REQUEST;
 
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
@@ -113,41 +114,50 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
         btn_edit.setOnClickListener(v -> {
             tModel.setChronologicalOrder(getAbsoluteAdapterPosition());
+
+            Context context = user.getContext();
+            float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
+            float requiredWidthDP = 368, requiredHeightDP = 750;
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean useDialog = preferences.getBoolean("prefer_dialog", true);
+            boolean smallScreenSize = resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP;
+
             if (user instanceof DaysFragment) {
-                tModel.setDay(timetable);
                 // for  normal timetable
-                Context context = user.getContext();
-                float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
-                float requiredWidthDP = 368, requiredHeightDP = 750;
+                tModel.setDay(timetable);
 
-                SharedPreferences preferences =
-                        PreferenceManager.getDefaultSharedPreferences(context);
-
-                boolean useDialog = preferences.getBoolean("prefer_dialog", true);
-
+                Intent intent = new Intent(context, AddTimetableActivity.class);
+                intent.putExtra(ARG_POSITION, tModel.getDayIndex())
+                      .putExtra(ARG_TO_EDIT, true)
+                      .putExtra(DaysFragment.ARG_DATA, tModel);
                 // choose what kind of task-add method to use base on device width and user pref
-                if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
-
-                    context.startActivity(new Intent(context, AddTimetableActivity.class)
-                                                  .putExtra(ARG_POSITION, tModel.getDayIndex())
-                                                  .putExtra(ARG_TO_EDIT, true));
-
+                if (smallScreenSize) {
+                    context.startActivity(intent);
                 } else {
-
                     if (useDialog) {
-
                         new AddTimetableDialog().show(user.getContext(), true, tModel);
 
                     } else {
-
-                        context.startActivity(new Intent(context, AddTimetableActivity.class)
-                                                      .putExtra(ARG_POSITION, tModel.getDayIndex())
-                                                      .putExtra(ARG_TO_EDIT, true));
-
+                        context.startActivity(intent);
                     }
                 }
             } else {
-                new AddScheduledDialog().show(user.getContext(), true, tModel);
+                Intent intent = new Intent(context, AddScheduledActivity.class);
+                intent.putExtra(ARG_POSITION, tModel.getDayIndex())
+                      .putExtra(ARG_TO_EDIT, true)
+                      .putExtra(ScheduledTimetableFragment.ARG_DATA, tModel);
+                // choose what kind of task-add method to use base on device width and user pref
+                if (smallScreenSize) {
+                    context.startActivity(intent);
+                } else {
+                    if (useDialog) {
+                        new AddScheduledDialog().show(user.getContext(), true, tModel);
+
+                    } else {
+                        context.startActivity(intent);
+                    }
+                }
             }
         });
 
@@ -175,9 +185,8 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             } else {
                 ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
                         = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
-                rowAdapter.setMultiSelectionEnabled(
-                        !rowAdapter.isMultiSelectionEnabled()
-                                || rowAdapter.getCheckedTimetablesCount() != 0);
+                rowAdapter.setMultiSelectionEnabled(!rowAdapter.isMultiSelectionEnabled()
+                                                            || rowAdapter.getCheckedTimetablesCount() != 0);
             }
             trySelectTimetable();
 
@@ -186,8 +195,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
         rootView.setOnClickListener(c -> {
             if (user instanceof DaysFragment) {
-                DaysFragment.TimeTableRowAdapter rowAdapter
-                        = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+                DaysFragment.TimeTableRowAdapter rowAdapter = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
 
                 if (rowAdapter.isMultiSelectionEnabled()) {
                     trySelectTimetable();
@@ -211,25 +219,23 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
     private void trySelectTimetable() {
         if (user instanceof DaysFragment) {
-            DaysFragment.TimeTableRowAdapter rowAdapter
-                    = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+            DaysFragment.TimeTableRowAdapter rowAdapter = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
 
-            TimetableModel timetableModel = (TimetableModel) tList.get(
-                    getAbsoluteAdapterPosition());
+            TimetableModel timetableModel = (TimetableModel) tList.get(getAbsoluteAdapterPosition());
+
             isChecked = !isChecked;
             v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            rowAdapter.onChecked(getAbsoluteAdapterPosition(),
-                                 isChecked, timetableModel.getId());
+            rowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, timetableModel.getId());
+
         } else {
             ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
                     = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
 
-            TimetableModel timetableModel = (TimetableModel) tList.get(
-                    getAbsoluteAdapterPosition());
+            TimetableModel timetableModel = (TimetableModel) tList.get(getAbsoluteAdapterPosition());
+
             isChecked = !isChecked;
             v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            rowAdapter.onChecked(getAbsoluteAdapterPosition(),
-                                 isChecked, timetableModel.getId());
+            rowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, timetableModel.getId());
         }
     }
 
@@ -301,6 +307,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
         if (user instanceof DaysFragment) {
             DaysFragment.TimeTableRowAdapter rowAdapter
                     = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+
             isChecked = rowAdapter.isChecked(getAbsoluteAdapterPosition());
             v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             tryDisableViews(rowAdapter.isMultiSelectionEnabled());
