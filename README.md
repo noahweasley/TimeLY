@@ -16,6 +16,8 @@
          
 * **courses**: Package housing everything related TimeLY's courses management system.
 
+* **custom**: Package containing all custom views used in TimeLY.
+
 * **error**: Package housing everything related to TimeLY's error display.
 
 * **exam**: Package housing everything related to TimeLY's exam management system.
@@ -31,5 +33,7 @@
 * **settings**: Contains TimeLY's global settings.
 
 * **timetable**: Package that contains TimeLY's timetable management system.
+
+* **util**: Package that contains all utility classes, methods, enums...
 
 *_Feel free to contribute to this project. Review the projects issues and try to fix any of the issues. I'll really love if could do that for me. Thank you for your collaboration_*.
