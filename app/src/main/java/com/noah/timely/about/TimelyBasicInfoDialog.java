@@ -14,8 +14,6 @@ import androidx.fragment.app.FragmentManager;
 import com.noah.timely.R;
 
 public class TimelyBasicInfoDialog extends DialogFragment {
-
-    @SuppressWarnings("FieldCanBeLocal")
     public static final String TAG = "com.noah.timely.about.TimelyInfoDialog";
 
     public void show(Context context) {
@@ -32,7 +30,7 @@ public class TimelyBasicInfoDialog extends DialogFragment {
     private static class InfoDialog extends Dialog {
 
         public InfoDialog(@NonNull Context context) {
-            super(context);
+            super(context, R.style.Dialog_Closeable);
         }
 
         @Override

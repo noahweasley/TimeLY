@@ -148,7 +148,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
                 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
 
         public ACDialog(@NonNull Context context) {
-            super(context);
+            super(context, R.style.Dialog);
         }
 
         @Override

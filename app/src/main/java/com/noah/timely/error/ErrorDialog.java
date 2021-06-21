@@ -80,7 +80,7 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
     private class Error1Dialog extends Dialog {
 
         public Error1Dialog(@NonNull Context context) {
-            super(context);
+            super(context, R.style.Dialog);
         }
 
         @Override

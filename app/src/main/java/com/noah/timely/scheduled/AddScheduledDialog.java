@@ -273,7 +273,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
     private class ASDialog extends Dialog {
 
         public ASDialog(Context context) {
-            super(context);
+            super(context, R.style.Dialog);
         }
 
         @Override

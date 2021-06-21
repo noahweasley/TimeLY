@@ -305,7 +305,7 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
     private class ATDialog extends Dialog {
 
         public ATDialog(@NonNull Context context) {
-            super(context);
+            super(context, R.style.Dialog);
         }
 
         @Override

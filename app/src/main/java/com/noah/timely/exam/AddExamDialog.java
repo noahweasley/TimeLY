@@ -153,7 +153,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
     private class AETDialog extends Dialog {
 
         public AETDialog(@NonNull Context context) {
-            super(context);
+            super(context, R.style.Dialog);
         }
 
         @Override
