@@ -69,6 +69,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             R.drawable.round_rl
     };
 
+    private final TextView btn_sunday, btn_monday, btn_tuesday, btn_wednesday, btn_thursday, btn_friday, btn_saturday;
     private final ExpandableLayout detailLayout;
     private final ImageView expandStatus;
     private final Calendar calendar = Calendar.getInstance();
@@ -86,13 +87,10 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     private final View decoration;
     private AlarmModel thisAlarm;
     private final ViewGroup vg_buttonRow;
-    private final TextView btn_sunday, btn_monday, btn_tuesday, btn_wednesday, btn_thursday,
-            btn_friday, btn_saturday;
     private Boolean[] selectedDays = new Boolean[7];
 
-    AlarmListHolder with(FragmentActivity activity, CoordinatorLayout coordinator,
-                         List<DataModel> alarmModelList, SchoolDatabase database,
-                         AlarmListFragment.AlarmAdapter alarmAdapter) {
+    AlarmListHolder with(FragmentActivity activity, CoordinatorLayout coordinator, List<DataModel> alarmModelList,
+                         SchoolDatabase database, AlarmListFragment.AlarmAdapter alarmAdapter) {
         this.mActivity = activity;
         this.mgr = activity.getSupportFragmentManager();
         this.coordinator = coordinator;
@@ -181,22 +179,27 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                 // re-schedule alarm base on alarm ON state
                 boolean checkedState = alarmStatus.isChecked();
                 if (checkedState) rescheduleAlarm(label, time);
-                else cancelAlarm(label, time);
+                else {
+                    // if alarm is ringing, stop notification service if the alarm that is
+                    mActivity.stopService(new Intent(mActivity, AlarmNotificationService.class));
+                    cancelAlarm(label, time);
+                }
                 // now update the alarm status when user toggles the state of the switch
                 database.updateAlarmState(position, checkedState);
             }
         });
 
-        cbx_Repeat.setOnCheckedChangeListener((v, checkedStatus) -> {
+        cbx_Repeat.setOnCheckedChangeListener((v, repeatStatus) -> {
             final int dataPos   // dataPos now refers to the alarms id in the database
                     = getAbsoluteAdapterPosition();
             // hide or show rows of button
-            vg_buttonRow.setVisibility(checkedStatus ? View.VISIBLE : View.GONE);
+            vg_buttonRow.setVisibility(repeatStatus ? View.VISIBLE : View.GONE);
 
             if (database != null) {
+                updatePendingAlarms(repeatStatus);
                 // now update the current alarm's repeat status when user toggles the current
                 // state of the checkbox
-                database.updateAlarmRepeatStatus(dataPos, checkedStatus);
+                database.updateAlarmRepeatStatus(dataPos, repeatStatus);
             }
         });
 
@@ -216,8 +219,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             String ss = tv_label.getText().toString();
             String label = ss.equals("Label") ? null : ss;
             String[] time = thisAlarm.getTime().split(":");
-
-            Log.d(getClass().getSimpleName(), "Cancelling alarm for:" + TextUtils.join(":", time));
 
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
@@ -275,12 +276,19 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         }
 
         boolean updated = database.updateSelectedDays(alarmPosition, selectedDays);
-        if (updated) updatePendingAlarms();
+        if (updated) updatePendingAlarms(true);
     }
 
-    //
-    private void updatePendingAlarms() {
+    // updated the next alarm trigger time based on the repeatStatus. When repeatStatus is true, then alarm would be
+    // triggered according to the checked repeat days. If it is not, alarm would be triggered the exact closest time
+    // as specified by alarm time.
+    @SuppressWarnings("all")
+    private void updatePendingAlarms(boolean repeated) {
+        if (repeated) {
 
+        } else {
+
+        }
     }
 
     void bindView() {

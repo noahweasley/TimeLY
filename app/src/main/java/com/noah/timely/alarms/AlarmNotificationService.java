@@ -109,7 +109,7 @@ public class AlarmNotificationService extends Service implements Runnable {
                     .getSystemService(Context.NOTIFICATION_SERVICE);
 
         manager.cancel(notificationID);
-        EventBus.getDefault().post(new EmptyMessageEvent());
+        EventBus.getDefault().post(new MessageEvent());
     }
 
     // Worker thread for idle alarm action

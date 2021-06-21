@@ -116,7 +116,7 @@
 		Continue?</string>
 	<string name="report_title">Report Bug</string>
     <string name="yes">Yes</string>
-    <string name="version">v1.0.0</string>
+    <string name="version">V1.0.0</string>
     <string name="dialog_pref">Use dialogs to add new task and reminders. This won\'t work
 		for smaller screen sizes</string>
     <string name="add_timetable">Add timetable</string>
@@ -124,4 +124,8 @@
     <string name="night">Good Night</string>
 	<string name="sleep">Sleep Well</string>
 	<string name="rise">Rise and Shine</string>
+    <string name="rocket">Rocket</string>
+	<string name="about_update">ABOUT UPDATE</string>
+	<string name="new_badge">New Badge</string>
+	<string name="initial_version_not">This is just the first version</string>
 </resources>

@@ -105,7 +105,7 @@ public class AlarmActivity extends AppCompatActivity {
     // because the action is from a service and the data that is needed is not supplied to this
     // activity when it start up.
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onExitEvent(EmptyMessageEvent event) {
+    public void onExitEvent(MessageEvent event) {
         finish();
     }
 

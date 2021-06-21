@@ -52,7 +52,6 @@ import static com.noah.timely.alarms.AlarmReceiver.REPEAT_DAYS;
 import static com.noah.timely.core.AppUtils.isUserPreferred24Hours;
 import static com.noah.timely.core.AppUtils.playAlertTone;
 
-@SuppressWarnings({"ConstantConditions"})
 public class AlarmListFragment extends Fragment {
     public static final String DELETE_REQUEST = "delete alarm";
     FragmentActivity mActivity;
@@ -319,8 +318,7 @@ public class AlarmListFragment extends Fragment {
                         Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
                         "com.noah.timely.alarm.dataType");
 
-                AlarmManager alarmManager
-                        = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
+                AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
                 PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity,
                                                                    1189765,
                                                                    alarmReceiverIntent,

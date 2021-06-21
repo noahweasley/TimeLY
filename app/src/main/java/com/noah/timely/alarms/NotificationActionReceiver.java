@@ -72,7 +72,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         manager.cancel(intent.getIntExtra(ID, -1));
         // After everything, stop service
         context.stopService(new Intent(context, AlarmNotificationService.class));
-        EventBus.getDefault().post(new EmptyMessageEvent());
+        EventBus.getDefault().post(new MessageEvent());
 
     }
 
