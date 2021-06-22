@@ -128,4 +128,15 @@
 	<string name="about_update">ABOUT UPDATE</string>
 	<string name="new_badge">New Badge</string>
 	<string name="initial_version_not">This is just the first version</string>
+    <string name="timely_icon">timely icon</string>
+	<string name="app_description">An android app that manages and keeps track of University students
+		activities</string>
+	<string name="header">Developer\'s Contact</string>
+	<string name="contact_fb">Facebook:</string>
+	<string name="fb">facebook icon</string>
+	<string name="gmail">Gmail icon</string>
+	<string name="github">Github icon</string>
+	<string name="dev_name">Ebenmelu Ifenna Emmanuel (Noah)</string>
+	<string name="dev_gmail">www.iebenmelu@gmail.com</string>
+	<string name="dev_github_username">noahweasley</string>
 </resources>

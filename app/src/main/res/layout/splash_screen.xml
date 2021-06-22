@@ -17,7 +17,7 @@
 		external:layout_constraintStart_toStartOf = "parent"
 		external:layout_constraintTop_toTopOf = "parent"
 		external:layout_constraintVertical_bias = "0.35000002"
-		external:srcCompat = "@drawable/icon"
+		external:srcCompat = "@mipmap/ic_timely_max_foreground"
 		tools:ignore = "HardcodedText" />
 
 	<TextView

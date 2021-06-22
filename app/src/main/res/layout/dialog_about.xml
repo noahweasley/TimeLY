@@ -1,6 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/normal_dialog_width"
-    android:layout_height="@dimen/normal_dialog_height">
+    android:layout_height="@dimen/normal_dialog_height"
+    android:background="@drawable/bg_day_and_night"
+    android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:contentDescription="@string/close"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintTop_toTopOf="parent"
+        external:srcCompat="@drawable/ic_clear" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/timely_icon"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/imageView5"
+        external:srcCompat="@drawable/timely_icon_mini" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_black"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="32sp"
+        external:layout_constraintBottom_toBottomOf="@+id/imageView"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toTopOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/version"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp"
+        external:layout_constraintBottom_toBottomOf="@+id/textView"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintHorizontal_bias="1.0"
+        external:layout_constraintStart_toEndOf="@+id/textView"
+        external:layout_constraintTop_toTopOf="@+id/textView"
+        external:layout_constraintVertical_bias="0.645" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center|top"
+        android:text="@string/app_description"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center|top"
+        android:text="@string/header"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        external:layout_constraintBottom_toTopOf="@+id/facebook"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <ImageView
+        android:id="@+id/facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/fb"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/textView4"
+        external:srcCompat="@drawable/ic_facebook" />
+
+    <ImageView
+        android:id="@+id/mail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/gmail"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/facebook"
+        external:srcCompat="@drawable/ic_gmail" />
+
+    <ImageView
+        android:id="@+id/github"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="23dp"
+        android:contentDescription="@string/github"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/mail"
+        external:srcCompat="@drawable/ic_github_logo" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/dev_name"
+        android:textStyle="bold"
+        external:layout_constraintBottom_toBottomOf="@+id/facebook"
+        external:layout_constraintStart_toEndOf="@+id/facebook"
+        external:layout_constraintTop_toTopOf="@+id/facebook" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/dev_gmail"
+        android:textStyle="bold"
+        external:layout_constraintBottom_toBottomOf="@+id/mail"
+        external:layout_constraintStart_toEndOf="@+id/mail"
+        external:layout_constraintTop_toTopOf="@+id/mail" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/dev_github_username"
+        android:textStyle="bold"
+        external:layout_constraintBottom_toBottomOf="@+id/github"
+        external:layout_constraintStart_toEndOf="@+id/github"
+        external:layout_constraintTop_toTopOf="@+id/github" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
