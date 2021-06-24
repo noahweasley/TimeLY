@@ -7,7 +7,7 @@
     android:padding="16dp">
 
     <ImageButton
-        android:id="@+id/imageView5"
+        android:id="@+id/close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
@@ -22,8 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:contentDescription="@string/timely_icon"
+        external:layout_constraintEnd_toStartOf="@+id/textView"
         external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@+id/imageView5"
+        external:layout_constraintTop_toBottomOf="@+id/close"
         external:srcCompat="@drawable/timely_icon_mini" />
 
     <TextView
@@ -33,7 +34,7 @@
         android:fontFamily="@font/roboto_black"
         android:text="@string/app_name"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="32sp"
+        android:textSize="24sp"
         external:layout_constraintBottom_toBottomOf="@+id/imageView"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
@@ -43,10 +44,6 @@
         android:id="@+id/version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:fontFamily="sans-serif-medium"
         android:text="@string/version"
         android:textColor="@color/colorPrimaryDark"

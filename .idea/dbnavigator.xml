@@ -28,7 +28,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d">
-      <console name="Connection" type="STANDARD" schema="" session="Main" />
+      <console name="Connection" type="STANDARD" schema="" session="Main"><![CDATA[select * from "alarms"]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">

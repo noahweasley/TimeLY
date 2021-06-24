@@ -81,8 +81,7 @@ public class AlarmReSchedulerService extends Service {
             }
 
             // Reset the scheduled timetable notification alarms here.
-            List<DataModel> timetables1
-                    = database.getTimeTableData(SchoolDatabase.SCHEDULED_TIMETABLE);
+            List<DataModel> timetables1 = database.getTimeTableData(SchoolDatabase.SCHEDULED_TIMETABLE);
             if (!timetables1.isEmpty()) {
                 // re-schedule alarms; get alarm data from app's database
                 for (DataModel rawData : timetables1) {
@@ -120,8 +119,7 @@ public class AlarmReSchedulerService extends Service {
         calendar.set(Calendar.DAY_OF_WEEK, day);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        calendar.setTimeInMillis(
-                calendar.getTimeInMillis() - TimeUnit.MINUTES.toMillis(10));
+        calendar.setTimeInMillis(calendar.getTimeInMillis() - TimeUnit.MINUTES.toMillis(10));
 
         long NOW = System.currentTimeMillis();
         long CURRENT = calendar.getTimeInMillis();
@@ -135,10 +133,8 @@ public class AlarmReSchedulerService extends Service {
                 .putExtra(ARG_DAY, day)
                 .addCategory("com.noah.timely.scheduled")
                 .setAction("com.noah.timely.scheduled.addAction")
-                .setDataAndType(
-                        Uri.parse(
-                                "content://com.noah.timely.scheduled.add." + triggerTime),
-                        "com.noah.timely.scheduled.dataType");
+                .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
+                                "com.noah.timely.scheduled.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
 
@@ -151,8 +147,7 @@ public class AlarmReSchedulerService extends Service {
     private void registerPendingTimetables(Context context, TimetableModel timetable) {
         int position = timetable.getChronologicalOrder();
         String time = timetable.getStartTime();
-        String course = timetable.getFullCourseName() + " (" + timetable
-                .getCourseCode() + ")";
+        String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
         String[] t = timetable.getStartTime().split(":");
 
         Calendar calendar = Calendar.getInstance();
@@ -161,15 +156,13 @@ public class AlarmReSchedulerService extends Service {
         calendar.set(Calendar.MINUTE, Integer.parseInt(t[1]));
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        calendar.setTimeInMillis(
-                calendar.getTimeInMillis() - TimeUnit.MINUTES.toMillis(10));
+        calendar.setTimeInMillis(calendar.getTimeInMillis() - TimeUnit.MINUTES.toMillis(10));
 
         long NOW = System.currentTimeMillis();
         long CURRENT = calendar.getTimeInMillis();
         long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-        AlarmManager manager = (AlarmManager) context.getSystemService(
-                Context.ALARM_SERVICE);
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent timetableIntent = new Intent(context, TimetableNotifier.class);
         timetableIntent.putExtra(DaysFragment.ARG_TIME, time)
@@ -179,10 +172,8 @@ public class AlarmReSchedulerService extends Service {
                        .putExtra(ARG_PAGE_POSITION, position)
                        .addCategory("com.noah.timely.timetable")
                        .setAction("com.noah.timely.timetable.addAction")
-                       .setDataAndType(
-                               Uri.parse(
-                                       "content://com.noah.timely.add." + timeInMillis),
-                               "com.noah.timely.dataType");
+                       .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
+                                       "com.noah.timely.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
                                                       PendingIntent.FLAG_UPDATE_CURRENT);
@@ -222,9 +213,8 @@ public class AlarmReSchedulerService extends Service {
                            .putExtra(POSITION, assignment.getPosition())
                            .addCategory(context.getPackageName() + ".category")
                            .setAction(context.getPackageName() + ".update")
-                           .setDataAndType(
-                                   Uri.parse("content://" + context.getPackageName()),
-                                   assignment.toString());
+                           .setDataAndType(Uri.parse("content://" + context.getPackageName()),
+                                           assignment.toString());
 
         Intent notifyIntentPrevious = new Intent(context, Reminder.class);
         notifyIntentPrevious.putExtra(LECTURER_NAME, ln)
@@ -232,16 +222,13 @@ public class AlarmReSchedulerService extends Service {
                             .putExtra(NEXT_ALARM, CURRENT)
                             .addCategory(context.getPackageName() + ".category")
                             .setAction(context.getPackageName() + ".update")
-                            .setDataAndType(
-                                    Uri.parse("content://" + context.getPackageName()),
-                                    assignment.toString());
+                            .setDataAndType(Uri.parse("content://" + context.getPackageName()),
+                                            assignment.toString());
 
-        PendingIntent assignmentPiPrevious
-                = PendingIntent.getBroadcast(context, 147, notifyIntentPrevious,
-                                             PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent assignmentPiCurrent
-                = PendingIntent.getBroadcast(context, 141, notifyIntentCurrent,
-                                             PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent assignmentPiPrevious = PendingIntent.getBroadcast(context, 147, notifyIntentPrevious,
+                                                                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent assignmentPiCurrent = PendingIntent.getBroadcast(context, 141, notifyIntentCurrent,
+                                                                       PendingIntent.FLAG_UPDATE_CURRENT);
         // Exact alarms not used here, so that android can perform its normal operation
         // on devices
         // >= 4.4 (KITKAT) to prevent unnecessary battery drain by alarms.
@@ -249,8 +236,7 @@ public class AlarmReSchedulerService extends Service {
         // Also set alarms for both that day, and a day before the assignment's deadline, to
         // act as a reminder to the deadline
         alarmManager.set(AlarmManager.RTC, CURRENT, assignmentPiCurrent);
-        if (PREVIOUS > NOW) alarmManager.set(AlarmManager.RTC, PREVIOUS,
-                                             assignmentPiPrevious);
+        if (PREVIOUS > NOW) alarmManager.set(AlarmManager.RTC, PREVIOUS, assignmentPiPrevious);
     }
 
     // Truncate lecturer's name to enable user view more of the name because
@@ -260,8 +246,7 @@ public class AlarmReSchedulerService extends Service {
         String[] nameTokens = fullName.split(" ");
 
         String[] titles = {"Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr",
-                           "Mr",
-                           "Mister", "Mrs", "Ms", "Prof", "Professor"};
+                           "Mr", "Mister", "Mrs", "Ms", "Prof", "Professor"};
 
         StringBuilder nameBuilder = new StringBuilder();
         String shortenedName = "";
@@ -378,12 +363,10 @@ public class AlarmReSchedulerService extends Service {
 
         alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
         alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
-        alarmReceiverIntent.setDataAndType(
-                Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-                "com.noah.timely.alarm.dataType");
+        alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
+                                           "com.noah.timely.alarm.dataType");
 
-        AlarmManager alarmManager
-                = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent alarmPI = PendingIntent.getBroadcast(context,
                                                            1189765,
                                                            alarmReceiverIntent,
@@ -392,8 +375,7 @@ public class AlarmReSchedulerService extends Service {
             // alarm has to be triggered even when device is in idle or doze mode.
             // This alarm is very important
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                                                       alarmMillis, alarmPI);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
             } else {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
             }

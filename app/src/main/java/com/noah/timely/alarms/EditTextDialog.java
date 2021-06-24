@@ -8,12 +8,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 
-import com.noah.timely.R;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-@SuppressWarnings("ConstantConditions")
+import com.noah.timely.R;
+
 public class EditTextDialog extends Dialog implements View.OnClickListener {
 
     private OnActionListener listener;
@@ -41,13 +40,11 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
         dismiss();
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(ContextCompat.getDrawable(getContext(),
-                                                                    R.drawable.dialog));
+        getWindow().setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.dialog));
         setContentView(R.layout.layout_label_editor);
         alarm_label = findViewById(R.id.alarm_label);
         findViewById(R.id.ok_button).setOnClickListener(EditTextDialog.this);

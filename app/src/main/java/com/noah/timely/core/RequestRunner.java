@@ -220,8 +220,7 @@ public class RequestRunner extends Thread {
 
         if (!deleteRequestDiscarded) {
             // delete attached images from database
-            boolean isDeleted
-                    = database.deleteMultipleImages(params.getAssignmentPosition(), itemIndices);
+            boolean isDeleted = database.deleteMultipleImages(params.getAssignmentPosition(), itemIndices);
             if (isDeleted) {
                 playAlertTone(appContext, Alert.DELETE);
                 if (mediaUris.isEmpty())
@@ -373,8 +372,9 @@ public class RequestRunner extends Thread {
             if (request.equals(ScheduledTimetableFragment.DELETE_REQUEST))
                 isDeleted = database.deleteTimetableEntry((TimetableModel) model,
                                                           SchoolDatabase.SCHEDULED_TIMETABLE);
-            else isDeleted
-                    = database.deleteTimetableEntry((TimetableModel) model, params.getTimetable());
+
+            else isDeleted = database.deleteTimetableEntry((TimetableModel) model, params.getTimetable());
+
             if (isDeleted) {
                 if (params.getModelList().isEmpty())
                     EventBus.getDefault().post(new EmptyListEvent());
@@ -405,9 +405,9 @@ public class RequestRunner extends Thread {
         AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
         Intent timetableIntent = new Intent(appContext, TimetableNotifier.class);
         timetableIntent.addCategory("com.noah.timely.timetable")
-                .setAction("com.noah.timely.timetable.addAction")
-                .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
-                                "com.noah.timely.dataType");
+                       .setAction("com.noah.timely.timetable.addAction")
+                       .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
+                                       "com.noah.timely.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(appContext, 555, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
@@ -499,10 +499,9 @@ public class RequestRunner extends Thread {
         AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
         Intent timetableIntent = new Intent(appContext, ScheduledTaskNotifier.class);
         timetableIntent.addCategory("com.noah.timely.scheduled")
-                .setAction("com.noah.timely.scheduled.addAction")
-                .setDataAndType(
-                        Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
-                        "com.noah.timely.scheduled.dataType");
+                       .setAction("com.noah.timely.scheduled.addAction")
+                       .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
+                                       "com.noah.timely.scheduled.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(appContext, 1156, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
@@ -512,25 +511,20 @@ public class RequestRunner extends Thread {
 
     private void cancelAssignmentNotifier(AssignmentModel data) {
         Intent notifyIntentCurrent = new Intent(appContext, SubmissionNotifier.class);
-        notifyIntentCurrent
-                .addCategory(appContext.getPackageName() + ".category")
-                .setAction(appContext.getPackageName() + ".update")
-                .setDataAndType(Uri.parse("content://" + appContext.getPackageName()),
-                                data.toString());
+        notifyIntentCurrent.addCategory(appContext.getPackageName() + ".category")
+                           .setAction(appContext.getPackageName() + ".update")
+                           .setDataAndType(Uri.parse("content://" + appContext.getPackageName()),
+                                           data.toString());
 
         Intent notifyIntentPrevious = new Intent(appContext, Reminder.class);
-        notifyIntentPrevious
-                .addCategory(appContext.getPackageName() + ".category")
-                .setAction(appContext.getPackageName() + ".update")
-                .setDataAndType(Uri.parse("content://" + appContext.getPackageName()),
-                                data.toString());
+        notifyIntentPrevious.addCategory(appContext.getPackageName() + ".category")
+                            .setAction(appContext.getPackageName() + ".update")
+                            .setDataAndType(Uri.parse("content://" + appContext.getPackageName()), data.toString());
 
         PendingIntent assignmentPiPrevious
-                = PendingIntent.getBroadcast(appContext, 147, notifyIntentPrevious,
-                                             PendingIntent.FLAG_CANCEL_CURRENT);
+                = PendingIntent.getBroadcast(appContext, 147, notifyIntentPrevious, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent assignmentPiCurrent
-                = PendingIntent.getBroadcast(appContext, 141, notifyIntentCurrent,
-                                             PendingIntent.FLAG_CANCEL_CURRENT);
+                = PendingIntent.getBroadcast(appContext, 141, notifyIntentCurrent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
         assignmentPiCurrent.cancel();
@@ -560,12 +554,11 @@ public class RequestRunner extends Thread {
         // effect.
         alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
         alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
-        alarmReceiverIntent.setDataAndType(
-                Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-                "com.noah.timely.alarm.dataType");
+        alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
+                                           "com.noah.timely.alarm.dataType");
 
-        AlarmManager alarmManager
-                = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
+
         PendingIntent alarmPI = PendingIntent.getBroadcast(appContext,
                                                            1189765,
                                                            alarmReceiverIntent,

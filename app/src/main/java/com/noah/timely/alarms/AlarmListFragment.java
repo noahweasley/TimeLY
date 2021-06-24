@@ -97,14 +97,8 @@ public class AlarmListFragment extends Fragment {
             aList = (LinkedList<DataModel>) database.getAlarms();
             if (isAdded())
                 getActivity().runOnUiThread(() -> {
-                    boolean empty = aList.isEmpty();
-                    no_alarm_view.setVisibility(empty ? View.VISIBLE : View.GONE);
-
-                    indeterminateProgress.animate()
-                                         .scaleX(0.0f)
-                                         .scaleY(0.0f)
-                                         .setDuration(1000);
-
+                    no_alarm_view.setVisibility(aList.isEmpty() ? View.VISIBLE : View.GONE);
+                    indeterminateProgress.setVisibility(View.GONE);
                     alarmAdapter.notifyDataSetChanged();
                 });
         });
@@ -114,8 +108,7 @@ public class AlarmListFragment extends Fragment {
 
         rV_AlarmList.setHasFixedSize(true);
         rV_AlarmList.setAdapter(alarmAdapter);
-        rV_AlarmList.addItemDecoration(
-                new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        rV_AlarmList.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         rV_AlarmList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,18 +282,15 @@ public class AlarmListFragment extends Fragment {
                 boolean isForenoon = hh >= 0 && hh < 12;
 
                 String formattedHrAM = String.format(Locale.US, "%02d", (hh == 0 ? 12 : hh));
-                String formattedHrPM = String.format(Locale.US, "%02d",
-                                                     (hh % 12 == 0 ? 12 : hh % 12));
+                String formattedHrPM = String.format(Locale.US, "%02d", (hh % 12 == 0 ? 12 : hh % 12));
                 String formattedMinAM = String.format(Locale.US, "%02d", mm) + " AM";
                 String formattedMinPM = String.format(Locale.US, "%02d", mm) + " PM";
 
                 String _12H = isForenoon ? formattedHrAM + ":" + formattedMinAM
                                          : formattedHrPM + ":" + formattedMinPM;
 
-                String message = isNextDay ? "Alarm set for: " + (is24 ? alarmTime
-                                                                       : _12H) + " tomorrow"
-                                           : "Alarm set for: " + (is24 ? alarmTime
-                                                                       : _12H) + " today";
+                String message = isNextDay ? "Alarm set for: " + (is24 ? alarmTime : _12H) + " tomorrow"
+                                           : "Alarm set for: " + (is24 ? alarmTime : _12H) + " today";
 
                 long alarmMillis = isNextDay ? calendar.getTimeInMillis() + NEXT_DAY
                                              : calendar.getTimeInMillis();
@@ -314,9 +304,8 @@ public class AlarmListFragment extends Fragment {
 
                 alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
                 alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
-                alarmReceiverIntent.setDataAndType(
-                        Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-                        "com.noah.timely.alarm.dataType");
+                alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
+                                                   "com.noah.timely.alarm.dataType");
 
                 AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
                 PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity,
@@ -327,8 +316,7 @@ public class AlarmListFragment extends Fragment {
                     // alarm has to be triggered even when device is in idle or doze mode.
                     // This alarm is very important
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                                                               alarmMillis, alarmPI);
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
                     } else {
                         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
                     }

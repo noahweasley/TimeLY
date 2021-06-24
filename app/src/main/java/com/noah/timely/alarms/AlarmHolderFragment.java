@@ -1,17 +1,17 @@
 package com.noah.timely.alarms;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.noah.timely.main.MainActivity;
-import com.noah.timely.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-@SuppressWarnings("ConstantConditions")
+import com.noah.timely.R;
+import com.noah.timely.main.MainActivity;
+
 public class AlarmHolderFragment extends Fragment {
 
     public static AlarmHolderFragment newInstance() {
@@ -32,7 +32,6 @@ public class AlarmHolderFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // Duplicate code from TimetableHolderFragment
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.alarm_time_fragment, new AlarmTimeFragment())
