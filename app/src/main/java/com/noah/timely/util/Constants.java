@@ -1,4 +1,4 @@
-package com.noah.timely.core;
+package com.noah.timely.util;
 
 /**
  * Set of constant fields required by TimeLY

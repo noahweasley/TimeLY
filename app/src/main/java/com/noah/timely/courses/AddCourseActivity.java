@@ -17,14 +17,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.noah.timely.R;
-import com.noah.timely.core.AppUtils;
+import com.noah.timely.util.Utility;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.courses.SemesterFragment.ARG_POSITION;
 
 /**
@@ -143,7 +143,7 @@ public class AddCourseActivity extends AppCompatActivity {
                 if (addPos != -1) {
                     model.setId(addPos);
                     model.setChronologicalOrder(data[0]);
-                    playAlertTone(getApplicationContext(), AppUtils.Alert.COURSE);
+                    playAlertTone(getApplicationContext(), Utility.Alert.COURSE);
                     EventBus.getDefault().post(new UpdateMessage(model, UpdateMessage.EventType.NEW,
                                                                  pagePosition1));
                 } else {

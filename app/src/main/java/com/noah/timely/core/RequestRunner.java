@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Process;
-import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,13 +41,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.noah.timely.core.AppUtils.Alert;
-import static com.noah.timely.core.AppUtils.deleteTaskRunning;
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.Alert;
+import static com.noah.timely.util.Utility.deleteTaskRunning;
+import static com.noah.timely.util.Utility.playAlertTone;
 
 /**
  * Thread to handle all delete requests
@@ -128,7 +126,6 @@ public class RequestRunner extends Thread {
 
     private void doDataModelMultiDelete() {
         List<DataModel> dataCache = new ArrayList<>();
-
         Integer[] itemIndices = params.getItemIndices();
         // Reverse array of indices in reversed order, because if the indices are not reversed,
         // an error occurs.
@@ -191,10 +188,8 @@ public class RequestRunner extends Thread {
 
     private void doImageMultiDelete() {
         List<Uri> uriCache = new ArrayList<>();
-
         Integer[] itemIndices = params.getItemIndices();
         List<Uri> mediaUris = params.getMediaUris();
-
         // Reverse array of indices in reversed order, because if the indices are not reversed,
         // an error occurs.
         Arrays.sort(itemIndices, Collections.reverseOrder());
@@ -202,7 +197,6 @@ public class RequestRunner extends Thread {
         for (int i : itemIndices) {
             uriCache.add(mediaUris.remove(i));
         }
-
         // Update UI
         EventBus.getDefault().post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.REMOVE));
 
@@ -212,7 +206,6 @@ public class RequestRunner extends Thread {
             for (int x = 0; x < uriCache.size(); x++) {
                 mediaUris.add(itemIndices[x], uriCache.get(x));
             }
-
             // Update UI
             EventBus.getDefault()
                     .post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.INSERT));
@@ -231,9 +224,9 @@ public class RequestRunner extends Thread {
 
     private void doImageDelete() {
         List<Uri> mediaUris = params.getMediaUris();
-
         Uri uri = mediaUris.remove(params.getAdapterPosition());
         params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
+
         try {
             Thread.sleep(WAIT_TIME);
         } catch (InterruptedException exc) {
@@ -245,8 +238,7 @@ public class RequestRunner extends Thread {
             String uris = database.deleteImage(params.getAdapterPosition(), uri);
             if (uris != null) {
                 playAlertTone(appContext, Alert.DELETE);
-                if (mediaUris.isEmpty())
-                    EventBus.getDefault().post(new EmptyListEvent());
+                if (mediaUris.isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
             EventBus.getDefault().post(new UriUpdateEvent(params.getAdapterPosition(), uris));
         }
@@ -290,12 +282,12 @@ public class RequestRunner extends Thread {
         params.getModelList().remove(params.getAdapterPosition());
         EventBus.getDefault()
                 .post(new RequestUpdateEvent(UpdateType.REMOVE, params.getAdapterPosition()));
-            /*
+         /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
             The sleep timer is also synchronized with the undo Snackbar's display timeout,
             which also is 3 seconds.
-            */
+         */
         try {
             Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
@@ -370,8 +362,7 @@ public class RequestRunner extends Thread {
         if (!deleteRequestDiscarded) {
             boolean isDeleted;
             if (request.equals(ScheduledTimetableFragment.DELETE_REQUEST))
-                isDeleted = database.deleteTimetableEntry((TimetableModel) model,
-                                                          SchoolDatabase.SCHEDULED_TIMETABLE);
+                isDeleted = database.deleteTimetableEntry((TimetableModel) model, SchoolDatabase.SCHEDULED_TIMETABLE);
 
             else isDeleted = database.deleteTimetableEntry((TimetableModel) model, params.getTimetable());
 
@@ -453,8 +444,7 @@ public class RequestRunner extends Thread {
             if (isDeleted) {
                 cancelAlarm(); // if alarm was deleted, cancel alarm first, then ...
                 playAlertTone(appContext, Alert.DELETE);
-                if (params.getModelList().isEmpty())
-                    EventBus.getDefault().post(new EmptyListEvent());
+                if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
@@ -493,8 +483,6 @@ public class RequestRunner extends Thread {
         long NOW = System.currentTimeMillis();
         long CURRENT = calendar.getTimeInMillis();
         long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
-
-        Log.d(getClass().getSimpleName(), "Cancelling alarm: " + new Date(timeInMillis));
 
         AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
         Intent timetableIntent = new Intent(appContext, ScheduledTaskNotifier.class);
@@ -559,9 +547,7 @@ public class RequestRunner extends Thread {
 
         AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
 
-        PendingIntent alarmPI = PendingIntent.getBroadcast(appContext,
-                                                           1189765,
-                                                           alarmReceiverIntent,
+        PendingIntent alarmPI = PendingIntent.getBroadcast(appContext, 11789, alarmReceiverIntent,
                                                            PendingIntent.FLAG_CANCEL_CURRENT);
         alarmPI.cancel();
         alarmManager.cancel(alarmPI);
@@ -629,7 +615,6 @@ public class RequestRunner extends Thread {
             requestParams.setMediaUris(mediaUris);
             return this;
         }
-
 
         public Builder setAssignmentPosition(int assignmentPosition) {
             requestParams.setAssignmentPosition(assignmentPosition);

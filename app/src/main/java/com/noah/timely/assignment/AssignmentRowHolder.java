@@ -98,10 +98,10 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
             if (TextUtils.equals(tv_course.getText(), "NIL")) {
                 ErrorDialog.Builder builder = new ErrorDialog.Builder();
                 builder.setDialogMessage("No matching course code found")
-                        .setShowSuggestions(true)
-                        .setSuggestionCount(2)
-                        .setSuggestion1("Register courses first")
-                        .setSuggestion2("After registration, use that course title");
+                       .setShowSuggestions(true)
+                       .setSuggestionCount(2)
+                       .setSuggestion1("Register courses first")
+                       .setSuggestion2("After registration, use that course title");
                 new ErrorDialog().showErrorMessage(mActivity, builder.build());
             }
         });
@@ -171,7 +171,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         String[] nameTokens = fullName.split(" ");
 
         String[] titles = {"Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr", "Mr",
-                "Mister", "Mrs", "Ms", "Prof", "Professor"};
+                           "Mister", "Mrs", "Ms", "Prof", "Professor"};
 
         StringBuilder nameBuilder = new StringBuilder();
 
@@ -255,19 +255,19 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         RequestRunner runner = RequestRunner.createInstance();
         Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted",
                                           Snackbar.LENGTH_LONG)
-                .setAction("undo", (view) -> runner.undoRequest())
-                .setActionTextColor(Color.YELLOW);
+                                    .setAction("undo", (view) -> runner.undoRequest())
+                                    .setActionTextColor(Color.YELLOW);
 
         snackbar.show();
 
         RequestRunner.Builder builder = new RequestRunner.Builder();
         builder.setOwnerContext(mActivity)
-                .setAdapterPosition(getAbsoluteAdapterPosition())
-                .setAdapter(assignmentRowAdapter)
-                .setModelList(aList)
-                .setAssignmentData(assignment);
+               .setAdapterPosition(getAbsoluteAdapterPosition())
+               .setAdapter(assignmentRowAdapter)
+               .setModelList(aList)
+               .setAssignmentData(assignment);
 
         runner.setRequestParams(builder.getParams())
-                .runRequest(DELETE_REQUEST);
+              .runRequest(DELETE_REQUEST);
     }
 }

@@ -42,9 +42,9 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.ALARM_SERVICE;
-import static com.noah.timely.core.AppUtils.Alert.SCHEDULED_TIMETABLE;
-import static com.noah.timely.core.AppUtils.DAYS;
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
+import static com.noah.timely.util.Utility.DAYS;
+import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
 

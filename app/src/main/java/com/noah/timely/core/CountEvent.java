@@ -7,9 +7,10 @@ public class CountEvent {
         this.size = size;
     }
 
-    public void setSize(int size){
+    public void setSize(int size) {
         this.size = size;
     }
+
     public int getSize() {
         return size;
     }

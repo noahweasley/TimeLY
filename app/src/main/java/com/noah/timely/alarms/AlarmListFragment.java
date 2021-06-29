@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
-import com.noah.timely.core.AppUtils.Alert;
+import com.noah.timely.util.Utility.Alert;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.EmptyListEvent;
 import com.noah.timely.core.SchoolDatabase;
@@ -49,8 +49,8 @@ import java.util.Locale;
 
 import static com.noah.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.noah.timely.alarms.AlarmReceiver.REPEAT_DAYS;
-import static com.noah.timely.core.AppUtils.isUserPreferred24Hours;
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.playAlertTone;
 
 public class AlarmListFragment extends Fragment {
     public static final String DELETE_REQUEST = "delete alarm";
@@ -308,9 +308,7 @@ public class AlarmListFragment extends Fragment {
                                                    "com.noah.timely.alarm.dataType");
 
                 AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
-                PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity,
-                                                                   1189765,
-                                                                   alarmReceiverIntent,
+                PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
                                                                    PendingIntent.FLAG_CANCEL_CURRENT);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     // alarm has to be triggered even when device is in idle or doze mode.

@@ -34,7 +34,7 @@ import com.noah.timely.alarms.AlarmHolderFragment;
 import com.noah.timely.alarms.AlarmReSchedulerService;
 import com.noah.timely.alarms.TimeChangeDetector;
 import com.noah.timely.assignment.AssignmentFragment;
-import com.noah.timely.core.Constants;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.PreferenceUtils;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
@@ -213,11 +213,11 @@ public class MainActivity
 
             new TimelyUpdateInfoDialog().show(this);
 
-        } else if (menuItemId == R.id.generate) {
+        }/* else if (menuItemId == R.id.generate) {
 
             Toast.makeText(this, "No action yet", Toast.LENGTH_LONG).show();
 
-        } else if (menuItemId == R.id.report) {
+        }*/ else if (menuItemId == R.id.report) {
 
             new AlertDialog.Builder(this)
                     .setTitle(R.string.report_title)

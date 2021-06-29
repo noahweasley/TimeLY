@@ -65,7 +65,7 @@ public class AlarmNotificationService extends Service implements Runnable {
                     .build();
 
             String type = PreferenceManager.getDefaultSharedPreferences(aCtxt)
-                    .getString("Alarm Ringtone", "TimeLY's Default");
+                                           .getString("Alarm Ringtone", "TimeLY's Default");
 
             final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null
                                     ? APP_DEFAULT : SYSTEM_DEFAULT;

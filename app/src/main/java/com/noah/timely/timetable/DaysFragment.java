@@ -52,7 +52,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.noah.timely.core.AppUtils.DAYS;
+import static com.noah.timely.util.Utility.DAYS;
 
 public class DaysFragment extends Fragment implements ActionMode.Callback {
     public static final String DELETE_REQUEST = "delete timetable";

@@ -26,8 +26,7 @@ public class IntroScreenFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.intro_page, container, false);
@@ -41,8 +40,8 @@ public class IntroScreenFragment extends Fragment {
         LottieAnimationView lottieAnimationView = view.findViewById(R.id.animationView);
         TextView tv_title = view.findViewById(R.id.title);
 
-        switch(position){
-            case 0 :
+        switch (position) {
+            case 0:
                 tv_title.setText(R.string.manage_time);
                 lottieAnimationView.setAnimation(R.raw.time_management);
                 break;

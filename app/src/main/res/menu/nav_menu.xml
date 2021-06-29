@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android = "http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <!-- Home category-->
 	<group android:checkableBehavior = "single">
 
@@ -73,10 +74,10 @@
 					android:icon = "@drawable/ic_whats_new"
 					android:title = "@string/whats_new" />
 
-				<item
-					android:id = "@+id/generate"
-					android:icon = "@drawable/ic_share"
-					android:title = "@string/generate" />
+<!--				<item-->
+<!--					android:id = "@+id/generate"-->
+<!--					android:icon = "@drawable/ic_share"-->
+<!--					android:title = "@string/generate" />-->
 
 				<item
 					android:id = "@+id/report"

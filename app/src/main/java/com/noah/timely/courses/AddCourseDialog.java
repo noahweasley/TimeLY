@@ -23,14 +23,14 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
-import com.noah.timely.core.AppUtils.Alert;
+import com.noah.timely.util.Utility.Alert;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.ThreadUtils;
 import com.noah.timely.error.ErrorDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.courses.SemesterFragment.ARG_POSITION;
 
 @SuppressWarnings("ConstantConditions")

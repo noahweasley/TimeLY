@@ -29,9 +29,9 @@ import com.noah.timely.error.ErrorDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.noah.timely.core.AppUtils.Alert;
-import static com.noah.timely.core.AppUtils.DAYS_3;
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.Alert;
+import static com.noah.timely.util.Utility.DAYS_3;
+import static com.noah.timely.util.Utility.playAlertTone;
 
 @SuppressWarnings("ConstantConditions")
 public class AddExamDialog extends DialogFragment implements View.OnClickListener {

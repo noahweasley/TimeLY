@@ -39,9 +39,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static com.noah.timely.core.AppUtils.Alert.COURSE;
-import static com.noah.timely.core.AppUtils.DAYS;
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.Alert.COURSE;
+import static com.noah.timely.util.Utility.DAYS;
+import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.timetable.DaysFragment.ARG_CHRONOLOGY;
 import static com.noah.timely.timetable.DaysFragment.ARG_CLASS;
 import static com.noah.timely.timetable.DaysFragment.ARG_DATA;

@@ -21,6 +21,7 @@ import com.noah.timely.exam.ExamModel;
 import com.noah.timely.gallery.Image;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
@@ -48,7 +49,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public static final String SECOND_SEMESTER = "Second_Semester";
     public static final String COLUMN_INITIAL_POS = "Initial_Position";
     public static final String REGISTERED_COURSES = "Registered_Courses";
-    public static final String ALL_TIMETABLE = "All Timetables";
 
     private static final String ASSIGNMENT_TABLE = "Assignment";
     private static final String COLUMN_LECTURER_NAME = "Lecturer_Name";
@@ -143,8 +143,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 weekCount = Integer.parseInt(countValue);
             }
         } catch (NumberFormatException exc) {
-            Log.w(getClass().getSimpleName(), "User specified week count of: " + countValue +
-                    " is ignored, using 8 weeks instead ");
+            Log.w(getClass().getSimpleName(),
+                  "User specified week count of: " + countValue + " is ignored, using 8 weeks instead ");
         }
 
         createExamTables(db, weekCount);
@@ -179,9 +179,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 + ")";
 
         // CREATE PREFS TABLE
-        String createPrefsDB_stmt
-                = "CREATE TABLE " + PREFERENCE_TABLE + " ("
-                + COLUMN_EXAM_WEEK_COUNT + " INTEGER )";
+        String createPrefsDB_stmt = "CREATE TABLE " + PREFERENCE_TABLE + " (" + COLUMN_EXAM_WEEK_COUNT + " INTEGER )";
 
         db.execSQL(createPrefsDB_stmt);
         db.execSQL(createAlarmDB_stmt);
@@ -272,8 +270,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         assignmentData.put(COLUMN_ID, assignment.getPosition());
         assignmentData.put(COLUMN_LECTURER_NAME, sanitizeEntry(assignment.getLecturerName()));
-        assignmentData.put(COLUMN_ASSIGNMENT_DESCRIPTION,
-                           sanitizeEntry(assignment.getDescription()));
+        assignmentData.put(COLUMN_ASSIGNMENT_DESCRIPTION, sanitizeEntry(assignment.getDescription()));
         assignmentData.put(COLUMN_ASSIGNMENT_TITLE, sanitizeEntry(assignment.getTitle()));
         assignmentData.put(COLUMN_COURSE_CODE, assignment.getCourseCode());
         assignmentData.put(COLUMN_SUBMISSION_DATE, assignment.getSubmissionDate());
@@ -378,8 +375,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             List<String> sList = new ArrayList<>();
             Cursor chronologyCursor = db.rawQuery("SELECT " + COLUMN_START_TIME
                                                           + " FROM " + timetableName, null);
-            while (chronologyCursor.moveToNext())
-                sList.add(chronologyCursor.getString(0));
+
+            while (chronologyCursor.moveToNext()) sList.add(chronologyCursor.getString(0));
 
             List<Integer> sIList = new ArrayList<>();
             for (String s : sList) {
@@ -407,8 +404,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         Cursor idCursor = db.rawQuery(getIdStmt, null);
 
         int last;
-        if (idCursor.moveToLast())
-            last = idCursor.getInt(idCursor.getColumnCount() - 1);
+        if (idCursor.moveToLast()) last = idCursor.getInt(idCursor.getColumnCount() - 1);
         else last = -1;
 
         idCursor.close();
@@ -427,8 +423,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         Cursor idCursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + timetableName, null);
 
         int last;
-        if (idCursor.moveToLast())
-            last = idCursor.getInt(idCursor.getColumnCount() - 1);
+        if (idCursor.moveToLast()) last = idCursor.getInt(idCursor.getColumnCount() - 1);
         else last = -1;
 
         idCursor.close();
@@ -448,9 +443,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         int last = 0;
         if (getAlarmCount(db) == 0) return -1;
-        if (lastId.moveToLast())
-            last = lastId.getInt(0);
+        if (lastId.moveToLast()) last = lastId.getInt(0);
         lastId.close();
+
         return last;
     }
 
@@ -725,8 +720,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
             if (!TextUtils.isEmpty(label)) retrieveEntry(label);
 
-            AlarmModel alarmModel = new AlarmModel(pos, time, onStat, repeatStat, ringtone,
-                                                   repeatDays, vibrate, label);
+            AlarmModel alarmModel = new AlarmModel(pos, time, onStat, repeatStat, ringtone, repeatDays, vibrate, label);
             alarmModel.setSnoozed(isSnoozed);
             alarmModel.setSnoozedTime(snoozedTime);
             alarms.add(alarmModel);
@@ -840,8 +834,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor count = db.rawQuery(countStmt, null);
-        if (count.moveToLast())
-            noteCount = count.getInt(0);
+        if (count.moveToLast()) noteCount = count.getInt(0);
 
         count.close();
         return noteCount;
@@ -859,8 +852,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         String countStmt = "SELECT COUNT(*) FROM " + ALARMS_TABLE;
 
         Cursor count = db.rawQuery(countStmt, null);
-        if (count.moveToLast())
-            alarmCount = count.getInt(0);
+        if (count.moveToLast()) alarmCount = count.getInt(0);
 
         count.close();
         return alarmCount;
@@ -1074,8 +1066,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             boolean onStat = Boolean.parseBoolean(alarmCursor.getString(2));
             boolean repeatStat = Boolean.parseBoolean(alarmCursor.getString(3));
             String label = alarmCursor.getString(7);
-            model = new AlarmModel(pos, time, onStat, repeatStat, ringtone,
-                                   repeatDays, vibrate, label);
+            model = new AlarmModel(pos, time, onStat, repeatStat, ringtone, repeatDays, vibrate, label);
         }
         alarmCursor.close();
         return model;
@@ -1108,8 +1099,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      */
     public boolean isAlarmPresent(String time) {
         SQLiteDatabase db = getReadableDatabase();
-        String findStmt = "SELECT * FROM " + ALARMS_TABLE
-                + " WHERE " + COLUMN_TIME + " = '" + time + "'";
+        String findStmt = "SELECT * FROM " + ALARMS_TABLE + " WHERE " + COLUMN_TIME + " = '" + time + "'";
         Cursor findCursor = db.rawQuery(findStmt, null);
 
         boolean isPresent = findCursor.moveToFirst();
@@ -1158,8 +1148,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 + " WHERE " + COLUMN_INITIAL_POS + " = " + pos;
         String time = null;
         Cursor getCursor = db.rawQuery(getStmt, null);
-        if (getCursor.moveToFirst())
-            time = getCursor.getString(0);
+        if (getCursor.moveToFirst()) time = getCursor.getString(0);
         getCursor.close();
 
         return time;
@@ -1260,8 +1249,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         String countQuery = "SELECT COUNT(*) FROM " + ASSIGNMENT_TABLE;
         Cursor countCursor = db.rawQuery(countQuery, null);
         int count = 0;
-        if (countCursor.moveToFirst())
-            count = countCursor.getInt(0);
+        if (countCursor.moveToFirst()) count = countCursor.getInt(0);
         countCursor.close();
         return count;
     }
@@ -1315,8 +1303,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         String countQuery = "SELECT COUNT(*) FROM " + TIMETABLE;
         Cursor countCursor = db.rawQuery(countQuery, null);
         int count = 0;
-        if (countCursor.moveToFirst())
-            count = countCursor.getInt(0);
+        if (countCursor.moveToFirst()) count = countCursor.getInt(0);
         countCursor.close();
         return count;
     }
@@ -1388,8 +1375,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         Cursor idCursor = db.rawQuery(getIdStmt, null);
 
         int lastID;
-        if (idCursor.moveToLast())
-            lastID = idCursor.getInt(0);
+        if (idCursor.moveToLast()) lastID = idCursor.getInt(0);
         else lastID = -1;
 
         ContentValues courseValues = new ContentValues();
@@ -1405,16 +1391,15 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         List<String> names = new ArrayList<>();
         Cursor c = db.rawQuery("SELECT " + COLUMN_FULL_COURSE_NAME + " FROM "
                                        + SEMESTER + " ORDER BY " + COLUMN_FULL_COURSE_NAME, null);
-        while (c.moveToNext())
-            names.add(c.getString(0));
+
+        while (c.moveToNext()) names.add(c.getString(0));
 
         // add to global semester
         db.insert(REGISTERED_COURSES, null, courseValues);
         idCursor.close();
         c.close();
-        return resCode != -1
-               ? new int[]{Collections.binarySearch(names, courseModel.getCourseName()), insertPos}
-               : new int[]{-1, -1};
+        return resCode != -1 ? new int[]{Collections.binarySearch(names, courseModel.getCourseName()), insertPos}
+                             : new int[]{-1, -1};
     }
 
     /**
@@ -1430,8 +1415,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         int resultCode = db.delete(SEMESTER, COLUMN_ID + " = " + model.getId(), null);
         // Delete from global course code
         db.delete(REGISTERED_COURSES,
-                  COLUMN_FULL_COURSE_NAME + " = '" + sanitizeEntry(model.getCourseName()) + "'",
-                  null);
+                  COLUMN_FULL_COURSE_NAME + " = '" + sanitizeEntry(model.getCourseName()) + "'", null);
 
         return resultCode != -1;
     }
@@ -1469,9 +1453,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public List<String> getAllRegisteredCourseCodes() {
         List<String> courses = new ArrayList<>();
         String getRegisteredCourses_stmt =
-                "SELECT " + COLUMN_COURSE_CODE
-                        + " FROM " + REGISTERED_COURSES
-                        + " ORDER BY " + COLUMN_COURSE_CODE;
+                "SELECT " + COLUMN_COURSE_CODE + " FROM " + REGISTERED_COURSES + " ORDER BY " + COLUMN_COURSE_CODE;
 
         SQLiteDatabase db = getReadableDatabase();
 
@@ -1605,8 +1587,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             String endTime = getExamsCursor.getString(4);
             String examWeek = getExamsCursor.getString(5);
             String day = getExamsCursor.getString(6);
-            exams.add(new ExamModel(day, examWeek, id, courseCode, courseName, startTime,
-                                    endTime));
+            exams.add(new ExamModel(day, examWeek, id, courseCode, courseName, startTime, endTime));
         }
         getExamsCursor.close();
         return exams;
@@ -1627,13 +1608,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 countValue = prefs.getString("exam weeks", "8");
                 if (countValue != null) wStart = Integer.parseInt(countValue);
             } catch (NumberFormatException exc) {
-                Log.w(TAG, "Ignoring user selected Week count of: " + countValue
-                        + ", using 8 weeks instead ");
+                Log.w(TAG, "Ignoring user selected Week count of: " + countValue + ", using 8 weeks instead ");
             }
-            Cursor getEndCursor = db.rawQuery("SELECT " + COLUMN_EXAM_WEEK_COUNT
-                                                      + " FROM "
-                                                      + PREFERENCE_TABLE,
-                                              null);
+            Cursor getEndCursor = db.rawQuery("SELECT " + COLUMN_EXAM_WEEK_COUNT + " FROM " + PREFERENCE_TABLE, null);
             // now perform the main operation of this action
             int wEnd = wStart;
             if (getEndCursor.moveToFirst())
@@ -1683,8 +1660,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         long resultCode = db.insertOrThrow(examWeek, null, values);
         // Begin exam sorting
         Cursor sortElementCursor
-                = db.rawQuery("SELECT " + COLUMN_START_TIME + "," + COLUMN_DAY + "," + COLUMN_ID
-                                      + " FROM " + examWeek,
+                = db.rawQuery("SELECT " + COLUMN_START_TIME + "," + COLUMN_DAY + "," + COLUMN_ID + " FROM " + examWeek,
                               null);
 
         List<ExamModel> exams = new ArrayList<>();
@@ -1705,8 +1681,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         idCursor.close();
         sortElementCursor.close();
         // Compare all the former exams in database with this exam
-        Comparator<? super ExamModel> idComparator
-                = (e1, e2) -> Integer.compare(e1.getId(), e2.getId());
+        Comparator<? super ExamModel> idComparator = (e1, e2) -> Integer.compare(e1.getId(), e2.getId());
         // impossible to sort exams, linear-search instead
         return resultCode != -1 ? new int[]{linearSearch(exams, exam, idComparator), exam.getId()}
                                 : new int[]{-1, -1};
@@ -1987,12 +1962,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             CourseModel model = (CourseModel) data.get(x);
             resCode |=
                     db.delete(SEMESTER, COLUMN_ID + " = " + itemIndices[x], null) != -1
-                            &
-                            // delete registered course entry
-                            db.delete(REGISTERED_COURSES,
-                                      COLUMN_FULL_COURSE_NAME + " = '"
-                                              + sanitizeEntry(model.getCourseName()) + "'",
-                                      null) != -1;
+                            & /* delete registered course entry */
+                            db.delete(REGISTERED_COURSES, COLUMN_FULL_COURSE_NAME + " = '"
+                                    + sanitizeEntry(model.getCourseName()) + "'", null) != -1;
         }
 
         return resCode;
@@ -2022,7 +1994,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @return a list of pending assignments
      */
     public List<DataModel> getPendingAssignments() {
-        return CollectionUtils.filterList(getAssignmentData(),
-                                          model -> !((AssignmentModel) model).isSubmitted());
+        return CollectionUtils.filterList(getAssignmentData(), model -> !((AssignmentModel) model).isSubmitted());
     }
 }

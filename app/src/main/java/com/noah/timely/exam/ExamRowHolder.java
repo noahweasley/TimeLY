@@ -21,7 +21,7 @@ import com.noah.timely.error.ErrorDialog;
 import java.util.List;
 import java.util.Locale;
 
-import static com.noah.timely.core.AppUtils.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 
 @SuppressWarnings("ConstantConditions")
 public class ExamRowHolder extends RecyclerView.ViewHolder {
@@ -59,12 +59,12 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(user.getActivity())
-                    .setModelList(eList)
-                    .setAdapter(examRowAdapter)
-                    .setAdapterPosition(getAbsoluteAdapterPosition());
+                   .setModelList(eList)
+                   .setAdapter(examRowAdapter)
+                   .setAdapterPosition(getAbsoluteAdapterPosition());
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(DELETE_REQUEST);
+                  .runRequest(DELETE_REQUEST);
 
             Snackbar bar = Snackbar.make(coordinator, "Exam Deleted", Snackbar.LENGTH_LONG);
             bar.setActionTextColor(Color.YELLOW);
@@ -76,10 +76,10 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
             if (TextUtils.equals(tv_courseCode.getText(), "NIL")) {
                 ErrorDialog.Builder builder = new ErrorDialog.Builder();
                 builder.setDialogMessage("No matching course code found")
-                        .setShowSuggestions(true)
-                        .setSuggestionCount(2)
-                        .setSuggestion1("Register courses first")
-                        .setSuggestion2("After registration, use that course title");
+                       .setShowSuggestions(true)
+                       .setSuggestionCount(2)
+                       .setSuggestion1("Register courses first")
+                       .setSuggestion2("After registration, use that course title");
                 new ErrorDialog().showErrorMessage(user.getContext(), builder.build());
             }
         });

@@ -21,6 +21,7 @@ public class AssignmentModel extends DataModel implements Serializable {
 
     public AssignmentModel() {
     }
+
     AssignmentModel(int id, String lecturerName, String title, String description, String date,
                     String courseCode, String submissionDate, String attachedPDF,
                     String attachedImage, boolean isSubmitted) {
@@ -138,7 +139,7 @@ public class AssignmentModel extends DataModel implements Serializable {
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 }

@@ -21,7 +21,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Random;
 
-@SuppressWarnings({"ConstantConditions"})
 public class LandingPageFragment extends Fragment {
     private TextView tv_gText;
     private DayPart lastDayPart;
@@ -56,22 +55,17 @@ public class LandingPageFragment extends Fragment {
                         tv_gText.setText(R.string.sleep);
                     break;
                 case DAY_START_ACTIVE_PERIOD:
-                    if(tv_gText != null)
+                    if (tv_gText != null)
                         tv_gText.setText(R.string.rise);
                     break;
                 case DEFAULT_INTERVAL_DAY:
-                    if(tv_gText != null) {
+                    if (tv_gText != null) {
                         // use an array of arbitrary greeting text
                         String[] gs = {"Hi there!", "Good Day!", "Hello"};
-                        int r = new Random(System.currentTimeMillis()).nextInt(4) ;
-                        String text;
-
-                        if(r == 0) text = gs[0];
-                        else if(r == 1) text = gs[1];
-                        else text = gs[2];
-
-                        tv_gText.setText(text);
+                        int r = new Random(System.currentTimeMillis()).nextInt(gs.length);
+                        tv_gText.setText(gs[r]);
                     }
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + time.getCurrentDayPart());
             }

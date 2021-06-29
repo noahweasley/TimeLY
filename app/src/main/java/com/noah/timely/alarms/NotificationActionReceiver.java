@@ -110,7 +110,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         AlarmManager alarmManager
                 = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent alarmPI = PendingIntent.getBroadcast(context,
-                                                           1189765,
+                                                           11789,
                                                            alarmReceiverIntent,
                                                            PendingIntent.FLAG_CANCEL_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

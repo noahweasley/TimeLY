@@ -120,7 +120,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
         findViewById(R.id.add_new).setOnClickListener(
                 v -> startActivity(new Intent(this, StorageViewer.class)
-                        .setAction(ADD_NEW)));
+                                           .setAction(ADD_NEW)));
 
         ItemTouchHelper swipeHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
@@ -141,13 +141,13 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
                 RequestRunner runner = RequestRunner.createInstance();
                 RequestRunner.Builder builder = new RequestRunner.Builder();
                 builder.setOwnerContext(ViewImagesActivity.this)
-                        .setMediaUris(mediaUris)
-                        .setAssignmentPosition(position)
-                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
-                        .setAdapter(imageAdapter);
+                       .setMediaUris(mediaUris)
+                       .setAssignmentPosition(position)
+                       .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                       .setAdapter(imageAdapter);
 
                 runner.setRequestParams(builder.getParams())
-                        .runRequest(DELETE_REQUEST);
+                      .runRequest(DELETE_REQUEST);
 
                 Snackbar snackbar
                         = Snackbar.make(coordinator, "Image Deleted", Snackbar.LENGTH_LONG);
@@ -358,20 +358,20 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(ViewImagesActivity.this)
-                    .setAdapter(imageAdapter)
-                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                    .setAssignmentPosition(position)
-                    .setMediaUris(mediaUris)
-                    .setItemIndices(getCheckedImagesIndices());
+                   .setAdapter(imageAdapter)
+                   .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                   .setAssignmentPosition(position)
+                   .setMediaUris(mediaUris)
+                   .setItemIndices(getCheckedImagesIndices());
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(MULTIPLE_DELETE_REQUEST);
+                  .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedImageCount();
             Snackbar snackbar
                     = Snackbar.make(coordinator,
-                    count + " Image" + (count > 1 ? "s" : "") + " Deleted",
-                    Snackbar.LENGTH_LONG);
+                                    count + " Image" + (count > 1 ? "s" : "") + " Deleted",
+                                    Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());

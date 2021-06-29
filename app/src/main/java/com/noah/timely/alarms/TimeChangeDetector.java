@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.noah.timely.core.AppUtils.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 
 /**
  * The thread responsible for blinking the colon in between the minute and second indicator
@@ -63,7 +63,6 @@ public class TimeChangeDetector extends Thread {
         wantToStopOperation = true;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void run() {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
@@ -113,16 +112,13 @@ public class TimeChangeDetector extends Thread {
 
         switch (dateFormat) {
             case "Full":
-                formattedDate
-                        = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+                formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
                 break;
             case "Short":
-                formattedDate
-                        = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
+                formattedDate = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
                 break;
             default:
-                formattedDate
-                        = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
+                formattedDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
         }
 
         return new Time(dateFormat, formattedDate, hour, min, isMilitaryTime, isForenoon);

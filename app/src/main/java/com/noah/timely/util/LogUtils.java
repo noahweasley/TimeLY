@@ -13,7 +13,7 @@ public class LogUtils {
      * @param origin  the originator of the log output. This should just be the <code>this</code> java keyword
      * @param message the output
      */
-    public static void log(Object origin, String message) {
+    public static void debug(Object origin, String message) {
         if (origin != null) {
             Log.d(origin.getClass().getSimpleName(), message);
         } else {

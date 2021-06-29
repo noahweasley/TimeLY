@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import static com.noah.timely.core.AppUtils.DAYS;
+import static com.noah.timely.util.Utility.DAYS;
 
 @SuppressWarnings("ConstantConditions")
 public class TimetableFragment extends Fragment {

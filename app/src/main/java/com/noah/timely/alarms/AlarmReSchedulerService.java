@@ -90,7 +90,7 @@ public class AlarmReSchedulerService extends Service {
                 }
             }
 
-            // Reset the scheduled timetable notification alarms here.
+            // Reset the regular timetable notification alarms here.
             List<DataModel> timetables2 = database.getAllNormalSchoolTimetable();
             if (!timetables2.isEmpty()) {
                 // re-schedule alarms; get alarm data from app's database
@@ -109,8 +109,7 @@ public class AlarmReSchedulerService extends Service {
     private void registerPendingScheduledTimetables(Context context, TimetableModel timetable) {
         String time = timetable.getStartTime();
         String[] sTime = time.split(":");
-        String course = timetable.getFullCourseName() + " (" + timetable
-                .getCourseCode() + ")";
+        String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
         int day = timetable.getCalendarDay();
 
         Calendar calendar = Calendar.getInstance();
@@ -175,8 +174,7 @@ public class AlarmReSchedulerService extends Service {
                        .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
                                        "com.noah.timely.dataType");
 
-        PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
-                                                      PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             manager.setExact(AlarmManager.RTC, timeInMillis, pi);
@@ -296,7 +294,6 @@ public class AlarmReSchedulerService extends Service {
             }
 
             int bMaxLen = nameBuilder.length();
-
             return nameBuilder.replace(bMaxLen - 1, bMaxLen, nameTokens[iMax]).toString();
 
         } else {
@@ -306,30 +303,15 @@ public class AlarmReSchedulerService extends Service {
 
     // Determines if there was an added title in the lecturer's name
     private boolean startsWithAny(String[] titles, String s) {
-        for (String title : titles)
-            if (s.startsWith(title))
-                return true;
+        for (String title : titles) if (s.startsWith(title)) return true;
         return false;
     }
 
     // register individual alarms
     private void registerAlarm(@NonNull Context context, @NonNull AlarmModel alarm) {
         // This gets the current day of the week as of TODAY / NOW
-        // int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-        // This calculates the days between now and the day needed which is represented
-        // by whichDay.
-        // int numberOfDays = Calendar.SATURDAY + whichDay - dayOfWeek;
-
-        // Now add NOT set the difference of the days to your Calendar object
-        // calendar`.add(Calendar.DATE, numberOfDays);
-
         Calendar calendar = Calendar.getInstance();
-        // The amount of milliseconds to the next day
-        final int NEXT_DAY = 1000 * 60 * 60 * 24;
-
         String alarmTime = alarm.getTime();
-
         String[] time = alarmTime.split(":");
 
         int hh = Integer.parseInt(time[0]);
@@ -346,15 +328,14 @@ public class AlarmReSchedulerService extends Service {
         boolean isForenoon = hh >= 0 && hh < 12;
 
         String formattedHrAM = String.format(Locale.US, "%02d", (hh == 0 ? 12 : hh));
-        String formattedHrPM = String.format(Locale.US, "%02d",
-                                             (hh % 12 == 0 ? 12 : hh % 12));
+        String formattedHrPM = String.format(Locale.US, "%02d", (hh % 12 == 0 ? 12 : hh % 12));
         String formattedMinAM = String.format(Locale.US, "%02d", mm) + " AM";
         String formattedMinPM = String.format(Locale.US, "%02d", mm) + " PM";
 
         String _12H = isForenoon ? formattedHrAM + ":" + formattedMinAM
                                  : formattedHrPM + ":" + formattedMinPM;
 
-        long alarmMillis = isNextDay ? calendar.getTimeInMillis() + NEXT_DAY
+        long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
                                      : calendar.getTimeInMillis();
 
         Intent alarmReceiverIntent = new Intent(context, AlarmReceiver.class);
@@ -367,9 +348,7 @@ public class AlarmReSchedulerService extends Service {
                                            "com.noah.timely.alarm.dataType");
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent alarmPI = PendingIntent.getBroadcast(context,
-                                                           1189765,
-                                                           alarmReceiverIntent,
+        PendingIntent alarmPI = PendingIntent.getBroadcast(context, 11789, alarmReceiverIntent,
                                                            PendingIntent.FLAG_CANCEL_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // alarm has to be triggered even when device is in idle or doze mode.

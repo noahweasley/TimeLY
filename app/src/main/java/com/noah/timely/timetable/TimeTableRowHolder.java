@@ -35,7 +35,7 @@ import com.noah.timely.util.DeviceInfoUtil;
 import java.util.List;
 import java.util.Locale;
 
-import static com.noah.timely.core.AppUtils.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_TO_EDIT;
 

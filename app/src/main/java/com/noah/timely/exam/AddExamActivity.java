@@ -17,15 +17,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.noah.timely.R;
-import com.noah.timely.core.AppUtils;
+import com.noah.timely.util.Utility;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.noah.timely.core.AppUtils.DAYS_3;
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.DAYS_3;
+import static com.noah.timely.util.Utility.playAlertTone;
 
 /**
  * A clone of {@link AddExamDialog} that would be used as an alternate to adding exams
@@ -172,7 +172,7 @@ public class AddExamActivity extends AppCompatActivity {
                     EventBus.getDefault().post(new UpdateMessage(exam,
                                                                  UpdateMessage.EventType.NEW,
                                                                  pagePosition));
-                    playAlertTone(getApplicationContext(), AppUtils.Alert.EXAM);
+                    playAlertTone(getApplicationContext(), Utility.Alert.EXAM);
                 } else {
                     Toast.makeText(this, "An Error occurred", Toast.LENGTH_LONG).show();
                 }

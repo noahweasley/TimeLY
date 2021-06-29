@@ -22,13 +22,15 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
         super(context);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public EditTextDialog prepareAndShow() {
         show();
         return this;
     }
 
-    public void setActionListener(OnActionListener listener) {
+    public EditTextDialog setActionListener(OnActionListener listener) {
         this.listener = listener;
+        return this;
     }
 
     @Override

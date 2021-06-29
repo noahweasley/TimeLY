@@ -66,8 +66,8 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
             new Thread(this).start();
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    requestCode);
+                                              new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                              requestCode);
         }
     }
 
@@ -104,7 +104,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         Uri storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         if (root_extra != null) {
             storageUri = root_extra.equals(EXTERNAL) ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                    : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+                                                     : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
         }
 
         String[] projection = {
@@ -188,8 +188,8 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         @Override
         public void onBindViewHolder(@NonNull ImageDirectoryRowHolder viewHolder, int pos) {
             viewHolder.with(ImageDirectory.this, imageDirectoryList, pos, accessedStorage)
-                    .setRequestAction(getIntent().getAction())
-                    .loadThumbnail();
+                      .setRequestAction(getIntent().getAction())
+                      .loadThumbnail();
         }
 
         @Override

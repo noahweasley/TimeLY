@@ -39,8 +39,8 @@ import static com.noah.timely.assignment.AssignmentFragment.DATE;
 import static com.noah.timely.assignment.AssignmentFragment.DESCRIPTION;
 import static com.noah.timely.assignment.AssignmentFragment.LECTURER_NAME;
 import static com.noah.timely.assignment.AssignmentFragment.TITLE;
-import static com.noah.timely.core.AppUtils.Alert;
-import static com.noah.timely.core.AppUtils.playAlertTone;
+import static com.noah.timely.util.Utility.Alert;
+import static com.noah.timely.util.Utility.playAlertTone;
 
 @SuppressWarnings({"ConstantConditions", "unused"})
 public class AddAssignmentActivity extends AppCompatActivity {
@@ -226,10 +226,10 @@ public class AddAssignmentActivity extends AppCompatActivity {
                                                                         pos)) {
             ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
             errorBuilder.setDialogMessage("Invalid assignment")
-                    .setShowSuggestions(true)
-                    .setSuggestionCount(2)
-                    .setSuggestion1("Try setting assignments to the future")
-                    .setSuggestion2("Check for assignment duplicates");
+                        .setShowSuggestions(true)
+                        .setSuggestionCount(2)
+                        .setSuggestion1("Try setting assignments to the future")
+                        .setSuggestion2("Check for assignment duplicates");
 
             new ErrorDialog().showErrorMessage(this, errorBuilder.build());
             return;
@@ -279,19 +279,19 @@ public class AddAssignmentActivity extends AppCompatActivity {
         String ln = truncateLecturerName(lecturer);
         Intent notifyIntentCurrent = new Intent(this, SubmissionNotifier.class);
         notifyIntentCurrent.putExtra(LECTURER_NAME, ln)
-                .putExtra(TITLE, title)
-                .putExtra(POSITION, pos)
-                .addCategory(getPackageName() + ".category")
-                .setAction(getPackageName() + ".update")
-                .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
+                           .putExtra(TITLE, title)
+                           .putExtra(POSITION, pos)
+                           .addCategory(getPackageName() + ".category")
+                           .setAction(getPackageName() + ".update")
+                           .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
 
         Intent notifyIntentPrevious = new Intent(this, Reminder.class);
         notifyIntentPrevious.putExtra(LECTURER_NAME, ln)
-                .putExtra(TITLE, title)
-                .putExtra(NEXT_ALARM, CURRENT)
-                .addCategory(getPackageName() + ".category")
-                .setAction(getPackageName() + ".update")
-                .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
+                            .putExtra(TITLE, title)
+                            .putExtra(NEXT_ALARM, CURRENT)
+                            .addCategory(getPackageName() + ".category")
+                            .setAction(getPackageName() + ".update")
+                            .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
 
         PendingIntent assignmentPiPrevious
                 = PendingIntent.getBroadcast(this, 147, notifyIntentPrevious,
@@ -316,7 +316,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
         String[] nameTokens = fullName.split(" ");
 
         String[] titles = {"Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr", "Mr",
-                "Mister", "Mrs", "Ms", "Prof", "Professor"};
+                           "Mister", "Mrs", "Ms", "Prof", "Professor"};
 
         StringBuilder nameBuilder = new StringBuilder();
         String shortenedName = "";

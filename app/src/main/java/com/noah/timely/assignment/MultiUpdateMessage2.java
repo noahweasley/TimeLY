@@ -12,7 +12,7 @@ public class MultiUpdateMessage2 {
     }
 
     public enum EventType {
-       INSERT, REMOVE
+        INSERT, REMOVE
     }
 }
 

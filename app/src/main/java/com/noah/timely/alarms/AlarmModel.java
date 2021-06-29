@@ -86,7 +86,7 @@ public class AlarmModel extends DataModel {
         return ringTone != null ? ringTone : "Choose ringtone";
     }
 
-    public void setRingTone(String ringTone) {
+    public void setRingtone(String ringTone) {
         this.ringTone = ringTone;
     }
 

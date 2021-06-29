@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.noah.timely.R;
 
-@SuppressWarnings("ConstantConditions")
 public class StorageViewer extends AppCompatActivity implements View.OnClickListener {
 
     @Override
@@ -28,8 +27,7 @@ public class StorageViewer extends AppCompatActivity implements View.OnClickList
         ViewGroup v_externalStorage = findViewById(R.id.external_storage);
         v_externalStorage.setOnClickListener(this);
 
-        boolean ext_str_mounted
-                = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+        boolean ext_str_mounted = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
         v_externalStorage.setVisibility(ext_str_mounted ? View.VISIBLE : View.GONE);
     }
 
@@ -37,12 +35,12 @@ public class StorageViewer extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v.getId() == R.id.internal_storage) {
             startActivity(new Intent(this, ImageDirectory.class)
-                    .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.INTERNAL)
-                    .setAction(getIntent().getAction()));
+                                  .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.INTERNAL)
+                                  .setAction(getIntent().getAction()));
         } else {
             startActivity(new Intent(this, ImageDirectory.class)
-                    .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
-                    .setAction(getIntent().getAction()));
+                                  .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
+                                  .setAction(getIntent().getAction()));
         }
         finish();
     }

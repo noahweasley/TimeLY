@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import static com.noah.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.noah.timely.alarms.AlarmReceiver.ID;
 import static com.noah.timely.alarms.AlarmReceiver.NOTIFICATION_ID;
-import static com.noah.timely.core.AppUtils.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 
 @SuppressWarnings("ConstantConditions")
 public class AlarmActivity extends AppCompatActivity {
@@ -82,13 +82,13 @@ public class AlarmActivity extends AppCompatActivity {
 
         receiverSnooze = new Intent(this, NotificationActionReceiver.class);
         receiverSnooze.putExtra("action", "Snooze")
-                .putExtra(ID, NOTIFICATION_ID)
-                .putExtra(ALARM_POS, getIntent().getIntExtra(ALARM_POS, -1));
+                      .putExtra(ID, NOTIFICATION_ID)
+                      .putExtra(ALARM_POS, getIntent().getIntExtra(ALARM_POS, -1));
 
         receiverDismiss = new Intent(this, NotificationActionReceiver.class);
         receiverDismiss.putExtra("action", "Dismiss")
-                .putExtra(ID, NOTIFICATION_ID)
-                .putExtra(ALARM_POS, getIntent().getIntExtra(ALARM_POS, -1));
+                       .putExtra(ID, NOTIFICATION_ID)
+                       .putExtra(ALARM_POS, getIntent().getIntExtra(ALARM_POS, -1));
 
         btn_snooze.setOnClickListener(v -> {
             sendBroadcast(receiverSnooze);
