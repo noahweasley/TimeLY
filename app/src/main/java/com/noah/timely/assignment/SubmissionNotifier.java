@@ -17,9 +17,9 @@ import static com.noah.timely.assignment.AddAssignmentActivity.POSITION;
 public class SubmissionNotifier extends AssignmentNotifier {
 
     @Override
-    public void onReceive(Context ctxt, Intent intent) {
-        super.onReceive(ctxt, intent);
-        SchoolDatabase database = new SchoolDatabase(ctxt);
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        SchoolDatabase database = new SchoolDatabase(context);
         int updatePos = intent.getIntExtra(POSITION, -1);
         boolean isUpdated = database.updateAssignmentStatus(updatePos, true);
         if (isUpdated)

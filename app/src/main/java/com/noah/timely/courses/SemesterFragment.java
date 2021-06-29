@@ -119,27 +119,27 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
         view.findViewById(R.id.add_course).setOnClickListener(v -> {
 
-                Context context = getContext();
-                float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
-                float requiredWidthDP = 368, requiredHeightDP = 750;
+            Context context = getContext();
+            float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
+            float requiredWidthDP = 368, requiredHeightDP = 750;
 
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-                boolean useDialog = preferences.getBoolean("prefer_dialog", true);
+            boolean useDialog = preferences.getBoolean("prefer_dialog", true);
 
-                // choose what kind of task-add method to use base on device width and user pref
-                if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
+            // choose what kind of task-add method to use base on device width and user pref
+            if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
+                startActivity(new Intent(context, AddCourseActivity.class)
+                                      .putExtra(ARG_POSITION, getPagePosition()));
+            } else {
+                if (useDialog) {
+                    new AddCourseDialog().show(context, getPagePosition());
+                } else {
                     startActivity(new Intent(context, AddCourseActivity.class)
                                           .putExtra(ARG_POSITION, getPagePosition()));
-                } else {
-                    if (useDialog) {
-                        new AddCourseDialog().show(context, getPagePosition());
-                    } else {
-                        startActivity(new Intent(context, AddCourseActivity.class)
-                                              .putExtra(ARG_POSITION, getPagePosition()));
-                    }
                 }
-            });
+            }
+        });
 
         // set  list to have a fixed size to increase performance and set stable id, to use same
         // view holder on adapter change
