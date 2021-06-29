@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
 
@@ -28,7 +29,6 @@ import static com.noah.timely.timetable.DaysFragment.ARG_PAGE_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_TIME;
 
-@SuppressWarnings("ConstantConditions")
 public class TimetableNotifier extends BroadcastReceiver {
 
     @Override
@@ -41,20 +41,16 @@ public class TimetableNotifier extends BroadcastReceiver {
         int position = intent.getIntExtra(ARG_POSITION, -1);
         int tabPosition = intent.getIntExtra(ARG_PAGE_POSITION, -1);
 
-        String message = "<b>" + course + "</b> starts in <b>" + "10 minutes</b>";
-        CharSequence spannedMessage
-                = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY);
+        String message = "<b>" + course + "</b> starts in <b>10 minutes</b>";
+        CharSequence spannedMessage = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY);
 
-        NotificationManager manager
-                = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String CHANNEL = "TimeLY's Timetable";
         String ID = "com.noah.timely.timetable";
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-                manager.getNotificationChannel(CHANNEL) == null) {
-            manager.createNotificationChannel(
-                    new NotificationChannel(ID, CHANNEL,
-                                            NotificationManager.IMPORTANCE_DEFAULT));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL) == null) {
+            manager.createNotificationChannel(new NotificationChannel(ID, CHANNEL,
+                                                                      NotificationManager.IMPORTANCE_DEFAULT));
         }
 
         Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -67,17 +63,17 @@ public class TimetableNotifier extends BroadcastReceiver {
         String type = PreferenceManager.getDefaultSharedPreferences(context)
                                        .getString("Uri Type", "TimeLY's Default");
 
-        final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null
-                                ? APP_DEFAULT : SYSTEM_DEFAULT;
+        final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
+                                                                                          : SYSTEM_DEFAULT;
 
-        Intent contentIntent = new Intent(context, MainActivity.class)
-                .setAction("com.noah.timely.timetable");
+        Intent contentIntent = new Intent(context, MainActivity.class).setAction("com.noah.timely.timetable");
 
         PendingIntent contentPI = PendingIntent.getActivity(context, 200, contentIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(spannedMessage))
-               .setSmallIcon(R.drawable.ic_table)
+               .setSmallIcon(R.drawable.ic_n_table)
+               .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
                .setContentTitle("Timetable")
                .setContentText(spannedMessage)
                .setSound(DEFAULT_URI)
@@ -90,8 +86,7 @@ public class TimetableNotifier extends BroadcastReceiver {
 
     // schedule the next alarm, which will be next week for the day this alarm goes off.
     // Technically, this is a repeating alarm.
-    private void scheduleFuture(Context context, String time, String course, int day, int position,
-                                int tabPosition) {
+    private void scheduleFuture(Context context, String time, String course, int day, int position, int tabPosition) {
         String[] sTime = time.split(":");
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, day);
@@ -113,10 +108,8 @@ public class TimetableNotifier extends BroadcastReceiver {
                         .putExtra(ARG_PAGE_POSITION, tabPosition)
                         .addCategory("com.noah.timely.timetable")
                         .setAction("com.noah.timely.timetable.addAction")
-                        .setDataAndType(
-                                Uri.parse("content://com.noah.timely.add."
-                                                  + calendar.getTimeInMillis()),
-                                "com.noah.timely.dataType");
+                        .setDataAndType(Uri.parse("content://com.noah.timely.add." + calendar.getTimeInMillis()),
+                                        "com.noah.timely.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent, 0);
 
