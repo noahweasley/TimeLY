@@ -29,13 +29,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
-import com.noah.timely.util.Utility.Alert;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.EmptyListEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.core.TimeRefreshEvent;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.Utility.Alert;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import static com.noah.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.noah.timely.alarms.AlarmReceiver.REPEAT_DAYS;
@@ -256,14 +257,11 @@ public class AlarmListFragment extends Fragment {
             newAlarm.setTime(alarmTime);
             newAlarm.setVibrate(true);
             newAlarm.setSnoozed(false);
-            newAlarm.setRepeatDays(new Boolean[]{true, true, true, true, true, true, true});
             newAlarm.setPosition((DB_initialPos = ++lastId));
             newAlarm.setInitialPosition(DB_initialPos);
+            newAlarm.setRepeatDays(new Boolean[]{true, true, true, true, true, true, true});
 
             boolean isAlarmAdded = database.addAlarm(newAlarm);
-
-            // The amount of milliseconds to the next day
-            final int NEXT_DAY = 1000 * 60 * 60 * 24;
 
             String[] time = alarmTime.split(":");
             int hh = Integer.parseInt(time[0]);
@@ -292,7 +290,7 @@ public class AlarmListFragment extends Fragment {
                 String message = isNextDay ? "Alarm set for: " + (is24 ? alarmTime : _12H) + " tomorrow"
                                            : "Alarm set for: " + (is24 ? alarmTime : _12H) + " today";
 
-                long alarmMillis = isNextDay ? calendar.getTimeInMillis() + NEXT_DAY
+                long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
                                              : calendar.getTimeInMillis();
 
                 Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
@@ -310,6 +308,7 @@ public class AlarmListFragment extends Fragment {
                 AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
                 PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
                                                                    PendingIntent.FLAG_CANCEL_CURRENT);
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     // alarm has to be triggered even when device is in idle or doze mode.
                     // This alarm is very important

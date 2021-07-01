@@ -463,10 +463,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         calendar.set(Calendar.MILLISECOND, 0);
 
         boolean isNextDay = System.currentTimeMillis() > calendar.getTimeInMillis();
-        // The amount of milliseconds to the next day
-        final int NEXT_DAY = 1000 * 60 * 60 * 24;
 
-        long alarmMillis = isNextDay ? calendar.getTimeInMillis() + NEXT_DAY
+        long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
                                      : calendar.getTimeInMillis();
 
         Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
@@ -505,6 +503,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
         PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
                                                            PendingIntent.FLAG_UPDATE_CURRENT);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // alarm has to be triggered even when device is in idle or doze mode.
@@ -616,9 +615,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                                            "com.noah.timely.alarm.dataType");
 
         AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity,
-                                                           11789,
-                                                           alarmReceiverIntent,
+        PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
                                                            PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

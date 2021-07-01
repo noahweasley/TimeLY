@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -50,9 +49,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         v_noMedia = findViewById(R.id.no_media);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar()
-                .setTitle(accessedStorage = getIntent().getStringExtra(STORAGE_ACCESS_ROOT));
-        Log.d(getClass().getSimpleName(), "Setting title to: " + accessedStorage);
+        getSupportActionBar().setTitle(accessedStorage = getIntent().getStringExtra(STORAGE_ACCESS_ROOT));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -119,8 +116,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         int bucketId = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
         int imgSize = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
         int name = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-        int bucketName
-                = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        int bucketName = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
 
         List<String> dirName = new ArrayList<>();
         while (imgCursor.moveToNext()) {
@@ -129,8 +125,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
             String fileName = imgCursor.getString(name);
             String folderName = imgCursor.getString(bucketName);
 
-            Uri contentUri
-                    = ContentUris.withAppendedId(storageUri, id);
+            Uri contentUri = ContentUris.withAppendedId(storageUri, id);
             Image currentImage = new Image(contentUri, size, fileName, folderName);
 
             int directoryIndex = linearSearch(dirName, folderName);
@@ -179,9 +174,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         @NonNull
         @Override
         public ImageDirectoryRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
-            View view =
-                    getLayoutInflater()
-                            .inflate(R.layout.layout_image_directory_row, viewGroup, false);
+            View view = getLayoutInflater().inflate(R.layout.layout_image_directory_row, viewGroup, false);
             return new ImageDirectoryRowHolder(view);
         }
 

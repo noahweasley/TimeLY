@@ -23,7 +23,7 @@
 	<string name = "edit">EDIT</string>
 	<string name = "heading">The title: This is a very, very long text just to describe the content</string>
 	<string name = "describe">This is a very, very long text just to describe the content</string>
-	<string name = "default_date">22–03–22</string>
+	<string name = "default_date">Thursday, 02 March, 2021</string>
 	<string name = "default_lecturer_name">Mr Noah</string>
 	<string name = "default_course">CSC201</string>
 	<string name = "no_task">no task</string>

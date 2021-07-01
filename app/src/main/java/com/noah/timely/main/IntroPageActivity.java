@@ -28,7 +28,6 @@ public class IntroPageActivity extends AppCompatActivity implements View.OnClick
         Button start = findViewById(R.id.start);
 
         ViewPager2 pager_intro = findViewById(R.id.intro_pager);
-        pager_intro.setOffscreenPageLimit(3);
         pager_intro.setAdapter(new IntroPagerAdapter(this));
         // set up page position indicator to react to page scroll
         TabLayout tab = findViewById(R.id.indicator);
@@ -62,8 +61,7 @@ public class IntroPageActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         startActivity(new Intent(this, MainActivity.class)
-                              .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                                | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                              .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
     private static class IntroPagerAdapter extends FragmentStateAdapter {

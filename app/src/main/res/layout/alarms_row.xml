@@ -20,7 +20,7 @@
             android:drawablePadding="8dp"
             android:fontFamily="sans-serif-condensed-light"
             android:textColor="@android:color/black"
-            android:textSize="25sp"
+            android:textSize="@dimen/alarm_list_time_text_size"
             external:drawableLeftCompat="@drawable/ic_alarm"
             external:drawableStartCompat="@drawable/ic_alarm"
             external:layout_constraintBottom_toBottomOf="parent"
@@ -85,7 +85,7 @@
                     android:layout_marginLeft="16dp"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@string/repeat"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/alarm_list_repeat_text_size"
                     external:layout_constraintBottom_toBottomOf="parent"
                     external:layout_constraintStart_toStartOf="parent"
                     external:layout_constraintTop_toTopOf="parent" />
@@ -99,7 +99,7 @@
                     android:layout_marginRight="16dp"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@string/vibrate"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/alarm_list_repeat_text_size"
                     external:layout_constraintBottom_toBottomOf="parent"
                     external:layout_constraintEnd_toEndOf="parent"
                     external:layout_constraintTop_toTopOf="parent" />
@@ -108,93 +108,94 @@
 
             <LinearLayout
                 android:id="@+id/button_row"
-                android:layout_margin="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_gap"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/sunday"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_marginEnd="@dimen/alarm_repeat_days_text_margin"
+                    android:layout_marginRight="@dimen/alarm_repeat_days_text_margin"
                     android:gravity="center"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginRight="18dp"
                     android:text="S"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/alarm_list_repeat_days_text_size"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/monday"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginEnd="@dimen/alarm_repeat_days_text_margin"
+                    android:layout_marginRight="@dimen/alarm_repeat_days_text_margin"
                     android:gravity="center"
                     android:text="M"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/alarm_list_repeat_days_text_size"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/tuesday"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_marginEnd="@dimen/alarm_repeat_days_text_margin"
+                    android:layout_marginRight="@dimen/alarm_repeat_days_text_margin"
                     android:gravity="center"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginRight="18dp"
                     android:text="T"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/alarm_list_repeat_days_text_size"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/wednesday"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginEnd="18dp"
+                    android:layout_marginEnd="@dimen/alarm_repeat_days_text_margin"
+                    android:layout_marginRight="@dimen/alarm_repeat_days_text_margin"
                     android:gravity="center"
-                    android:layout_marginRight="18dp"
                     android:text="W"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/alarm_list_repeat_days_text_size"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/thursday"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginEnd="18dp"
+                    android:layout_marginEnd="@dimen/alarm_repeat_days_text_margin"
+                    android:layout_marginRight="@dimen/alarm_repeat_days_text_margin"
                     android:gravity="center"
-                    android:layout_marginRight="18dp"
                     android:text="T"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/alarm_list_repeat_days_text_size"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/friday"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginEnd="@dimen/alarm_repeat_days_text_margin"
+                    android:layout_marginRight="@dimen/alarm_repeat_days_text_margin"
                     android:gravity="center"
                     android:text="F"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/alarm_list_repeat_days_text_size"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/saturday"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_marginEnd="@dimen/alarm_repeat_days_text_margin"
+                    android:layout_marginRight="@dimen/alarm_repeat_days_text_margin"
                     android:gravity="center"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginRight="18dp"
                     android:text="S"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/alarm_list_repeat_days_text_size"
                     tools:ignore="HardcodedText" />
 
             </LinearLayout>
@@ -214,7 +215,7 @@
                 android:maxLines="1"
                 android:text="@string/label"
                 android:textColor="@android:color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/alarm_list_label_text_size"
                 external:drawableLeftCompat="@drawable/ic_label"
                 external:drawableStartCompat="@drawable/ic_label" />
 
@@ -231,7 +232,7 @@
                 android:maxLines="1"
                 android:text="@string/choose_ringtone"
                 android:textColor="@android:color/black"
-                android:textSize="15sp"
+                android:textSize="@dimen/alarm_list_ringtone_text_size"
                 external:drawableLeftCompat="@drawable/ic_notification"
                 external:drawableStartCompat="@drawable/ic_notification"
                 tools:ignore="RtlSymmetry" />
@@ -282,7 +283,6 @@
             tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </LinearLayout>
 

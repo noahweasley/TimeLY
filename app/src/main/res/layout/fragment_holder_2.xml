@@ -32,13 +32,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        external:layout_constraintGuide_percent=".3" />
+        external:layout_constraintGuide_begin="@dimen/alarm_time_bottom_position" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        external:layout_constraintGuide_percent=".2" />
+        external:layout_constraintGuide_begin="@dimen/alarm_list_top_position"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

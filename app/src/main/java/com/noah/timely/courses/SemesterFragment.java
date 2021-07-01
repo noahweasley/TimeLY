@@ -201,8 +201,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     }
 
     public String getSemester() {
-        if (getPagePosition() == 0)
-            return SchoolDatabase.FIRST_SEMESTER;
+        if (getPagePosition() == 0) return SchoolDatabase.FIRST_SEMESTER;
         else return SchoolDatabase.SECOND_SEMESTER;
     }
 
@@ -440,10 +439,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                   .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedCoursesCount();
-            Snackbar snackbar
-                    = Snackbar.make(coordinator,
-                                    count + " Course" + (count > 1 ? "s" : "") + " Deleted",
-                                    Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(coordinator, count + " Course" + (count > 1 ? "s" : "") + " Deleted",
+                                              Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());

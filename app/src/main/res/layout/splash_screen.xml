@@ -8,17 +8,18 @@
 	android:background = "@color/colorPrimaryDark">
 
 	<ImageView
-		android:id = "@+id/app_icon"
-		android:layout_width = "100dp"
-		android:layout_height = "100dp"
-		android:contentDescription = "App Icon"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toTopOf = "parent"
-		external:layout_constraintVertical_bias = "0.35000002"
-		external:srcCompat = "@mipmap/ic_timely_max_foreground"
-		tools:ignore = "HardcodedText" />
+		android:id="@+id/app_icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:contentDescription="App Icon"
+		external:layout_constraintBottom_toBottomOf="parent"
+		external:layout_constraintEnd_toEndOf="parent"
+		external:layout_constraintHorizontal_bias="0.498"
+		external:layout_constraintStart_toStartOf="parent"
+		external:layout_constraintTop_toTopOf="parent"
+		external:layout_constraintVertical_bias="0.35000002"
+		external:srcCompat="@mipmap/timely_icon_splash"
+		tools:ignore="HardcodedText" />
 
 	<TextView
 		android:id="@+id/app_name"
@@ -27,12 +28,12 @@
 		android:fontFamily="@font/roboto_black"
 		android:text="@string/app_name"
 		android:textColor="@android:color/white"
-		android:textSize="52sp"
+		android:textSize="@dimen/splash_app_name_size"
 		external:layout_constraintBottom_toBottomOf="parent"
 		external:layout_constraintEnd_toEndOf="parent"
 		external:layout_constraintStart_toStartOf="parent"
 		external:layout_constraintTop_toBottomOf="@+id/app_icon"
-		external:layout_constraintVertical_bias="0.19"
+		external:layout_constraintVertical_bias="0.22000003"
 		tools:text="@string/app_name" />
 
 	<ImageButton

@@ -22,7 +22,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-@SuppressWarnings("ConstantConditions")
 public class AlarmTimeFragment extends Fragment {
     private ImageView img_dayAndNight;
     private TextView alarmDate, alarmMin, alarmHour, am_pm;
