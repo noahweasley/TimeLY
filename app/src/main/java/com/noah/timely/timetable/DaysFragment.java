@@ -123,8 +123,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
                     doEmptyTimetableUpdate(null);
                     dismissProgressbar(indeterminateProgress, isEmpty);
                     rowAdapter.notifyDataSetChanged();
-                    if (itemCount != null)
-                        itemCount.setText(String.valueOf(tList.size()));
+                    if (itemCount != null) itemCount.setText(String.valueOf(tList.size()));
                 });
             }
         });

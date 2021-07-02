@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@SuppressWarnings("ConstantConditions")
 public class SemesterFragment extends Fragment implements ActionMode.Callback {
     public static final String ARG_POSITION = "page position";
     public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Courses";
@@ -124,13 +123,10 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
             float requiredWidthDP = 368, requiredHeightDP = 750;
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
             boolean useDialog = preferences.getBoolean("prefer_dialog", true);
-
             // choose what kind of task-add method to use base on device width and user pref
             if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
-                startActivity(new Intent(context, AddCourseActivity.class)
-                                      .putExtra(ARG_POSITION, getPagePosition()));
+                startActivity(new Intent(context, AddCourseActivity.class).putExtra(ARG_POSITION, getPagePosition()));
             } else {
                 if (useDialog) {
                     new AddCourseDialog().show(context, getPagePosition());
@@ -146,17 +142,13 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         rv_Courses.setHasFixedSize(true);
         courseAdapter.setHasStableIds(true);
         rv_Courses.setAdapter(courseAdapter);
-
-        rv_Courses.setLayoutManager(new LinearLayoutManager(getActivity(),
-                                                            LinearLayoutManager.VERTICAL,
-                                                            false));
+        rv_Courses.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null)
-            courseAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) courseAdapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

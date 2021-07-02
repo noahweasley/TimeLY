@@ -38,7 +38,6 @@ import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.RequestUpdateEvent;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.courses.AddCourseActivity;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
@@ -104,8 +103,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                 ExamModel em1 = (ExamModel) e1;
                 ExamModel em2 = (ExamModel) e2;
                 int cmp = Integer.compare(em1.getDayIndex(), em2.getDayIndex());
-                if (cmp != 0)
-                    return cmp;
+                if (cmp != 0) return cmp;
                 else return Integer.compare(em1.getStartAsInt(), em2.getStartAsInt());
             });
             // post a message to the message queue to update the table's ui
@@ -113,11 +111,9 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                 getActivity().runOnUiThread(() -> {
                     boolean isEmpty = eList.isEmpty();
                     doEmptyExamsUpdate(null);
-                    // animate progress bar dismissal
                     dismissProgressbar(indeterminateProgress, isEmpty);
                     examRowAdapter.notifyDataSetChanged();
-                    if (itemCount != null)
-                        itemCount.setText(String.valueOf(eList.size()));
+                    if (itemCount != null) itemCount.setText(String.valueOf(eList.size()));
                 });
             }
         });
@@ -133,21 +129,17 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
             float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
             float requiredWidthDP = 368, requiredHeightDP = 750;
 
-            SharedPreferences preferences =
-                    PreferenceManager.getDefaultSharedPreferences(context);
-
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             boolean useDialog = preferences.getBoolean("prefer_dialog", true);
 
             // choose what kind of task-add method to use base on device width and user pref
             if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
-                startActivity(new Intent(context, AddExamActivity.class)
-                                      .putExtra(ARG_POSITION, pagePos));
+                startActivity(new Intent(context, AddExamActivity.class).putExtra(ARG_POSITION, pagePos));
             } else {
                 if (useDialog) {
                     new AddExamDialog().show(getContext(), pagePos);
                 } else {
-                    startActivity(new Intent(context, AddExamActivity.class)
-                                          .putExtra(ARG_POSITION, pagePos));
+                    startActivity(new Intent(context, AddExamActivity.class).putExtra(ARG_POSITION, pagePos));
                 }
             }
         });
@@ -158,9 +150,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
         examRowAdapter.setHasStableIds(true);
         rv_Exams.setAdapter(examRowAdapter);
 
-        rv_Exams.setLayoutManager(new LinearLayoutManager(getActivity(),
-                                                          LinearLayoutManager.VERTICAL,
-                                                          false));
+        rv_Exams.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 
     @Override
@@ -321,8 +311,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
         @NonNull
         @Override
         public ExamRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.exam_list_row, parent,
-                                                    false);
+            View view = getLayoutInflater().inflate(R.layout.exam_list_row, parent, false);
             return (rowHolder = new ExamRowHolder(view));
         }
 
@@ -445,11 +434,9 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                   .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedCoursesCount();
-            Snackbar snackbar
-                    = Snackbar.make(coordinator,
-                                    count + " Exam" + (count > 1 ? "s" : "") + " Deleted",
-                                    Snackbar.LENGTH_LONG);
-
+            Snackbar snackbar = Snackbar.make(coordinator,
+                                              count + " Exam" + (count > 1 ? "s" : "") + " Deleted",
+                                              Snackbar.LENGTH_LONG);
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());
             snackbar.show();

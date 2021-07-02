@@ -83,15 +83,13 @@ public class AddAssignmentActivity extends AppCompatActivity {
         descriptionBox = findViewById(R.id.description_box);
 
         submitButton.setOnClickListener(v -> saveOrUpdateAssignment());
-        btn_gallery.setOnClickListener(
-                v -> startActivity(new Intent(this, StorageViewer.class).setAction(ADD_NEW)));
+        btn_gallery.setOnClickListener(v -> startActivity(new Intent(this, StorageViewer.class).setAction(ADD_NEW)));
 
-        ArrayAdapter<String> courseAdapter
-                = new ArrayAdapter<>(this,
-                                     android.R.layout.simple_spinner_item,
-                                     courseList = database.getAllRegisteredCourseCodes());
+        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
+                                                                R.layout.simple_spinner_item,
+                                                                courseList = database.getAllRegisteredCourseCodes());
 
-        courseAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
 
         spin_courseCode.setAdapter(courseAdapter);
         spin_courseCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

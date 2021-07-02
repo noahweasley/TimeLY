@@ -45,17 +45,19 @@
         external:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_black"
             android:text="@string/no_image"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/no_task_text_size"
+            android:layout_margin="@dimen/layout_gap"
             external:layout_constraintBottom_toTopOf="@id/img_no_event"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent"
-            external:layout_constraintVertical_bias="0.75" />
+            external:layout_constraintVertical_chainStyle="packed" />
 
         <ImageView
             android:id="@+id/img_no_event"
@@ -67,8 +69,8 @@
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent"
-            external:layout_constraintVertical_bias=".6"
+            external:layout_constraintTop_toBottomOf="@id/header"
+            external:layout_constraintVertical_bias="0.78"
             external:srcCompat="@drawable/image_availability" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -103,6 +103,8 @@
 			android:layout_height = "wrap_content"
 			android:layout_gravity = "bottom|center"
 			android:layout_margin = "@dimen/fab_margin"
+			external:fabCustomSize="@dimen/fab_size"
+			external:maxImageSize="@dimen/fab_icon_size"
 			external:srcCompat = "@drawable/ic_add"
 			android:contentDescription = "@string/add" />
 

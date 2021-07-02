@@ -30,9 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SchoolDatabase database = new SchoolDatabase(context);
-
-        // Handle the alarm and then show the UI to wake the user up, that is, if he/she
-        // is asleep :)
+        // Handle the alarm and then show the UI to wake the user up, that is, if he/she is asleep :)
         int dataPos = intent.getIntExtra(ALARM_POS, -1); // The position of the alarm
 
         String action = intent.getStringExtra("action");
@@ -104,9 +102,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                .setContentText(alarmLabel)
                .setSmallIcon(R.drawable.ic_n_alarm)
                .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+               .setContentIntent(pi)
                .setFullScreenIntent(pi, true)
-               .addAction(new NotificationCompat.Action(R.drawable.ic_snooze_black, "Snooze", actionSnooze))
-               .addAction(new NotificationCompat.Action(R.drawable.ic_cancel, "Dismiss", actionDismiss));
+               .addAction(new NotificationCompat.Action(R.drawable.ic_n_snooze, "Snooze", actionSnooze))
+               .addAction(new NotificationCompat.Action(R.drawable.ic_n_cancel, "Dismiss", actionDismiss));
 
         manager.notify(NOTIFICATION_ID, builder.build());
         // start playing alarm tone using the AlarmNotificationService
