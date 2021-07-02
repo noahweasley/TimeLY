@@ -23,20 +23,22 @@
         android:layout_height="0dp"
         external:layout_constraintBottom_toTopOf="@+id/bottom_actions_container"
         external:layout_constraintEnd_toEndOf="parent"
+        android:paddingBottom="@dimen/layout_gap"
+        external:layout_constraintHorizontal_bias="1.0"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/lecturer_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="@dimen/layout_gap"
+                android:layout_marginTop="@dimen/layout_gap"
                 android:background="@drawable/bg_dialog_form"
                 external:errorEnabled="true">
 
@@ -63,7 +65,8 @@
                 android:id="@+id/title_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="@dimen/layout_gap"
+                android:layout_marginTop="@dimen/layout_gap"
                 android:background="@drawable/bg_dialog_form"
                 external:errorEnabled="true">
 
@@ -89,7 +92,8 @@
                 android:id="@+id/description_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="@dimen/layout_gap"
+                android:layout_marginTop="@dimen/layout_gap"
                 android:background="@drawable/bg_dialog_form"
                 external:errorEnabled="true">
 
@@ -105,8 +109,8 @@
                     android:hint="@string/description"
                     android:imeOptions="actionNext"
                     android:inputType="textMultiLine"
-                    android:maxLines="5"
-                    android:minLines="5"
+                    android:maxLines="@integer/editor_large_input_size"
+                    android:minLines="@integer/editor_large_input_size"
                     android:textColor="@android:color/black"
                     android:textCursorDrawable="@drawable/colored_cursor"
                     tools:ignore="Autofill" />
@@ -117,7 +121,8 @@
                 android:id="@+id/date_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="@dimen/layout_gap"
+                android:layout_marginTop="@dimen/layout_gap"
                 android:background="@drawable/bg_dialog_form"
                 external:errorEnabled="true">
 
@@ -148,16 +153,18 @@
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/layout_gap"
+                    android:layout_marginTop="@dimen/layout_gap"
                     android:text="@string/choose_course"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/assignment_course_code_text_size" />
 
                 <Spinner
                     android:id="@+id/chooseCourse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp" />
+                    android:layout_marginHorizontal="@dimen/layout_gap"
+                    android:layout_marginTop="@dimen/layout_gap" />
 
             </LinearLayout>
 
@@ -177,12 +184,10 @@
             android:id="@+id/submitButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="@dimen/layout_gap"
             android:background="@drawable/bg_submit"
+            android:minHeight="@dimen/button_min_height"
+            android:textSize="@dimen/button_text_size"
             android:text="@string/register"
             android:textColor="@android:color/white"
             external:layout_constraintBottom_toBottomOf="parent"
@@ -195,8 +200,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:contentDescription="@string/todo"
+            external:fabCustomSize="@dimen/fab_size"
+            external:maxImageSize="@dimen/fab_icon_size"
             external:backgroundTint="@color/colorPrimaryDark"
-            external:fabSize="auto"
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"
             external:srcCompat="@drawable/ic_image" />

@@ -10,10 +10,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:paddingEnd="16dp"
+        android:paddingHorizontal="@dimen/data_list_padding"
+        android:paddingTop="@dimen/data_list_padding"
         android:paddingBottom="80dp"
         android:visibility="gone"
         external:layout_constraintBottom_toBottomOf="parent"
@@ -91,6 +89,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
             android:layout_margin="@dimen/fab_margin"
+            external:fabCustomSize="@dimen/fab_size"
+            external:maxImageSize="@dimen/fab_icon_size"
             android:contentDescription="@string/add_exam"
             external:srcCompat="@drawable/ic_add" />
 

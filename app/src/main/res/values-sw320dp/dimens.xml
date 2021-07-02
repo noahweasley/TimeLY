@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_margin">8dp</dimen>
     <dimen name="default_gap">10dp</dimen>
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="card_margin_bottom">8dp</dimen>
@@ -36,4 +36,13 @@
     <dimen name="alarm_repeat_days_text_margin">10dp</dimen>
     <dimen name="data_list_padding">8dp</dimen>
     <dimen name="course_list_height">110dp</dimen>
+    <dimen name="range_editor_margin">4dp</dimen>
+    <dimen name="timetable_list_height">120dp</dimen>
+    <dimen name="scheduled_list_row_height">140dp</dimen>
+    <dimen name="scheduled_day_text_size">14sp</dimen>
+    <dimen name="schedule_course_code_text_size">18sp</dimen>
+    <dimen name="fab_size">40dp</dimen>
+    <dimen name="fab_icon_size">18dp</dimen>
+    <dimen name="extra_margin">80dp</dimen>
+    <dimen name="assignment_course_code_text_size">14sp</dimen>
 </resources>
