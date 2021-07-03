@@ -6,18 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.noah.timely.R;
-import com.squareup.picasso.Picasso;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.noah.timely.R;
+import com.squareup.picasso.Picasso;
 
 public class FullScreenImageFragment extends Fragment {
     public static final String ARG_IMAGE = "Fullscreen image";
 
     public static FullScreenImageFragment newInstance(Image image) {
-
         Bundle args = new Bundle();
         args.putSerializable(ARG_IMAGE, image);
         FullScreenImageFragment fragment = new FullScreenImageFragment();

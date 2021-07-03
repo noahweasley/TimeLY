@@ -49,7 +49,7 @@ public class TimelyBasicInfoDialog extends DialogFragment implements View.OnClic
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges_8);
+            getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges);
             setContentView(R.layout.dialog_about);
 
             ImageButton btn_close = findViewById(R.id.close);

@@ -26,6 +26,7 @@ public class TimelyUpdateInfoDialog extends DialogFragment implements View.OnCli
     public void show(Context context) {
         FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
         show(manager, TAG);
+
     }
 
     @Override

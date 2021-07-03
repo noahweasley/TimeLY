@@ -18,7 +18,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.noah.timely.R;
 
-public class IntroPageActivity extends AppCompatActivity implements View.OnClickListener {
+public class IntroPageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,7 +26,6 @@ public class IntroPageActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.intro);
 
         Button start = findViewById(R.id.start);
-
         ViewPager2 pager_intro = findViewById(R.id.intro_pager);
         pager_intro.setAdapter(new IntroPagerAdapter(this));
         // set up page position indicator to react to page scroll
@@ -50,18 +49,16 @@ public class IntroPageActivity extends AppCompatActivity implements View.OnClick
 
         });
         // navigate to landing page
-        start.setOnClickListener(this);
+        start.setOnClickListener(v -> {
+            Intent nav_main = new Intent(this, MainActivity.class);
+            nav_main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(nav_main);
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onClick(View v) {
-        startActivity(new Intent(this, MainActivity.class)
-                              .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
     private static class IntroPagerAdapter extends FragmentStateAdapter {

@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@SuppressWarnings("ConstantConditions")
 public class ViewImagesActivity extends AppCompatActivity implements ActionMode.Callback {
     public static final String ARG_POSITION = "com.noah.timely.viewImagesActivity.position";
     public static final String DELETE_REQUEST = "Delete Image";
@@ -119,8 +118,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         rv_imageList.setAdapter(imageAdapter = new ImageAdapter(choiceMode));
 
         findViewById(R.id.add_new).setOnClickListener(
-                v -> startActivity(new Intent(this, StorageViewer.class)
-                                           .setAction(ADD_NEW)));
+                v -> startActivity(new Intent(this, StorageViewer.class).setAction(ADD_NEW)));
 
         ItemTouchHelper swipeHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
@@ -149,8 +147,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
                 runner.setRequestParams(builder.getParams())
                       .runRequest(DELETE_REQUEST);
 
-                Snackbar snackbar
-                        = Snackbar.make(coordinator, "Image Deleted", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinator, "Image Deleted", Snackbar.LENGTH_LONG);
                 snackbar.setActionTextColor(Color.YELLOW);
                 snackbar.setAction("UNDO", v -> runner.undoRequest());
                 snackbar.show();
@@ -368,10 +365,9 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
                   .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedImageCount();
-            Snackbar snackbar
-                    = Snackbar.make(coordinator,
-                                    count + " Image" + (count > 1 ? "s" : "") + " Deleted",
-                                    Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(coordinator,
+                                              count + " Image" + (count > 1 ? "s" : "") + " Deleted",
+                                              Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());

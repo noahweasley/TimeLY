@@ -1,83 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-	xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:external = "http://schemas.android.com/apk/res-auto"
-	xmlns:tools = "http://schemas.android.com/tools"
-	android:layout_width = "match_parent"
-	android:layout_height = "200dp"
-	android:layout_margin = "2dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/image_row_size"
+    android:layout_margin="2dp">
 
-	<ImageView
-		android:id = "@+id/rowImage"
-		android:layout_width = "0dp"
-		android:layout_height = "0dp"
-		android:background = "@drawable/bg_images"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toTopOf = "parent"
-		tools:ignore = "ContentDescription" />
+    <ImageView
+        android:id="@+id/rowImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_images"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
-	<View
-        android:layout_width = "0dp"
-		android:layout_height = "100dp"
-		android:background = "@drawable/bg_details"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toBottomOf = "@id/rowImage" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="@drawable/bg_details"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@id/rowImage" />
 
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id = "@+id/checked_overlay"
-		android:layout_width = "0dp"
-		android:layout_height = "0dp"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toTopOf = "parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/checked_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toTopOf="parent">
 
-		<View
-            android:layout_width = "0dp"
-			android:layout_height = "0dp"
-			android:background = "@color/bg_multiSelect_images"
-			external:layout_constraintBottom_toBottomOf = "parent"
-			external:layout_constraintEnd_toEndOf = "parent"
-			external:layout_constraintStart_toStartOf = "parent"
-			external:layout_constraintTop_toTopOf = "parent" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/bg_multiSelect_images"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent" />
 
-		<ImageView
-            android:layout_width = "wrap_content"
-			android:layout_height = "wrap_content"
-			android:contentDescription = "@string/check_stat"
-			external:layout_constraintBottom_toBottomOf = "parent"
-			external:layout_constraintEnd_toEndOf = "parent"
-			external:layout_constraintStart_toStartOf = "parent"
-			external:layout_constraintTop_toTopOf = "parent"
-			external:srcCompat = "@drawable/ic_baseline_done_24" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/check_stat"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            external:srcCompat="@drawable/ic_baseline_done_24" />
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-	<ImageView
-		android:id = "@+id/img_folder"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:layout_margin = "@dimen/folder_img_margin"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:srcCompat = "@drawable/ic_image"
-		tools:ignore = "ContentDescription" />
+    <ImageView
+        android:id="@+id/img_folder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/folder_img_margin"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:srcCompat="@drawable/ic_image"
+        tools:ignore="ContentDescription" />
 
-	<TextView
-		android:id = "@+id/filename"
-		android:layout_width = "150dp"
-		android:layout_height = "wrap_content"
-		android:layout_margin = "@dimen/folder_img_margin"
-		android:ellipsize = "middle"
-		android:singleLine = "true"
-		android:text = "@string/long_text"
-		android:textColor = "@android:color/white"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toEndOf = "@id/img_folder" />
+    <TextView
+        android:id="@+id/filename"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/folder_img_margin"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:text="@string/long_text"
+        android:textColor="@android:color/white"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toEndOf="@id/img_folder" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

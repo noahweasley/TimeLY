@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:external="http://schemas.android.com/apk/res-auto"
-    android:layout_width="320dp"
-    android:layout_height="480dp"
+    android:layout_width="@dimen/normal_dialog_width"
+    android:layout_height="@dimen/update_dialog_height"
     android:background="@drawable/bg_day_and_night">
 
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/wave_decoration_height"
         android:background="@drawable/wavy"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
@@ -18,7 +18,7 @@
         android:id="@+id/close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/layout_gap"
         android:background="@null"
         android:contentDescription="@string/close"
         external:layout_constraintEnd_toEndOf="parent"
@@ -38,10 +38,10 @@
         external:srcCompat="@drawable/ic_rocket" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/new_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/layout_gap"
         android:contentDescription="@string/new_badge"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toBottomOf="@id/rocket"
@@ -51,30 +51,30 @@
         android:id="@+id/version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/layout_gap"
         android:fontFamily="sans-serif-medium"
         android:text="@string/version"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="24sp"
+        android:textSize="@dimen/update_text_size"
         android:textStyle="bold"
-        external:layout_constraintBottom_toBottomOf="@+id/imageView4"
+        external:layout_constraintBottom_toBottomOf="@+id/new_badge"
         external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintTop_toTopOf="@+id/imageView4" />
+        external:layout_constraintTop_toTopOf="@+id/new_badge" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/layout_gap"
         android:background="@drawable/bg_notice"
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="@string/initial_version_not"
         android:textColor="@color/light_grey"
-        android:textSize="24sp"
+        android:textSize="@dimen/update_text_size"
         android:textStyle="bold"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        external:layout_constraintTop_toBottomOf="@id/new_badge" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

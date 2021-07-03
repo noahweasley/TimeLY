@@ -7,14 +7,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.noah.timely.R;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-@SuppressWarnings("ConstantConditions")
+import com.noah.timely.R;
+
 public class AssignmentViewDialog extends DialogFragment {
     static final String ARG_DATA = "Assignment";
 
@@ -34,7 +33,7 @@ public class AssignmentViewDialog extends DialogFragment {
     private class AVDialog extends Dialog {
 
         public AVDialog(Context context) {
-            super(context);
+            super(context, R.style.Dialog_Closeable);
         }
 
         @Override
@@ -57,8 +56,7 @@ public class AssignmentViewDialog extends DialogFragment {
             tv_description.setText(assignment.getDescription());
 
             // Start image viewer
-            btn_viewImages.setOnClickListener(
-                    v -> ViewImagesActivity.start(getContext(), position, title));
+            btn_viewImages.setOnClickListener(v -> ViewImagesActivity.start(getContext(), position, title));
         }
     }
 }

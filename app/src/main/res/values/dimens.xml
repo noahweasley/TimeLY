@@ -45,4 +45,18 @@
     <dimen name="fab_icon_size">24dp</dimen>
     <dimen name="extra_margin">80dp</dimen>
     <dimen name="assignment_course_code_text_size">14sp</dimen>
+    <dimen name="storage_viewer_text_size">18sp</dimen>
+    <dimen name="storage_view_container_height">80dp</dimen>
+    <dimen name="assignment_list_height">225dp</dimen>
+    <dimen name="assignment_text_size">14sp</dimen>
+    <dimen name="assignment_dialog_text_size_medium">18sp</dimen>
+    <dimen name="image_row_size">200dp</dimen>
+    <dimen name="image_row_size_2">300dp</dimen>
+    <dimen name="update_dialog_height">480dp</dimen>
+    <dimen name="wave_decoration_height">100dp</dimen>
+    <dimen name="rocket_width">150dp</dimen>
+    <dimen name="rocket_height">100dp</dimen>
+    <dimen name="update_text_size">24sp</dimen>
+    <dimen name="info_version_text_size">24sp</dimen>
+    <dimen name="app_desc_text_size">18sp</dimen>
 </resources>

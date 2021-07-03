@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noah.timely.R;
+import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
-            new Thread(this).start();
+            ThreadUtils.runBackgroundTask(this);
         } else {
             ActivityCompat.requestPermissions(this,
                                               new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},

@@ -26,6 +26,7 @@ import com.noah.timely.R;
 import com.noah.timely.assignment.AddAssignmentActivity;
 import com.noah.timely.assignment.ViewImagesActivity;
 import com.noah.timely.core.ChoiceMode;
+import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ import static com.noah.timely.assignment.ViewImagesActivity.ARG_URI_LIST;
 import static com.noah.timely.gallery.ImageDirectory.EXTERNAL;
 import static com.noah.timely.gallery.ImageDirectory.STORAGE_ACCESS_ROOT;
 
-@SuppressWarnings("ConstantConditions")
 @SuppressLint("InlinedApi")
 public class ImageGallery extends AppCompatActivity implements Runnable, ActionMode.Callback {
     public static final String ARG_FILES_COUNT = "Attached files count";
@@ -65,7 +65,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
         imageList.setLayoutManager(new GridLayoutManager(this, 2));
         imageList.setClickable(true);
         doViewUpdate();
-        new Thread(this).start();
+        ThreadUtils.runBackgroundTask(this);
     }
 
     @Override
@@ -89,8 +89,8 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
     @Override
     public void onBackPressed() {
         String extraRoot = getIntent().getStringExtra(STORAGE_ACCESS_ROOT);
-        startActivity(new Intent(this, ImageDirectory.class)
-                              .putExtra(STORAGE_ACCESS_ROOT, extraRoot));
+        startActivity(new Intent(this, ImageDirectory.class).putExtra(STORAGE_ACCESS_ROOT, extraRoot));
+
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
@@ -120,10 +120,8 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
         int idColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
         int sizeColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
-        int displayNameColumn
-                = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-        int bucketDisplayNameColumn
-                = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        int displayNameColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+        int bucketDisplayNameColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
 
         while (imgCursor.moveToNext()) {
             long id = imgCursor.getLong(idColumn);
@@ -169,8 +167,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
         Log.d(getClass().getSimpleName(), "Action: " + getIntent().getAction());
 
         if (getIntent().getAction().equals(ViewImagesActivity.ADD_NEW)) {
-            ImageMultiChoiceMode imageMultiChoiceMode
-                    = (ImageMultiChoiceMode) imageAdapter.getChoiceMode();
+            ImageMultiChoiceMode imageMultiChoiceMode = (ImageMultiChoiceMode) imageAdapter.getChoiceMode();
 
             // FIXME: 2/23/2021 Find the cause of the additional images
             startActivity(new Intent(this, ViewImagesActivity.class)
@@ -194,15 +191,14 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
         private boolean multiSelectionEnabled;
 
         public ImageAdapter(ChoiceMode choiceMode) {
+            super();
             this.choiceMode = choiceMode;
         }
 
         @NonNull
         @Override
         public ImageGalleryRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
-            View view =
-                    getLayoutInflater()
-                            .inflate(R.layout.layout_image_gallery_row, viewGroup, false);
+            View view = getLayoutInflater().inflate(R.layout.layout_image_gallery_row, viewGroup, false);
             return new ImageGalleryRowHolder(view);
         }
 
