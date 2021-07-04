@@ -80,7 +80,7 @@
             android:layout_marginHorizontal="@dimen/layout_gap"
             android:text="@string/default_course_name"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textSize="@dimen/course_course_name_text_size"
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toEndOf="@id/right_indicator"

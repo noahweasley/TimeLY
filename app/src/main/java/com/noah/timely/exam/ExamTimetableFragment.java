@@ -131,7 +131,6 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             boolean useDialog = preferences.getBoolean("prefer_dialog", true);
-
             // choose what kind of task-add method to use base on device width and user pref
             if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
                 startActivity(new Intent(context, AddExamActivity.class).putExtra(ARG_POSITION, pagePos));
@@ -295,7 +294,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
         else progressBar.animate()
                         .scaleX(0.0f)
                         .scaleY(0.0f)
-                        .setDuration(1000);
+                        .setDuration(250);
     }
 
     class ExamRowAdapter extends RecyclerView.Adapter<ExamRowHolder> {

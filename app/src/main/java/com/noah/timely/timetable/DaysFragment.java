@@ -280,7 +280,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
         else progressBar.animate()
                         .scaleX(0.0f)
                         .scaleY(0.0f)
-                        .setDuration(1000);
+                        .setDuration(250);
     }
 
     @Override

@@ -59,4 +59,5 @@
     <dimen name="update_text_size">24sp</dimen>
     <dimen name="info_version_text_size">24sp</dimen>
     <dimen name="app_desc_text_size">18sp</dimen>
+    <dimen name="course_course_name_text_size">16sp</dimen>
 </resources>

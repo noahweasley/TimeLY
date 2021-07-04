@@ -106,10 +106,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                 dismissProgressbar(indeterminateProgress, isEmpty);
                 courseAdapter.notifyDataSetChanged();
 
-                if (itemCount != null)
-                    itemCount.setText(String.valueOf(cList.size()));
+                if (itemCount != null) itemCount.setText(String.valueOf(cList.size()));
             });
-
         });
 
         noCourseView = view.findViewById(R.id.no_courses_view);
@@ -202,7 +200,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         else progressBar.animate()
                         .scaleX(0.0f)
                         .scaleY(0.0f)
-                        .setDuration(1000);
+                        .setDuration(250);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

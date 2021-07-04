@@ -38,7 +38,7 @@
     <dimen name="course_list_height">110dp</dimen>
     <dimen name="range_editor_margin">4dp</dimen>
     <dimen name="timetable_list_height">120dp</dimen>
-    <dimen name="scheduled_list_row_height">140dp</dimen>
+    <dimen name="scheduled_list_row_height">145dp</dimen>
     <dimen name="scheduled_day_text_size">14sp</dimen>
     <dimen name="schedule_course_code_text_size">18sp</dimen>
     <dimen name="fab_size">40dp</dimen>
@@ -58,4 +58,5 @@
     <dimen name="rocket_height">100dp</dimen>
     <dimen name="update_text_size">18sp</dimen>
     <dimen name="app_desc_text_size">14sp</dimen>
+    <dimen name="course_course_name_text_size">14sp</dimen>
 </resources>

@@ -203,7 +203,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         else bar.animate()
                 .scaleX(0.0f)
                 .scaleY(0.0f)
-                .setDuration(1000);
+                .setDuration(250);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

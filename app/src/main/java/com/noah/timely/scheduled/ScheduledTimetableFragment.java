@@ -56,7 +56,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-@SuppressWarnings({"ConstantConditions"})
 public class ScheduledTimetableFragment extends Fragment implements ActionMode.Callback {
     public static final String DELETE_REQUEST = "delete scheduled timetable";
     public static final String MULTIPLE_DELETE_REQUEST = "delete multiple timetable";
@@ -98,8 +97,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         setHasOptionsMenu(true);
         Resources resources = getResources();
         coordinator = view.findViewById(R.id.coordinator);
-        boolean isInLandscape =
-                resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        boolean isInLandscape = resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
         ThreadUtils.runBackgroundTask(() -> {
@@ -110,8 +108,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
                 TimetableModel tm1 = ((TimetableModel) t1);
                 TimetableModel tm2 = ((TimetableModel) t2);
                 int cmpDay = Integer.compare(tm1.getDayIndex(), tm2.getDayIndex());
-                if (cmpDay == 0)
-                    return Integer.compare(tm1.getStartTimeAsInt(), tm2.getStartTimeAsInt());
+                if (cmpDay == 0) return Integer.compare(tm1.getStartTimeAsInt(), tm2.getStartTimeAsInt());
                 else return cmpDay;
             });
             // post a message to the message queue to update the table's ui
@@ -121,8 +118,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
                     doEmptyTimetableUpdate(null);
                     dismissProgressbar(indeterminateProgress, isEmpty);
                     tableRowAdapter.notifyDataSetChanged();
-                    if (itemCount != null)
-                        itemCount.setText(String.valueOf(tList.size()));
+                    if (itemCount != null) itemCount.setText(String.valueOf(tList.size()));
                 });
         });
 
@@ -167,24 +163,21 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         rV_timetable.setHasFixedSize(true);
         rV_timetable.setAdapter(tableRowAdapter);
         swiper.attachToRecyclerView(rV_timetable);
+
         if (isInLandscape) {
             rV_timetable.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         } else {
-            rV_timetable.setLayoutManager(new LinearLayoutManager(getActivity(),
-                                                                  LinearLayoutManager.VERTICAL,
-                                                                  false));
+            rV_timetable.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         }
+
         view.findViewById(R.id.fab_add_new).setOnClickListener(v -> {
             Context context = getContext();
 
             float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
             float requiredWidthDP = 368, requiredHeightDP = 750;
 
-            SharedPreferences preferences =
-                    PreferenceManager.getDefaultSharedPreferences(context);
-
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             boolean useDialog = preferences.getBoolean("prefer_dialog", true);
-
             // choose what kind of task-add method to use base on device width and user pref
             if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
                 startActivity(new Intent(context, AddScheduledActivity.class));
@@ -277,7 +270,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         else progressBar.animate()
                         .scaleX(0.0f)
                         .scaleY(0.0f)
-                        .setDuration(1000);
+                        .setDuration(250);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -328,15 +321,13 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         @NonNull
         @Override
         public TimeTableRowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int ignored) {
-            View view = getLayoutInflater().inflate(R.layout.scheduled_timetable_row, viewGroup,
-                                                    false);
+            View view = getLayoutInflater().inflate(R.layout.scheduled_timetable_row, viewGroup, false);
             return (rowHolder = new TimeTableRowHolder(view));
         }
 
         @Override
         public void onBindViewHolder(@NonNull TimeTableRowHolder timeTableRowHolder, int position) {
-            timeTableRowHolder.with(ScheduledTimetableFragment.this, tableRowAdapter, tList,
-                                    coordinator, position)
+            timeTableRowHolder.with(ScheduledTimetableFragment.this, tableRowAdapter, tList, coordinator, position)
                               .bindView();
         }
 
