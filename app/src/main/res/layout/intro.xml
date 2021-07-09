@@ -42,13 +42,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/top_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        external:layout_constraintGuide_begin="82dp" />
-
     <!--    <ImageButton-->
     <!--        android:id="@+id/close"-->
     <!--        android:layout_width="wrap_content"-->
@@ -66,13 +59,12 @@
         android:id="@+id/intro_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        external:layout_constraintBottom_toBottomOf="@+id/bottom_guideline"
+        external:layout_constraintBottom_toTopOf="@id/indicator"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintHorizontal_bias="0.0"
+        external:layout_constraintVertical_chainStyle="packed"
         external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@id/top_guideline"
-        external:layout_constraintVertical_bias="0.5">
+        external:layout_constraintTop_toBottomOf="@id/toolbar">
 
     </androidx.viewpager2.widget.ViewPager2>
 
@@ -81,6 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        external:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toBottomOf="@id/intro_pager"
@@ -93,7 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        external:layout_constraintGuide_percent=".7" />
+        external:layout_constraintGuide_percent="0.8" />
 
     <Button
         android:id="@+id/start"

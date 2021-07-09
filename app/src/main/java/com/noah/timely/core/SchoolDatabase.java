@@ -342,11 +342,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         // Start timetable's chronological order search
         if (timetableName.equals(SCHEDULED_TIMETABLE)) {
             // Begin exam sorting
-            Cursor sortElementCursor
-                    = db.rawQuery("SELECT " + COLUMN_START_TIME
-                                          + "," + COLUMN_DAY
-                                          + "," + COLUMN_ID
-                                          + " FROM " + timetableName, null);
+            Cursor sortElementCursor = db.rawQuery("SELECT " + COLUMN_START_TIME
+                                                           + "," + COLUMN_DAY
+                                                           + "," + COLUMN_ID
+                                                           + " FROM " + timetableName, null);
 
             List<TimetableModel> timetables = new ArrayList<>();
             while (sortElementCursor.moveToNext()) {

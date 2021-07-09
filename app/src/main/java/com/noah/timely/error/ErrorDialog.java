@@ -99,8 +99,7 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
             img_dismiss.setOnClickListener(ErrorDialog.this);
 
             if (err.getSuggestionCount() < 1 && err.isShowSuggestions())
-                throw new IllegalArgumentException("Suggestion count must be >= 1 if suggestions" +
-                                                           " are" + " enabled");
+                throw new IllegalArgumentException("Suggestion count must be >= 1 if suggestions are enabled");
             if (err.getSuggestionCount() > 2)
                 Log.w(getClass().getSimpleName(), "Ignoring suggestionCount of: "
                         + err.getSuggestionCount() + ", 2 suggestions will be shown");

@@ -8,6 +8,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
 import com.noah.timely.assignment.AssignmentFragment.AssignmentRowAdapter;
@@ -16,13 +23,6 @@ import com.noah.timely.core.RequestRunner;
 import com.noah.timely.error.ErrorDialog;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.TooltipCompat;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.noah.timely.assignment.AddAssignmentActivity.EDIT_POS;
 import static com.noah.timely.assignment.AssignmentFragment.COURSE_CODE;
@@ -34,17 +34,18 @@ import static com.noah.timely.assignment.AssignmentFragment.TITLE;
 
 public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
-    private static final int[] COLORS = {
-            android.R.color.holo_blue_bright,
-            android.R.color.holo_orange_light,
-            R.color.pink,
-            android.R.color.holo_green_dark,
-            android.R.color.holo_purple,
-            android.R.color.holo_green_light,
-            android.R.color.holo_blue_dark,
-            android.R.color.holo_orange_dark,
-            android.R.color.holo_red_light
+    private static final int[] DRAWABLE = {
+            R.drawable.rounded_ct_bb,
+            R.drawable.rounded_ct_ol,
+            R.drawable.rounded_ct_pi,
+            R.drawable.rounded_ct_gd,
+            R.drawable.rounded_ct_pu,
+            R.drawable.rounded_ct_gl,
+            R.drawable.rounded_ct_bd,
+            R.drawable.rounded_ct_od,
+            R.drawable.rounded_ct_rl
     };
+
     private final View header;
     private final TextView tv_title, tv_description, tv_date, tv_lecturerName, tv_course;
     private final ImageView img_stats;
@@ -82,16 +83,12 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
         editButton.setOnClickListener(
                 v -> mActivity.startActivity(new Intent(mActivity, AddAssignmentActivity.class)
-                                                     .putExtra(LECTURER_NAME,
-                                                               assignment.getLecturerName())
+                                                     .putExtra(LECTURER_NAME, assignment.getLecturerName())
                                                      .putExtra(TITLE, tv_title.getText().toString())
-                                                     .putExtra(DESCRIPTION,
-                                                               tv_description.getText().toString())
+                                                     .putExtra(DESCRIPTION, tv_description.getText().toString())
                                                      .putExtra(DATE, tv_date.getText().toString())
-                                                     .putExtra(COURSE_CODE,
-                                                               tv_course.getText().toString())
-                                                     .putExtra(EDIT_POS,
-                                                               getAbsoluteAdapterPosition())
+                                                     .putExtra(COURSE_CODE, tv_course.getText().toString())
+                                                     .putExtra(EDIT_POS, getAbsoluteAdapterPosition())
                                                      .setAction("Edit")));
 
         tv_course.setOnClickListener(v -> {
@@ -109,9 +106,9 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         // Multi - Select actions
         rootView.setOnLongClickListener(l -> {
             trySelectAssignment();
-            assignmentRowAdapter.setMultiSelectionEnabled(
-                    !assignmentRowAdapter.isMultiSelectionEnabled()
-                            || assignmentRowAdapter.getCheckedAssignmentsCount() != 0);
+            assignmentRowAdapter
+                    .setMultiSelectionEnabled(!assignmentRowAdapter.isMultiSelectionEnabled()
+                                                      || assignmentRowAdapter.getCheckedAssignmentsCount() != 0);
             return true;
         });
 
@@ -143,8 +140,8 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         tv_description.setText(assignment.getDescription());
         tv_date.setText(assignment.getDate());
         tv_course.setText(assignment.getCourseCode());
-        int rowColor = COLORS[getAbsoluteAdapterPosition() % COLORS.length];
-        header.setBackgroundColor(ContextCompat.getColor(mActivity, rowColor));
+        int rowDrawable = DRAWABLE[getAbsoluteAdapterPosition() % DRAWABLE.length];
+        header.setBackground(ContextCompat.getDrawable(mActivity, rowDrawable));
         // Truncate lecturer's name based on length
         tv_lecturerName.setText(truncateName(assignment.getLecturerName()));
 
@@ -158,9 +155,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
     // Determines if there was an added title in the lecturer's name
     private boolean startsWithAny(String[] titles, String s) {
-        for (String title : titles)
-            if (s.startsWith(title))
-                return true;
+        for (String title : titles) if (s.startsWith(title)) return true;
         return false;
     }
 
@@ -253,8 +248,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     private void doDeleteAssignment() {
         // post a delete request on the assignment database7
         RequestRunner runner = RequestRunner.createInstance();
-        Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted",
-                                          Snackbar.LENGTH_LONG)
+        Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted", Snackbar.LENGTH_LONG)
                                     .setAction("undo", (view) -> runner.undoRequest())
                                     .setActionTextColor(Color.YELLOW);
 
@@ -263,7 +257,6 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         RequestRunner.Builder builder = new RequestRunner.Builder();
         builder.setOwnerContext(mActivity)
                .setAdapterPosition(getAbsoluteAdapterPosition())
-               .setAdapter(assignmentRowAdapter)
                .setModelList(aList)
                .setAssignmentData(assignment);
 

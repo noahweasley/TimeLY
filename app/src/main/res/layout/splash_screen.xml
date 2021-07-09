@@ -1,63 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-	xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:external = "http://schemas.android.com/apk/res-auto"
-	xmlns:tools = "http://schemas.android.com/tools"
-	android:layout_width = "match_parent"
-	android:layout_height = "match_parent"
-	android:background = "@color/colorPrimaryDark">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
 
-	<ImageView
-		android:id="@+id/app_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:contentDescription="App Icon"
-		external:layout_constraintBottom_toBottomOf="parent"
-		external:layout_constraintEnd_toEndOf="parent"
-		external:layout_constraintHorizontal_bias="0.498"
-		external:layout_constraintStart_toStartOf="parent"
-		external:layout_constraintTop_toTopOf="parent"
-		external:layout_constraintVertical_bias="0.35000002"
-		external:srcCompat="@mipmap/timely_icon_splash"
-		tools:ignore="HardcodedText" />
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="App Icon"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintHorizontal_bias="0.498"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toTopOf="parent"
+        external:layout_constraintVertical_bias="0.35000002"
+        external:srcCompat="@mipmap/timely_icon_splash"
+        tools:ignore="HardcodedText" />
 
-	<TextView
-		android:id="@+id/app_name"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:fontFamily="@font/roboto_black"
-		android:text="@string/app_name"
-		android:textColor="@android:color/white"
-		android:textSize="@dimen/splash_app_name_size"
-		external:layout_constraintBottom_toBottomOf="parent"
-		external:layout_constraintEnd_toEndOf="parent"
-		external:layout_constraintStart_toStartOf="parent"
-		external:layout_constraintTop_toBottomOf="@+id/app_icon"
-		external:layout_constraintVertical_bias="0.22000003"
-		tools:text="@string/app_name" />
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_black"
+        android:text="@string/app_name"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/splash_app_name_size"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/app_icon"
+        external:layout_constraintVertical_bias="0.22000003"
+        tools:text="@string/app_name" />
 
-	<ImageButton
-		android:id = "@+id/skip"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:layout_margin = "8dp"
-		android:background = "@null"
-		android:contentDescription = "@string/skip"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:srcCompat = "@drawable/ic_arrow_forward" />
+    <ImageButton
+        android:id="@+id/skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@null"
+        android:contentDescription="@string/skip"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:srcCompat="@drawable/ic_arrow_forward" />
 
-	<TextView
-		android:id = "@+id/version"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:layout_marginBottom = "8dp"
-		android:text = "@string/version"
-		android:fontFamily="serif-monospace"
-		android:textColor = "#FFFFFF"
-		android:textSize = "18sp"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent" />
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/version"
+        android:fontFamily="serif-monospace"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

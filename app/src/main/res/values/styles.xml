@@ -94,4 +94,9 @@
         <item name="android:windowExitAnimation">@anim/dialog_fade_out</item>
     </style>
 
+    <style name="Rounded_Image_Corners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_radius</item>
+    </style>
+
 </resources>

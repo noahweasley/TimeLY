@@ -2,97 +2,97 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Home category-->
-	<group android:checkableBehavior = "single">
+    <group android:checkableBehavior="single">
 
-		<item
-			android:id = "@+id/home"
-			android:checked = "true"
-			android:icon = "@drawable/ic_home"
-			android:title = "@string/home" />
+        <item
+            android:id="@+id/home"
+            android:checked="true"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home" />
 
-	</group>
+    </group>
 
-	<!-- School category-->
+    <!-- School category-->
 
-	<item android:title = "@string/school">
+    <item android:title="@string/school">
 
-		<menu>
+        <menu>
 
-			<group android:checkableBehavior = "single">
+            <group android:checkableBehavior="single">
 
-				<item
-					android:id = "@+id/courses"
-					android:icon = "@drawable/ic_subject"
-					android:title = "@string/registered_course" />
+                <item
+                    android:id="@+id/courses"
+                    android:icon="@drawable/ic_subject"
+                    android:title="@string/registered_course" />
 
-				<item
-					android:id = "@+id/timetable"
-					android:icon = "@drawable/ic_table_blue"
-					android:title = "@string/timetable" />
+                <item
+                    android:id="@+id/timetable"
+                    android:icon="@drawable/ic_table_blue"
+                    android:title="@string/timetable" />
 
-				<item
-					android:id = "@+id/scheduled_classes"
-					android:icon = "@drawable/schedule_not_important"
-					android:title = "@string/classes" />
+                <item
+                    android:id="@+id/scheduled_classes"
+                    android:icon="@drawable/schedule_not_important"
+                    android:title="@string/classes" />
 
-				<item
-					android:id = "@+id/assignment"
-					android:icon = "@drawable/ic_assignment"
-					android:title = "@string/assignment" />
+                <item
+                    android:id="@+id/assignment"
+                    android:icon="@drawable/ic_assignment"
+                    android:title="@string/assignment" />
 
-				<item
-					android:id = "@+id/exam_timetable"
-					android:icon = "@drawable/ic_event_note"
-					android:title = "@string/exam_timetable" />
+                <item
+                    android:id="@+id/exam_timetable"
+                    android:icon="@drawable/ic_event_note"
+                    android:title="@string/exam_timetable" />
 
-				<item
-					android:id = "@+id/alarms"
-					android:icon = "@drawable/ic_alarm"
-					android:title = "@string/alarms" />
+                <item
+                    android:id="@+id/alarms"
+                    android:icon="@drawable/ic_alarm"
+                    android:title="@string/alarms" />
 
-			</group>
+            </group>
 
         </menu>
 
     </item>
 
-	<!-- Miscellaneous category-->
+    <!-- Miscellaneous category-->
 
-	<item android:title = "@string/miscellaneous">
+    <item android:title="@string/miscellaneous">
 
-		<menu>
+        <menu>
 
-			<group android:checkableBehavior = "single">
+            <group android:checkableBehavior="single">
 
-				<item
-					android:id = "@+id/settings"
-					android:icon = "@drawable/ic_settings"
-					android:title = "@string/settings" />
+                <item
+                    android:id="@+id/settings"
+                    android:icon="@drawable/ic_settings"
+                    android:title="@string/settings" />
 
-				<item
-					android:id = "@+id/whats_new"
-					android:icon = "@drawable/ic_whats_new"
-					android:title = "@string/whats_new" />
+                <item
+                    android:id="@+id/whats_new"
+                    android:icon="@drawable/ic_whats_new"
+                    android:title="@string/whats_new" />
 
-<!--				<item-->
-<!--					android:id = "@+id/generate"-->
-<!--					android:icon = "@drawable/ic_share"-->
-<!--					android:title = "@string/generate" />-->
+                <!--				<item-->
+                <!--					android:id = "@+id/generate"-->
+                <!--					android:icon = "@drawable/ic_share"-->
+                <!--					android:title = "@string/generate" />-->
 
-				<item
-					android:id = "@+id/report"
-					android:icon = "@drawable/ic_report"
-					android:title = "@string/help" />
+                <item
+                    android:id="@+id/report"
+                    android:icon="@drawable/ic_report"
+                    android:title="@string/help" />
 
-				<item
-					android:id = "@+id/about"
-					android:icon = "@drawable/ic_about"
-					android:title = "@string/about" />
+                <item
+                    android:id="@+id/about"
+                    android:icon="@drawable/ic_about"
+                    android:title="@string/about" />
 
-			</group>
+            </group>
 
-		</menu>
+        </menu>
 
-	</item>
+    </item>
 
 </menu>

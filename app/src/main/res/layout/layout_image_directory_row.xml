@@ -45,22 +45,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/folder_img_margin"
-		android:text="@string/rand"
+        android:text="@string/rand"
         android:textColor="@android:color/white"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent" />
 
     <!--folder name-->
-	<TextView
-		android:id="@+id/directoryName"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/folder_img_margin"
-		android:text="@string/default_dir_nae"
-		android:textColor="@android:color/white"
-		external:layout_constraintBottom_toBottomOf="parent"
-		external:layout_constraintEnd_toStartOf="@+id/directorySize"
-		external:layout_constraintStart_toEndOf="@id/img_folder" />
+    <TextView
+        android:id="@+id/directoryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/folder_img_margin"
+        android:text="@string/default_dir_nae"
+        android:textColor="@android:color/white"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toStartOf="@+id/directorySize"
+        external:layout_constraintStart_toEndOf="@id/img_folder" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

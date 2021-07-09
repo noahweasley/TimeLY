@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-	xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:external = "http://schemas.android.com/apk/res-auto"
-	android:id = "@+id/coordinator"
-	android:layout_width = "match_parent"
-	android:layout_height = "match_parent"
-	android:background = "@drawable/bg_day_and_night">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_day_and_night">
 
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:layout_width = "match_parent"
-		android:layout_height = "match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-		<com.google.android.material.tabs.TabLayout
-			android:id = "@+id/tabs"
-			android:layout_width = "0dp"
-			android:layout_height = "wrap_content"
-			android:background = "@color/colorPrimary"
-			external:layout_constraintEnd_toEndOf = "parent"
-			external:layout_constraintStart_toStartOf = "parent"
-			external:layout_constraintTop_toTopOf = "parent"
-			external:tabBackground = "@color/colorPrimary"
-			external:tabIndicator = "@drawable/tab_indicator"
-			external:tabIndicatorColor = "@color/tabIndicatorColor"
-			external:tabTextColor = "@color/tab_state" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            external:tabBackground="@color/colorPrimary"
+            external:tabIndicator="@drawable/tab_indicator"
+            external:tabIndicatorColor="@color/tabIndicatorColor"
+            external:tabTextColor="@color/tab_state" />
 
-         <androidx.viewpager2.widget.ViewPager2
-	         android:id = "@+id/pager"
-	         android:layout_width = "0dp"
-	         android:layout_height = "0dp"
-	         external:layout_constraintBottom_toBottomOf = "parent"
-	         external:layout_constraintEnd_toEndOf = "parent"
-	         external:layout_constraintStart_toStartOf = "parent"
-	         external:layout_constraintTop_toBottomOf = "@+id/tabs" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/tabs" />
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

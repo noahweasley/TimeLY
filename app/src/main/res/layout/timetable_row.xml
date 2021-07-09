@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/timetable_list_height"
+    android:layout_marginHorizontal="-8dp"
+    android:layout_marginTop="-8dp"
     android:layout_marginBottom="@dimen/secondary_card_margin_bottom"
     external:cardCornerRadius="@dimen/corner_radius"
     external:cardElevation="@dimen/normal_elevation"
+    external:cardPreventCornerOverlap="false"
+    external:cardUseCompatPadding="true"
     tools:ignore="RtlSymmetry">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +29,7 @@
                 android:id="@+id/indicator"
                 android:layout_width="@dimen/indicator_width"
                 android:layout_height="match_parent"
-                android:background="@color/pink" />
+                android:background="@drawable/bg_decor_left" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -119,7 +123,7 @@
             android:id="@+id/checked_overlay"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/image_background_2"
+            android:background="@drawable/bg_images_selection"
             android:visibility="gone"
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"

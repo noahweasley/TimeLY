@@ -181,6 +181,21 @@ public class AlarmListFragment extends Fragment {
             alarmAdapter.notifyDataSetChanged();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doAlarmUpdate(AAUpdateMessage update) {
+        int changePos = update.getPosition();
+        switch (update.getType()) {
+            case INSERT:
+                alarmAdapter.notifyItemInserted(changePos);
+                alarmAdapter.notifyDataSetChanged();
+                break;
+            case REMOVE:
+                alarmAdapter.notifyItemRemoved(changePos);
+                alarmAdapter.notifyDataSetChanged();
+                break;
+        }
+    }
+
     private class TimeManager implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
 
         /**
@@ -296,9 +311,7 @@ public class AlarmListFragment extends Fragment {
                 Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
                 alarmReceiverIntent.putExtra(ALARM_POS, DB_initialPos);
                 alarmReceiverIntent.putExtra("Time", alarmTime);
-
-                boolean[] repeatDays = convertToPrimitive(newAlarm.getRepeatDays());
-                alarmReceiverIntent.putExtra(REPEAT_DAYS, repeatDays);
+                alarmReceiverIntent.putExtra(REPEAT_DAYS, convertToPrimitive(newAlarm.getRepeatDays()));
 
                 alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
                 alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");

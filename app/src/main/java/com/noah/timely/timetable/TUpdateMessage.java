@@ -1,12 +1,12 @@
-package com.noah.timely.exam;
+package com.noah.timely.timetable;
 
-public class UpdateMessage {
+public class TUpdateMessage {
     private int position;
-    private ExamModel data;
-    private EventType type;
+    private TimetableModel data;
+    private final EventType type;
     private int pagePosition;
 
-    public UpdateMessage(ExamModel data, EventType type, int pagePosition) {
+    public TUpdateMessage(TimetableModel data, int pagePosition, EventType type) {
         this.data = data;
         this.type = type;
         this.pagePosition = pagePosition;
@@ -28,11 +28,11 @@ public class UpdateMessage {
         this.position = position;
     }
 
-    public ExamModel getData() {
+    public TimetableModel getData() {
         return data;
     }
 
-    public void setData(ExamModel data) {
+    public void setData(TimetableModel data) {
         this.data = data;
     }
 
@@ -40,8 +40,7 @@ public class UpdateMessage {
         return type;
     }
 
-    @SuppressWarnings("unused")
     public enum EventType {
-        NEW, UPDATE_CURRENT
+        NEW, UPDATE_CURRENT, INSERT, REMOVE
     }
 }

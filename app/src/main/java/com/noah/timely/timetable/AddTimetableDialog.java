@@ -163,8 +163,8 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
                 cancelTimetableNotifier(context, formerTimetable); // cancel former alarm first
                 timetable.setId(formerTimetable.getId());
                 timetable.setChronologicalOrder(formerTimetable.getChronologicalOrder());
-                EventBus.getDefault().post(new UpdateMessage(timetable, pagePosition,
-                                                             UpdateMessage.EventType.UPDATE_CURRENT));
+                EventBus.getDefault().post(new TUpdateMessage(timetable, pagePosition,
+                                                              TUpdateMessage.EventType.UPDATE_CURRENT));
                 scheduleTimetableAlarm(getContext(), timetable, pagePosition);
             } else Toast.makeText(getContext(), "An Error Occurred", Toast.LENGTH_LONG).show();
 
@@ -179,8 +179,8 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
                         timetable.setChronologicalOrder(insertData[0]);
                         timetable.setId(insertData[1]);
                         // after adding to database, update the UI and schedule notification
-                        EventBus.getDefault().post(new UpdateMessage(timetable, pagePosition,
-                                                                     UpdateMessage.EventType.NEW));
+                        EventBus.getDefault().post(new TUpdateMessage(timetable, pagePosition,
+                                                                      TUpdateMessage.EventType.NEW));
                         scheduleTimetableAlarm(context, timetable, pagePosition);
                     } else {
                         Toast.makeText(context, "An Error Occurred", Toast.LENGTH_LONG).show();

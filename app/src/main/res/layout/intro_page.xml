@@ -19,17 +19,17 @@
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toTopOf="parent"
-        external:layout_constraintVertical_bias="0.100000024" />
+        external:layout_constraintVertical_bias="0.1" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toBottomOf="@id/title"
-        external:layout_constraintVertical_bias="0.39"
         external:lottie_autoPlay="true"
         external:lottie_loop="true" />
 

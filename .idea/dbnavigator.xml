@@ -24,24 +24,25 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="6d4399dc-274f-4cdd-ac06-221347e93de2">
+        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d">
-      <console name="Connection" type="STANDARD" schema="" session="Main"><![CDATA[select * from "alarms"]]></console>
+    <connection id="6d4399dc-274f-4cdd-ac06-221347e93de2">
+      <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" />
+    <connection id="6d4399dc-274f-4cdd-ac06-221347e93de2" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Registered_Courses" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Alarms" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Monday" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" dataset="main.Assignment" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="6d4399dc-274f-4cdd-ac06-221347e93de2" dataset="main.Assignment" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -69,7 +70,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="6eb47c26-e3ff-4993-b80b-99d7080f5f1d" active="true">
+      <connection id="6d4399dc-274f-4cdd-ac06-221347e93de2" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -80,9 +81,9 @@
           <driver-library value="" />
           <driver value="" />
           <url-type value="FILE" />
-          <host value="localhost" />
-          <port value="1234" />
-          <database value="database" />
+          <host value="" />
+          <port value="" />
+          <database value="" />
           <files>
             <file path="C:\Users\Noah\Desktop\SchoolDatabase.db" schema="main" />
           </files>

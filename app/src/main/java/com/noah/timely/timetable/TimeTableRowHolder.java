@@ -39,7 +39,6 @@ import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_TO_EDIT;
 
-@SuppressWarnings("ConstantConditions")
 public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
     private static final int[] COLORS_1 = {
@@ -53,14 +52,28 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             android.R.color.holo_orange_dark,
             android.R.color.holo_red_light
     };
-    private static final int[] COLORS_2 = {
-            android.R.color.holo_purple,
-            R.color.pink,
-            android.R.color.holo_green_light,
-            android.R.color.holo_blue_dark,
-            android.R.color.holo_orange_dark,
-            android.R.color.holo_red_light
+
+    private static final int[] DRAWABLE_2 = {
+            R.drawable.rounded_cl_pu,
+            R.drawable.rounded_cl_pi,
+            R.drawable.rounded_cl_gl,
+            R.drawable.rounded_cl_bd,
+            R.drawable.rounded_cl_od,
+            R.drawable.rounded_cl_rl
     };
+
+    private static final int[] DRAWABLE = {
+            R.drawable.rounded_cl_bb,
+            R.drawable.rounded_cl_ol,
+            R.drawable.rounded_cl_pi,
+            R.drawable.rounded_cl_gd,
+            R.drawable.rounded_cl_pu,
+            R.drawable.rounded_cl_gl,
+            R.drawable.rounded_cl_bd,
+            R.drawable.rounded_cl_od,
+            R.drawable.rounded_cl_rl
+    };
+
     private final ImageView img_schImp;
     private final View lIndicator, rIndicator;
     private final TextView tv_time, tv_course, tv_lecturer, atv_FCN;
@@ -74,6 +87,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
     private String timetable;
     private final View v_selectionOverlay;
     private boolean isChecked;
+    private int pagePosition;
 
     public TimeTableRowHolder(@NonNull View rootView) {
         super(rootView);
@@ -91,6 +105,9 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
         btn_edit = rootView.findViewById(R.id.editButton);
 
         btn_delete.setOnClickListener(v -> {
+            // for  normal timetable
+            if (user instanceof DaysFragment) tModel.setDay(timetable);
+
             String deleteRequest =
                     user instanceof ScheduledTimetableFragment ? ScheduledTimetableFragment.DELETE_REQUEST
                                                                : DaysFragment.DELETE_REQUEST;
@@ -99,7 +116,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(user.getActivity())
                    .setAdapterPosition(getAbsoluteAdapterPosition())
-                   .setAdapter(rowAdapter)
+                   .setPagePosition(tModel.getTimetablePosition())
                    .setModelList(tList)
                    .setTimetable(timetable);
 
@@ -179,9 +196,8 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
                 DaysFragment.TimeTableRowAdapter rowAdapter
                         = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
-                rowAdapter.setMultiSelectionEnabled(
-                        !rowAdapter.isMultiSelectionEnabled()
-                                || rowAdapter.getCheckedTimetablesCount() != 0);
+                rowAdapter.setMultiSelectionEnabled(!rowAdapter.isMultiSelectionEnabled()
+                                                            || rowAdapter.getCheckedTimetablesCount() != 0);
             } else {
                 ScheduledTimetableFragment.TimeTableRowAdapter rowAdapter
                         = (ScheduledTimetableFragment.TimeTableRowAdapter) this.rowAdapter;
@@ -267,26 +283,28 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
         if (tModel.getImportance() != null) {
             switch (tModel.getImportance()) {
                 case "Not Important":
-                    img_schImp.setBackgroundResource(R.drawable.schedule_not_important);
+                    img_schImp.setBackground(ContextCompat.getDrawable(context, R.drawable.schedule_not_important));
                     break;
                 case "Very Important":
-                    img_schImp.setBackgroundResource(R.drawable.schedule_very_important);
+                    img_schImp.setBackground(
+                            ContextCompat.getDrawable(context, R.drawable.schedule_very_important));
                     break;
                 case "Less Important":
-                    img_schImp.setBackgroundResource(R.drawable.schedule_less_important);
+                    img_schImp.setBackground(
+                            ContextCompat.getDrawable(context, R.drawable.schedule_less_important));
             }
             TooltipCompat.setTooltipText(img_schImp, tModel.getImportance());
         }
         if (user instanceof DaysFragment) {
-            int rowColor = COLORS_1[getAbsoluteAdapterPosition() % COLORS_1.length];
-            lIndicator.setBackgroundColor(ContextCompat.getColor(context, rowColor));
+            int background = DRAWABLE[getAbsoluteAdapterPosition() % DRAWABLE.length];
+            lIndicator.setBackground(ContextCompat.getDrawable(context, background));
         } else {
             // indicator2 and verticalTextView will return null for users other than
             // the ScheduledTimetableFragment, so use them only for that particular fragment
             // to prevent application crash.
-            int dayColor = COLORS_2[tModel.getDayIndex()];
-            lIndicator.setBackgroundColor(ContextCompat.getColor(context, dayColor));
-            rIndicator.setBackgroundColor(ContextCompat.getColor(context, dayColor));
+            int dayBackground = DRAWABLE_2[tModel.getDayIndex()];
+            lIndicator.setBackground(ContextCompat.getDrawable(context, dayBackground));
+            rIndicator.setBackground(ContextCompat.getDrawable(context, dayBackground));
             tv_day.setText(tModel.getDay());
             tv_lecturer.setText(truncateName(tModel.getLecturerName()));
         }
@@ -302,11 +320,11 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
             start = convertTime(tModel.getStartTime(), context);
             end = convertTime(tModel.getEndTime(), context);
         }
+
         tv_time.setText(String.format("%s - %s", start, end));
 
         if (user instanceof DaysFragment) {
-            DaysFragment.TimeTableRowAdapter rowAdapter
-                    = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
+            DaysFragment.TimeTableRowAdapter rowAdapter = (DaysFragment.TimeTableRowAdapter) this.rowAdapter;
 
             isChecked = rowAdapter.isChecked(getAbsoluteAdapterPosition());
             v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
@@ -352,9 +370,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
     // Determines if there was an added title in the lecturer's name
     private boolean startsWithAny(String[] titles, String s) {
-        for (String title : titles)
-            if (s.startsWith(title))
-                return true;
+        for (String title : titles) if (s.startsWith(title)) return true;
         return false;
     }
 
@@ -371,8 +387,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
         int iMax = nameTokens.length - 1;
         int nameLimit = user.getContext().getResources().getInteger(R.integer.name_limit);
 
-        if (nameTokens.length > 2 &&
-                fullName.length() > nameLimit && startsWithAny(titles, fullName)) {
+        if (nameTokens.length > 2 && fullName.length() > nameLimit && startsWithAny(titles, fullName)) {
             // Append the title if there is one
             switch (nameTokens[0]) {
                 case "Barrister":

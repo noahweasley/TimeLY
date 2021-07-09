@@ -1,17 +1,14 @@
-package com.noah.timely.assignment;
+package com.noah.timely.scheduled;
 
-public class UpdateMessage {
-    private AssignmentModel data;
-    private EventType type;
+import com.noah.timely.timetable.TimetableModel;
+
+public class SUpdateMessage {
     private int position;
+    private TimetableModel data;
+    private EventType type;
 
-    public UpdateMessage(AssignmentModel data, EventType type) {
+    public SUpdateMessage(TimetableModel data, EventType type) {
         this.data = data;
-        this.type = type;
-    }
-
-    public UpdateMessage(int position, EventType type) {
-        this.position = position;
         this.type = type;
     }
 
@@ -23,11 +20,11 @@ public class UpdateMessage {
         this.position = position;
     }
 
-    public AssignmentModel getData() {
+    public TimetableModel getData() {
         return data;
     }
 
-    public void setData(AssignmentModel data) {
+    public void setData(TimetableModel data) {
         this.data = data;
     }
 
@@ -39,4 +36,3 @@ public class UpdateMessage {
         NEW, UPDATE_CURRENT, INSERT, REMOVE
     }
 }
-

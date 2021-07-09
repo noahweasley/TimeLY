@@ -2,6 +2,7 @@ package com.noah.timely.exam;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,7 +24,6 @@ import java.util.Locale;
 
 import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 
-@SuppressWarnings("ConstantConditions")
 public class ExamRowHolder extends RecyclerView.ViewHolder {
     public static final String DELETE_REQUEST = "Delete Exam";
     private static final int[] COLORS_2 = {
@@ -32,6 +32,13 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
             android.R.color.holo_green_light,
             android.R.color.holo_blue_dark,
             android.R.color.holo_orange_dark
+    };
+    private static final int[] DRAWABLE = {
+            R.drawable.rounded_cl_pu,
+            R.drawable.rounded_cl_pi,
+            R.drawable.rounded_cl_gl,
+            R.drawable.rounded_cl_bd,
+            R.drawable.rounded_cl_od
     };
     private ExamTimetableFragment user;
     private ExamTimetableFragment.ExamRowAdapter examRowAdapter;
@@ -60,7 +67,6 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(user.getActivity())
                    .setModelList(eList)
-                   .setAdapter(examRowAdapter)
                    .setAdapterPosition(getAbsoluteAdapterPosition());
 
             runner.setRequestParams(builder.getParams())
@@ -87,9 +93,8 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
         // Multi - Select actions
         rootView.setOnLongClickListener(l -> {
             trySelectExam();
-            examRowAdapter.setMultiSelectionEnabled(
-                    !examRowAdapter.isMultiSelectionEnabled()
-                            || examRowAdapter.getCheckedCoursesCount() != 0);
+            examRowAdapter.setMultiSelectionEnabled(!examRowAdapter.isMultiSelectionEnabled()
+                                                            || examRowAdapter.getCheckedCoursesCount() != 0);
             return true;
         });
 
@@ -129,10 +134,12 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
 
     void bindView() {
         Context context = user.getContext();
+        int rightColor = ContextCompat.getColor(context, COLORS_2[exam.getDayIndex()]);
+        Drawable leftDrawable = ContextCompat.getDrawable(context, DRAWABLE[exam.getDayIndex()]);
 
-        int indicatorColor = ContextCompat.getColor(context, COLORS_2[exam.getDayIndex()]);
-        leftIndicator.setBackgroundColor(indicatorColor);
-        rightIndicator.setBackgroundColor(indicatorColor);
+        leftIndicator.setBackground(leftDrawable);
+        rightIndicator.setBackgroundColor(rightColor);
+
         tv_courseCode.setText(exam.getCourseCode());
         tv_courseName.setText(exam.getCourseName());
         tv_examDay.setText(exam.getDay());

@@ -13,7 +13,7 @@
         external:layout_constraintTop_toTopOf="parent"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"/>
+        external:layout_constraintEnd_toEndOf="parent" />
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/fullscreen_image"

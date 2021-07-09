@@ -1,15 +1,15 @@
-package com.noah.timely.scheduled;
+package com.noah.timely.alarms;
 
-import com.noah.timely.timetable.TimetableModel;
-
-public class UpdateMessage {
+public class AAUpdateMessage {
     private int position;
-    private TimetableModel data;
-    private EventType type;
+    private AlarmModel data;
+    private final EventType type;
+    private int pagePosition;
 
-    public UpdateMessage(TimetableModel data, EventType type) {
+    public AAUpdateMessage(AlarmModel data, int position, EventType type) {
         this.data = data;
         this.type = type;
+        this.position = position;
     }
 
     public int getPosition() {
@@ -20,11 +20,11 @@ public class UpdateMessage {
         this.position = position;
     }
 
-    public TimetableModel getData() {
+    public AlarmModel getData() {
         return data;
     }
 
-    public void setData(TimetableModel data) {
+    public void setData(AlarmModel data) {
         this.data = data;
     }
 
@@ -33,6 +33,6 @@ public class UpdateMessage {
     }
 
     public enum EventType {
-        NEW, UPDATE_CURRENT
+        NEW, UPDATE_CURRENT, INSERT, REMOVE
     }
 }

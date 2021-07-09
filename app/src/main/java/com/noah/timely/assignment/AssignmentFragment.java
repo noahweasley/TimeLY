@@ -36,6 +36,7 @@ import com.noah.timely.core.PositionMessageEvent;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -79,9 +80,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup parent,
-                             Bundle savedState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedState) {
         return inflater.inflate(R.layout.fragment_assignment, parent, false);
     }
 
@@ -105,15 +104,14 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                     noAssignmentView.setVisibility(empty ? View.VISIBLE : View.GONE);
                     rV_assignmentList.setVisibility(empty ? View.GONE : View.VISIBLE);
                     assignmentAdapter.notifyDataSetChanged();
-                    if (itemCount != null)
-                        itemCount.setText(String.valueOf(aList.size()));
+
+                    if (itemCount != null) itemCount.setText(String.valueOf(aList.size()));
                 });
         });
 
         FloatingActionButton fab_add = view.findViewById(R.id.fab_add);
-        fab_add.setOnClickListener(
-                v -> startActivity(new Intent(getActivity(), AddAssignmentActivity.class)
-                                           .setAction("Create")));
+        fab_add.setOnClickListener(v -> startActivity(new Intent(getActivity(),
+                                                                 AddAssignmentActivity.class).setAction("Create")));
 
         assignmentAdapter.setHasStableIds(true);
         rV_assignmentList.setHasFixedSize(true);
@@ -138,16 +136,14 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 // post a delete request to the assignment database
                 RequestRunner runner = RequestRunner.createInstance();
-                Snackbar snackbar
-                        = Snackbar.make(coordinator, "Assignment Deleted", Snackbar.LENGTH_LONG)
-                                  .setAction("undo", (view) -> runner.undoRequest())
-                                  .setActionTextColor(Color.YELLOW);
+                Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted", Snackbar.LENGTH_LONG)
+                                            .setAction("undo", (view) -> runner.undoRequest())
+                                            .setActionTextColor(Color.YELLOW);
                 snackbar.show();
 
                 RequestRunner.Builder builder = new RequestRunner.Builder();
                 builder.setOwnerContext(getActivity())
                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
-                       .setAdapter(assignmentAdapter)
                        .setModelList(aList)
                        .setAssignmentData((AssignmentModel) aList.get(viewHolder.getAbsoluteAdapterPosition()));
 
@@ -231,16 +227,13 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doAssignmentUpdate(UpdateMessage update) {
+    public void doAssignmentUpdate(AUpdateMessage update) {
         AssignmentModel data = update.getData();
-        // data position is not the same as the absolute adapter position in list
-        // so, use the change ID that was gotten from the absolute adapter position to
-        // make changes to the list.
-        int changePos = data.getChangeId();
-
+        // data position is not the same as the absolute adapter position in list so, use the change ID that was
+        // gotten from the absolute adapter position to make changes to the list.
+        int changePos = data.getPosition();
         switch (update.getType()) {
             case NEW:
-
                 aList.add(data);
                 itemCount.setText(String.valueOf(aList.size()));
 
@@ -252,10 +245,8 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                     rV_assignmentList.setVisibility(View.VISIBLE);
                 }
                 assignmentAdapter.notifyItemInserted(changePos);
-
                 break;
             case REMOVE:
-
                 aList.remove(changePos);
                 itemCount.setText(String.valueOf(aList.size()));
                 assignmentAdapter.notifyItemRemoved(changePos);
@@ -265,18 +256,10 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
                 break;
             case INSERT:
-
-                if (noAssignmentView.getVisibility() == View.VISIBLE)
-                    noAssignmentView.setVisibility(View.GONE);
-
-                if (rV_assignmentList.getVisibility() == View.GONE)
-                    rV_assignmentList.setVisibility(View.VISIBLE);
-
                 aList.add(changePos, data);
                 itemCount.setText(String.valueOf(aList.size()));
                 assignmentAdapter.notifyItemInserted(changePos);
                 assignmentAdapter.notifyDataSetChanged();
-
                 break;
             default:
 
@@ -320,7 +303,6 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         assignmentAdapter.deleteMultiple();
         return true;
     }
-
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         actionMode = null;
@@ -448,7 +430,6 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                   .setAdapter(assignmentAdapter)
                    .setModelList(aList)
                    .setMetadataType(RequestParams.MetaDataType.NO_DATA)
                    .setItemIndices(getCheckedAssignmentsIndices())
@@ -459,10 +440,9 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                   .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedAssignmentsCount();
-            Snackbar snackbar
-                    = Snackbar.make(coordinator,
-                                    count + " Assignment" + (count > 1 ? "s" : "") + " Deleted",
-                                    Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(coordinator,
+                                              count + " Assignment" + (count > 1 ? "s" : "") + " Deleted",
+                                              Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());

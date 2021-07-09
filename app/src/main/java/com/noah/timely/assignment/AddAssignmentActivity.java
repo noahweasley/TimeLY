@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.noah.timely.assignment.AssignmentFragment.DATE;
 import static com.noah.timely.assignment.AssignmentFragment.DESCRIPTION;
@@ -217,11 +218,10 @@ public class AddAssignmentActivity extends AppCompatActivity {
         int id = database.getLastAssignmentId() + 1;
 
         int pos = isToEdit ? editPos : id;
-        data = new AssignmentModel(pos, ln, tt, description, date,
-                                   cc, date, attachedPDF, attachedImage, false);
 
-        if (database.isAssignmentPresent(data) && !tryScheduleNotifiers(yy, mm, dd, tt, ln, data,
-                                                                        pos)) {
+        data = new AssignmentModel(pos, ln, tt, description, date, cc, date, attachedPDF, attachedImage, false);
+
+        if (database.isAssignmentPresent(data) && !tryScheduleNotifiers(yy, mm, dd, tt, ln, data, pos)) {
             ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
             errorBuilder.setDialogMessage("Invalid assignment")
                         .setShowSuggestions(true)
@@ -235,14 +235,12 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
         if (isToEdit) {
             message = "Assignment updated";
-            boolean isSubmitted =
-                    isSuccessful = database.updateAssignmentData(data);
-            EventBus.getDefault().post(
-                    new UpdateMessage(data, UpdateMessage.EventType.UPDATE_CURRENT));
+            boolean isSubmitted = isSuccessful = database.updateAssignmentData(data);
+            EventBus.getDefault().post(new AUpdateMessage(data, AUpdateMessage.EventType.UPDATE_CURRENT));
         } else {
             message = "Registering Assignment...";
             isSuccessful = database.addAssignmentData(data);
-            EventBus.getDefault().post(new UpdateMessage(data, UpdateMessage.EventType.NEW));
+            EventBus.getDefault().post(new AUpdateMessage(data, AUpdateMessage.EventType.NEW));
         }
 
         if (isSuccessful) {
@@ -269,8 +267,8 @@ public class AddAssignmentActivity extends AppCompatActivity {
         long CURRENT = calendar.getTimeInMillis();
         long NOW = System.currentTimeMillis();
         if (CURRENT < NOW) return false;
-        final int ONE_DAY = 1000 * 60 * 60 * 24;
-        final long PREVIOUS = CURRENT - ONE_DAY;
+
+        final long PREVIOUS = CURRENT - TimeUnit.DAYS.toMillis(1);
         // Get the alarm manager
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         // Now set the next alarm

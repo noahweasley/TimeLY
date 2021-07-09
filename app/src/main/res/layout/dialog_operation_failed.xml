@@ -1,99 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-	xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:external = "http://schemas.android.com/apk/res-auto"
-	xmlns:tools = "http://schemas.android.com/tools"
-	android:layout_width = "300dp"
-	android:layout_height = "wrap_content"
-	android:background = "@drawable/bg_day_and_night"
-	android:paddingBottom = "16dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/secondary_dialog_width"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_day_and_night"
+    android:paddingBottom="16dp">
 
-	<ImageView
-		android:id = "@+id/imageView2"
-		android:layout_width = "80dp"
-		android:layout_height = "80dp"
-		android:contentDescription = "@string/sad_emoji"
-		external:layout_constraintBottom_toTopOf = "@id/message"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toBottomOf = "@+id/dismiss2"
-		external:layout_constraintVertical_bias = "0.47000003"
-		external:srcCompat = "@drawable/img_sad_emoji" />
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:contentDescription="@string/sad_emoji"
+        external:layout_constraintBottom_toTopOf="@id/message"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/dismiss2"
+        external:layout_constraintVertical_bias="0.47000003"
+        external:srcCompat="@drawable/img_sad_emoji" />
 
-	<TextView
-		android:id = "@+id/message"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:layout_marginTop = "8dp"
-		android:gravity = "center_horizontal"
-		android:paddingStart = "8dp"
-		android:paddingLeft = "8dp"
-		android:paddingEnd = "8dp"
-		android:paddingRight = "8dp"
-		android:text = "Please try again, the time already exist"
-		android:textColor = "@android:color/black"
-		android:textSize = "18sp"
-		external:layout_constraintBottom_toTopOf = "@id/suggestion_title"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toBottomOf = "@+id/imageView2"
-		external:layout_constraintVertical_bias = "0.19"
-		tools:ignore = "HardcodedText" />
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:paddingStart="8dp"
+        android:paddingLeft="8dp"
+        android:paddingEnd="8dp"
+        android:paddingRight="8dp"
+        android:text="Please try again, the time already exist"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        external:layout_constraintBottom_toTopOf="@id/suggestion_title"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/imageView2"
+        external:layout_constraintVertical_bias="0.19"
+        tools:ignore="HardcodedText" />
 
-	<TextView
-		android:id = "@+id/suggestion_title"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:layout_marginTop = "8dp"
-		android:layout_marginBottom = "8dp"
-		android:text = "@string/suggestions"
-		android:textColor = "@android:color/black"
-		android:textStyle = "bold"
-		external:layout_constraintBottom_toTopOf = "@id/suggestion_1"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toBottomOf = "@+id/message" />
+    <TextView
+        android:id="@+id/suggestion_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/suggestions"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        external:layout_constraintBottom_toTopOf="@id/suggestion_1"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/message" />
 
-	<TextView
-		android:id = "@+id/suggestion_1"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:drawablePadding = "8dp"
-		android:gravity = "center"
-		android:text = "@string/suggestion_1"
-		android:textColor = "@android:color/black"
-		external:drawableLeftCompat = "@drawable/ic_circle_fill"
-		external:layout_constraintBottom_toTopOf = "@id/suggestion_2"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toBottomOf = "@+id/suggestion_title" />
+    <TextView
+        android:id="@+id/suggestion_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="@string/suggestion_1"
+        android:textColor="@android:color/black"
+        external:drawableLeftCompat="@drawable/ic_circle_fill"
+        external:layout_constraintBottom_toTopOf="@id/suggestion_2"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/suggestion_title" />
 
-	<TextView
-		android:id = "@+id/suggestion_2"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:drawablePadding = "8dp"
-		android:gravity = "center"
-		android:text = "@string/suggestion_2"
-		android:textColor = "@android:color/black"
-		external:drawableLeftCompat = "@drawable/ic_circle_fill"
-		external:layout_constraintBottom_toBottomOf = "parent"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintStart_toStartOf = "parent"
-		external:layout_constraintTop_toBottomOf = "@+id/suggestion_1" />
+    <TextView
+        android:id="@+id/suggestion_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="@string/suggestion_2"
+        android:textColor="@android:color/black"
+        external:drawableLeftCompat="@drawable/ic_circle_fill"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@+id/suggestion_1" />
 
-
-	<ImageButton
-		android:id = "@+id/dismiss2"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:layout_marginTop = "8dp"
-		android:layout_marginEnd = "8dp"
-		android:layout_marginRight = "8dp"
-		android:background = "@android:color/transparent"
-		android:contentDescription = "@string/clear"
-		external:layout_constraintEnd_toEndOf = "parent"
-		external:layout_constraintTop_toTopOf = "parent"
-		external:srcCompat = "@drawable/ic_clear" />
+    <ImageButton
+        android:id="@+id/dismiss2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/clear"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintTop_toTopOf="parent"
+        external:srcCompat="@drawable/ic_clear" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

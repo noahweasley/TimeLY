@@ -19,6 +19,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,20 +35,24 @@ import com.noah.timely.alarms.AlarmHolderFragment;
 import com.noah.timely.alarms.AlarmReSchedulerService;
 import com.noah.timely.alarms.TimeChangeDetector;
 import com.noah.timely.assignment.AssignmentFragment;
-import com.noah.timely.util.Constants;
-import com.noah.timely.util.PreferenceUtils;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
 import com.noah.timely.exam.ExamFragment;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TimetableFragment;
+import com.noah.timely.util.Constants;
+import com.noah.timely.util.PreferenceUtils;
 
 public class MainActivity
         extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActionBarDrawerToggle toggle;
     DrawerLayout drawer;
     private TimeChangeDetector timeChangeDetector;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

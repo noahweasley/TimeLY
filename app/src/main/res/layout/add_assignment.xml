@@ -21,9 +21,9 @@
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingBottom="@dimen/layout_gap"
         external:layout_constraintBottom_toTopOf="@+id/bottom_actions_container"
         external:layout_constraintEnd_toEndOf="parent"
-        android:paddingBottom="@dimen/layout_gap"
         external:layout_constraintHorizontal_bias="1.0"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -48,9 +48,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_lecturer"
-                    android:drawableLeft="@drawable/ic_lecturer"
-                    android:drawablePadding="@dimen/space"
                     android:hint="@string/lecturer"
                     android:imeOptions="actionNext"
                     android:inputType="textMultiLine"
@@ -76,9 +73,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_title"
-                    android:drawableLeft="@drawable/ic_title"
-                    android:drawablePadding="@dimen/space"
                     android:hint="@string/title"
                     android:imeOptions="actionNext"
                     android:inputType="textMultiLine"
@@ -103,9 +97,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_description"
-                    android:drawableLeft="@drawable/ic_description"
-                    android:drawablePadding="@dimen/space"
                     android:hint="@string/description"
                     android:imeOptions="actionNext"
                     android:inputType="textMultiLine"
@@ -131,9 +122,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_date"
-                    android:drawableLeft="@drawable/ic_date"
-                    android:drawablePadding="@dimen/space"
                     android:hint="@string/submission_date"
                     android:imeOptions="actionDone"
                     android:inputType="date"
@@ -172,51 +160,57 @@
 
     </ScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/bottom_actions_container"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/submitButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
-            android:background="@drawable/bg_submit"
-            android:minHeight="@dimen/button_min_height"
-            android:textSize="@dimen/button_text_size"
-            android:text="@string/register"
-            android:textColor="@android:color/white"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toStartOf="@id/gallery"
-            external:layout_constraintStart_toStartOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:contentDescription="@string/todo"
-            external:fabCustomSize="@dimen/fab_size"
-            external:maxImageSize="@dimen/fab_icon_size"
-            external:backgroundTint="@color/colorPrimaryDark"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:srcCompat="@drawable/ic_image" />
+            <Button
+                android:id="@+id/submitButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_gap"
+                android:background="@drawable/bg_submit"
+                android:minHeight="@dimen/button_min_height"
+                android:text="@string/register"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/button_text_size"
+                external:layout_constraintBottom_toBottomOf="parent"
+                external:layout_constraintEnd_toStartOf="@id/gallery"
+                external:layout_constraintStart_toStartOf="parent" />
 
-        <!--	<com.google.android.material.floatingactionbutton.FloatingActionButton-->
-        <!--		android:id = "@+id/camera"-->
-        <!--		android:layout_width = "wrap_content"-->
-        <!--		android:layout_height = "wrap_content"-->
-        <!--		android:layout_margin = "24dp"-->
-        <!--		external:fabSize = "auto"-->
-        <!--		external:layout_constraintBottom_toBottomOf = "parent"-->
-        <!--		external:layout_constraintEnd_toEndOf = "parent"-->
-        <!--		external:srcCompat = "@drawable/ic_camera" />-->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                android:contentDescription="@string/todo"
+                external:backgroundTint="@color/colorPrimaryDark"
+                external:fabCustomSize="@dimen/fab_size"
+                external:layout_constraintBottom_toBottomOf="parent"
+                external:layout_constraintEnd_toEndOf="parent"
+                external:maxImageSize="@dimen/fab_icon_size"
+                external:srcCompat="@drawable/ic_image" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--	<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--		android:id = "@+id/camera"-->
+            <!--		android:layout_width = "wrap_content"-->
+            <!--		android:layout_height = "wrap_content"-->
+            <!--		android:layout_margin = "24dp"-->
+            <!--		external:fabSize = "auto"-->
+            <!--		external:layout_constraintBottom_toBottomOf = "parent"-->
+            <!--		external:layout_constraintEnd_toEndOf = "parent"-->
+            <!--		external:srcCompat = "@drawable/ic_camera" />-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

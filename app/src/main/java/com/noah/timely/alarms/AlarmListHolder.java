@@ -37,7 +37,6 @@ import com.noah.timely.R;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener;
@@ -149,8 +148,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         // now deal with when the user wants to expand or collapse one of the alarm row
         rootView.setOnClickListener(v -> {
             detailLayout.toggle();
-            // When detailLayout expansion state has changed, rotate arrow and change
-            // background color.
+            // When detailLayout expansion state has changed, rotate arrow and change background color.
             final boolean isExpanded = detailLayout.isExpanded();
             int position = isExpanded ? getAbsoluteAdapterPosition() : -1;
             rootView.setActivated(isExpanded);
@@ -162,7 +160,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         // display the days to repeat if repeat checkbox is checked
         alarmStatus.setOnClickListener((view) -> {
             if (database != null) {
-                // Disable alarm if checkbox is unchecked but still keep the PendingIntent alive
+                // disable alarm if checkbox is unchecked but still keep the PendingIntent alive
                 String ss = thisAlarm.getLabel();
                 String label = ss.equals("Label") ? null : ss;
                 int position = getAbsoluteAdapterPosition();
@@ -177,27 +175,35 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                     time = thisAlarm.getTime().split(":");
                 }
 
-                // re-schedule alarm base on alarm ON state
-                boolean checkedState = alarmStatus.isChecked();
-                if (checkedState) rescheduleNonRepeatingAlarm(label, time, true);
-                else cancelNonRepeatingAlarm(label, time);
+                boolean alarmOn = alarmStatus.isChecked();
+                thisAlarm.setOn(alarmOn);
+                // re-schedule alarm based on alarm ON state
+                if (alarmOn) {
+                    if (!thisAlarm.isRepeated()) rescheduleNonRepeatingAlarm(label, time, true);
+                    else rescheduleRepeatingPendingAlarm2(label, time);
+
+                } else {
+                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                    if (!thisAlarm.isRepeated()) cancelNonRepeatingAlarm(label, time);
+                    else cancelNextRepeatingAlarm(label, getNextRepeatingAlarmDistance(dayOfWeek, null));
+                }
                 // now update the alarm status when user toggles the state of the switch
-                database.updateAlarmState(position, checkedState);
+                database.updateAlarmState(position, alarmOn);
             }
         });
 
         cbx_Repeat.setOnClickListener(v -> {
-            alarmStatus.setChecked(true);
             boolean repeated = cbx_Repeat.isChecked();
-            final int dataPos   // dataPos now refers to the alarms id in the database
-                    = getAbsoluteAdapterPosition();
+            final int dataPos = getAbsoluteAdapterPosition(); // the alarms id in the database
             // hide or show rows of button
             thisAlarm.setRepeated(repeated);
             vg_buttonRow.setVisibility(repeated ? View.VISIBLE : View.GONE);
             // cancel previous repeating alarm, while leaving any alarm that was set to be triggered the day the
             // alarm was set or the day after, only if time has passed
-            if (repeated) updateRepeatingPendingAlarm();
-            else updateRepeatingPendingAlarm2();
+            if (thisAlarm.isOn()) {
+                if (repeated) updateRepeatingPendingAlarm();
+                else updateRepeatingPendingAlarm2();
+            }
 
             if (database != null) {
                 // now update the current alarm's repeat status when user toggles the current
@@ -208,12 +214,10 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
         cbx_Vibrate.setOnClickListener(v -> {
             boolean checked = cbx_Vibrate.isChecked();
-            final int dataPos   // dataPos now refers to the alarms id in the database
-                    = getAbsoluteAdapterPosition();
+            final int dataPos = getAbsoluteAdapterPosition(); // the alarms id in the database
             thisAlarm.setVibrate(checked);
             if (database != null) {
-                // now update the current alarm's vibrate status when user toggles the current
-                // state of the checkbox
+                // now update the current alarm's vibrate status when user toggles the current state of the checkbox
                 boolean isUpdated = database.updateAlarmVibrateStatus(dataPos, checked);
             }
         });
@@ -229,8 +233,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(mActivity)
                    .setAdapterPosition(this.getAbsoluteAdapterPosition())
-                   .setAdapter(alarmAdapter)
                    .setModelList(alarmModelList)
+                   .setAlarmRepeatDays(selectedDays)
                    .setAlarmLabel(label)
                    .setAlarmTime(time);
 
@@ -246,11 +250,10 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     }
 
     private void onRepeatButtonClick(View view) {
-        LogUtils.debug(this, "onRepeatButtonClick called");
         int buttonId = view.getId();
         int alarmPosition = getAbsoluteAdapterPosition();
         // cancel any previous alarm for this current item position ONLY, before proceeding
-        cancelAllPendingAlarms();
+        if (thisAlarm.isOn()) cancelAllPendingAlarms();
         // then update the repeat days array
         if (buttonId == R.id.sunday) {
             selectedDays[0] = !selectedDays[0];
@@ -283,7 +286,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         }
 
         boolean updated = database.updateSelectedDays(alarmPosition, selectedDays);
-        if (updated) updateRepeatingPendingAlarm();
+        // don't update alarm when the current selected alarm is still off
+        if (updated && thisAlarm.isOn()) updateRepeatingPendingAlarm();
     }
 
     // updated the next alarm trigger time based on the repeatStatus. When repeatStatus is true, then alarm would be
@@ -540,6 +544,77 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         alert.show();
     }
 
+    /*
+     * When alarm is set, user has the option to toggle the alarm status with the switch in the
+     * list, so when the event that occurs when switch is toggled is a request to reschedule
+     * the former repeated alarm, just reschedule it with this method !!
+     */
+    private void rescheduleRepeatingPendingAlarm2(String label, String[] time) {
+        // This gets the current day of the week as of TODAY / NOW
+        Calendar calendar = Calendar.getInstance();
+
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int closestRepeatDay = getClosestRepeatDay(dayOfWeek);
+        int alarmDistance = getNextRepeatingAlarmDistance(dayOfWeek, closestRepeatDay);
+
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.DATE, alarmDistance);
+
+        long alarmMillis = calendar.getTimeInMillis();
+
+        Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
+        alarmReceiverIntent.putExtra("Label", label);
+        alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
+        alarmReceiverIntent.putExtra("Time", time);
+
+        alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
+        alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
+        alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
+                                           "com.noah.timely.alarm.dataType");
+
+        AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
+                                                           PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // alarm has to be triggered even when device is in idle or doze mode.
+                // This alarm is very important
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+            }
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+        }
+
+        // notifications
+        boolean is24 = isUserPreferred24Hours(mActivity);
+        int hh = Integer.parseInt(time[0]);
+        int mm = Integer.parseInt(time[1]);
+        boolean isAM = hh >= 0 && hh < 12;
+
+        String formattedHrAM = String.format(Locale.US, "%02d", (hh == 0 ? 12 : hh));
+        String formattedHrPM = String.format(Locale.US, "%02d", (hh % 12 == 0 ? 12 : hh % 12));
+        String formattedMinAM = String.format(Locale.US, "%02d", mm) + " AM";
+        String formattedMinPM = String.format(Locale.US, "%02d", mm) + " PM";
+
+        String _12H = isAM ? formattedHrAM + ":" + formattedMinAM
+                           : formattedHrPM + ":" + formattedMinPM;
+
+        String alarmTime = time[0] + ":" + time[1];
+        String message = "Alarm set for: " + (is24 ? alarmTime : _12H)
+                + (alarmDistance >= 2 ? " in " + alarmDistance + " days" : " tomorrow");
+
+        Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
+        alert.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
+        alert.show();
+    }
+
     //  Updates the alarm pending intent extras
     private void updateAlarm(String label, String time) {
         String[] realTime = time.split(":");
@@ -620,7 +695,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // alarm has to be triggered even when device is in idle or doze mode.
+                // Alarm has to be triggered even when device is in idle or doze mode.
                 // This alarm is very important
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
             } else {
@@ -655,7 +730,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     }
 
     private void onLabelClick(View v) {
-        new EditTextDialog(mActivity)
+        new EditTextDialog()
                 .setActionListener(label -> {
                     tv_label.setText(label);
                     thisAlarm.setLabel(label);
@@ -664,7 +739,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                         database.updateAlarmLabel(getAbsoluteAdapterPosition(), label);
                         updateAlarm(label, thisAlarm.getTime());
                     });
-                }).prepareAndShow();
+                }).prepareAndShow(mActivity);
     }
 
     private void onSelectRingtone(View v) {
@@ -715,7 +790,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                                                                 is24);
             dpd.setVersion(TimePickerDialog.Version.VERSION_2);
             dpd.show(manager, "TimePickerDialog");
-
         }
 
         /*
@@ -723,7 +797,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          */
         @Override
         public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-
             alarmStatus.setChecked(true);
 
             String label = tv_label.getText().toString();
@@ -745,10 +818,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", currentLocale);
             SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm", currentLocale);
 
-            String currentTime;
-
-            currentTime = isUserPreferred24HourView ? timeFormat24.format(calendar.getTime())
-                                                    : timeFormat12.format(calendar.getTime());
+            String currentTime = isUserPreferred24HourView ? timeFormat24.format(calendar.getTime())
+                                                           : timeFormat12.format(calendar.getTime());
 
             boolean isAM = hourOfDay >= 0 && hourOfDay < 12;
             tv_alarmTime.setText(currentTime);

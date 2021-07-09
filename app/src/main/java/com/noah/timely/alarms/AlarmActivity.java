@@ -26,7 +26,6 @@ import static com.noah.timely.alarms.AlarmReceiver.ID;
 import static com.noah.timely.alarms.AlarmReceiver.NOTIFICATION_ID;
 import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 
-@SuppressWarnings("ConstantConditions")
 public class AlarmActivity extends AppCompatActivity {
     private Intent receiverSnooze;
     private Intent receiverDismiss;
@@ -37,7 +36,7 @@ public class AlarmActivity extends AppCompatActivity {
         setContentView(R.layout.alarm_view);
 
         Intent starterIntent = getIntent();
-        // Register this activity has a receiver of the MessageEvent posts
+        // Register this activity as a receiver of the MessageEvent posts
         EventBus.getDefault().register(this);
 
         TextView tv_time = findViewById(R.id.time);
@@ -55,8 +54,7 @@ public class AlarmActivity extends AppCompatActivity {
             time = time.replace(" PM", "");
         }
 
-        if (time != null)
-            tv_time.setText(time);
+        if (time != null) tv_time.setText(time);
 
         Animation alphaAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_reverse);
         findViewById(R.id.alarm_text).startAnimation(alphaAnimation);
@@ -68,16 +66,14 @@ public class AlarmActivity extends AppCompatActivity {
         String action = starterIntent.getAction();
 
         boolean snoozeAction = false;
-        if (action != null)
-            snoozeAction = action.equals("Snooze");
+        if (action != null) snoozeAction = action.equals("Snooze");
 
         if (snoozeAction) findViewById(R.id.snooze_stat).setVisibility(View.VISIBLE);
 
         String label = starterIntent.getStringExtra("Label");
         TextView tv_Label = findViewById(R.id.label);
 
-        if (label != null && !label.equals("Label"))
-            tv_Label.setText(label);
+        if (label != null && !label.equals("Label")) tv_Label.setText(label);
         else tv_Label.setVisibility(View.GONE);
 
         receiverSnooze = new Intent(this, NotificationActionReceiver.class);

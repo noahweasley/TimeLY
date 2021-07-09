@@ -103,19 +103,13 @@ public class AlarmTimeFragment extends Fragment {
             case SLEEP_TIME:
             case DAY_START_ACTIVE_PERIOD:
             case DEFAULT_INTERVAL_DAY:
-                img_dayAndNight.setImageResource(R.drawable.ic_day_full);
-                Log.d(getClass().getSimpleName(), "Morning");
-                break;
             case AFTERNOON:
                 img_dayAndNight.setImageResource(R.drawable.ic_day_full);
-                Log.d(getClass().getSimpleName(), "Afternoon");
                 break;
             case EVENING:
             case NIGHT:
             case DEFAULT_INTERVAL_NIGHT:
                 img_dayAndNight.setImageResource(R.drawable.ic_night_icon);
-                img_dayAndNight.setBackgroundResource(R.drawable.night);
-                Log.d(getClass().getSimpleName(), "Evening");
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + time.getCurrentDayPart());

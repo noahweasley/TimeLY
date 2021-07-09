@@ -170,6 +170,29 @@ public class TimetableModel extends DataModel implements Serializable {
         this.id = id;
     }
 
+    public int getTimetablePosition() {
+        if (this.day != null) {
+            switch (this.day) {
+                case "Monday":
+                    return 0;
+                case "Tuesday":
+                    return 1;
+                case "Wednesday":
+                    return 2;
+                case "Thursday":
+                    return 3;
+                case "Friday":
+                    return 4;
+                case "Saturday":
+                    return 5;
+                case "Sunday":
+                    return 6;
+                default:
+                    throw new IllegalArgumentException(day + " is invalid");
+            }
+        } else return -1;
+    }
+
     @Override
     @SuppressWarnings("all")
     public String toString() {

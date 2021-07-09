@@ -119,8 +119,8 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
                     model.setId(addPos);
                     model.setChronologicalOrder(data[0]);
                     playAlertTone(context.getApplicationContext(), Alert.COURSE);
-                    EventBus.getDefault().post(new UpdateMessage(model, UpdateMessage.EventType.NEW,
-                                                                 pagePosition1));
+                    EventBus.getDefault().post(new CUpdateMessage(model, CUpdateMessage.EventType.NEW,
+                                                                  pagePosition1));
                 } else {
                     Toast.makeText(context, "An Error occurred", Toast.LENGTH_LONG).show();
                 }

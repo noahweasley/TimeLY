@@ -22,16 +22,16 @@ import java.util.List;
 
 public class CourseRowHolder extends RecyclerView.ViewHolder {
     public static final String DELETE_REQUEST = "Delete course";
-    private static final int[] COLORS = {
-            android.R.color.holo_blue_bright,
-            android.R.color.holo_orange_light,
-            R.color.pink,
-            android.R.color.holo_green_dark,
-            android.R.color.holo_purple,
-            android.R.color.holo_green_light,
-            android.R.color.holo_blue_dark,
-            android.R.color.holo_orange_dark,
-            android.R.color.holo_red_light
+    private static final int[] DRAWABLE = {
+            R.drawable.rounded_cl_bb,
+            R.drawable.rounded_cl_ol,
+            R.drawable.rounded_cl_pi,
+            R.drawable.rounded_cl_gd,
+            R.drawable.rounded_cl_pu,
+            R.drawable.rounded_cl_gl,
+            R.drawable.rounded_cl_bd,
+            R.drawable.rounded_cl_od,
+            R.drawable.rounded_cl_rl,
     };
     private SemesterFragment user;
     private CourseAdapter courseAdapter;
@@ -44,6 +44,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
     private final View v_selectionOverlay;
     private boolean isChecked;
     private CourseModel course;
+    private int pagePosition;
 
     public CourseRowHolder(@NonNull View rootView) {
         super(rootView);
@@ -58,8 +59,8 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(user.getActivity())
+                   .setPagePosition(pagePosition)
                    .setAdapterPosition(getAbsoluteAdapterPosition())
-                   .setAdapter(courseAdapter)
                    .setModelList(cList);
 
             runner.setRequestParams(builder.getParams())
@@ -74,9 +75,8 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
         // Multi - Select actions
         rootView.setOnLongClickListener(l -> {
             trySelectCourse();
-            courseAdapter.setMultiSelectionEnabled(
-                    !courseAdapter.isMultiSelectionEnabled()
-                            || courseAdapter.getCheckedCoursesCount() != 0);
+            courseAdapter.setMultiSelectionEnabled(!courseAdapter.isMultiSelectionEnabled()
+                                                           || courseAdapter.getCheckedCoursesCount() != 0);
             return true;
         });
 
@@ -99,6 +99,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
     public CourseRowHolder with(SemesterFragment user,
                                 CourseAdapter courseAdapter,
                                 List<DataModel> cList,
+                                int pagePosition,
                                 CoordinatorLayout coordinator) {
         this.user = user;
         this.courseAdapter = courseAdapter;
@@ -106,6 +107,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
         this.course = (CourseModel) cList.get(getAbsoluteAdapterPosition());
         this.cModel = (CourseModel) cList.get(getAbsoluteAdapterPosition());
         this.coordinator = coordinator;
+        this.pagePosition = pagePosition;
         return this;
     }
 
@@ -117,8 +119,8 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
 
     public void bindView() {
         Context context = user.getContext();
-        int rowColor = COLORS[getAbsoluteAdapterPosition() % COLORS.length];
-        lIndicator.setBackgroundColor(ContextCompat.getColor(context, rowColor));
+        int rowDrawable = DRAWABLE[getAbsoluteAdapterPosition() % DRAWABLE.length];
+        lIndicator.setBackground(ContextCompat.getDrawable(context, rowDrawable));
         tv_courseCode.setText(cModel.getCourseCode());
         tv_courseName.setText(cModel.getCourseName());
         String credit = cModel.getCredits() + " credits";

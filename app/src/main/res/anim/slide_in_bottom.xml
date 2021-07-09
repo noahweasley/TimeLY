@@ -3,5 +3,5 @@
     android:duration="@android:integer/config_shortAnimTime">
     <translate
         android:fromYDelta="1000%p"
-        android:toYDelta="0%p"/>
+        android:toYDelta="0%p" />
 </set>

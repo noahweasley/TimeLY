@@ -1,12 +1,12 @@
 package com.noah.timely.courses;
 
-public class UpdateMessage {
+public class CUpdateMessage {
     private int position;
     private CourseModel data;
-    private EventType type;
+    private final EventType type;
     private int pagePosition;
 
-    public UpdateMessage(CourseModel data, EventType type, int pagePosition) {
+    public CUpdateMessage(CourseModel data, EventType type, int pagePosition) {
         this.data = data;
         this.type = type;
         this.pagePosition = pagePosition;
@@ -40,8 +40,7 @@ public class UpdateMessage {
         return type;
     }
 
-    @SuppressWarnings("unused")
     public enum EventType {
-        NEW, UPDATE_CURRENT
+        NEW, UPDATE_CURRENT, INSERT, REMOVE
     }
 }

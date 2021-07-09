@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android = "http://schemas.android.com/apk/res/android"
-     android:duration = "200"
-     android:fillAfter = "true"
-     android:interpolator = "@android:anim/bounce_interpolator">
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="200"
+    android:fillAfter="true"
+    android:interpolator="@android:anim/bounce_interpolator">
 
-	<scale
-		android:fromXScale = "0"
-		android:fromYScale = "0"
-		android:pivotX = "50%"
-		android:pivotY = "50%"
-		android:toXScale = "1"
-		android:toYScale = "1" />
+    <scale
+        android:fromXScale="0"
+        android:fromYScale="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="1"
+        android:toYScale="1" />
 
-	<translate
-		android:fromYDelta = "0%p"
-		android:repeatCount = "-1"
-		android:repeatMode = "reverse"
-		android:startOffset = "50"
-		android:toYDelta = "5%p" />
+    <translate
+        android:fromYDelta="0%p"
+        android:repeatCount="-1"
+        android:repeatMode="reverse"
+        android:startOffset="50"
+        android:toYDelta="5%p" />
 
 </set>

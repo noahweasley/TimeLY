@@ -1,6 +1,5 @@
 package com.noah.timely.assignment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,15 +23,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
+import com.noah.timely.alarms.AAUpdateMessage;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.core.EmptyListEvent;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.ThreadUtils;
 import com.noah.timely.gallery.Image;
 import com.noah.timely.gallery.ImageListRowHolder;
 import com.noah.timely.gallery.ImageMultiChoiceMode;
 import com.noah.timely.gallery.StorageViewer;
+import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -96,7 +96,6 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     }
 
     @Override
-    @SuppressLint("DefaultLocale")
     @SuppressWarnings("unchecked")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +104,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         position = getIntent().getIntExtra(ARG_POSITION, -1);
-        getSupportActionBar().setTitle(String.format("Assignment #%d Images", position + 1));
+        getSupportActionBar().setTitle(String.format(Locale.US,"Assignment #%d Images", position + 1));
 
         indeterminateProgress = findViewById(R.id.indeterminateProgress);
         indeterminateProgress2 = findViewById(R.id.content_loading);
@@ -113,12 +112,13 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         coordinator = findViewById(R.id.coordinator);
         rv_imageList = findViewById(R.id.imageList);
         no_media = findViewById(R.id.no_media);
+
         rv_imageList.setHasFixedSize(true);
         rv_imageList.setLayoutManager(new LinearLayoutManager(this));
         rv_imageList.setAdapter(imageAdapter = new ImageAdapter(choiceMode));
 
-        findViewById(R.id.add_new).setOnClickListener(
-                v -> startActivity(new Intent(this, StorageViewer.class).setAction(ADD_NEW)));
+        findViewById(R.id.add_new)
+                .setOnClickListener(v -> startActivity(new Intent(this, StorageViewer.class).setAction(ADD_NEW)));
 
         ItemTouchHelper swipeHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
@@ -141,8 +141,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
                 builder.setOwnerContext(ViewImagesActivity.this)
                        .setMediaUris(mediaUris)
                        .setAssignmentPosition(position)
-                       .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
-                       .setAdapter(imageAdapter);
+                       .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition());
 
                 runner.setRequestParams(builder.getParams())
                       .runRequest(DELETE_REQUEST);
@@ -186,6 +185,21 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         choiceMode.onSaveInstanceState(outState);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doImageUpdate(AAUpdateMessage update) {
+        int changePos = update.getPosition();
+        switch (update.getType()) {
+            case INSERT:
+                imageAdapter.notifyItemInserted(changePos);
+                imageAdapter.notifyDataSetChanged();
+                break;
+            case REMOVE:
+                imageAdapter.notifyItemRemoved(changePos);
+                imageAdapter.notifyDataSetChanged();
+                break;
+        }
     }
 
     @Override
@@ -355,7 +369,6 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(ViewImagesActivity.this)
-                   .setAdapter(imageAdapter)
                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
                    .setAssignmentPosition(position)
                    .setMediaUris(mediaUris)

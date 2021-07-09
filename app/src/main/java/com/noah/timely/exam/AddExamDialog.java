@@ -128,9 +128,9 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
                 if (data[1] != -1) {
                     exam.setId(data[1]);
                     exam.setChronologicalOrder(data[0]);
-                    EventBus.getDefault().post(new UpdateMessage(exam,
-                                                                 UpdateMessage.EventType.NEW,
-                                                                 pagePosition));
+                    EventBus.getDefault().post(new EUpdateMessage(exam,
+                                                                  EUpdateMessage.EventType.NEW,
+                                                                  pagePosition));
                     playAlertTone(context.getApplicationContext(), Alert.EXAM);
                 } else {
                     Toast.makeText(context, "An Error occurred", Toast.LENGTH_LONG).show();

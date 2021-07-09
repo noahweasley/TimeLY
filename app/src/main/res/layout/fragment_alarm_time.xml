@@ -17,6 +17,7 @@
         external:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/time_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         external:layout_constraintBottom_toTopOf="@id/alarm_date"
@@ -115,11 +116,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/day_and_night"
-        external:layout_constraintTop_toTopOf="@id/set_time"
         external:layout_constraintBottom_toBottomOf="@id/set_time"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintHorizontal_bias=".9"
+        external:layout_constraintStart_toEndOf="@+id/time_container"
         external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toTopOf="@id/set_time"
         external:srcCompat="@drawable/ic_day_full" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

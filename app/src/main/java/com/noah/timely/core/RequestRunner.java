@@ -8,30 +8,33 @@ import android.net.Uri;
 import android.os.Process;
 
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.noah.timely.alarms.AAUpdateMessage;
 import com.noah.timely.alarms.AlarmListFragment;
 import com.noah.timely.alarms.AlarmModel;
 import com.noah.timely.alarms.AlarmReceiver;
+import com.noah.timely.assignment.AUpdateMessage;
 import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.assignment.AssignmentModel;
 import com.noah.timely.assignment.MultiUpdateMessage2;
 import com.noah.timely.assignment.Reminder;
 import com.noah.timely.assignment.SubmissionNotifier;
-import com.noah.timely.assignment.UpdateMessage;
-import com.noah.timely.assignment.UpdateMessage.EventType;
+import com.noah.timely.assignment.UUpdateMessage;
 import com.noah.timely.assignment.UriUpdateEvent;
 import com.noah.timely.assignment.ViewImagesActivity;
-import com.noah.timely.core.RequestUpdateEvent.UpdateType;
+import com.noah.timely.courses.CUpdateMessage;
 import com.noah.timely.courses.CourseModel;
 import com.noah.timely.courses.CourseRowHolder;
 import com.noah.timely.courses.SemesterFragment;
+import com.noah.timely.exam.EUpdateMessage;
 import com.noah.timely.exam.ExamModel;
 import com.noah.timely.exam.ExamRowHolder;
 import com.noah.timely.exam.ExamTimetableFragment;
+import com.noah.timely.scheduled.SUpdateMessage;
 import com.noah.timely.scheduled.ScheduledTaskNotifier;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.timetable.DaysFragment;
+import com.noah.timely.timetable.TUpdateMessage;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.timetable.TimetableNotifier;
 
@@ -90,15 +93,15 @@ public class RequestRunner extends Thread {
 
     private void performDeleteOperation() throws IllegalArgumentException {
         switch (request) {
-            case AssignmentFragment.DELETE_REQUEST:
-                doAssignmentDelete();
-                break;
             case AssignmentFragment.MULTIPLE_DELETE_REQUEST:
             case SemesterFragment.MULTIPLE_DELETE_REQUEST:
             case ScheduledTimetableFragment.MULTIPLE_DELETE_REQUEST:
             case DaysFragment.MULTIPLE_DELETE_REQUEST:
             case ExamTimetableFragment.MULTIPLE_DELETE_REQUEST:
                 doDataModelMultiDelete();
+                break;
+            case AssignmentFragment.DELETE_REQUEST:
+                doAssignmentDelete();
                 break;
             case DaysFragment.DELETE_REQUEST:
             case ScheduledTimetableFragment.DELETE_REQUEST:
@@ -127,8 +130,7 @@ public class RequestRunner extends Thread {
     private void doDataModelMultiDelete() {
         List<DataModel> dataCache = new ArrayList<>();
         Integer[] itemIndices = params.getItemIndices();
-        // Reverse array of indices in reversed order, because if the indices are not reversed,
-        // an error occurs.
+        // Reverse order of items in array of indices, because if the indices are not reversed, an error occurs.
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
         for (int i : itemIndices) {
@@ -180,8 +182,7 @@ public class RequestRunner extends Thread {
 
             if (isDeleted) {
                 playAlertTone(appContext, Alert.DELETE);
-                if (params.getModelList().isEmpty())
-                    EventBus.getDefault().post(new EmptyListEvent());
+                if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
@@ -216,8 +217,7 @@ public class RequestRunner extends Thread {
             boolean isDeleted = database.deleteMultipleImages(params.getAssignmentPosition(), itemIndices);
             if (isDeleted) {
                 playAlertTone(appContext, Alert.DELETE);
-                if (mediaUris.isEmpty())
-                    EventBus.getDefault().post(new EmptyListEvent());
+                if (mediaUris.isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
@@ -225,13 +225,18 @@ public class RequestRunner extends Thread {
     private void doImageDelete() {
         List<Uri> mediaUris = params.getMediaUris();
         Uri uri = mediaUris.remove(params.getAdapterPosition());
-        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
+        int changePos = params.getAdapterPosition();
+
+        EventBus.getDefault()
+                .post(new UUpdateMessage(uri, changePos, UUpdateMessage.EventType.REMOVE));
 
         try {
             Thread.sleep(WAIT_TIME);
         } catch (InterruptedException exc) {
             mediaUris.add(params.getAdapterPosition(), uri);
-            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
+
+            EventBus.getDefault()
+                    .post(new UUpdateMessage(uri, changePos, UUpdateMessage.EventType.INSERT));
         }
 
         if (!deleteRequestDiscarded) {
@@ -247,13 +252,13 @@ public class RequestRunner extends Thread {
     private void doExamDelete() {
         DataModel model = params.getModelList().get(params.getAdapterPosition());
         params.getModelList().remove(params.getAdapterPosition());
+        int pos = params.getPagePosition();
         EventBus.getDefault()
-                .post(new RequestUpdateEvent(UpdateType.REMOVE, params.getAdapterPosition()));
+                .post(new EUpdateMessage((ExamModel) model, EUpdateMessage.EventType.REMOVE, pos));
             /*
-            wait 3 seconds to perform actual delete request, because an undo request
-            might also be issued, which delete request would have to be cancelled.
-            The sleep timer is also synchronized   with the undo Snackbar's display timeout,
-            which also is 3 seconds.
+            wait 3 seconds to perform actual delete request, because an undo request might also be issued, which
+            delete request would have to be cancelled. The sleep timer is also synchronized   with the undo
+            Snackbar's display timeout, which also is 3 seconds.
             */
         try {
             Thread.sleep(WAIT_TIME);
@@ -264,15 +269,14 @@ public class RequestRunner extends Thread {
             */
             params.getModelList().add(params.getAdapterPosition(), model);
             EventBus.getDefault()
-                    .post(new RequestUpdateEvent(UpdateType.INSERT, params.getAdapterPosition()));
+                    .post(new EUpdateMessage((ExamModel) model, EUpdateMessage.EventType.INSERT, pos));
         }
         if (!deleteRequestDiscarded) {
             ExamModel examModel = (ExamModel) model;
             boolean isDeleted = database.deleteExamEntry(examModel, examModel.getWeek());
             if (isDeleted) {
                 playAlertTone(appContext, Alert.DELETE);
-                if (params.getModelList().isEmpty())
-                    EventBus.getDefault().post(new EmptyListEvent());
+                if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
@@ -280,32 +284,29 @@ public class RequestRunner extends Thread {
     private void doCourseDelete() {
         DataModel model = params.getModelList().get(params.getAdapterPosition());
         params.getModelList().remove(params.getAdapterPosition());
+        int pos = params.getPagePosition();
+
         EventBus.getDefault()
-                .post(new RequestUpdateEvent(UpdateType.REMOVE, params.getAdapterPosition()));
+                .post(new CUpdateMessage((CourseModel) model, CUpdateMessage.EventType.REMOVE, pos));
          /*
-            wait 3 seconds to perform actual delete request, because an undo request
-            might also be issued, which delete request would have to be cancelled.
-            The sleep timer is also synchronized with the undo Snackbar's display timeout,
-            which also is 3 seconds.
+            wait 3 seconds to perform actual delete request, because an undo request might also be issued, which
+            delete request would have to be cancelled. The sleep timer is also synchronized with the undo Snackbar's
+            display timeout, which also is 3 seconds.
          */
         try {
             Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
-            /*
-            will be executed when the deleteRequestDiscarded property has been set,
-            meaning an undo request
-            */
+            // will be executed when the deleteRequestDiscarded property has been set, meaning an undo request
             params.getModelList().add(params.getAdapterPosition(), model);
             EventBus.getDefault()
-                    .post(new RequestUpdateEvent(UpdateType.INSERT, params.getAdapterPosition()));
+                    .post(new CUpdateMessage((CourseModel) model, CUpdateMessage.EventType.REMOVE, pos));
         }
         if (!deleteRequestDiscarded) {
             CourseModel courseModel = (CourseModel) model;
             boolean isDeleted = database.deleteCourseEntry(courseModel, courseModel.getSemester());
             if (isDeleted) {
                 playAlertTone(appContext, Alert.DELETE);
-                if (params.getModelList().isEmpty())
-                    EventBus.getDefault().post(new EmptyListEvent());
+                if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
         }
     }
@@ -314,18 +315,16 @@ public class RequestRunner extends Thread {
         DataModel model = params.getModelList().get(params.getAdapterPosition());
         AssignmentModel aModel = (AssignmentModel) model;
         aModel.setId(params.getAdapterPosition());
-        EventBus.getDefault().post(new UpdateMessage(aModel, EventType.REMOVE));
-            /*
-            wait 3 seconds to perform actual delete request, because an undo request
-            might also be issued, which delete request would have to be cancelled.
-            The sleep timer is also synchronized with the undo Snackbar's display timeout,
-            which also is 3 seconds.
-            */
+        EventBus.getDefault().post(new AUpdateMessage(aModel, AUpdateMessage.EventType.REMOVE));
+          /*
+            wait 3 seconds to perform actual delete request, because an undo request might also be issued, which
+            delete request would have to be cancelled. The sleep timer is also synchronized with the undo Snackbar's
+            display timeout, which also is 3 seconds.
+         */
         try {
             Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
-            EventBus.getDefault()
-                    .post(new UpdateMessage((AssignmentModel) model, EventType.INSERT));
+            EventBus.getDefault().post(new AUpdateMessage(aModel, AUpdateMessage.EventType.INSERT));
         }
         if (!deleteRequestDiscarded) {
             boolean isDeleted = database.deleteAssignmentEntry((AssignmentModel) model);
@@ -339,9 +338,12 @@ public class RequestRunner extends Thread {
     private void doTimeTableDelete() {
         DataModel model = params.getModelList().get(params.getAdapterPosition());
         params.getModelList().remove(params.getAdapterPosition());
-        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
-        params.getAdapter().notifyDataSetChanged();
-        EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
+        int pagePosition = params.getPagePosition();
+        if (request.equals(ScheduledTimetableFragment.DELETE_REQUEST))
+            EventBus.getDefault().post(new SUpdateMessage((TimetableModel) model, SUpdateMessage.EventType.REMOVE));
+        else
+            EventBus.getDefault().post(new TUpdateMessage((TimetableModel) model, pagePosition,
+                                                          TUpdateMessage.EventType.REMOVE));
         // wait 3 seconds to perform actual delete request, because an undo request
         // might also be issued, which delete request would have to be cancelled.
         // The sleep timer is also synchronized with the undo Snackbar's display timeout,
@@ -355,9 +357,11 @@ public class RequestRunner extends Thread {
             // will be executed when the deleteRequestDiscarded property has been set,
             // meaning an undo request
             params.getModelList().add(params.getAdapterPosition(), model);
-            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
-            params.getAdapter().notifyDataSetChanged();
-            EventBus.getDefault().post(new CountEvent(params.getModelList().size()));
+            if (request.equals(ScheduledTimetableFragment.DELETE_REQUEST))
+                EventBus.getDefault().post(new SUpdateMessage((TimetableModel) model, SUpdateMessage.EventType.INSERT));
+            else
+                EventBus.getDefault().post(new TUpdateMessage((TimetableModel) model, pagePosition,
+                                                              TUpdateMessage.EventType.INSERT));
         }
         if (!deleteRequestDiscarded) {
             boolean isDeleted;
@@ -407,19 +411,14 @@ public class RequestRunner extends Thread {
     }
 
     private void doAlarmDelete() {
-        // I experienced a bug at the next line here.
-        // I had to use getAlarmAt() instead of using the data supplied from the
-        // modelList variable. Why ? Because I ran a background task that always changed the
-        // data the alarm list adapter was holding, so the modelList variable became invalid.
-        // So why did I still use it ? Because I wanted to play the animation of alarm row
-        // delete task, and using the modelList, even though it is invalid, had an important role
-        // to play, because it still represent the alarm row
-        DataModel model = database.getAlarmAt(params.getAdapterPosition());
-        params.getModelList().remove(params.getAdapterPosition());
-        params.getAdapter().notifyItemRemoved(params.getAdapterPosition());
+        int changePos = params.getAdapterPosition();
+        DataModel model = database.getAlarmAt(changePos);
+        AlarmModel alarm = (AlarmModel) model;
+        params.getModelList().remove(changePos);
         // now notify list of item change so that it can invalidate current views.
         // This line fixed a bug for me and help me change the indicators :)
-        params.getAdapter().notifyDataSetChanged();
+        EventBus.getDefault()
+                .post(new AAUpdateMessage(alarm, changePos, AAUpdateMessage.EventType.REMOVE));
             /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
@@ -429,20 +428,18 @@ public class RequestRunner extends Thread {
         try {
             Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
-            /*
-            will be executed when the deleteRequestDiscarded property has been set,
-            meaning an undo request
-            */
-            params.getModelList().add(params.getAdapterPosition(), model);
-            params.getAdapter().notifyItemInserted(params.getAdapterPosition());
+            // will be executed when the deleteRequestDiscarded property has been set,  meaning an undo request
+            params.getModelList().add(changePos, alarm);
             // now notify list of item change so that it can invalidate current views.
             // This line fixed a bug for me and help me change the indicators :)
-            params.getAdapter().notifyDataSetChanged();
+            EventBus.getDefault()
+                    .post(new AAUpdateMessage(alarm, changePos, AAUpdateMessage.EventType.INSERT));
         }
         if (!deleteRequestDiscarded) {
-            boolean isDeleted = database.deleteAlarmEntry((AlarmModel) model);
+            boolean isDeleted = database.deleteAlarmEntry(alarm);
             if (isDeleted) {
-                cancelAlarm(); // if alarm was deleted, cancel alarm first, then ...
+                if (!alarm.isRepeated()) cancelNonRepeatingAlarm();
+                else cancelRepeatingAlarm();
                 playAlertTone(appContext, Alert.DELETE);
                 if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
@@ -521,7 +518,7 @@ public class RequestRunner extends Thread {
         manager.cancel(assignmentPiPrevious);
     }
 
-    public void cancelAlarm() {
+    public void cancelNonRepeatingAlarm() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(params.getAlarmTime()[0]));
@@ -530,6 +527,66 @@ public class RequestRunner extends Thread {
         calendar.set(Calendar.MILLISECOND, 0);
 
         boolean isNextDay = System.currentTimeMillis() > calendar.getTimeInMillis();
+        long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
+                                     : calendar.getTimeInMillis();
+
+        Intent alarmReceiverIntent = new Intent(appContext, AlarmReceiver.class);
+        alarmReceiverIntent.putExtra("Label", params.getAlarmLabel());
+        // This is just used to prevent cancelling all pending intent, because when
+        // PendingIntent#cancel is called, all pending intent that matches the intent supplied to
+        // Intent#filterEquals (and it returns true), will be cancelled because there was no
+        // difference between the intents. So this code segment was used to provide a distinguishing
+        // effect.
+        alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
+        alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
+        alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
+                                           "com.noah.timely.alarm.dataType");
+
+        AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
+
+        PendingIntent alarmPI = PendingIntent.getBroadcast(appContext, 11789, alarmReceiverIntent,
+                                                           PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmPI.cancel();
+        alarmManager.cancel(alarmPI);
+    }
+
+    // This calculates the days between now and the day needed which is represented by closest repeat day.
+    private int getNextRepeatingAlarmDistance() {
+        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        return (Calendar.SATURDAY + getClosestRepeatDay(dayOfWeek) - dayOfWeek) % Calendar.SATURDAY;
+    }
+
+    // gets the closest repeat day making code more easier to understand. Returns -1 if no day was set to repeat.
+    private int getClosestRepeatDay(int from) {
+        Boolean[] selectedDays = params.getAlarmRepeatDays();
+        if (from < 0 || from > 7) throw new IllegalArgumentException("Invalid day " + from);
+        int result = -1;
+        int nextSearch = from;
+        // search from sunday to saturday
+        for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
+            if (selectedDays[nextSearch - 1]) {
+                result = nextSearch;
+                break;
+            }
+            nextSearch = nextSearch == Calendar.SATURDAY ? Calendar.SUNDAY : ++nextSearch;
+        }
+
+        return result;
+    }
+
+    public void cancelRepeatingAlarm() {
+        Calendar calendar = Calendar.getInstance();
+        String[] time = params.getAlarmTime();
+
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.DATE, getNextRepeatingAlarmDistance());
+
+        boolean isNextDay = System.currentTimeMillis() > calendar.getTimeInMillis();
+
         long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
                                      : calendar.getTimeInMillis();
 
@@ -578,11 +635,6 @@ public class RequestRunner extends Thread {
 
         public Builder setAdapterPosition(int adapterPosition) {
             requestParams.setAdapterPosition(adapterPosition);
-            return this;
-        }
-
-        public Builder setAdapter(RecyclerView.Adapter<?> adapter) {
-            requestParams.setAdapter(adapter);
             return this;
         }
 
@@ -643,6 +695,16 @@ public class RequestRunner extends Thread {
 
         public Builder setMetadataType(RequestParams.MetaDataType metadataType) {
             requestParams.setMetadataType(metadataType);
+            return this;
+        }
+
+        public Builder setAlarmRepeatDays(Boolean[] alarmRepeatDays) {
+            requestParams.setAlarmRepeatDays(alarmRepeatDays);
+            return this;
+        }
+
+        public Builder setPagePosition(int position) {
+            requestParams.setPagePosition(position);
             return this;
         }
     }

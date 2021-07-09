@@ -1,6 +1,5 @@
 package com.noah.timely.exam;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -17,12 +16,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.noah.timely.R;
-import com.noah.timely.util.Utility;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.Utility;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.Locale;
 
 import static com.noah.timely.util.Utility.DAYS_3;
 import static com.noah.timely.util.Utility.playAlertTone;
@@ -72,17 +73,15 @@ public class AddExamActivity extends AppCompatActivity {
         edt_startTime = findViewById(R.id.start_time);
         edt_endTime = findViewById(R.id.end_time);
 
-        ArrayAdapter<String> courseAdapter
-                = new ArrayAdapter<>(this,
-                                     android.R.layout.simple_dropdown_item_1line,
-                                     database.getAllRegisteredCourses());
+        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
+                                                                android.R.layout.simple_dropdown_item_1line,
+                                                                database.getAllRegisteredCourses());
         atv_courseName.setAdapter(courseAdapter);
 
         Spinner spin_days = findViewById(R.id.day_spin);
-        ArrayAdapter<String> dayAdapter
-                = new ArrayAdapter<>(this,
-                                     android.R.layout.simple_spinner_item,
-                                     DAYS_3);
+        ArrayAdapter<String> dayAdapter = new ArrayAdapter<>(this,
+                                                             android.R.layout.simple_spinner_item,
+                                                             DAYS_3);
 
         dayAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         spin_days.setAdapter(dayAdapter);
@@ -157,8 +156,7 @@ public class AddExamActivity extends AppCompatActivity {
 
         int pagePosition = getIntent().getIntExtra(ARG_PAGE_POSITION, 0);
 
-        @SuppressLint("DefaultLocale")
-        String examWeek = String.format("%s_%d", "WEEK", pagePosition + 1);
+        String examWeek = String.format(Locale.US, "%s_%d", "WEEK", pagePosition + 1);
         ExamModel exam = new ExamModel(code, course, start, end);
         exam.setWeek(examWeek);
         exam.setDay(examDay);
@@ -169,9 +167,7 @@ public class AddExamActivity extends AppCompatActivity {
                 if (data[1] != -1) {
                     exam.setId(data[1]);
                     exam.setChronologicalOrder(data[0]);
-                    EventBus.getDefault().post(new UpdateMessage(exam,
-                                                                 UpdateMessage.EventType.NEW,
-                                                                 pagePosition));
+                    EventBus.getDefault().post(new EUpdateMessage(exam, EUpdateMessage.EventType.NEW, pagePosition));
                     playAlertTone(getApplicationContext(), Utility.Alert.EXAM);
                 } else {
                     Toast.makeText(this, "An Error occurred", Toast.LENGTH_LONG).show();

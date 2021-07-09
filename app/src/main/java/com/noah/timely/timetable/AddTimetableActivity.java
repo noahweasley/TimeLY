@@ -236,7 +236,7 @@ public class AddTimetableActivity extends AppCompatActivity {
                 timetable.setId(formerTimetable.getId());
                 timetable.setChronologicalOrder(formerTimetable.getChronologicalOrder());
                 EventBus.getDefault()
-                        .post(new UpdateMessage(timetable, pagePosition, UpdateMessage.EventType.UPDATE_CURRENT));
+                        .post(new TUpdateMessage(timetable, pagePosition, TUpdateMessage.EventType.UPDATE_CURRENT));
 
                 scheduleTimetableAlarm(this, timetable, pagePosition);
 
@@ -254,8 +254,8 @@ public class AddTimetableActivity extends AppCompatActivity {
                         timetable.setChronologicalOrder(insertData[0]);
                         timetable.setId(insertData[1]);
                         // after adding to database, update the UI and schedule notification
-                        EventBus.getDefault().post(new UpdateMessage(timetable, pagePosition,
-                                                                     UpdateMessage.EventType.NEW));
+                        EventBus.getDefault().post(new TUpdateMessage(timetable, pagePosition,
+                                                                      TUpdateMessage.EventType.NEW));
 
                         scheduleTimetableAlarm(this, timetable, pagePosition);
 

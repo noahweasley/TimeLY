@@ -199,8 +199,8 @@ public class AlarmReSchedulerService extends Service {
 
         long CURRENT = calendar.getTimeInMillis();
         long NOW = System.currentTimeMillis();
-        final int ONE_DAY = 1000 * 60 * 60 * 24;
-        final long PREVIOUS = CURRENT - ONE_DAY;
+
+        final long PREVIOUS = CURRENT - TimeUnit.DAYS.toMillis(1);
         // Get the alarm manager
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         // Now set the next alarm

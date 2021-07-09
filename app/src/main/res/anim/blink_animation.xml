@@ -5,4 +5,4 @@
     android:repeatCount="-1"
     android:repeatMode="reverse"
     android:toAlpha="0.0"
-    android:interpolator="@android:anim/accelerate_interpolator"/>
+    android:interpolator="@android:anim/accelerate_interpolator" />

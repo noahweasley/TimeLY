@@ -150,7 +150,6 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
 
                 RequestRunner.Builder builder = new RequestRunner.Builder();
                 builder.setOwnerContext(getActivity())
-                       .setAdapter(tableRowAdapter)
                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
                        .setModelList(tList);
 
@@ -241,28 +240,39 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doTimetableUpdate(UpdateMessage update) {
+    public void doTimetableUpdate(SUpdateMessage update) {
         TimetableModel data = update.getData();
         int changePos = data.getChronologicalOrder();
 
-        if (update.getType() == UpdateMessage.EventType.NEW) {
-            tList.add(changePos, data);
-            itemCount.setText(String.valueOf(tList.size()));
-
-            if (tList.isEmpty()) {
-                noTimetableView.setVisibility(View.VISIBLE);
-                rV_timetable.setVisibility(View.GONE);
-            } else {
-                noTimetableView.setVisibility(View.GONE);
-                rV_timetable.setVisibility(View.VISIBLE);
-            }
-            tableRowAdapter.notifyItemInserted(changePos);
-            tableRowAdapter.notifyDataSetChanged();
-        } else {
-            tList.remove(changePos);
-            tList.add(changePos, data);
-            tableRowAdapter.notifyItemChanged(changePos);
+        switch (update.getType()) {
+            case NEW:
+                tList.add(changePos, data);
+                if (tList.isEmpty()) {
+                    noTimetableView.setVisibility(View.VISIBLE);
+                    rV_timetable.setVisibility(View.GONE);
+                } else {
+                    noTimetableView.setVisibility(View.GONE);
+                    rV_timetable.setVisibility(View.VISIBLE);
+                }
+                tableRowAdapter.notifyItemInserted(changePos);
+                tableRowAdapter.notifyDataSetChanged();
+                break;
+            case INSERT:
+                tableRowAdapter.notifyItemInserted(changePos);
+                tableRowAdapter.notifyDataSetChanged();
+                break;
+            case REMOVE:
+                tableRowAdapter.notifyItemRemoved(changePos);
+                tableRowAdapter.notifyDataSetChanged();
+                break;
+            default:
+                tList.remove(changePos);
+                tList.add(changePos, data);
+                tableRowAdapter.notifyItemChanged(changePos);
+                break;
         }
+        // reflect data count
+        itemCount.setText(String.valueOf(tList.size()));
     }
 
     private void dismissProgressbar(ProgressBar progressBar, boolean empty) {
@@ -432,7 +442,6 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                   .setAdapter(tableRowAdapter)
                    .setModelList(tList)
                    .setTimetable(SchoolDatabase.SCHEDULED_TIMETABLE)
                    .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
@@ -444,10 +453,9 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
                   .runRequest(MULTIPLE_DELETE_REQUEST);
 
             final int count = getCheckedTimetablesCount();
-            Snackbar snackbar
-                    = Snackbar.make(coordinator,
-                                    count + " Course" + (count > 1 ? "s" : "") + " Deleted",
-                                    Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(coordinator,
+                                              count + " Course" + (count > 1 ? "s" : "") + " Deleted",
+                                              Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.setAction("UNDO", v -> runner.undoRequest());

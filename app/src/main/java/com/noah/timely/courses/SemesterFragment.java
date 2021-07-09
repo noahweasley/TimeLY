@@ -35,7 +35,6 @@ import com.noah.timely.core.EmptyListEvent;
 import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
-import com.noah.timely.core.RequestUpdateEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
@@ -219,52 +218,49 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doCourseUpdate(UpdateMessage update) {
+    public void doCourseUpdate(CUpdateMessage update) {
         int pagePosition = update.getPagePosition();
         // Because an update message would be posted to the two existing fragments in viewpager,
         // instead of updating UI for both fragments, update only a particular fragments view
         // which was specified by the currently checked radio button in the add-course dialog
         if (getPagePosition() == pagePosition) {
             CourseModel data = update.getData();
-            int changePos = data.getId();
+            int changePos = data.getChronologicalOrder();
 
-            if (update.getType() == UpdateMessage.EventType.NEW) {
-                cList.add(changePos, data);
-                itemCount.setText(String.valueOf(cList.size()));
+            switch (update.getType()) {
+                case NEW:
+                    cList.add(changePos, data);
+                    itemCount.setText(String.valueOf(cList.size()));
 
-                if (cList.isEmpty()) {
-                    noCourseView.setVisibility(View.VISIBLE);
-                    rv_Courses.setVisibility(View.GONE);
-                } else {
-                    noCourseView.setVisibility(View.GONE);
-                    rv_Courses.setVisibility(View.VISIBLE);
-                }
-                courseAdapter.notifyItemInserted(changePos);
-                courseAdapter.notifyDataSetChanged();
-            } else {
-                // This else block is never used, but is left here for future app updates, where I
-                // would need to edit course.
-                cList.remove(changePos);
-                cList.add(changePos, data);
-                courseAdapter.notifyItemChanged(changePos);
+                    if (cList.isEmpty()) {
+                        noCourseView.setVisibility(View.VISIBLE);
+                        rv_Courses.setVisibility(View.GONE);
+                    } else {
+                        noCourseView.setVisibility(View.GONE);
+                        rv_Courses.setVisibility(View.VISIBLE);
+                    }
+                    courseAdapter.notifyItemInserted(changePos);
+                    courseAdapter.notifyDataSetChanged();
+                    break;
+                case INSERT:
+                    courseAdapter.notifyItemInserted(changePos);
+                    courseAdapter.notifyDataSetChanged();
+                    break;
+                case REMOVE:
+                    courseAdapter.notifyItemRemoved(changePos);
+                    courseAdapter.notifyDataSetChanged();
+                    break;
+                default:
+                    // This else block is never used, but is left here for future app updates, where I
+                    // would need to edit course.
+                    cList.remove(changePos);
+                    cList.add(changePos, data);
+                    courseAdapter.notifyItemChanged(changePos);
+                    break;
             }
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doOnRequestUpdate(RequestUpdateEvent request) {
-        switch (request.getUpdateType()) {
-            case INSERT:
-                itemCount.setText(String.valueOf(cList.size()));
-                courseAdapter.notifyItemInserted(request.getChangePosition());
-                courseAdapter.notifyDataSetChanged();
-                break;
-            case REMOVE:
-                itemCount.setText(String.valueOf(cList.size()));
-                courseAdapter.notifyItemRemoved(request.getChangePosition());
-                courseAdapter.notifyDataSetChanged();
-                break;
-        }
+        // reflect data count
+        itemCount.setText(String.valueOf(cList.size()));
     }
 
     @Override
@@ -291,7 +287,6 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         courseAdapter.notifyDataSetChanged();
     }
 
-    // For the vertical scrolling list (timetable)
     public class CourseAdapter extends RecyclerView.Adapter<CourseRowHolder> {
         private final ChoiceMode choiceMode;
         private boolean multiSelectionEnabled;
@@ -311,7 +306,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
         @Override
         public void onBindViewHolder(@NonNull CourseRowHolder viewHolder, int position) {
-            viewHolder.with(SemesterFragment.this, courseAdapter, cList, coordinator)
+            viewHolder.with(SemesterFragment.this, courseAdapter, cList, getPagePosition(), coordinator)
                       .bindView();
         }
 
@@ -417,7 +412,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                   .setAdapter(courseAdapter)
+                   .setPagePosition(getPagePosition())
                    .setModelList(cList)
                    .setCourseSemester(SemesterFragment.this.getSemester())
                    .setMetadataType(RequestParams.MetaDataType.COURSE)

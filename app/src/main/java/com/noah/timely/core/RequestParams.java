@@ -2,18 +2,16 @@ package com.noah.timely.core;
 
 import android.net.Uri;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.noah.timely.assignment.AssignmentModel;
 
 import java.util.List;
-
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 // Parameters for RequestRunner
 public class RequestParams {
     private FragmentActivity mActivity;
     private int adapterPosition;
-    private RecyclerView.Adapter<?> adapter;
     private List<DataModel> dList;
     private String alarmLabel;
     private String[] alarmTime;
@@ -26,6 +24,12 @@ public class RequestParams {
     private Integer[] positionIndices;
     private String semester;
     private MetaDataType metadataType;
+    private Boolean[] alarmRepeatDays;
+    private int pagePosition;
+
+    public void setPagePosition(int pagePosition) {
+        this.pagePosition = pagePosition;
+    }
 
     public String getSemester() {
         return semester;
@@ -57,14 +61,6 @@ public class RequestParams {
 
     public void setAdapterPosition(int adapterPosition) {
         this.adapterPosition = adapterPosition;
-    }
-
-    public RecyclerView.Adapter<?> getAdapter() {
-        return adapter;
-    }
-
-    public void setAdapter(RecyclerView.Adapter<?> adapter) {
-        this.adapter = adapter;
     }
 
     public List<DataModel> getModelList() {
@@ -145,6 +141,18 @@ public class RequestParams {
 
     public void setPositionIndices(Integer[] positionIndices) {
         this.positionIndices = positionIndices;
+    }
+
+    public void setAlarmRepeatDays(Boolean[] alarmRepeatDays) {
+        this.alarmRepeatDays = alarmRepeatDays;
+    }
+
+    public Boolean[] getAlarmRepeatDays() {
+        return alarmRepeatDays;
+    }
+
+    public int getPagePosition() {
+        return pagePosition;
     }
 
     public enum MetaDataType {

@@ -154,8 +154,8 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
                 // after updating database, update the UI and re-schedule notification
                 cancelTimetableNotifier(context, formerTimetable);
                 EventBus.getDefault()
-                        .post(new UpdateMessage(newTimetable,
-                                                UpdateMessage.EventType.UPDATE_CURRENT));
+                        .post(new SUpdateMessage(newTimetable,
+                                                 SUpdateMessage.EventType.UPDATE_CURRENT));
                 scheduleTimetableAlarm(getContext(), newTimetable);
             } else Toast.makeText(getContext(), "An Error Occurred", Toast.LENGTH_LONG).show();
 
@@ -171,7 +171,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
                         newTimetable.setId(insertData[1]);
                         // after adding to database, update the UI and schedule notification
                         EventBus.getDefault()
-                                .post(new UpdateMessage(newTimetable, UpdateMessage.EventType.NEW));
+                                .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.NEW));
                         scheduleTimetableAlarm(context, newTimetable);
                     } else {
                         Toast.makeText(context, "An Error Occurred", Toast.LENGTH_LONG).show();

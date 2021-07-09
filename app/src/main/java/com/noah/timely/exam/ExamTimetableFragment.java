@@ -36,7 +36,6 @@ import com.noah.timely.core.EmptyListEvent;
 import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
-import com.noah.timely.core.RequestUpdateEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
@@ -236,56 +235,43 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doExamsUpdate(UpdateMessage update) {
+    public void doExamsUpdate(EUpdateMessage update) {
         int pagePosition = update.getPagePosition();
-        // Because an update message would be posted to the two existing fragments in viewpager,
-        // instead of updating UI for both fragments, update only a particular fragments view
-        // which was specified by the currently viewed exam week timetable.
+        // Because an update message would be posted to all the existing fragments in viewpager, instead of updating UI
+        // for all fragments, update only a particular fragments view which was specified by the currently viewed exam
+        // week timetable.
         if (getArguments().getInt(ARG_POSITION) == pagePosition) {
             ExamModel data = update.getData();
             int changePos = data.getChronologicalOrder();
 
             if (changePos >= 0) {
-                if (update.getType() == UpdateMessage.EventType.NEW) {
-                    eList.add(changePos, data);
-                    itemCount.setText(String.valueOf(eList.size()));
-
-                    if (eList.isEmpty()) {
-                        noExamView.setVisibility(View.VISIBLE);
-                        rv_Exams.setVisibility(View.GONE);
-                    } else {
-                        noExamView.setVisibility(View.GONE);
-                        rv_Exams.setVisibility(View.VISIBLE);
-                    }
-                    examRowAdapter.notifyItemInserted(changePos);
-                    examRowAdapter.notifyDataSetChanged();
-                } else {
-                    // This else block is never used, but is left here for future app updates,
-                    // where I
-                    // would need to edit exams.
-                    eList.remove(changePos);
-                    eList.add(changePos, data);
-                    examRowAdapter.notifyItemChanged(changePos);
+                switch (update.getType()) {
+                    case NEW:
+                        eList.add(changePos, data);
+                        examRowAdapter.notifyItemInserted(changePos);
+                        examRowAdapter.notifyDataSetChanged();
+                        doEmptyExamsUpdate(null);
+                        break;
+                    case INSERT:
+                        examRowAdapter.notifyItemInserted(changePos);
+                        examRowAdapter.notifyDataSetChanged();
+                        break;
+                    case REMOVE:
+                        examRowAdapter.notifyItemRemoved(changePos);
+                        examRowAdapter.notifyDataSetChanged();
+                        break;
+                    default:
+                        // This else block is never used, but is left here for future app updates, where I would need
+                        // to edit exams.
+                        eList.remove(changePos);
+                        eList.add(changePos, data);
+                        examRowAdapter.notifyItemChanged(changePos);
+                        break;
                 }
+                itemCount.setText(String.valueOf(eList.size()));
             } else {
                 Log.w(getClass().getSimpleName(), "Couldn't update list for position: " + changePos);
             }
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doOnRequestUpdate(RequestUpdateEvent request) {
-        switch (request.getUpdateType()) {
-            case INSERT:
-                itemCount.setText(String.valueOf(eList.size()));
-                examRowAdapter.notifyItemInserted(request.getChangePosition());
-                examRowAdapter.notifyDataSetChanged();
-                break;
-            case REMOVE:
-                itemCount.setText(String.valueOf(eList.size()));
-                examRowAdapter.notifyItemRemoved(request.getChangePosition());
-                examRowAdapter.notifyDataSetChanged();
-                break;
         }
     }
 
@@ -422,7 +408,6 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                   .setAdapter(examRowAdapter)
                    .setModelList(eList)
                    .setMetadataType(RequestParams.MetaDataType.EXAM)
                    .setItemIndices(getCheckedExamsIndices())

@@ -13,7 +13,7 @@
     <dimen name="timetable_space">8dp</dimen>
     <dimen name="folder_img_margin">10dp</dimen>
     <dimen name="imp_space">8dp</dimen>
-    <dimen name="secondary_card_margin_bottom">16dp</dimen>
+    <dimen name="secondary_card_margin_bottom_21">16dp</dimen>
     <dimen name="normal_dialog_width">360dp</dimen>
     <dimen name="normal_dialog_height">370dp</dimen>
     <dimen name="splash_app_name_size">38sp</dimen>
@@ -35,10 +35,10 @@
     <dimen name="alarm_list_repeat_days_text_size">14sp</dimen>
     <dimen name="alarm_repeat_days_text_margin">18dp</dimen>
     <dimen name="data_list_padding">16dp</dimen>
-    <dimen name="course_list_height">120dp</dimen>
+    <dimen name="course_list_height_21">120dp</dimen>
     <dimen name="range_editor_margin">4dp</dimen>
-    <dimen name="timetable_list_height">120dp</dimen>
-    <dimen name="scheduled_list_row_height">160dp</dimen>
+    <dimen name="timetable_list_height_21">120dp</dimen>
+    <dimen name="scheduled_list_row_height_21">160dp</dimen>
     <dimen name="scheduled_day_text_size">18sp</dimen>
     <dimen name="schedule_course_code_text_size">22sp</dimen>
     <dimen name="fab_size">56dp</dimen>
@@ -47,7 +47,7 @@
     <dimen name="assignment_course_code_text_size">16sp</dimen>
     <dimen name="storage_viewer_text_size">18sp</dimen>
     <dimen name="storage_view_container_height">80dp</dimen>
-    <dimen name="assignment_list_height">225dp</dimen>
+    <dimen name="assignment_list_height_2">225dp</dimen>
     <dimen name="assignment_text_size">14sp</dimen>
     <dimen name="assignment_dialog_text_size_medium">18sp</dimen>
     <dimen name="image_row_size">200dp</dimen>
@@ -60,4 +60,15 @@
     <dimen name="info_version_text_size">24sp</dimen>
     <dimen name="app_desc_text_size">18sp</dimen>
     <dimen name="course_course_name_text_size">16sp</dimen>
+    <dimen name="bg_repeat_check_size">30dp</dimen>
+    <dimen name="alarm_decor_margin">16dp</dimen>
+    <dimen name="secondary_dialog_width">300dp</dimen>
+    <dimen name="intro_top_begin">82dp</dimen>
+    <dimen name="secondary_card_margin_bottom">4dp</dimen>
+    <dimen name="course_list_height">120dp</dimen>
+    <dimen name="assignment_list_height">235dp</dimen>
+    <dimen name="course_list_height_">130dp</dimen>
+    <dimen name="timetable_list_height">130dp</dimen>
+    <dimen name="scheduled_list_row_height">180dp</dimen>
+    <dimen name="image_row_size_2B">310dp</dimen>
 </resources>

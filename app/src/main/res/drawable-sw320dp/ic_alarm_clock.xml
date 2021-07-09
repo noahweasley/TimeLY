@@ -110,7 +110,7 @@
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         tools:ignore="VectorPath" />
-  
+
     <path
         android:fillAlpha="1"
         android:fillColor="#412f2f"

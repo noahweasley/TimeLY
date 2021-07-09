@@ -208,7 +208,7 @@ public class AddScheduledActivity extends AppCompatActivity {
                 cancelTimetableNotifier(this, formerTimetable);
 
                 EventBus.getDefault()
-                        .post(new UpdateMessage(newTimetable, UpdateMessage.EventType.UPDATE_CURRENT));
+                        .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.UPDATE_CURRENT));
 
                 scheduleTimetableAlarm(this, newTimetable);
 
@@ -228,7 +228,7 @@ public class AddScheduledActivity extends AppCompatActivity {
                         newTimetable.setId(insertData[1]);
                         // after adding to database, update the UI and schedule notification
                         EventBus.getDefault()
-                                .post(new UpdateMessage(newTimetable, UpdateMessage.EventType.NEW));
+                                .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.NEW));
                         scheduleTimetableAlarm(this, newTimetable);
                     } else {
                         Toast.makeText(this, "An Error Occurred", Toast.LENGTH_LONG).show();

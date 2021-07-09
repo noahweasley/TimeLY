@@ -6,7 +6,7 @@
         android:width="2dp"
         android:color="@color/colorPrimary"
         android:dashGap="8dp"
-        android:dashWidth="12dp"/>
+        android:dashWidth="12dp" />
 
     <corners android:radius="4dp" />
 
@@ -14,6 +14,6 @@
         android:bottom="16dp"
         android:left="8dp"
         android:right="8dp"
-        android:top="16dp"/>
+        android:top="16dp" />
 
 </shape>

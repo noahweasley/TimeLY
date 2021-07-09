@@ -144,8 +144,8 @@ public class AddCourseActivity extends AppCompatActivity {
                     model.setId(addPos);
                     model.setChronologicalOrder(data[0]);
                     playAlertTone(getApplicationContext(), Utility.Alert.COURSE);
-                    EventBus.getDefault().post(new UpdateMessage(model, UpdateMessage.EventType.NEW,
-                                                                 pagePosition1));
+                    EventBus.getDefault().post(new CUpdateMessage(model, CUpdateMessage.EventType.NEW,
+                                                                  pagePosition1));
                 } else {
                     Toast.makeText(this, "An Error occurred", Toast.LENGTH_LONG).show();
                 }
