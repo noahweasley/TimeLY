@@ -1941,9 +1941,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         boolean resCode = false;
         SQLiteDatabase db = getWritableDatabase();
 
-        for (int index : itemIndices) {
-            resCode |= db.delete(WEEK, COLUMN_ID + " = " + index, null) != -1;
-        }
+        for (int index : itemIndices) resCode |= db.delete(WEEK, COLUMN_ID + " = " + index, null) != -1;
 
         return resCode;
     }
