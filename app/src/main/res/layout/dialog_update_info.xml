@@ -9,7 +9,7 @@
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="@dimen/wave_decoration_height"
-        android:background="@drawable/wavy"
+        android:background="@color/colorPrimaryDark"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toTopOf="parent" />
