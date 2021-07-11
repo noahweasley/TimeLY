@@ -43,11 +43,11 @@ import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TimetableFragment;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.PreferenceUtils;
+import com.noah.timely.util.TimelyUpdateUtils;
 
-public class MainActivity
-        extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private ActionBarDrawerToggle toggle;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
     private TimeChangeDetector timeChangeDetector;
 
     static {
@@ -63,13 +63,13 @@ public class MainActivity
 
         setContentView(R.layout.activity_main);
 
+        TimelyUpdateUtils.checkForUpdates(this); // check for updates
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         NavigationView navView = findViewById(R.id.nav_view);
         drawer = findViewById(R.id.drawer);
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                                           R.string.open,
-                                           R.string.close);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
         drawer.addDrawerListener(toggle);
         navView.setNavigationItemSelectedListener(this);
         // Set the first viewed fragment on app start
@@ -85,18 +85,16 @@ public class MainActivity
         String noticeMessage = getString(R.string.noticeMessage);
 
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
                 // notify user of their actions to remove restrictions on battery optimizations
                 new AlertDialog.Builder(this)
-                        .setMessage(noticeMessage)
                         .setTitle(noticeTitle)
+                        .setMessage(noticeMessage)
                         .setNegativeButton(cancelText, this::requestAction)
                         .setPositiveButton(goText, this::requestAction)
                         .create()
                         .show();
-
             }
         }
     }
@@ -172,7 +170,7 @@ public class MainActivity
         if (id == R.id.action_settings) {
             open_upSetting();
         } else if (id == R.id.update) {
-            Toast.makeText(this, "No action yet", Toast.LENGTH_LONG).show();
+            TimelyUpdateUtils.checkForUpdates(this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -237,8 +235,7 @@ public class MainActivity
 
         }
 
-        if (drawer.isDrawerOpen(GravityCompat.START))
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
 
         return true;
     }
@@ -246,14 +243,12 @@ public class MainActivity
     private void reportAction(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             // start WhatsApp
-            String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp";
             PackageManager packageManager = getPackageManager();
+            String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp";
             String developersContact = "+2347065478947";
 
             // send message with emojis
-            int waveEmojiUnicode = 0x1F44B,
-                    clapEmojiUnicode = 0x1F44F,
-                    faceTongueEmojiUnicode = 0x1F60B;
+            int waveEmojiUnicode = 0x1F44B, clapEmojiUnicode = 0x1F44F, faceTongueEmojiUnicode = 0x1F60B;
 
             char[] waveEmojiChars = Character.toChars(waveEmojiUnicode);
             char[] clapEmojiChars = Character.toChars(clapEmojiUnicode);
