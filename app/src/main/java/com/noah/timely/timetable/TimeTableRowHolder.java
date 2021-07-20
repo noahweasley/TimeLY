@@ -286,12 +286,10 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
                     img_schImp.setBackground(ContextCompat.getDrawable(context, R.drawable.schedule_not_important));
                     break;
                 case "Very Important":
-                    img_schImp.setBackground(
-                            ContextCompat.getDrawable(context, R.drawable.schedule_very_important));
+                    img_schImp.setBackground(ContextCompat.getDrawable(context, R.drawable.schedule_very_important));
                     break;
                 case "Less Important":
-                    img_schImp.setBackground(
-                            ContextCompat.getDrawable(context, R.drawable.schedule_less_important));
+                    img_schImp.setBackground(ContextCompat.getDrawable(context, R.drawable.schedule_less_important));
             }
             TooltipCompat.setTooltipText(img_schImp, tModel.getImportance());
         }
