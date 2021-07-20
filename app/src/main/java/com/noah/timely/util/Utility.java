@@ -21,8 +21,6 @@ public class Utility {
     public static final String[] DAYS = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     public static final String[] DAYS_3 = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
     public static final char[] DAYS_2 = {'S', 'M', 'T', 'W', 'T', 'F', 'S'};
-    // Used By DayRowHolder for polling changes in button state
-    public static String timetable = "Monday"; // Monday: Default
     public static boolean deleteTaskRunning;
 
     /**

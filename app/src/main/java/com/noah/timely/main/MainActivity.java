@@ -42,6 +42,7 @@ import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TimetableFragment;
 import com.noah.timely.util.Constants;
+import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.PreferenceUtils;
 import com.noah.timely.util.TimelyUpdateUtils;
 
@@ -244,30 +245,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (which == DialogInterface.BUTTON_POSITIVE) {
             // start WhatsApp
             PackageManager packageManager = getPackageManager();
-            String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp";
-            String developersContact = "+2347065478947";
-
+            String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp", devCon = "+2347065478947";
             // send message with emojis
-            int waveEmojiUnicode = 0x1F44B, clapEmojiUnicode = 0x1F44F, faceTongueEmojiUnicode = 0x1F60B;
+            int waveEmojiUnicode = 0x1F3FC, clapEmojiUnicode = 0x1F44F,
+                    faceTongueEmojiUnicode = 0x1F60B, mobilePhoneEmojiUnicode = 0x1F4F1;
 
             char[] waveEmojiChars = Character.toChars(waveEmojiUnicode);
             char[] clapEmojiChars = Character.toChars(clapEmojiUnicode);
+            char[] mobilePhoneEmojiChars = Character.toChars(mobilePhoneEmojiUnicode);
             char[] faceTongueEmojiChars = Character.toChars(faceTongueEmojiUnicode);
 
+            float[] deviceRes = DeviceInfoUtil.getDeviceResolutionDP(this);
+            String devSpecs = "\n\n Device specs " + String.valueOf(mobilePhoneEmojiChars) +
+                    "\n"
+                    + "Api Level: " + Build.VERSION.SDK_INT
+                    + "\n"
+                    + "Device Screen Density: " + DeviceInfoUtil.getScreenDensity(this)
+                    + "\n"
+                    + "Screen Resolution (dp) : " + deviceRes[0] + " x " + deviceRes[1];
+
             String s1 = "Hi Noah ", s2 = ", TimeLY is a nice app ", s3 = ". However, I would like" +
-                    " to report a bug [ ... ]. My name is [ ... ] by the way.";
+                    " to report a bug .... My name is ... by the way.";
 
             String message = s1 + String.valueOf(waveEmojiChars) + s2
-                    + String.valueOf(clapEmojiChars) + s3 + String.valueOf(faceTongueEmojiChars);
+                    + String.valueOf(clapEmojiChars) + s3 + String.valueOf(faceTongueEmojiChars) + devSpecs;
 
-            String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s",
-                                              developersContact,
-                                              message);
+            String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s", devCon, message);
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataString));
             try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(whatsappPkgName,
-                                                                        PackageManager.GET_META_DATA);
+                PackageInfo packageInfo = packageManager.getPackageInfo(whatsappPkgName, PackageManager.GET_META_DATA);
 
                 intent.setPackage(whatsappPkgName);
                 startActivity(intent);
@@ -328,7 +335,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void loadFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        // transaction.setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit);
         final String TAG = fragment.getClass().getName();
         Fragment fragment1 = manager.findFragmentByTag(TAG);
 

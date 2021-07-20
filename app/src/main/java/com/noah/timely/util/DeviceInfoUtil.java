@@ -27,4 +27,7 @@ public class DeviceInfoUtil {
         return getDeviceResolutionDP(context)[0] + w;
     }
 
+    public static float getScreenDensity(Context context) {
+        return context.getResources().getDisplayMetrics().density;
+    }
 }

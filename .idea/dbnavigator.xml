@@ -42,6 +42,7 @@
     <connection id="6d4399dc-274f-4cdd-ac06-221347e93de2" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="6d4399dc-274f-4cdd-ac06-221347e93de2" dataset="main.Alarms" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="6d4399dc-274f-4cdd-ac06-221347e93de2" dataset="main.Assignment" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">

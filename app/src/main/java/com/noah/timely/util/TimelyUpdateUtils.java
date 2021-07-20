@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
@@ -28,6 +29,8 @@ import java.util.Locale;
  */
 public class TimelyUpdateUtils {
     private static final int UPDATE_ID = 222;
+    private static final String USER = "noahweasley";
+    private static final String REPO = "TimeLY";
 
     public static void checkForUpdates(Context context) {
         AppUpdaterUtils updaterUtils = new AppUpdaterUtils(context);
@@ -35,7 +38,7 @@ public class TimelyUpdateUtils {
         postNotification(context, "Checking for updates", null);
 
         updaterUtils.setUpdateFrom(UpdateFrom.GITHUB);
-        updaterUtils.setGitHubUserAndRepo(GithubUtils.getTimelyOwner(), GithubUtils.getTimelyRepo());
+        updaterUtils.setGitHubUserAndRepo(USER, REPO);
         updaterUtils.withListener(new TimelyUpdateListener(context));
         updaterUtils.start();
     }
@@ -96,20 +99,23 @@ public class TimelyUpdateUtils {
             final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                               : SYSTEM_DEFAULT;
 
-            String githubLink = update.getUrlToDownload().toString();
+            String v = update.getLatestVersion();
+            // corresponding link to direct download link which was in sync with the actual build version
+            String githubLink = "https://github.com/noahweasley/TimeLY/releases/download/"
+                    + "v" + v + "/" + REPO + "_v" + v + ".apk";
             Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
             notificationIntent.setData(Uri.parse(githubLink));
             PendingIntent pi = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-            String contentText
-                    = String.format(Locale.US, "TimeLY_v%s is out, Click to update", update.getLatestVersion());
+            String contentText = String.format(Locale.US, "TimeLY_v%s is out, Click to update", v);
 
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
                    .setAutoCancel(true)
                    .setContentTitle(updateTitle)
                    .setContentText(contentText)
                    .setSound(DEFAULT_URI)
-                   .setSmallIcon(R.mipmap.app_icon)
+                   .setSmallIcon(R.drawable.ic_n_upgrade)
+                   .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                    .setLargeIcon(icon)
                    .setContentIntent(pi);
         } else {
@@ -117,7 +123,8 @@ public class TimelyUpdateUtils {
                    .setOngoing(true)
                    .setSilent(true)
                    .setAutoCancel(false)
-                   .setSmallIcon(R.mipmap.app_icon)
+                   .setSmallIcon(R.drawable.ic_n_upgrade)
+                   .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                    .setLargeIcon(icon);
         }
 

@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
-import android.view.Gravity;
 import android.widget.Toast;
 
 import androidx.core.os.ConfigurationCompat;
@@ -33,7 +32,6 @@ import static com.noah.timely.alarms.AlarmReceiver.ID;
 public class NotificationActionReceiver extends BroadcastReceiver {
     private SchoolDatabase database;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onReceive(Context context, Intent intent) {
         database = new SchoolDatabase(context); // The apps data
@@ -44,31 +42,27 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             // Get the amount of time (in minutes) to snooze the alarm when the user
             // is probably lazy, like me :), and wants to keep on sleeping at least for
             // a little while.
-            SharedPreferences preferences
-                    = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             final int snoozeTime = Integer.parseInt(preferences.getString("snooze_time", "5"));
 
-            String message
-                    = "Snoozing for " + snoozeTime + " minute" + (snoozeTime > 1 ? "s" : "");
+            String message = "Snoozing for " + snoozeTime + " minute" + (snoozeTime > 1 ? "s" : "");
 
             snoozeAlarmFor(snoozeTime, intent, context); // now perform the snooze operation proper
 
             int yOffset = context.getResources().getInteger(R.integer.toast_y_offset);
             Toast alert = Toast.makeText(context, message, Toast.LENGTH_LONG);
-            alert.setGravity(Gravity.CENTER_HORIZONTAL, 0, yOffset);
             alert.show();
 
         } else {
-            // When alarm is dismissed, update database to reflect the presence of
-            // the alarm. By alarm presence, I meant that the pending intent has been fired
+            // When alarm is dismissed, update database to reflect the presence of the alarm.
+            // By alarm presence, I meant that the pending intent has been fired
             int dataPos = intent.getIntExtra(ALARM_POS, -1);
-            database.updateAlarmStateFromInitialPosition(dataPos, false);
+            database.updateAlarmStatesAt(dataPos, false, false);
             EventBus.getDefault().post(new PositionMessageEvent(dataPos));
         }
 
         // after any action close the notification tray
-        NotificationManager manager
-                = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(intent.getIntExtra(ID, -1));
         // After everything, stop service
         context.stopService(new Intent(context, AlarmNotificationService.class));
@@ -107,8 +101,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         Uri data = Uri.parse("content://com.noah.timely/Alarms/alarm" + rTime);
         alarmReceiverIntent.setDataAndType(data, "com.noah.timely.alarm.dataType");
 
-        AlarmManager alarmManager
-                = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent alarmPI = PendingIntent.getBroadcast(context,
                                                            11789,
                                                            alarmReceiverIntent,
