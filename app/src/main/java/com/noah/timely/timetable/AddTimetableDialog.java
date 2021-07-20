@@ -30,18 +30,18 @@ import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.ThreadUtils;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import static com.noah.timely.util.Utility.Alert.COURSE;
-import static com.noah.timely.util.Utility.DAYS;
-import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.timetable.DaysFragment.ARG_CHRONOLOGY;
 import static com.noah.timely.timetable.DaysFragment.ARG_CLASS;
 import static com.noah.timely.timetable.DaysFragment.ARG_DATA;
@@ -50,13 +50,18 @@ import static com.noah.timely.timetable.DaysFragment.ARG_PAGE_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_TIME;
 import static com.noah.timely.timetable.DaysFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Utility.Alert.COURSE;
+import static com.noah.timely.util.Utility.DAYS;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.playAlertTone;
 
-@SuppressWarnings("ConstantConditions")
 public class AddTimetableDialog extends DialogFragment implements View.OnClickListener {
     private static String selectedDay;
     private AutoCompleteTextView atv_courseName;
     private EditText edt_startTime, edt_endTime;
     private CheckBox cbx_clear;
+    private static final int UNIT_12 = 12;
+    private static final int UNIT_24 = 24;
 
     /**
      * Make this dialog visible to the user
@@ -106,8 +111,7 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
 
     private boolean registerAndClose() {
         boolean isRegistered = registerTimetable();
-        if (isRegistered)
-            dismiss();
+        if (isRegistered) dismiss();
         return isRegistered;
     }
 
@@ -127,28 +131,42 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
         String end = edt_endTime.getText().toString();
         String start = edt_startTime.getText().toString();
         String code = database.getCourseCodeFromName(course);
-        String timeRegex  /* 24 Hours format */
-                = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+        String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+        String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
 
-        boolean errorOccurred = false;
-        if (!start.matches(timeRegex)) {
+        boolean errorOccurred = false, use24 = isUserPreferred24Hours(getContext());
+
+        if (use24 && !start.matches(timeRegex24)) {
             edt_startTime.setError("Format: HH:SS");
             errorOccurred = true;
+        } else {
+            if (!use24 && !start.matches(timeRegex12)) {
+                edt_startTime.setError("12 hours mode");
+                errorOccurred = true;
+            }
         }
 
-        if (!end.matches(timeRegex)) {
+        if (use24 && !end.matches(timeRegex24)) {
             edt_endTime.setError("Format: HH:SS");
             errorOccurred = true;
+        } else {
+            if (!use24 && !end.matches(timeRegex12)) {
+                edt_endTime.setError("12 hours mode");
+                errorOccurred = true;
+            }
         }
 
         if (TextUtils.isEmpty(course)) {
             atv_courseName.setError("Required");
             errorOccurred = true;
         }
+
         if (errorOccurred) {
-            database.close();
             return false;
         }
+
+        start = use24 ? start : convert(start, UNIT_24);
+        end = use24 ? end : convert(end, UNIT_24);
 
         int pagePosition = getPagePosition();
         TimetableModel formerTimetable = (TimetableModel) getArguments().getSerializable(ARG_DATA);
@@ -196,6 +214,19 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
         }
         database.close();
         return true;
+    }
+
+    private String convert(String time, int unit) {
+        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+        Date date;
+        try {
+            date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
+        } catch (ParseException e) {
+            return null;
+        }
+        return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
     }
 
     private void cancelTimetableNotifier(Context context, TimetableModel timetable) {
@@ -322,8 +353,7 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
                 boolean success = cbx_multiple.isChecked() ? registerAndClear()
                                                            : registerAndClose();
                 int m;
-                if (getArguments().getBoolean(ARG_TO_EDIT))
-                    m = R.string.update_pending;
+                if (getArguments().getBoolean(ARG_TO_EDIT)) m = R.string.update_pending;
                 else m = R.string.registration_pending;
 
                 if (success) {
@@ -338,18 +368,16 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
             edt_endTime = findViewById(R.id.end_time);
 
             SchoolDatabase database = new SchoolDatabase(getContext());
-            ArrayAdapter<String> courseAdapter
-                    = new ArrayAdapter<>(getContext(),
-                                         android.R.layout.simple_dropdown_item_1line,
-                                         database.getAllRegisteredCourses());
+            ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(getContext(),
+                                                                    android.R.layout.simple_dropdown_item_1line,
+                                                                    database.getAllRegisteredCourses());
 
             atv_courseName.setAdapter(courseAdapter);
 
             Spinner spin_days = findViewById(R.id.day_spin);
-            ArrayAdapter<String> daysAdapter
-                    = new ArrayAdapter<>(getContext(),
-                                         android.R.layout.simple_spinner_item,
-                                         DAYS);
+            ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(getContext(),
+                                                                  android.R.layout.simple_spinner_item,
+                                                                  DAYS);
             daysAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
             spin_days.setAdapter(daysAdapter);
             spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -368,7 +396,12 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
             if (getArguments().getBoolean(ARG_TO_EDIT)) {
                 TimetableModel data = (TimetableModel) getArguments().getSerializable(ARG_DATA);
                 getArguments().putInt(ARG_CHRONOLOGY, data.getChronologicalOrder());
-                Log.d(getClass().getSimpleName(), "Order: " + data.getChronologicalOrder());
+
+                if (!isUserPreferred24Hours(getContext())) {
+                    data.setStartTime(convert(data.getStartTime(), UNIT_12));
+                    data.setEndTime(convert(data.getEndTime(), UNIT_12));
+                }
+
                 edt_endTime.setText(data.getEndTime());
                 edt_startTime.setText(data.getStartTime());
                 atv_courseName.setText(data.getFullCourseName());

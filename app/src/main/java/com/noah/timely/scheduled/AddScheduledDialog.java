@@ -31,24 +31,27 @@ import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.ThreadUtils;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.timetable.TimetableModel;
+import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.ALARM_SERVICE;
-import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
-import static com.noah.timely.util.Utility.DAYS;
-import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
+import static com.noah.timely.util.Utility.DAYS;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.playAlertTone;
 
-@SuppressWarnings("ConstantConditions")
 public class AddScheduledDialog extends DialogFragment implements View.OnClickListener {
     public static final String ARG_TIME = "Scheduled time";
     public static final String ARG_COURSE = "Course code";
@@ -58,6 +61,8 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
     private EditText edt_startTime, edt_endTime, edt_lecturerName;
     private RadioGroup imp_group;
     private CheckBox cbx_clear;
+    public static final int UNIT_12 = 12;
+    public static final int UNIT_24 = 24;
 
     public void show(Context context) {
         FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
@@ -86,8 +91,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
 
     private boolean registerAndClose() {
         boolean isRegistered = registerTimetable();
-        if (isRegistered)
-            dismiss();
+        if (isRegistered) dismiss();
         return isRegistered;
     }
 
@@ -109,18 +113,29 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
             importance = "Not Important";
         }
 
-        String timeRegex  /* 24 Hours format */
-                = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+        String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+        String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
 
-        boolean errorOccurred = false;
-        if (!start.matches(timeRegex)) {
+        boolean errorOccurred = false, use24 = isUserPreferred24Hours(getContext());
+
+        if (use24 && !start.matches(timeRegex24)) {
             edt_startTime.setError("Format: HH:SS");
             errorOccurred = true;
+        } else {
+            if (!use24 && !start.matches(timeRegex12)) {
+                edt_startTime.setError("12 hours mode only");
+                errorOccurred = true;
+            }
         }
 
-        if (!end.matches(timeRegex)) {
+        if (use24 && !end.matches(timeRegex24)) {
             edt_endTime.setError("Format: HH:SS");
             errorOccurred = true;
+        } else {
+            if (!use24 && !end.matches(timeRegex12)) {
+                edt_endTime.setError("12 hours mode only");
+                errorOccurred = true;
+            }
         }
 
         if (TextUtils.isEmpty(course)) {
@@ -134,19 +149,19 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
         }
 
         if (errorOccurred) {
-            database.close();
             return false;
         }
 
-        TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code,
-                                                         importance, selectedDay);
+        start = use24 ? start : convert(start, UNIT_24);
+        end = use24 ? end : convert(end, UNIT_24);
+
+        TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance,
+                                                         selectedDay);
 
         Context context = getContext();
         if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT)) {
-            TimetableModel formerTimetable
-                    = (TimetableModel) getArguments().getSerializable(ARG_DATA);
-            boolean updated = database.updateTimetableData(newTimetable,
-                                                           SchoolDatabase.SCHEDULED_TIMETABLE);
+            TimetableModel formerTimetable = (TimetableModel) getArguments().getSerializable(ARG_DATA);
+            boolean updated = database.updateTimetableData(newTimetable, SchoolDatabase.SCHEDULED_TIMETABLE);
 
             if (updated) {
                 newTimetable.setId(formerTimetable.getId());
@@ -154,17 +169,15 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
                 // after updating database, update the UI and re-schedule notification
                 cancelTimetableNotifier(context, formerTimetable);
                 EventBus.getDefault()
-                        .post(new SUpdateMessage(newTimetable,
-                                                 SUpdateMessage.EventType.UPDATE_CURRENT));
-                scheduleTimetableAlarm(getContext(), newTimetable);
-            } else Toast.makeText(getContext(), "An Error Occurred", Toast.LENGTH_LONG).show();
+                        .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.UPDATE_CURRENT));
+                scheduleTimetableAlarm(context, newTimetable);
+            } else Toast.makeText(context, "An Error Occurred", Toast.LENGTH_SHORT).show();
 
         } else {
             if (database.isTimeTableAbsent(SchoolDatabase.SCHEDULED_TIMETABLE, newTimetable)) {
                 ThreadUtils.runBackgroundTask(() -> {
                     Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                    int[] insertData = database.addTimeTableData(newTimetable,
-                                                                 SchoolDatabase.SCHEDULED_TIMETABLE);
+                    int[] insertData = database.addTimeTableData(newTimetable, SchoolDatabase.SCHEDULED_TIMETABLE);
                     if (insertData[1] != -1) {
                         // set the id to be used with view holder's item Id
                         newTimetable.setChronologicalOrder(insertData[0]);
@@ -174,7 +187,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
                                 .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.NEW));
                         scheduleTimetableAlarm(context, newTimetable);
                     } else {
-                        Toast.makeText(context, "An Error Occurred", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "An Error Occurred", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
@@ -189,6 +202,19 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
         return true;
     }
 
+    private String convert(String time, int unit) {
+        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+        Date date;
+        try {
+            date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
+        } catch (ParseException e) {
+            return null;
+        }
+        return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
+    }
+
     private boolean registerAndClear() {
         boolean isRegistered = registerTimetable();
         if (isRegistered && cbx_clear.isChecked()) {
@@ -201,7 +227,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
     }
 
     private void cancelTimetableNotifier(Context context, TimetableModel timetable) {
-        String[] t = timetable.getStartTime().split(":");
+        String[] t = timetable.getStartTime().split("[: ]");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
@@ -221,9 +247,8 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
         Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
         timetableIntent.addCategory("com.noah.timely.scheduled")
                        .setAction("com.noah.timely.scheduled.addAction")
-                       .setDataAndType(
-                               Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
-                               "com.noah.timely.scheduled.dataType");
+                       .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
+                                       "com.noah.timely.scheduled.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
@@ -232,7 +257,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
     }
 
     private void scheduleTimetableAlarm(Context context, TimetableModel timetable) {
-        String[] sTime = timetable.getStartTime().split(":");
+        String[] sTime = timetable.getStartTime().split("[: ]");
         String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
         int day = timetable.getCalendarDay();
 
@@ -336,13 +361,30 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
 
             if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT)) {
                 TimetableModel data = (TimetableModel) getArguments().getSerializable(ARG_DATA);
+
+                if (!isUserPreferred24Hours(getContext())) {
+                    data.setStartTime(convert(data.getStartTime(), UNIT_12));
+                    data.setEndTime(convert(data.getEndTime(), UNIT_12));
+                }
+
                 edt_endTime.setText(data.getEndTime());
                 edt_startTime.setText(data.getStartTime());
                 atv_courseName.setText(data.getFullCourseName());
                 edt_lecturerName.setText(data.getLecturerName());
                 spin_days.setSelection(data.getDayIndex());
+                switch (data.getImportance()) {
+                    case "Not Important":
+                        imp_group.check(R.id.not_important);
+                        break;
+                    case "Less Important":
+                        imp_group.check(R.id.less_important);
+                        break;
+                    default:
+                        imp_group.check(R.id.very_important);
+                }
             }
             database.close();
         }
+
     }
 }

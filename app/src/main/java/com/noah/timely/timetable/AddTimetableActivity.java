@@ -30,12 +30,16 @@ import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static com.noah.timely.util.Utility.Alert.COURSE;
 import static com.noah.timely.util.Utility.DAYS;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.timetable.DaysFragment.ARG_CHRONOLOGY;
 import static com.noah.timely.timetable.DaysFragment.ARG_CLASS;
@@ -55,6 +59,8 @@ public class AddTimetableActivity extends AppCompatActivity {
     private EditText edt_startTime, edt_endTime;
     private CheckBox cbx_clear;
     private SchoolDatabase database;
+    private static final int UNIT_12 = 12;
+    private static final int UNIT_24 = 24;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +113,11 @@ public class AddTimetableActivity extends AppCompatActivity {
             TimetableModel data = (TimetableModel) intent.getSerializableExtra(ARG_DATA);
             getIntent().putExtra(ARG_CHRONOLOGY, data.getChronologicalOrder());
 
+            if (!isUserPreferred24Hours(this)) {
+                data.setStartTime(convert(data.getStartTime(), UNIT_12));
+                data.setEndTime(convert(data.getEndTime(), UNIT_12));
+            }
+
             edt_endTime.setText(data.getEndTime());
             edt_startTime.setText(data.getStartTime());
             atv_courseName.setText(data.getFullCourseName());
@@ -121,8 +132,7 @@ public class AddTimetableActivity extends AppCompatActivity {
             boolean success = cbx_multiple.isChecked() ? registerAndClear() : registerAndClose();
             int m;
 
-            if (getIntent().getBooleanExtra(ARG_TO_EDIT, false))
-                m = R.string.update_pending;
+            if (getIntent().getBooleanExtra(ARG_TO_EDIT, false)) m = R.string.update_pending;
             else m = R.string.registration_pending;
 
             if (success) {
@@ -200,27 +210,42 @@ public class AddTimetableActivity extends AppCompatActivity {
         String end = edt_endTime.getText().toString();
         String start = edt_startTime.getText().toString();
         String code = database.getCourseCodeFromName(course);
-        String timeRegex  /* 24 Hours format */
-                = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+        String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+        String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
 
-        boolean errorOccurred = false;
-        if (!start.matches(timeRegex)) {
+        boolean errorOccurred = false, use24 = isUserPreferred24Hours(this);
+
+        if (use24 && !start.matches(timeRegex24)) {
             edt_startTime.setError("Format: HH:SS");
             errorOccurred = true;
+        } else {
+            if (!use24 && !start.matches(timeRegex12)) {
+                edt_startTime.setError("12 hours mode");
+                errorOccurred = true;
+            }
         }
 
-        if (!end.matches(timeRegex)) {
+        if (use24 && !end.matches(timeRegex24)) {
             edt_endTime.setError("Format: HH:SS");
             errorOccurred = true;
+        } else {
+            if (!use24 && !end.matches(timeRegex12)) {
+                edt_endTime.setError("12 hours mode");
+                errorOccurred = true;
+            }
         }
 
         if (TextUtils.isEmpty(course)) {
             atv_courseName.setError("Required");
             errorOccurred = true;
         }
+
         if (errorOccurred) {
             return false;
         }
+
+        start = use24 ? start : convert(start, UNIT_24);
+        end = use24 ? end : convert(end, UNIT_24);
 
         int pagePosition = getPagePosition();
         TimetableModel formerTimetable = (TimetableModel) getIntent().getSerializableExtra(ARG_DATA);
@@ -277,7 +302,7 @@ public class AddTimetableActivity extends AppCompatActivity {
 
     // cancel timetable
     private void cancelTimetableNotifier(Context context, TimetableModel timetable) {
-        String[] t = timetable.getStartTime().split(":");
+        String[] t = timetable.getStartTime().split("[: ]");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
@@ -309,7 +334,7 @@ public class AddTimetableActivity extends AppCompatActivity {
         int position = timetable.getChronologicalOrder();
         String time = timetable.getStartTime();
         String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
-        String[] t = timetable.getStartTime().split(":");
+        String[] t = timetable.getStartTime().split("[: ]");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
@@ -352,4 +377,18 @@ public class AddTimetableActivity extends AppCompatActivity {
         // notify user
         playAlertTone(context, COURSE);
     }
+
+    private String convert(String time, int unit) {
+        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+        Date date;
+        try {
+            date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
+        } catch (ParseException e) {
+            return null;
+        }
+        return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
+    }
+
 }

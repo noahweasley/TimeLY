@@ -101,8 +101,8 @@
                     android:layout_weight="5"
                     android:background="@drawable/bg_dialog_form"
                     android:hint="@string/start_time_hint"
-                    android:inputType="time"
-                    android:maxLength="5"
+                    android:inputType="textNoSuggestions"
+                    android:maxLength="8"
                     android:maxLines="1"
                     tools:ignore="Autofill,TextFields" />
 
@@ -116,8 +116,8 @@
                     android:layout_weight="5"
                     android:background="@drawable/bg_dialog_form"
                     android:hint="@string/end_time_hint"
-                    android:inputType="time"
-                    android:maxLength="5"
+                    android:inputType="textNoSuggestions"
+                    android:maxLength="8"
                     android:maxLines="1"
                     tools:ignore="Autofill,TextFields" />
 
@@ -153,9 +153,9 @@
                     <RadioButton
                         android:id="@+id/less_important"
                         android:layout_width="wrap_content"
-                        android:checked="true"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/imp_space"
+                        android:checked="true"
                         android:text="@string/less_important" />
 
                     <RadioButton

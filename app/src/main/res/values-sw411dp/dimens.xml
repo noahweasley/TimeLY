@@ -3,7 +3,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="default_gap">10dp</dimen>
     <dimen name="corner_radius">10dp</dimen>
-    <dimen name="card_margin_bottom">10dp</dimen>
+    <dimen name="card_margin_bottom">16dp</dimen>
     <dimen name="layout_gap">16dp</dimen>
     <dimen name="space">16dp</dimen>
     <dimen name="header_size">30dp</dimen>
@@ -64,7 +64,7 @@
     <dimen name="alarm_decor_margin">16dp</dimen>
     <dimen name="secondary_dialog_width">300dp</dimen>
     <dimen name="intro_top_begin">82dp</dimen>
-    <dimen name="secondary_card_margin_bottom">4dp</dimen>
+    <dimen name="secondary_card_margin_bottom">10dp</dimen>
     <dimen name="course_list_height">140dp</dimen>
     <dimen name="assignment_list_height">235dp</dimen>
     <dimen name="course_list_height_">130dp</dimen>
