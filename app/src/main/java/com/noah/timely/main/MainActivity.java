@@ -37,6 +37,7 @@ import com.noah.timely.alarms.TimeChangeDetector;
 import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
+import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.exam.ExamFragment;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.settings.SettingsActivity;
@@ -206,8 +207,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             loadFragment(ExamFragment.newInstance());
 
         } else if (menuItemId == R.id.alarms) {
+//          loadFragment(AlarmHolderFragment.newInstance());
+            String message = "This feature is experimental and contains a lot of bugs." +
+                    " In a future release, the bugs would be fixed";
+            ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
+            errorBuilder.setShowSuggestions(false)
+                        .setDialogMessage(message);
 
-            loadFragment(AlarmHolderFragment.newInstance());
+            new ErrorDialog().showErrorMessage(this, errorBuilder.build());
 
         } else if (menuItemId == R.id.settings) {
 
