@@ -141,4 +141,6 @@
     <string name="default_date_2">22–03–2020</string>
     <string name="default_dir_nae">Downloads</string>
     <string name="rand">23</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
 </resources>

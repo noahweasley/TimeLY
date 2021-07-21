@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +62,7 @@ public class AlarmListFragment extends Fragment {
     private SchoolDatabase database;
     private CoordinatorLayout coordinator;
     private ProgressBar indeterminateProgress;
+    private RecyclerView rV_AlarmList;
 
     @Override
     public void onCreate(Bundle state) {
@@ -90,7 +90,7 @@ public class AlarmListFragment extends Fragment {
 
         coordinator = view.findViewById(R.id.coordinator);
         no_alarm_view = view.findViewById(R.id.no_alarm_view);
-        RecyclerView rV_AlarmList = view.findViewById(R.id.alarm_list);
+        rV_AlarmList = view.findViewById(R.id.alarm_list);
         indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
 
         ThreadUtils.runBackgroundTask(() -> {
@@ -112,56 +112,6 @@ public class AlarmListFragment extends Fragment {
         rV_AlarmList.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         rV_AlarmList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                               //
-//   Note:  Code commented out because a user requested but code remains for code re-usability   //
-//                                                                                               //
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//        ItemTouchHelper deleteSwiper = new ItemTouchHelper(new ItemTouchHelper.Callback() {    //
-//            @Override                                                                          //
-//            public int getMovementFlags(@NonNull RecyclerView recyclerView,                    //
-//                                        @NonNull RecyclerView.ViewHolder viewHolder) {         //
-//                return makeMovementFlags(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);     //
-//            }                                                                                  //
-//                                                                                               //
-//            @Override                                                                          //
-//            public boolean onMove(@NonNull RecyclerView recyclerView,                          //
-//                                  @NonNull RecyclerView.ViewHolder viewHolder,                 //
-//                                  @NonNull RecyclerView.ViewHolder target) {                   //
-//                // Not implemented, return false                                               //
-//                return false;                                                                  //
-//                                                                                               //
-//            }                                                                                  //
-//                                                                                               //
-//            @Override                                                                          //
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) { //
-//                // post a delete request on the assignment database                            //
-//                RequestRunner runner = RequestRunner.getInstance();                            //
-//                Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted",           //
-//                                                  Snackbar.LENGTH_LONG)                        //
-//                        .setAction("undo", v -> runner.undoRequest())                          //
-//                        .setActionTextColor(Color.YELLOW);                                     //
-//                                                                                               //
-//                snackbar.show();                                                               //
-//                                                                                               //
-//                int pos = viewHolder.getAbsoluteAdapterPosition();                             //
-//                String[] elements = database.getElementaryAlarmDataAt(pos);                    //
-//                                                                                               //
-//                RequestRunner.Builder builder = new RequestRunner.Builder();                   //
-//                builder.setOwnerContext(getActivity())                                         //
-//                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())           //
-//                        .setAdapter(alarmAdapter)                                              //
-//                        .setModelList(aList)                                                   //
-//                        .setAlarmTime(elements);                                               //
-//                                                                                               //
-//                runner.setRequestParams(builder.getParams())                                   //
-//                        .runRequest(DELETE_REQUEST);                                           //
-//            }                                                                                  //
-//        });                                                                                    //
-//                                                                                               //
-//        deleteSwiper.attachToRecyclerView(rV_AlarmList);                                       //
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
     }
 
     @Override
@@ -173,6 +123,7 @@ public class AlarmListFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doEmptyResponse(EmptyListEvent alarmEvent) {
         no_alarm_view.setVisibility(aList.isEmpty() ? View.VISIBLE : View.GONE);
+        rV_AlarmList.setVisibility(aList.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -342,7 +293,6 @@ public class AlarmListFragment extends Fragment {
                 // play alert tone if user activated alert tones in user settings
                 Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
                 int yOffset = getResources().getInteger(R.integer.toast_y_offset);
-                alert.setGravity(Gravity.CENTER_HORIZONTAL, 0, yOffset);
                 alert.show();
                 playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
 

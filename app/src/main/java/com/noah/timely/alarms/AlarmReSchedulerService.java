@@ -23,9 +23,11 @@ import com.noah.timely.scheduled.ScheduledTaskNotifier;
 import com.noah.timely.timetable.DaysFragment;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.timetable.TimetableNotifier;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -66,8 +68,19 @@ public class AlarmReSchedulerService extends Service {
                 // re-schedule alarms; get alarm data from app's database
                 for (DataModel rawData : activeAlarms) {
                     AlarmModel alarm = (AlarmModel) rawData;
-                    registerAlarm(context, alarm);
-                }
+                    // This gets the current day of the week as of TODAY / NOW
+                    Calendar calendar = Calendar.getInstance();
+                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                    int closestRepeatDay = getClosestRepeatDay(dayOfWeek, alarm.getRepeatDays());
+                    int alarmDistance = getNextRepeatingAlarmDistance(dayOfWeek, closestRepeatDay);
+
+                    if (closestRepeatDay != -1 && alarmDistance != 0) {
+                        calendar.add(Calendar.DATE, alarmDistance);
+                        rescheduleRepeatingPendingAlarm(context, alarm, alarmDistance);
+                    } else {
+                        rescheduleNonRepeatingAlarm(context, alarm);
+                    }
+                } // end for
             }
 
             // Reset the assignment notification alarms here.
@@ -308,7 +321,7 @@ public class AlarmReSchedulerService extends Service {
     }
 
     // register individual alarms
-    private void registerAlarm(@NonNull Context context, @NonNull AlarmModel alarm) {
+    private void rescheduleNonRepeatingAlarm(@NonNull Context context, @NonNull AlarmModel alarm) {
         // This gets the current day of the week as of TODAY / NOW
         Calendar calendar = Calendar.getInstance();
         String alarmTime = alarm.getTime();
@@ -362,4 +375,79 @@ public class AlarmReSchedulerService extends Service {
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
         }
     }
+
+    /*
+     * When alarm is set, user has the option to toggle the alarm status with the switch in the
+     * list, so when the event that occurs when switch is toggled is a request to reschedule
+     * the former repeated alarm, just reschedule it with this method !!
+     */
+    private void rescheduleRepeatingPendingAlarm(@NonNull Context context, @NonNull AlarmModel alarm, int dist) {
+        // This gets the current day of the week as of TODAY / NOW
+        Calendar calendar = Calendar.getInstance();
+
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        String[] time = alarm.getTime().split(":");
+
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.DATE, dist);
+
+        long alarmMillis = calendar.getTimeInMillis();
+
+        Intent alarmReceiverIntent = new Intent(context, AlarmReceiver.class);
+        alarmReceiverIntent.putExtra("Label", alarm.getLabel());
+        alarmReceiverIntent.putExtra(ALARM_POS, alarm.getPosition());
+        alarmReceiverIntent.putExtra("Time", time);
+
+        alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
+        alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
+        alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
+                                           "com.noah.timely.alarm.dataType");
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent alarmPI = PendingIntent.getBroadcast(context, 11789, alarmReceiverIntent,
+                                                           PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // alarm has to be triggered even when device is in idle or doze mode.
+                // This alarm is very important
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+            }
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmMillis, alarmPI);
+        }
+
+    }
+
+    // This calculates the days between now and the day needed which is represented by closest repeat day.
+    // to avoid unnecessary calling of getClosestRepeatDay(int), closestDaySeed was used. so if closestDaySeed != null,
+    // then that closestDaySeed would be used. The seed is used to prevent unnecessary calculations.
+    private int getNextRepeatingAlarmDistance(int dayOfWeek, int closestRepeatDay) {
+        return (Calendar.SATURDAY + closestRepeatDay - dayOfWeek) % Calendar.SATURDAY;
+    }
+
+    // gets the closest repeat day making code more easier to understand. Returns -1 if no day was set to repeat.
+    private int getClosestRepeatDay(int from, Boolean[] hayStack) {
+        if (from < 0 || from > 7) throw new IllegalArgumentException("Invalid day " + from);
+        int result = -1;
+        int nextSearch = from;
+        // search from sunday to saturday
+        for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
+            if (hayStack[nextSearch - 1]) {
+                result = nextSearch;
+                break;
+            }
+            nextSearch = nextSearch == Calendar.SATURDAY ? Calendar.SUNDAY : ++nextSearch;
+        }
+
+        return result;
+    }
+
 }

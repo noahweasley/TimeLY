@@ -24,7 +24,6 @@ public class TimeChangeReceiver extends BroadcastReceiver {
         if (isTimeChangeEvent) {
             Time time = TimeChangeDetector.requestImmediateTime(context);
             EventBus.getDefault().post(time);
-
         }
     }
 }

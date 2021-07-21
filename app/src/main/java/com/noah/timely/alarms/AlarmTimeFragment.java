@@ -87,7 +87,6 @@ public class AlarmTimeFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doTimeUpdate(@NonNull Time time) {
-        Log.d(getClass().getSimpleName(), "Time: " + time.toString());
         alarmDate.setText(time.getDate());
         alarmHour.setText(time.getHour());
         alarmMin.setText(time.getMinutes());

@@ -50,8 +50,13 @@ public class AlarmActivity extends AppCompatActivity {
 
         am_pm.setVisibility(is24 ? View.GONE : View.VISIBLE);
         if (!TextUtils.isEmpty(time) && !is24) {
-            am_pm.setText(time.endsWith("PM") ? "PM" : "AM");
-            time = time.replace(" PM", "");
+            if (time.endsWith("PM")) {
+                am_pm.setText(R.string.pm);
+                time = time.replace(" PM", "");
+            } else {
+                am_pm.setText(R.string.am);
+                time = time.replace(" AM", "");
+            }
         }
 
         if (time != null) tv_time.setText(time);

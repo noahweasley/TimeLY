@@ -37,6 +37,7 @@ import com.noah.timely.R;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener;
@@ -45,6 +46,7 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +81,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     private FragmentManager mgr;
     private CoordinatorLayout coordinator;
     private List<DataModel> alarmModelList;
-    private AlarmListFragment.AlarmAdapter alarmAdapter;
     private SchoolDatabase database;
     private final CheckBox cbx_Repeat, cbx_Vibrate;
     private final ImageButton btn_deleteRow;
@@ -96,7 +97,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         this.coordinator = coordinator;
         this.alarmModelList = alarmModelList;
         this.database = database;
-        this.alarmAdapter = alarmAdapter;
         this.thisAlarm = (AlarmModel) alarmModelList.get(getAbsoluteAdapterPosition());
         return this;
     }
@@ -192,23 +192,25 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             }
         });
 
+        // companion operation to onClick handler
+        cbx_Repeat.setOnCheckedChangeListener((v, chk) -> {
+            thisAlarm.setRepeated(chk);
+            final int dataPos = getAbsoluteAdapterPosition(); // the alarms id in the database
+            vg_buttonRow.setVisibility(chk ? View.VISIBLE : View.GONE);
+            if (database != null) database.updateAlarmRepeatStatus(dataPos, chk);
+
+        });
+        // companion operation to onCheckedChange handler
         cbx_Repeat.setOnClickListener(v -> {
             boolean repeated = cbx_Repeat.isChecked();
             final int dataPos = getAbsoluteAdapterPosition(); // the alarms id in the database
             // hide or show rows of button
             thisAlarm.setRepeated(repeated);
-            vg_buttonRow.setVisibility(repeated ? View.VISIBLE : View.GONE);
             // cancel previous repeating alarm, while leaving any alarm that was set to be triggered the day the
             // alarm was set or the day after, only if time has passed
             if (thisAlarm.isOn()) {
                 if (repeated) updateRepeatingPendingAlarm();
                 else updateRepeatingPendingAlarm2();
-            }
-
-            if (database != null) {
-                // now update the current alarm's repeat status when user toggles the current
-                // state of the checkbox
-                database.updateAlarmRepeatStatus(dataPos, repeated);
             }
         });
 
@@ -224,28 +226,31 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
         // delete a row on button click, but, post a delete request first
         btn_deleteRow.setOnClickListener(v -> {
-            // cancel the pending  alarm first before properly deleting the row
-            String ss = thisAlarm.getLabel();
-            String label = ss.equals("Label") ? null : ss;
-            String[] time = thisAlarm.getTime().split(":");
+            // bug exists while deleting multiple rows very quickly
+            if (!SchoolDatabase.isDeleteTaskRunning()) {
+                // cancel the pending  alarm first before properly deleting the row
+                String ss = thisAlarm.getLabel();
+                String label = ss.equals("Label") ? null : ss;
+                String[] time = thisAlarm.getTime().split(":");
 
-            RequestRunner runner = RequestRunner.createInstance();
-            RequestRunner.Builder builder = new RequestRunner.Builder();
-            builder.setOwnerContext(mActivity)
-                   .setAdapterPosition(this.getAbsoluteAdapterPosition())
-                   .setModelList(alarmModelList)
-                   .setAlarmRepeatDays(selectedDays)
-                   .setAlarmLabel(label)
-                   .setAlarmTime(time);
+                RequestRunner runner = RequestRunner.createInstance();
+                RequestRunner.Builder builder = new RequestRunner.Builder();
+                builder.setOwnerContext(mActivity)
+                       .setAdapterPosition(this.getAbsoluteAdapterPosition())
+                       .setModelList(alarmModelList)
+                       .setAlarmRepeatDays(selectedDays)
+                       .setAlarmLabel(label)
+                       .setAlarmTime(time);
 
-            runner.setRequestParams(builder.getParams())
-                  .runRequest(DELETE_REQUEST);
+                runner.setRequestParams(builder.getParams())
+                      .runRequest(DELETE_REQUEST);
 
-            Snackbar snackBar = Snackbar.make(coordinator, "Alarm Deleted", Snackbar.LENGTH_LONG);
-            snackBar.setActionTextColor(Color.YELLOW);
-            snackBar.setAction("UNDO", x -> runner.undoRequest());
-            snackBar.show();
+                Snackbar snackBar = Snackbar.make(coordinator, "Alarm Deleted", Snackbar.LENGTH_LONG);
+                snackBar.setActionTextColor(Color.YELLOW);
+                snackBar.setAction("UNDO", x -> runner.undoRequest());
+                snackBar.show();
 
+            } else mActivity.runOnUiThread(() -> Toast.makeText(mActivity, "Wait a bit :(", Toast.LENGTH_SHORT).show());
         });
     }
 
@@ -285,6 +290,13 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                                                                 : R.drawable.enabled_round_button);
         }
 
+        // check if all the buttons are cleared and deactivate repeat
+        int sCount = 0;
+        for (boolean selected : selectedDays) {
+            if (selected) break;
+            else if (++sCount == 7) cbx_Repeat.setChecked(false);
+        }
+
         boolean updated = database.updateSelectedDays(alarmPosition, selectedDays);
         // don't update alarm when the current selected alarm is still off
         if (updated && thisAlarm.isOn()) updateRepeatingPendingAlarm();
@@ -310,11 +322,9 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         String label = ss.equals("Label") ? null : ss;
 
         if (closestRepeatDay != -1 && alarmDistance != 0) {
-            thisAlarm.setRepeated(true);
             calendar.add(Calendar.DATE, alarmDistance);
             rescheduleRepeatingPendingAlarm(calendar, thisAlarm.getTime(), alarmDistance);
         } else {
-            thisAlarm.setRepeated(false);
             rescheduleNonRepeatingAlarm(label, time, false);
         }
     }
@@ -349,10 +359,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     // to avoid unnecessary calling of getClosestRepeatDay(int), closestDaySeed was used. so if closestDaySeed != null,
     // then that closestDaySeed would be used. The seed is used to prevent unnecessary calculations.
     private int getNextRepeatingAlarmDistance(int dayOfWeek, Integer closestDaySeed) {
-        if (closestDaySeed < -1 || closestDaySeed > 7)
-            throw new IllegalArgumentException("Incorrect day seed " + closestDaySeed);
-        int closestRepeatDay;
         if (closestDaySeed != null)
+            if ((closestDaySeed < -1 || closestDaySeed > 7))
+                throw new IllegalArgumentException("Incorrect day seed " + closestDaySeed);
+        int closestRepeatDay;
+        if (closestDaySeed == null)
             closestRepeatDay = getClosestRepeatDay(dayOfWeek);
         else closestRepeatDay = closestDaySeed;
         return (Calendar.SATURDAY + closestRepeatDay - dayOfWeek) % Calendar.SATURDAY;
@@ -382,7 +393,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         String label = tv_label.getText().toString();
         alarmReceiverIntent.putExtra("Label", label);
         alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
-        alarmReceiverIntent.putExtra("Time", time);
 
         alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
         alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
@@ -428,13 +438,13 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.DATE, nextTriggerDate);
 
-        boolean isNextDay = System.currentTimeMillis() > calendar.getTimeInMillis();
+        long alarmMillis = calendar.getTimeInMillis();
 
-        long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
-                                     : calendar.getTimeInMillis();
-
+        LogUtils.debug(this, "cancelled next: " + new Date(alarmMillis));
         Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
         alarmReceiverIntent.putExtra("Label", label);
+
+        alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
         // This is just used to prevent cancelling all pending intent, because when
         // PendingIntent#cancel is called, all pending intent that matches the intent supplied to
         // Intent#filterEquals (and it returns true), will be cancelled because there was no
@@ -473,6 +483,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
         Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
         alarmReceiverIntent.putExtra("Label", label);
+        alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
         // This is just used to prevent cancelling all pending intent, because when
         // PendingIntent#cancel is called, all pending intent that matches the intent supplied to
         // Intent#filterEquals (and it returns true), will be cancelled because there was no
@@ -493,11 +504,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     private void rescheduleRepeatingPendingAlarm(Calendar calendar, String time, int alarmDistance) {
         long alarmMillis = calendar.getTimeInMillis();
 
+        LogUtils.debug(this, "Scheduling next repeat: " + new Date(alarmMillis));
         Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
         String label = tv_label.getText().toString();
         alarmReceiverIntent.putExtra("Label", label);
         alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
-        alarmReceiverIntent.putExtra("Time", time);
 
         alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
         alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
@@ -539,9 +550,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         String message = "Alarm set for: " + (is24 ? alarmTime : _12H)
                 + (alarmDistance >= 2 ? " in " + alarmDistance + " days" : " tomorrow");
 
-        Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
-        alert.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-        alert.show();
+        mActivity.runOnUiThread(() -> {
+            Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
+            alert.setGravity(Gravity.BOTTOM, 0, 100);
+            alert.show();
+        });
     }
 
     /*
@@ -569,7 +582,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
         alarmReceiverIntent.putExtra("Label", label);
         alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
-        alarmReceiverIntent.putExtra("Time", time);
 
         alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
         alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
@@ -610,14 +622,19 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         String message = "Alarm set for: " + (is24 ? alarmTime : _12H)
                 + (alarmDistance >= 2 ? " in " + alarmDistance + " days" : " tomorrow");
 
-        Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
-        alert.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-        alert.show();
+        mActivity.runOnUiThread(() -> {
+            Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
+            alert.setGravity(Gravity.BOTTOM, 0, 100);
+            alert.show();
+        });
+
     }
 
-    //  Updates the alarm pending intent extras
-    private void updateAlarm(String label, String time) {
+    // Updates the alarm pending intent extras
+    private void updateAlarm(String time) {
         String[] realTime = time.split(":");
+        String label = thisAlarm.getLabel();
+
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(realTime[0]));
         calendar.set(Calendar.MINUTE, Integer.parseInt(realTime[1]));
@@ -632,7 +649,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
         alarmReceiverIntent.putExtra("Label", label);
         alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
-        alarmReceiverIntent.putExtra("Time", time);
 
         alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
         alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
@@ -676,9 +692,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         long alarmMillis = isNextDay ? calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1)
                                      : calendar.getTimeInMillis();
 
+        String st = TextUtils.join(":", time);
+        LogUtils.debug(this, "Scheduling non repeat: " + st);
         Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
+        alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
         alarmReceiverIntent.putExtra("Label", label);
-        alarmReceiverIntent.putExtra("Time", time[0] + time[1]);
         // This is just used to prevent cancelling all pending intent, because when
         // PendingIntent#cancel is called, all pending intent that matches the intent supplied to
         // Intent#filterEquals (and it returns true), will be cancelled because there was no
@@ -722,9 +740,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         String message = isNextDay ? "Alarm set for: " + (is24 ? alarmTime : _12H) + " tomorrow"
                                    : "Alarm set for: " + (is24 ? alarmTime : _12H) + " today";
 
-        Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
-        alert.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-        alert.show();
+        mActivity.runOnUiThread(() -> {
+            Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
+            alert.setGravity(Gravity.BOTTOM, 0, 100);
+            alert.show();
+        });
 
         if (playSound) playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
     }
@@ -737,7 +757,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                     ThreadUtils.runBackgroundTask(() -> {
                         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                         database.updateAlarmLabel(getAbsoluteAdapterPosition(), label);
-                        updateAlarm(label, thisAlarm.getTime());
+                        updateAlarm(thisAlarm.getTime());
                     });
                 }).prepareAndShow(mActivity);
     }
@@ -798,11 +818,12 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         @Override
         public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
             alarmStatus.setChecked(true);
+            thisAlarm.setOn(true);
 
             String label = tv_label.getText().toString();
             String[] ts = thisAlarm.getTime().split(":");
 
-            cancelNonRepeatingAlarm(label, ts);
+            cancelAllPendingAlarms();
 
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute);
@@ -828,26 +849,33 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
             ThreadUtils.runBackgroundTask(() -> {
                 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                updateAlarm(label.equals("Label") ? null : label, currentTime);
+                // set alarm based on repeat status
+                if (thisAlarm.isOn() && thisAlarm.isRepeated()) {
+                    updateRepeatingPendingAlarm();
+                } else if (thisAlarm.isOn() && !thisAlarm.isRepeated()) {
+                    updateAlarm(currentTime);
+                    // notify user of changes made
+                    long calendarTime = calendar.getTimeInMillis();
+                    boolean isNextDay = System.currentTimeMillis() > calendarTime;
+
+                    boolean is24 = isUserPreferred24Hours(mActivity);
+
+                    String alarmTime = is24 ? timeFormat24.format(calendar.getTime())
+                                            : timeFormat12.format(calendar.getTime());
+
+                    String message = isNextDay ? "Alarm set for: " + alarmTime + " tomorrow"
+                                               : "Alarm set for: " + alarmTime + " today";
+
+                    mActivity.runOnUiThread(() -> {
+                        // can't use toast outside the UI thread
+                        Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
+                        alert.setGravity(Gravity.BOTTOM, 0, 100);
+                        alert.show();
+                    });
+                }
+
                 database.updateTime(getAbsoluteAdapterPosition(), currentTime);
             });
-
-            // notify user of changes made
-            long calendarTime = calendar.getTimeInMillis();
-            boolean isNextDay = System.currentTimeMillis() > calendarTime;
-
-            boolean is24 = isUserPreferred24Hours(mActivity);
-
-            String alarmTime = is24 ? timeFormat24.format(calendar.getTime())
-                                    : timeFormat12.format(calendar.getTime());
-
-            String message = isNextDay ? "Alarm set for: " + alarmTime + " tomorrow"
-                                       : "Alarm set for: " + alarmTime + " today";
-
-            Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
-            int yOffset = mActivity.getResources().getInteger(R.integer.toast_y_offset);
-            alert.setGravity(Gravity.CENTER_HORIZONTAL, 0, yOffset);
-            alert.show();
 
             playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
 
@@ -917,5 +945,4 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
         int rowDrawable = DRAWABLES[getAbsoluteAdapterPosition() % DRAWABLES.length];
         decoration.setBackground(ContextCompat.getDrawable(mActivity, rowDrawable));
     }
-
 }

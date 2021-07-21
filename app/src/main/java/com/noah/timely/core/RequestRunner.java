@@ -56,7 +56,6 @@ import static com.noah.timely.util.Utility.playAlertTone;
  */
 public class RequestRunner extends Thread {
     public static final int WAIT_TIME = 3000;
-    public static final String TAG = "SchoolDatabase";
     private static boolean deleteRequestDiscarded;
     private String request;
     private SchoolDatabase database;

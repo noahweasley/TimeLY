@@ -36,7 +36,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String action = intent.getStringExtra("action");
         boolean is24 = isUserPreferred24Hours(context);
 
-        String _24H = database.getSnoozedTimeAtInitialPosition(dataPos);
+        String _24H = database.getSnoozedTimeAtPosition(dataPos);
 
         String[] time = _24H.split(":");
         int hh = Integer.parseInt(time[0]);

@@ -86,6 +86,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_SNOOZED_TIME = "Snoozed_Time";
     private static final String COLUMN_SNOOZE_STAT = "Snoozed";
 
+    private static boolean mDeleting;
+
     private final String TAG = "SchoolDatabase";
 
     private final Context context;
@@ -93,6 +95,15 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public SchoolDatabase(@Nullable Context context) {
         super(context, "SchoolDatabase.db", null, 1);
         this.context = context;
+    }
+
+    /**
+     * Temporary fix to bug that exists when app crashes as a result of improper ended background task
+     *
+     * @return true if delete task is running
+     */
+    public static boolean isDeleteTaskRunning() {
+        return mDeleting;
     }
 
     /**
@@ -794,6 +805,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @author Noah
      */
     public boolean deleteAlarmEntry(AlarmModel entry) {
+        mDeleting = true;
         SQLiteDatabase db = getWritableDatabase();
         String whereClause = COLUMN_POS + "= ?";
         String[] whereArg = {String.valueOf(entry.getPosition())};
@@ -819,6 +831,27 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         int resultCode = db.update(ALARMS_TABLE, repeatValue, COLUMN_POS + " = " + pos, null);
         return resultCode != -1;
+    }
+
+    /**
+     * retrieves repeat stat of the alarm at pos
+     *
+     * @param pos the id in the database
+     * @return true if alarm was set to vibrate, false otherwise
+     * @author Noah
+     */
+    public boolean getAlarmVibrateStatus(int pos) {
+        boolean isVibrate = false;
+        SQLiteDatabase db = getWritableDatabase();
+
+        String getAlarmVibrateStatusStmt = "SELECT " + COLUMN_VIBRATE_STAT
+                + " FROM " + ALARMS_TABLE + " WHERE " + COLUMN_POS + " = " + pos;
+
+        Cursor vibrateStatCursor = db.rawQuery(getAlarmVibrateStatusStmt, null);
+        if (vibrateStatCursor.moveToNext()) isVibrate = Boolean.parseBoolean(vibrateStatCursor.getString(0));
+
+        vibrateStatCursor.close();
+        return isVibrate;
     }
 
     /**
@@ -886,6 +919,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             data.moveToNext();
         }  // end for
         data.close();
+        mDeleting = false;
     }
 
     /**
@@ -1167,12 +1201,12 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @return the time string at the specified initial position
      */
 
-    public String getSnoozedTimeAtInitialPosition(int pos) {
+    public String getSnoozedTimeAtPosition(int pos) {
         SQLiteDatabase db = getReadableDatabase();
         String getStmt
                 = "SELECT " + COLUMN_SNOOZE_STAT + ", " + COLUMN_SNOOZED_TIME + ", " + COLUMN_TIME
                 + " FROM " + ALARMS_TABLE
-                + " WHERE " + COLUMN_INITIAL_POS + " = " + pos;
+                + " WHERE " + COLUMN_POS + " = " + pos;
 
         String originalTime = null, snoozedTime = null;
         boolean isAlarmSnoozed = false;
@@ -1209,6 +1243,18 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         db.update(ALARMS_TABLE, statValue, COLUMN_INITIAL_POS + " = " + pos, null);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean updateAlarmStatesAt(int dataPos, boolean snoozed, boolean on) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SNOOZE_STAT, snoozed);
+        values.put(COLUMN_ON_STAT, String.valueOf(on));
+
+        long resCode = db.update(ALARMS_TABLE, values, COLUMN_POS + " = " + dataPos, null);
+        db.close();
+        return resCode != -1;
+    }
     /**
      * Simply updates the assignment in the database at the specified index at
      * {@link AssignmentModel#getPosition()}
@@ -1895,8 +1941,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @return true if the data were deleted
      */
     public synchronized boolean deleteDataModels(Class<?> clazz, String[] metadata,
-                                                 Integer[] itemIndices,
-                                                 List<DataModel> data) {
+                                                 Integer[] itemIndices, List<DataModel> data) {
         boolean resultCode;
 
         switch (clazz.getName()) {

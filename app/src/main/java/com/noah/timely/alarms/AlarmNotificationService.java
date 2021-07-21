@@ -10,25 +10,28 @@ import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Process;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.text.TextUtils;
+
+import androidx.preference.PreferenceManager;
 
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 
 import org.greenrobot.eventbus.EventBus;
 
-import androidx.preference.PreferenceManager;
-
 import static com.noah.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.noah.timely.alarms.AlarmReceiver.ID;
 import static com.noah.timely.alarms.AlarmReceiver.NOTIFICATION_ID;
 
-@SuppressWarnings("ConstantConditions")
 public class AlarmNotificationService extends Service implements Runnable {
     private static int notificationID;
     private MediaPlayer alarmRingtonePlayer;
+    private Vibrator vibrator;
     private NotificationManager manager;
     private SchoolDatabase database;
     private int alarmPos = -1;
@@ -39,8 +42,7 @@ public class AlarmNotificationService extends Service implements Runnable {
     public void onCreate() {
         super.onCreate();
         database = new SchoolDatabase(getApplicationContext());
-        manager = (NotificationManager) getApplicationContext()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         preferences = PreferenceManager.getDefaultSharedPreferences(AlarmNotificationService.this);
     }
 
@@ -49,11 +51,13 @@ public class AlarmNotificationService extends Service implements Runnable {
         Context aCtxt = getApplicationContext();
         alarmPos = intent.getIntExtra(ALARM_POS, -1);
         String uriString = database.getRingtoneURIAt(alarmPos);
+        boolean isAlarmVibrate = database.getAlarmVibrateStatus(alarmPos);
+
         if (!TextUtils.isEmpty(uriString)) {
             // Use this if alarm ringtone was set
             Uri ringtoneURI = Uri.parse(uriString);
-            if (ringtoneURI != null)
-                alarmRingtonePlayer = MediaPlayer.create(aCtxt, ringtoneURI);
+            if (ringtoneURI != null) alarmRingtonePlayer = MediaPlayer.create(aCtxt, ringtoneURI);
+
         } else {
             // Fallback to the default alarm ringtone uri when user didn't set a new ringtone to
             // be played when alarm goes off. But if there is no default ringtone, play silent
@@ -67,15 +71,31 @@ public class AlarmNotificationService extends Service implements Runnable {
             String type = PreferenceManager.getDefaultSharedPreferences(aCtxt)
                                            .getString("Alarm Ringtone", "TimeLY's Default");
 
-            final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null
-                                    ? APP_DEFAULT : SYSTEM_DEFAULT;
+            final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
+                                                                                              : SYSTEM_DEFAULT;
 
             alarmRingtonePlayer = MediaPlayer.create(aCtxt, DEFAULT_URI);
         }
+
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (isAlarmVibrate) {
+
+            final int DELAY = 0, VIBRATE = 1000, SLEEP = 1000, START = 0;
+            long[] vibratePattern = {DELAY, VIBRATE, SLEEP};
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, START));
+            } else {
+                // backward compatibility for Android API < 26
+                // noinspection Deprecation
+                vibrator.vibrate(vibratePattern, START);
+            }
+        }
+
         alarmRingtonePlayer.setLooping(true); // repeatedly play alarm tone
         alarmRingtonePlayer.start();
-        notificationID = intent.getIntExtra(ID,
-                                            NOTIFICATION_ID); // get id of notification to cancel
+
+        notificationID = intent.getIntExtra(ID, NOTIFICATION_ID); // get id of notification to cancel
 
         worker = new Thread(this);
         worker.start();
@@ -103,17 +123,16 @@ public class AlarmNotificationService extends Service implements Runnable {
     private void stopNotificationAlert() {
         alarmRingtonePlayer.stop();
         alarmRingtonePlayer.release();
+        vibrator.cancel();
         // Remove the notification from the shade
         if (manager == null)
-            manager = (NotificationManager) getApplicationContext()
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         manager.cancel(notificationID);
         EventBus.getDefault().post(new MessageEvent());
     }
 
     // Worker thread for idle alarm action
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void run() {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
