@@ -23,11 +23,9 @@ import com.noah.timely.scheduled.ScheduledTaskNotifier;
 import com.noah.timely.timetable.DaysFragment;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.timetable.TimetableNotifier;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -121,7 +119,7 @@ public class AlarmReSchedulerService extends Service {
     // register pending scheduled timetables
     private void registerPendingScheduledTimetables(Context context, TimetableModel timetable) {
         String time = timetable.getStartTime();
-        String[] sTime = time.split(":");
+        String[] sTime = time.split(": ");
         String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
         int day = timetable.getCalendarDay();
 
@@ -160,7 +158,7 @@ public class AlarmReSchedulerService extends Service {
         int position = timetable.getChronologicalOrder();
         String time = timetable.getStartTime();
         String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
-        String[] t = timetable.getStartTime().split(":");
+        String[] t = timetable.getStartTime().split(": ");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
@@ -199,7 +197,7 @@ public class AlarmReSchedulerService extends Service {
         Calendar calendar = Calendar.getInstance();
 
         String submissionDate = assignment.getSubmissionDate();
-        String[] sArr = submissionDate.split("/");
+        String[] sArr = submissionDate.split("[/._-]");
         int day = Integer.parseInt(sArr[0]);
         int month = Integer.parseInt(sArr[1]);
         int year = Integer.parseInt(sArr[2]);

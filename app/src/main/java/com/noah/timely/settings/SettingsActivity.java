@@ -13,6 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.noah.timely.R;
 import com.noah.timely.alarms.TimeChangeDetector;
+import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.Time;
 import com.noah.timely.core.TimeRefreshEvent;
 
@@ -54,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         @SuppressWarnings("FieldCanBeLocal")
         private Preference pref_EnableNotifications, pref_TimeFormat, pref_eTone,
-                pref_DateFormat, pref_SnoozeTime, pref_snoozeOnStop,
+                pref_DateFormat, pref_SnoozeTime, pref_snoozeOnStop, pref_azz_date_format,
                 pref_uriType, pref_weekNum, pref_ringtoneType, pref_prefer_dialog;
 
         @Override
@@ -70,6 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
             pref_weekNum = findPreference("exam weeks");
             pref_ringtoneType = findPreference("Alarm Ringtone");
             pref_prefer_dialog = findPreference("prefer_dialog");
+            pref_azz_date_format = findPreference("a_date_format");
 
             pref_DateFormat.setOnPreferenceChangeListener(this);
             pref_EnableNotifications.setOnPreferenceChangeListener(this);
@@ -81,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
             pref_weekNum.setOnPreferenceChangeListener(this);
             pref_ringtoneType.setOnPreferenceChangeListener(this);
             pref_prefer_dialog.setOnPreferenceChangeListener(this);
+            pref_azz_date_format.setOnPreferenceChangeListener(this);
 
             initialize();
         }
@@ -92,40 +95,36 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void initialize() {
-            String prefValue
-                    = String.valueOf(pref_EnableNotifications
-                                             .getSharedPreferences()
-                                             .getBoolean(pref_EnableNotifications.getKey(), true));
+            String prefValue = String.valueOf(pref_EnableNotifications
+                                                      .getSharedPreferences()
+                                                      .getBoolean(pref_EnableNotifications.getKey(), true));
             updatePreferenceSummary(pref_EnableNotifications, prefValue);
 
             prefValue = String.valueOf(pref_TimeFormat.getSharedPreferences()
-                                                      .getBoolean(pref_TimeFormat.getKey(),
-                                                                  true));
+                                                      .getBoolean(pref_TimeFormat.getKey(), true));
             updatePreferenceSummary(pref_TimeFormat, prefValue);
 
-            prefValue = pref_DateFormat.getSharedPreferences().getString(pref_DateFormat.getKey(),
-                                                                         "Medium");
+            prefValue = pref_DateFormat.getSharedPreferences().getString(pref_DateFormat.getKey(), "Medium");
             updatePreferenceSummary(pref_DateFormat, prefValue);
 
-            prefValue = pref_SnoozeTime.getSharedPreferences().getString(pref_SnoozeTime.getKey(),
-                                                                         "5");
+            prefValue = pref_SnoozeTime.getSharedPreferences().getString(pref_SnoozeTime.getKey(), "5");
             updatePreferenceSummary(pref_SnoozeTime, prefValue);
-            prefValue =
-                    pref_snoozeOnStop.getSharedPreferences()
-                                     .getString(pref_snoozeOnStop.getKey(), "Snooze");
+            prefValue = pref_snoozeOnStop.getSharedPreferences().getString(pref_snoozeOnStop.getKey(), "Snooze");
             updatePreferenceSummary(pref_snoozeOnStop, prefValue);
 
-            prefValue = pref_uriType.getSharedPreferences()
-                                    .getString(pref_uriType.getKey(), "TimeLY's Default");
+            prefValue = pref_uriType.getSharedPreferences().getString(pref_uriType.getKey(), "TimeLY's Default");
             updatePreferenceSummary(pref_uriType, prefValue);
 
-            prefValue = pref_weekNum.getSharedPreferences()
-                                    .getString(pref_weekNum.getKey(), "8");
+            prefValue = pref_weekNum.getSharedPreferences().getString(pref_weekNum.getKey(), "8");
             updatePreferenceSummary(pref_weekNum, prefValue);
 
             prefValue = pref_ringtoneType.getSharedPreferences()
                                          .getString(pref_ringtoneType.getKey(), "TimeLY's Default");
             updatePreferenceSummary(pref_ringtoneType, prefValue);
+
+            String ddf = getContext().getString(R.string.default_date_format);
+            prefValue = pref_azz_date_format.getSharedPreferences().getString("a_date_format", ddf);
+            updatePreferenceSummary(pref_azz_date_format, prefValue);
 
             onStart = false;
         }
@@ -135,8 +134,7 @@ public class SettingsActivity extends AppCompatActivity {
                 switch (pref.getKey()) {
                     case "enable_notifications": {
                         String append = "Notifications are ";
-                        String realNewValue
-                                = Boolean.parseBoolean(state) ? "ON" : "OFF";
+                        String realNewValue = Boolean.parseBoolean(state) ? "ON" : "OFF";
                         pref.setSummary(append + realNewValue);
                     }
                     break;
@@ -171,6 +169,11 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
                     case "snoozeOnStop":
                     case "Alarm Ringtone":
+                    case "a_date_format": {
+                        pref.setSummary(state);
+                        if (!onStart) EventBus.getDefault().post(new LayoutRefreshEvent());
+                    }
+                    break;
                     case "Uri Type": {
                         pref.setSummary(state);
                     }

@@ -7,22 +7,22 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.noah.timely.R;
-import com.noah.timely.assignment.ViewImagesActivity;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.noah.timely.R;
+import com.noah.timely.assignment.ImageViewerActivity;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class ImageListRowHolder extends RecyclerView.ViewHolder {
     private final ImageView img_image;
     private final View v_selectionOverlay;
     private boolean isChecked;
     private Uri imageContentUri;
-    private ViewImagesActivity.ImageAdapter imageAdapter;
+    private ImageViewerActivity.ImageAdapter imageAdapter;
     private List<Image> imageList;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -43,17 +43,15 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
 
         rootView.setOnLongClickListener(l -> {
             trySelectImage();
-            imageAdapter
-                    .setMultiSelectionEnabled(!imageAdapter.isMultiSelectionEnabled()
-                                                      || imageAdapter.getCheckedImageCount() != 0);
+            imageAdapter.setMultiSelectionEnabled(!imageAdapter.isMultiSelectionEnabled()
+                                                          || imageAdapter.getCheckedImageCount() != 0);
             return true;
         });
 
         rootView.setOnTouchListener((t, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    if (!isChecked) img_image.setColorFilter(
-                            ContextCompat.getColor(context, R.color.image_click_bg));
+                    if (!isChecked) img_image.setColorFilter(ContextCompat.getColor(context, R.color.image_click_bg));
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
@@ -66,7 +64,7 @@ public class ImageListRowHolder extends RecyclerView.ViewHolder {
 
     public ImageListRowHolder with(List<? extends Uri> uris,
                                    List<Image> imageList,
-                                   ViewImagesActivity.ImageAdapter imageAdapter) {
+                                   ImageViewerActivity.ImageAdapter imageAdapter) {
         this.imageList = imageList;
         this.imageContentUri = uris.get(getAbsoluteAdapterPosition());
         this.imageAdapter = imageAdapter;

@@ -14,8 +14,8 @@
         <ListPreference
             external:defaultValue="TimeLY's Default"
             external:entries="@array/alert_entries"
-            external:icon="@drawable/ic_alert_tone"
             external:entryValues="@array/alert_values"
+            external:icon="@drawable/ic_alert_tone"
             external:key="Uri Type"
             external:title="Notification alert sound" />
 
@@ -40,6 +40,39 @@
             external:key="prefer_dialog"
             external:summary="@string/dialog_pref"
             external:title="Prefer dialogs" />
+
+        <SwitchPreferenceCompat
+            external:defaultValue="true"
+            external:icon="@drawable/ic_baseline_update_24"
+            external:key="update_startup"
+            external:title="Startup update checks" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        external:allowDividerAbove="true"
+        external:title="Assignment">
+
+        <ListPreference
+            android:summary="@string/default_date_format"
+            external:defaultValue="@string/default_date_format"
+            external:entries="@array/date_entries"
+            external:entryValues="@array/date_entries"
+            external:icon="@drawable/ic_baseline_date_range_24"
+            external:key="a_date_format"
+            external:title="Date Format" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        external:allowDividerAbove="true"
+        external:title="Exam Timetable">
+
+        <EditTextPreference
+            external:defaultValue="8"
+            external:icon="@drawable/ic_numbered"
+            external:key="exam weeks"
+            external:title="Number of weeks" />
 
     </PreferenceCategory>
 
@@ -86,18 +119,6 @@
             external:key="dismiss"
             external:summary="@string/dismiss_summary"
             external:title="Back is snooze" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        external:allowDividerAbove="true"
-        external:title="Exam Timetable">
-
-        <EditTextPreference
-            external:defaultValue="8"
-            external:icon="@drawable/ic_numbered"
-            external:key="exam weeks"
-            external:title="Number of weeks" />
 
     </PreferenceCategory>
 

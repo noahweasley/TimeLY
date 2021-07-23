@@ -3,10 +3,10 @@ package com.noah.timely.gallery;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -28,7 +28,6 @@ import com.noah.timely.util.ThreadUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("ConstantConditions")
 public class ImageDirectory extends AppCompatActivity implements Runnable {
     public static final int requestCode = 112;
     public static final String STORAGE_ACCESS_ROOT = "Storage access";
@@ -50,7 +49,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         v_noMedia = findViewById(R.id.no_media);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(accessedStorage = getIntent().getStringExtra(STORAGE_ACCESS_ROOT));
+        getSupportActionBar().setTitle("Select Images");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -77,9 +76,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, StorageViewer.class));
         super.onBackPressed();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
@@ -98,11 +95,11 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     @Override
     @SuppressLint("InlinedApi")
     public void run() {
-        String root_extra = getIntent().getStringExtra(STORAGE_ACCESS_ROOT);
-        Uri storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        if (root_extra != null) {
-            storageUri = root_extra.equals(EXTERNAL) ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                                                     : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+        Uri storageUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            storageUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        } else {
+            storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         }
 
         String[] projection = {
@@ -110,16 +107,16 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media.DISPLAY_NAME};
-        Cursor imgCursor = getApplicationContext()
-                .getContentResolver()
-                .query(storageUri, projection, null, null, null);
+
+        Cursor imgCursor = getApplicationContext().getContentResolver().query(storageUri, projection, null, null, null);
 
         int bucketId = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
         int imgSize = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
         int name = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
         int bucketName = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
 
-        List<String> dirName = new ArrayList<>();
+        List<String> directoryDictionary = new ArrayList<>();
+        List<Image> generalList = new ArrayList<>();
         while (imgCursor.moveToNext()) {
             long id = imgCursor.getLong(bucketId);
             int size = imgCursor.getInt(imgSize);
@@ -128,20 +125,27 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
             Uri contentUri = ContentUris.withAppendedId(storageUri, id);
             Image currentImage = new Image(contentUri, size, fileName, folderName);
+            // add all images to the general image list, but modifying the directory name
+            Image genImage = new Image(contentUri, size, fileName, "All Media");
+            generalList.add(genImage);
 
-            int directoryIndex = linearSearch(dirName, folderName);
+            int directoryIndex = linearSearch(directoryDictionary, folderName);
             // if search result (directoryIndex) passes this test, then it means that there is
             // no such directory in list of directory names
             if (directoryIndex < 0) {
                 imageDirectoryList.add(new ArrayList<>());
-                dirName.add(folderName);
-                directoryIndex = linearSearch(dirName, folderName);
+                directoryDictionary.add(folderName);
+                directoryIndex = linearSearch(directoryDictionary, folderName);
                 if (directoryIndex >= 0)
                     imageDirectoryList.get(directoryIndex).add(currentImage);
             } else {
                 imageDirectoryList.get(directoryIndex).add(currentImage);
             }
         }
+
+        //...then add it if the image list of folder is > 2
+        if (imageDirectoryList.size() > 2) imageDirectoryList.add(0, generalList);
+
 
         imgCursor.close();
         runOnUiThread(() -> {

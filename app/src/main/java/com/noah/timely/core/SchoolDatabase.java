@@ -22,6 +22,7 @@ import com.noah.timely.gallery.Image;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
@@ -1812,7 +1813,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             for (String ai : ais) {
                 Uri uri = Uri.parse(ai);
                 uris.add(uri);
-                images.add(Image.createInstance(uri));
+                images.add(Image.createImageFromUri(uri));
             }
         }
 
@@ -1861,11 +1862,12 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor attachedImagesCursor = db.rawQuery(getAttachedImages_stmt, null);
 
-        String attachedImages = null;
+        String attachedImages = "";
         if (attachedImagesCursor.moveToFirst())
             attachedImages = attachedImagesCursor.getString(0);
 
         attachedImagesCursor.close();
+        LogUtils.debug(this, "images: " + attachedImages);
         return attachedImages;
     }
 
@@ -1879,10 +1881,12 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues uriValues = new ContentValues();
 
+        Log.d(TAG, "deleteImage() called with: position = [" + position + "], uri = [" + uri + "]");
         String uris = getAttachedImagesAsString(position).replace(uri.toString() + ";", "");
         uriValues.put(COLUMN_ATTACHED_IMAGE, uris);
 
         long updated = db.update(ASSIGNMENT_TABLE, uriValues, COLUMN_ID + " = " + position, null);
+        LogUtils.debug(this, "Results: " + uris);
         return updated != -1 ? uris : null;
     }
 
@@ -1904,6 +1908,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getWritableDatabase();
         long updated = db.update(ASSIGNMENT_TABLE, uriValues, COLUMN_ID + " = " + position, null);
+        LogUtils.debug(this, "Updating to: " + joint);
         return updated != -1;
     }
 
@@ -1918,7 +1923,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public boolean deleteMultipleImages(int position, Integer[] itemIndices) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues uriValues = new ContentValues();
-
+        LogUtils.debug(this, "Deleting at: " + Arrays.toString(itemIndices));
         List<String> uris = getAttachedImagesAsStringList(position);
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
@@ -1929,7 +1934,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         uriValues.put(COLUMN_ATTACHED_IMAGE, joint);
         long resCode = db.update(ASSIGNMENT_TABLE, uriValues, COLUMN_ID + " = " + position, null);
-
+        LogUtils.debug(this, "M-Deleting: " + Arrays.toString(s));
         return resCode != -1;
     }
 

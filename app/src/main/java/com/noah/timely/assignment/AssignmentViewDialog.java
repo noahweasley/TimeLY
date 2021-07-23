@@ -56,7 +56,7 @@ public class AssignmentViewDialog extends DialogFragment {
             tv_description.setText(assignment.getDescription());
 
             // Start image viewer
-            btn_viewImages.setOnClickListener(v -> ViewImagesActivity.start(getContext(), position, title));
+            btn_viewImages.setOnClickListener(v -> ImageViewerActivity.start(getContext(), position, title));
         }
     }
 }

@@ -45,10 +45,10 @@
                     android:icon="@drawable/ic_event_note"
                     android:title="@string/exam_timetable" />
 
-                <item
-                    android:id="@+id/alarms"
-                    android:icon="@drawable/ic_alarm"
-                    android:title="@string/alarms" />
+<!--                <item-->
+<!--                    android:id="@+id/alarms"-->
+<!--                    android:icon="@drawable/ic_alarm"-->
+<!--                    android:title="@string/alarms" />-->
 
             </group>
 

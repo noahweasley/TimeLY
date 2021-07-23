@@ -36,7 +36,6 @@ import com.noah.timely.core.PositionMessageEvent;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -99,8 +98,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             if (isAdded())
                 getActivity().runOnUiThread(() -> {
                     boolean empty = aList.isEmpty();
-                    // animate progress bar dismissal
-                    dismissProgressbar(indeterminateProgress, empty);
+                    dismissProgressbar(indeterminateProgress);
                     noAssignmentView.setVisibility(empty ? View.VISIBLE : View.GONE);
                     rV_assignmentList.setVisibility(empty ? View.GONE : View.VISIBLE);
                     assignmentAdapter.notifyDataSetChanged();
@@ -194,12 +192,8 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
     }
 
     // dismiss the content-loading progress bar
-    private void dismissProgressbar(ProgressBar bar, boolean empty) {
-        if (empty) bar.setVisibility(View.GONE);
-        else bar.animate()
-                .scaleX(0.0f)
-                .scaleY(0.0f)
-                .setDuration(250);
+    private void dismissProgressbar(ProgressBar bar) {
+        bar.setVisibility(View.GONE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -224,6 +218,11 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             if (actionMode != null)
                 actionMode.finish(); // require onDestroyActionMode() callback
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doLayoutRefresh(LayoutRefreshEvent event) {
+        assignmentAdapter.notifyDataSetChanged();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -260,6 +259,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
                 itemCount.setText(String.valueOf(aList.size()));
                 assignmentAdapter.notifyItemInserted(changePos);
                 assignmentAdapter.notifyDataSetChanged();
+                doEmptyListUpdate(null);
                 break;
             default:
 
@@ -283,8 +283,8 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doEmptyListUpdate(EmptyListEvent e) {
-        noAssignmentView.setVisibility(View.VISIBLE);
-        rV_assignmentList.setVisibility(View.GONE);
+        noAssignmentView.setVisibility(aList.isEmpty() ? View.VISIBLE : View.GONE);
+        rV_assignmentList.setVisibility(aList.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -303,6 +303,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
         assignmentAdapter.deleteMultiple();
         return true;
     }
+
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         actionMode = null;

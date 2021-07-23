@@ -48,8 +48,7 @@ class ImageDirectoryRowHolder extends RecyclerView.ViewHolder {
         img_image.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    img_image.setColorFilter(
-                            ContextCompat.getColor(img_image.getContext(), R.color.image_click_bg));
+                    img_image.setColorFilter(ContextCompat.getColor(img_image.getContext(), R.color.image_click_bg));
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL: {

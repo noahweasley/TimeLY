@@ -5,10 +5,10 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,16 +24,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noah.timely.R;
 import com.noah.timely.assignment.AddAssignmentActivity;
-import com.noah.timely.assignment.ViewImagesActivity;
+import com.noah.timely.assignment.ImageViewerActivity;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.noah.timely.assignment.ViewImagesActivity.ARG_URI_LIST;
-import static com.noah.timely.gallery.ImageDirectory.EXTERNAL;
-import static com.noah.timely.gallery.ImageDirectory.STORAGE_ACCESS_ROOT;
+import static com.noah.timely.assignment.ImageViewerActivity.ARG_URI_LIST;
 
 @SuppressLint("InlinedApi")
 public class ImageGallery extends AppCompatActivity implements Runnable, ActionMode.Callback {
@@ -88,9 +86,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
     @Override
     public void onBackPressed() {
-        String extraRoot = getIntent().getStringExtra(STORAGE_ACCESS_ROOT);
-        startActivity(new Intent(this, ImageDirectory.class).putExtra(STORAGE_ACCESS_ROOT, extraRoot));
-
+        startActivity(new Intent(this, ImageDirectory.class));
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
@@ -98,25 +94,28 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
     // will be replaced with a cursor loader
     @Override
     public void run() {
-        String root_extra = getIntent().getStringExtra(STORAGE_ACCESS_ROOT);
-        Uri storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        if (root_extra != null) {
-            storageUri = root_extra.equals(EXTERNAL) ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                                                     : MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+        Uri storageUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            storageUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        } else {
+            storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         }
 
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+
+        boolean queryAll = folder.equals("All Media");
         String[] projection = {
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media.DISPLAY_NAME};
-        String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ?";
-        String[] selectionArgs = {folder};
+        String selection = queryAll ? null : MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ?";
+        String[] selectionArgs = queryAll ? null : new String[]{folder};
+        String sortOrder = MediaStore.Images.Media.DATE_ADDED;
 
-        Cursor imgCursor = getApplicationContext()
-                .getContentResolver()
-                .query(storageUri, projection, selection, selectionArgs, null);
+        Cursor imgCursor
+                = getApplicationContext()
+                .getContentResolver().query(storageUri, projection, selection, selectionArgs, sortOrder);
 
         int idColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
         int sizeColumn = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
@@ -164,13 +163,12 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        Log.d(getClass().getSimpleName(), "Action: " + getIntent().getAction());
 
-        if (getIntent().getAction().equals(ViewImagesActivity.ADD_NEW)) {
+        if (getIntent().getAction().equals(ImageViewerActivity.ADD_NEW)) {
             ImageMultiChoiceMode imageMultiChoiceMode = (ImageMultiChoiceMode) imageAdapter.getChoiceMode();
 
             // FIXME: 2/23/2021 Find the cause of the additional images
-            startActivity(new Intent(this, ViewImagesActivity.class)
+            startActivity(new Intent(this, ImageViewerActivity.class)
                                   .putExtra(ARG_URI_LIST, imageMultiChoiceMode.getUriList()));
         } else {
             startActivity(new Intent(this, AddAssignmentActivity.class)

@@ -110,7 +110,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                 getActivity().runOnUiThread(() -> {
                     boolean isEmpty = eList.isEmpty();
                     doEmptyExamsUpdate(null);
-                    dismissProgressbar(indeterminateProgress, isEmpty);
+                    dismissProgressbar(indeterminateProgress);
                     examRowAdapter.notifyDataSetChanged();
                     if (itemCount != null) itemCount.setText(String.valueOf(eList.size()));
                 });
@@ -275,12 +275,8 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
         }
     }
 
-    private void dismissProgressbar(ProgressBar progressBar, boolean isEmpty) {
-        if (isEmpty) progressBar.setVisibility(View.GONE);
-        else progressBar.animate()
-                        .scaleX(0.0f)
-                        .scaleY(0.0f)
-                        .setDuration(250);
+    private void dismissProgressbar(ProgressBar progressBar) {
+        progressBar.setVisibility(View.GONE);
     }
 
     class ExamRowAdapter extends RecyclerView.Adapter<ExamRowHolder> {

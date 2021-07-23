@@ -102,7 +102,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                 boolean isEmpty = cList.isEmpty();
                 doEmptyCourseUpdate(null);
                 // animate progress bar dismissal
-                dismissProgressbar(indeterminateProgress, isEmpty);
+                dismissProgressbar(indeterminateProgress);
                 courseAdapter.notifyDataSetChanged();
 
                 if (itemCount != null) itemCount.setText(String.valueOf(cList.size()));
@@ -194,12 +194,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
         else return SchoolDatabase.SECOND_SEMESTER;
     }
 
-    private void dismissProgressbar(ProgressBar progressBar, boolean isEmpty) {
-        if (isEmpty) progressBar.setVisibility(View.GONE);
-        else progressBar.animate()
-                        .scaleX(0.0f)
-                        .scaleY(0.0f)
-                        .setDuration(250);
+    private void dismissProgressbar(ProgressBar progressBar) {
+        progressBar.setVisibility(View.GONE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

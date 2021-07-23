@@ -116,7 +116,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
                 getActivity().runOnUiThread(() -> {
                     boolean isEmpty = tList.isEmpty();
                     doEmptyTimetableUpdate(null);
-                    dismissProgressbar(indeterminateProgress, isEmpty);
+                    dismissProgressbar(indeterminateProgress);
                     tableRowAdapter.notifyDataSetChanged();
                     if (itemCount != null) itemCount.setText(String.valueOf(tList.size()));
                 });
@@ -275,12 +275,8 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
         itemCount.setText(String.valueOf(tList.size()));
     }
 
-    private void dismissProgressbar(ProgressBar progressBar, boolean empty) {
-        if (empty) progressBar.setVisibility(View.GONE);
-        else progressBar.animate()
-                        .scaleX(0.0f)
-                        .scaleY(0.0f)
-                        .setDuration(250);
+    private void dismissProgressbar(ProgressBar progressBar) {
+        progressBar.setVisibility(View.GONE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

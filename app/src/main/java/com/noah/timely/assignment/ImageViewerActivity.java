@@ -23,15 +23,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
-import com.noah.timely.alarms.AAUpdateMessage;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.core.EmptyListEvent;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.gallery.Image;
+import com.noah.timely.gallery.ImageDirectory;
 import com.noah.timely.gallery.ImageListRowHolder;
 import com.noah.timely.gallery.ImageMultiChoiceMode;
-import com.noah.timely.gallery.StorageViewer;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,10 +39,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class ViewImagesActivity extends AppCompatActivity implements ActionMode.Callback {
+public class ImageViewerActivity extends AppCompatActivity implements ActionMode.Callback {
     public static final String ARG_POSITION = "com.noah.timely.viewImagesActivity.position";
     public static final String DELETE_REQUEST = "Delete Image";
     public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Images";
@@ -59,9 +60,10 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     private List<Uri> mediaUris = new ArrayList<>();
     private List<Image> imageList = new ArrayList<>();
     private int position;
+    private SchoolDatabase database;
 
     public static void start(Context context, int position, String title) {
-        Intent starter = new Intent(context, ViewImagesActivity.class);
+        Intent starter = new Intent(context, ImageViewerActivity.class);
         starter.putExtra(ARG_POSITION, position);
         starter.putExtra(ARG_TITLE, title);
         context.startActivity(starter);
@@ -99,12 +101,13 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     @SuppressWarnings("unchecked")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        database = new SchoolDatabase(this);
         EventBus.getDefault().register(this);
         setContentView(R.layout.image_gallery2);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         position = getIntent().getIntExtra(ARG_POSITION, -1);
-        getSupportActionBar().setTitle(String.format(Locale.US,"Assignment #%d Images", position + 1));
+        getSupportActionBar().setTitle(String.format(Locale.US, "Assignment #%d Images", position + 1));
 
         indeterminateProgress = findViewById(R.id.indeterminateProgress);
         indeterminateProgress2 = findViewById(R.id.content_loading);
@@ -117,8 +120,10 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         rv_imageList.setLayoutManager(new LinearLayoutManager(this));
         rv_imageList.setAdapter(imageAdapter = new ImageAdapter(choiceMode));
 
-        findViewById(R.id.add_new)
-                .setOnClickListener(v -> startActivity(new Intent(this, StorageViewer.class).setAction(ADD_NEW)));
+        findViewById(R.id.add_new).setOnClickListener(
+                v -> startActivity(new Intent(this, ImageDirectory.class)
+                                           .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
+                                           .setAction(ADD_NEW)));
 
         ItemTouchHelper swipeHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
@@ -136,10 +141,12 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                LogUtils.debug(this, "Deleting: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
                 RequestRunner runner = RequestRunner.createInstance();
                 RequestRunner.Builder builder = new RequestRunner.Builder();
-                builder.setOwnerContext(ViewImagesActivity.this)
+                builder.setOwnerContext(ImageViewerActivity.this)
                        .setMediaUris(mediaUris)
+                       .setImageList(imageList)
                        .setAssignmentPosition(position)
                        .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition());
 
@@ -156,22 +163,21 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         swipeHelper.attachToRecyclerView(rv_imageList);
 
         ThreadUtils.runBackgroundTask(() -> {
-            SchoolDatabase database = new SchoolDatabase(this);
             List<?>[] genericList = database.getAttachedImagesAsUriList(position);
             mediaUris = (List<Uri>) genericList[0];
             imageList = (List<Image>) genericList[1];
-
+            LogUtils.debug(this, "Retrieved: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
             runOnUiThread(() -> {
                 imageAdapter.notifyDataSetChanged();
                 doViewUpdate(null);
             });
-            database.close();
         });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        database.close();
         EventBus.getDefault().unregister(this);
     }
 
@@ -188,8 +194,9 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void doImageUpdate(AAUpdateMessage update) {
+    public void doImageUpdate(UUpdateMessage update) {
         int changePos = update.getPosition();
+        LogUtils.debug(this, "Changed: " + update.getData());
         switch (update.getType()) {
             case INSERT:
                 imageAdapter.notifyItemInserted(changePos);
@@ -200,6 +207,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
                 imageAdapter.notifyDataSetChanged();
                 break;
         }
+        LogUtils.debug(this, "Results: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
     }
 
     @Override
@@ -211,23 +219,26 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
 
         indeterminateProgress2.setVisibility(View.VISIBLE);
         String[] uriList = intent.getStringArrayExtra(ARG_URI_LIST);
+        LogUtils.debug(this, "onNewIntent got: " + Arrays.toString(uriList));
 
-        SchoolDatabase database = new SchoolDatabase(this);
         ThreadUtils.runBackgroundTask(() -> {
-            boolean isUpdated /* use the intent that started this activity */
-                    = database.updateUris(getIntent().getIntExtra(ARG_POSITION, -1), uriList);
+            /* use the intent that started this activity */
+            boolean isUpdated = database.updateUris(getIntent().getIntExtra(ARG_POSITION, -1), uriList);
 
             if (isUpdated) {
-                for (String uri : uriList) mediaUris.add(Uri.parse(uri));
+                for (String uri : uriList) {
+                    mediaUris.add(Uri.parse(uri));
+                    imageList.add(Image.createImageFromUri(Uri.parse(uri)));
+                }
 
                 runOnUiThread(() -> {
                     imageAdapter.notifyDataSetChanged();
                     doViewUpdate(null);
+                    indeterminateProgress2.setVisibility(View.GONE);
                 });
+
             } else Toast.makeText(this, "An Error Occurred", Toast.LENGTH_SHORT).show();
 
-            runOnUiThread(() -> indeterminateProgress2.setVisibility(View.GONE));
-            database.close();
         });
     }
 
@@ -351,7 +362,7 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
             int choiceCount = imcm.getCheckedChoiceCount();
 
             if (actionMode == null && choiceCount == 1) {
-                actionMode = startSupportActionMode(ViewImagesActivity.this);
+                actionMode = startSupportActionMode(ImageViewerActivity.this);
             } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
                 isFinished = true;
@@ -368,12 +379,14 @@ public class ViewImagesActivity extends AppCompatActivity implements ActionMode.
         public void deleteMultiple() {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
-            builder.setOwnerContext(ViewImagesActivity.this)
+            builder.setOwnerContext(ImageViewerActivity.this)
                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
                    .setAssignmentPosition(position)
                    .setMediaUris(mediaUris)
+                   .setImageList(imageList)
                    .setItemIndices(getCheckedImagesIndices());
 
+            LogUtils.debug(this, "M-Deleting: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
             runner.setRequestParams(builder.getParams())
                   .runRequest(MULTIPLE_DELETE_REQUEST);
 

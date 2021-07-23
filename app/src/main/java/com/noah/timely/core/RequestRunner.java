@@ -21,7 +21,7 @@ import com.noah.timely.assignment.Reminder;
 import com.noah.timely.assignment.SubmissionNotifier;
 import com.noah.timely.assignment.UUpdateMessage;
 import com.noah.timely.assignment.UriUpdateEvent;
-import com.noah.timely.assignment.ViewImagesActivity;
+import com.noah.timely.assignment.ImageViewerActivity;
 import com.noah.timely.courses.CUpdateMessage;
 import com.noah.timely.courses.CourseModel;
 import com.noah.timely.courses.CourseRowHolder;
@@ -30,6 +30,7 @@ import com.noah.timely.exam.EUpdateMessage;
 import com.noah.timely.exam.ExamModel;
 import com.noah.timely.exam.ExamRowHolder;
 import com.noah.timely.exam.ExamTimetableFragment;
+import com.noah.timely.gallery.Image;
 import com.noah.timely.scheduled.SUpdateMessage;
 import com.noah.timely.scheduled.ScheduledTaskNotifier;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
@@ -37,6 +38,7 @@ import com.noah.timely.timetable.DaysFragment;
 import com.noah.timely.timetable.TUpdateMessage;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.timetable.TimetableNotifier;
+import com.noah.timely.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -56,7 +58,7 @@ import static com.noah.timely.util.Utility.playAlertTone;
  */
 public class RequestRunner extends Thread {
     public static final int WAIT_TIME = 3000;
-    private static boolean deleteRequestDiscarded;
+    private boolean deleteRequestDiscarded;
     private String request;
     private SchoolDatabase database;
     private RequestParams params;
@@ -115,10 +117,10 @@ public class RequestRunner extends Thread {
             case ExamRowHolder.DELETE_REQUEST:
                 doExamDelete();
                 break;
-            case ViewImagesActivity.DELETE_REQUEST:
+            case ImageViewerActivity.DELETE_REQUEST:
                 doImageDelete();
                 break;
-            case ViewImagesActivity.MULTIPLE_DELETE_REQUEST:
+            case ImageViewerActivity.MULTIPLE_DELETE_REQUEST:
                 doImageMultiDelete();
                 break;
             default:
@@ -133,7 +135,7 @@ public class RequestRunner extends Thread {
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
         for (int i : itemIndices) {
-            dataCache.add(params.getModelList().remove(i));
+             dataCache.add(params.getModelList().remove(i));
         }
 
         // Update UI
@@ -187,16 +189,24 @@ public class RequestRunner extends Thread {
     }
 
     private void doImageMultiDelete() {
+        // data cache
         List<Uri> uriCache = new ArrayList<>();
+        List<Image> imgCache = new ArrayList<>();
+
         Integer[] itemIndices = params.getItemIndices();
         List<Uri> mediaUris = params.getMediaUris();
-        // Reverse array of indices in reversed order, because if the indices are not reversed,
-        // an error occurs.
+        List<Image> images = params.getImageList();
+        LogUtils.debug(this, "Deleting at: " + Arrays.toString(itemIndices));
+        // Reverse array of indices in reversed order, because if the indices are not reversed, an error occurs.
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
         for (int i : itemIndices) {
             uriCache.add(mediaUris.remove(i));
+            imgCache.add(images.remove(i));
         }
+
+        LogUtils.debug(this, "Removed: " + Arrays.toString(uriCache.toArray(new Uri[0])));
+        LogUtils.debug(this, "Results: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
         // Update UI
         EventBus.getDefault().post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.REMOVE));
 
@@ -205,10 +215,10 @@ public class RequestRunner extends Thread {
         } catch (InterruptedException exc) {
             for (int x = 0; x < uriCache.size(); x++) {
                 mediaUris.add(itemIndices[x], uriCache.get(x));
+                images.add(itemIndices[x], imgCache.get(x));
             }
             // Update UI
-            EventBus.getDefault()
-                    .post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.INSERT));
+            EventBus.getDefault().post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.INSERT));
         }
 
         if (!deleteRequestDiscarded) {
@@ -223,19 +233,24 @@ public class RequestRunner extends Thread {
 
     private void doImageDelete() {
         List<Uri> mediaUris = params.getMediaUris();
-        Uri uri = mediaUris.remove(params.getAdapterPosition());
-        int changePos = params.getAdapterPosition();
+        List<Image> images = params.getImageList();
 
-        EventBus.getDefault()
-                .post(new UUpdateMessage(uri, changePos, UUpdateMessage.EventType.REMOVE));
+        LogUtils.debug(this, "Deleting: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
+
+        Uri uri = mediaUris.remove(params.getAdapterPosition());
+        Image image = images.remove(params.getAdapterPosition());
+
+        LogUtils.debug(this, "Removed: " + uri);
+
+        int changePos = params.getAdapterPosition();
+        EventBus.getDefault().post(new UUpdateMessage(uri, image, changePos, UUpdateMessage.EventType.REMOVE));
 
         try {
             Thread.sleep(WAIT_TIME);
         } catch (InterruptedException exc) {
             mediaUris.add(params.getAdapterPosition(), uri);
-
-            EventBus.getDefault()
-                    .post(new UUpdateMessage(uri, changePos, UUpdateMessage.EventType.INSERT));
+            images.add(params.getAdapterPosition(), image);
+            EventBus.getDefault().post(new UUpdateMessage(uri, image, changePos, UUpdateMessage.EventType.INSERT));
         }
 
         if (!deleteRequestDiscarded) {
@@ -252,8 +267,7 @@ public class RequestRunner extends Thread {
         DataModel model = params.getModelList().get(params.getAdapterPosition());
         params.getModelList().remove(params.getAdapterPosition());
         int pos = params.getPagePosition();
-        EventBus.getDefault()
-                .post(new EUpdateMessage((ExamModel) model, EUpdateMessage.EventType.REMOVE, pos));
+        EventBus.getDefault().post(new EUpdateMessage((ExamModel) model, EUpdateMessage.EventType.REMOVE, pos));
             /*
             wait 3 seconds to perform actual delete request, because an undo request might also be issued, which
             delete request would have to be cancelled. The sleep timer is also synchronized   with the undo
@@ -267,8 +281,7 @@ public class RequestRunner extends Thread {
             meaning an undo request
             */
             params.getModelList().add(params.getAdapterPosition(), model);
-            EventBus.getDefault()
-                    .post(new EUpdateMessage((ExamModel) model, EUpdateMessage.EventType.INSERT, pos));
+            EventBus.getDefault().post(new EUpdateMessage((ExamModel) model, EUpdateMessage.EventType.INSERT, pos));
         }
         if (!deleteRequestDiscarded) {
             ExamModel examModel = (ExamModel) model;
@@ -285,8 +298,7 @@ public class RequestRunner extends Thread {
         params.getModelList().remove(params.getAdapterPosition());
         int pos = params.getPagePosition();
 
-        EventBus.getDefault()
-                .post(new CUpdateMessage((CourseModel) model, CUpdateMessage.EventType.REMOVE, pos));
+        EventBus.getDefault().post(new CUpdateMessage((CourseModel) model, CUpdateMessage.EventType.REMOVE, pos));
          /*
             wait 3 seconds to perform actual delete request, because an undo request might also be issued, which
             delete request would have to be cancelled. The sleep timer is also synchronized with the undo Snackbar's
@@ -297,8 +309,7 @@ public class RequestRunner extends Thread {
         } catch (InterruptedException e) {
             // will be executed when the deleteRequestDiscarded property has been set, meaning an undo request
             params.getModelList().add(params.getAdapterPosition(), model);
-            EventBus.getDefault()
-                    .post(new CUpdateMessage((CourseModel) model, CUpdateMessage.EventType.REMOVE, pos));
+            EventBus.getDefault().post(new CUpdateMessage((CourseModel) model, CUpdateMessage.EventType.REMOVE, pos));
         }
         if (!deleteRequestDiscarded) {
             CourseModel courseModel = (CourseModel) model;
@@ -416,8 +427,7 @@ public class RequestRunner extends Thread {
         params.getModelList().remove(changePos);
         // now notify list of item change so that it can invalidate current views.
         // This line fixed a bug for me and help me change the indicators :)
-        EventBus.getDefault()
-                .post(new AAUpdateMessage(alarm, changePos, AAUpdateMessage.EventType.REMOVE));
+        EventBus.getDefault().post(new AAUpdateMessage(alarm, changePos, AAUpdateMessage.EventType.REMOVE));
             /*
             wait 3 seconds to perform actual delete request, because an undo request
             might also be issued, which delete request would have to be cancelled.
@@ -431,8 +441,7 @@ public class RequestRunner extends Thread {
             params.getModelList().add(changePos, alarm);
             // now notify list of item change so that it can invalidate current views.
             // This line fixed a bug for me and help me change the indicators :)
-            EventBus.getDefault()
-                    .post(new AAUpdateMessage(alarm, changePos, AAUpdateMessage.EventType.INSERT));
+            EventBus.getDefault().post(new AAUpdateMessage(alarm, changePos, AAUpdateMessage.EventType.INSERT));
         }
         if (!deleteRequestDiscarded) {
             boolean isDeleted = database.deleteAlarmEntry(alarm);
@@ -497,8 +506,7 @@ public class RequestRunner extends Thread {
         Intent notifyIntentCurrent = new Intent(appContext, SubmissionNotifier.class);
         notifyIntentCurrent.addCategory(appContext.getPackageName() + ".category")
                            .setAction(appContext.getPackageName() + ".update")
-                           .setDataAndType(Uri.parse("content://" + appContext.getPackageName()),
-                                           data.toString());
+                           .setDataAndType(Uri.parse("content://" + appContext.getPackageName()), data.toString());
 
         Intent notifyIntentPrevious = new Intent(appContext, Reminder.class);
         notifyIntentPrevious.addCategory(appContext.getPackageName() + ".category")
@@ -591,11 +599,10 @@ public class RequestRunner extends Thread {
 
         Intent alarmReceiverIntent = new Intent(appContext, AlarmReceiver.class);
         alarmReceiverIntent.putExtra("Label", params.getAlarmLabel());
-        // This is just used to prevent cancelling all pending intent, because when
-        // PendingIntent#cancel is called, all pending intent that matches the intent supplied to
-        // Intent#filterEquals (and it returns true), will be cancelled because there was no
-        // difference between the intents. So this code segment was used to provide a distinguishing
-        // effect.
+        // This is just used to prevent cancelling all pending intent, because when PendingIntent#cancel is called,
+        // all pending intent that matches the intent supplied to Intent#filterEquals (and it returns true), will be
+        // cancelled because there was no difference between the intents. So this code segment was used to provide a
+        // distinguishing effect.
         alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
         alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
         alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
@@ -704,6 +711,11 @@ public class RequestRunner extends Thread {
 
         public Builder setPagePosition(int position) {
             requestParams.setPagePosition(position);
+            return this;
+        }
+
+        public Builder setImageList(List<Image> imageList) {
+            requestParams.setImageList(imageList);
             return this;
         }
     }

@@ -26,8 +26,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.gallery.ImageDirectory;
 import com.noah.timely.gallery.ImageGallery;
-import com.noah.timely.gallery.StorageViewer;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -43,7 +43,6 @@ import static com.noah.timely.assignment.AssignmentFragment.TITLE;
 import static com.noah.timely.util.Utility.Alert;
 import static com.noah.timely.util.Utility.playAlertTone;
 
-@SuppressWarnings({"ConstantConditions", "unused"})
 public class AddAssignmentActivity extends AppCompatActivity {
     public static final String SCHEDULE_POS = "Schedule position";
     public static final String ADD_NEW = "com.noah.timely.addAssignmentActivity.add_new";
@@ -84,7 +83,10 @@ public class AddAssignmentActivity extends AppCompatActivity {
         descriptionBox = findViewById(R.id.description_box);
 
         submitButton.setOnClickListener(v -> saveOrUpdateAssignment());
-        btn_gallery.setOnClickListener(v -> startActivity(new Intent(this, StorageViewer.class).setAction(ADD_NEW)));
+        btn_gallery.setOnClickListener(
+                v -> startActivity(new Intent(this, ImageDirectory.class)
+                                           .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
+                                           .setAction(ADD_NEW)));
 
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
                                                                 R.layout.simple_spinner_item,
@@ -150,8 +152,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (fileCount != null)
-            fileCount.setText(String.valueOf(intent.getIntExtra(ImageGallery.ARG_FILES_COUNT, -1)));
+        if (fileCount != null) fileCount.setText(String.valueOf(intent.getIntExtra(ImageGallery.ARG_FILES_COUNT, -1)));
     }
 
     @Override
@@ -161,14 +162,14 @@ public class AddAssignmentActivity extends AppCompatActivity {
     }
 
     private void saveOrUpdateAssignment() {
-        String emptyErrorMessage = "Required! Field can't be empty";
-        String datePattern = "^(?:(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9]))/[0-9]{4}$";
-        String dateInput = edt_date.getText().toString();
+        String emptyErrorMessage = "Field can't be empty";
+        String datePattern = "^(?:(3[01]|[12][0-9]|0[1-9])[/._-](1[0-2]|0[1-9]))[/._-][0-9]{4}$";
+        String date = edt_date.getText().toString();
 
         boolean errorOccurred = false;
 
-        if (!dateInput.matches(datePattern)) {
-            dateBox.setError("Date format : dd/mm/yyyy");
+        if (!date.matches(datePattern)) {
+            dateBox.setError("Invalid date format");
             errorOccurred = true;
         }
 
@@ -192,7 +193,6 @@ public class AddAssignmentActivity extends AppCompatActivity {
         String ln = edt_lecturerName.getText().toString();
         String tt = edt_title.getText().toString();
         String description = this.edt_description.getText().toString();
-        String date = edt_date.getText().toString();
         String attachedPDF = "not implemented yet";
         String cc = this.courseCode;
 
@@ -210,7 +210,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
         boolean isSuccessful;
         AssignmentModel data;
 
-        String[] splitDate = date.split("/");
+        String[] splitDate = date.split("[/._-]");
         int dd = Integer.parseInt(splitDate[0]);
         int mm = Integer.parseInt(splitDate[1]) - 1;
         int yy = Integer.parseInt(splitDate[2]);
@@ -238,7 +238,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
             boolean isSubmitted = isSuccessful = database.updateAssignmentData(data);
             EventBus.getDefault().post(new AUpdateMessage(data, AUpdateMessage.EventType.UPDATE_CURRENT));
         } else {
-            message = "Registering Assignment...";
+            message = "Registering Assignment";
             isSuccessful = database.addAssignmentData(data);
             EventBus.getDefault().post(new AUpdateMessage(data, AUpdateMessage.EventType.NEW));
         }
@@ -249,7 +249,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
             alert.show();
             playAlertTone(getApplicationContext(), Alert.ASSIGNMENT);
 
-        } else Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(this, "Error occurred", Toast.LENGTH_SHORT).show();
 
         onBackPressed();
     }
@@ -289,11 +289,9 @@ public class AddAssignmentActivity extends AppCompatActivity {
                             .setAction(getPackageName() + ".update")
                             .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
 
-        PendingIntent assignmentPiPrevious
-                = PendingIntent.getBroadcast(this, 147, notifyIntentPrevious,
+        PendingIntent assignmentPiPrevious = PendingIntent.getBroadcast(this, 147, notifyIntentPrevious,
                                              PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent assignmentPiCurrent
-                = PendingIntent.getBroadcast(this, 141, notifyIntentCurrent,
+        PendingIntent assignmentPiCurrent = PendingIntent.getBroadcast(this, 141, notifyIntentCurrent,
                                              PendingIntent.FLAG_UPDATE_CURRENT);
         // Exact alarms not used here, so that android can perform its normal operation on devices
         // >= 4.4 (KITKAT) to prevent unnecessary battery drain by alarms.
@@ -372,9 +370,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
     // Determines if there was an added title in the lecturer's name
     private boolean startsWithAny(String[] titles, String s) {
-        for (String title : titles)
-            if (s.startsWith(title))
-                return true;
+        for (String title : titles) if (s.startsWith(title)) return true;
         return false;
     }
 }

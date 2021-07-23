@@ -45,8 +45,7 @@ public class ImageSlideActivity extends AppCompatActivity {
         pager.setAdapter(new ImageAdapter(this));
 
         // Converts 8 dip into its equivalent px
-        float mPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8.0f,
-                                              getResources().getDisplayMetrics());
+        float mPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8.0f, getResources().getDisplayMetrics());
 
         pager.setPageTransformer(new MarginPageTransformer((int) mPx));
         pager.setOffscreenPageLimit(images.size());

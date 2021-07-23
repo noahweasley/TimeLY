@@ -95,7 +95,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".assignment.ViewImagesActivity"
+            android:name=".assignment.ImageViewerActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -163,6 +163,16 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".assignment.AssignmentSchedulerChecker">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <!--For HTC devices-->
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".timetable.TimetableNotifier" />
         <receiver android:name=".alarms.AlarmReceiver" />
         <receiver android:name=".alarms.NotificationActionReceiver" />
@@ -177,6 +187,7 @@
                 <action android:name="android.intent.action.DATE_CHANGED" />
             </intent-filter>
         </receiver>
+
 
     </application>
 

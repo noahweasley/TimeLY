@@ -20,8 +20,7 @@ public class PreferenceUtils {
      */
     public static boolean getFirstLaunchKey(@NonNull Context context) {
         // default preference file
-        SharedPreferences sharedPreferences
-                = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         return sharedPreferences.getBoolean(FIRST_LAUNCH_KEY, true);
     }
@@ -34,14 +33,18 @@ public class PreferenceUtils {
      */
     public static void setFirstLaunchKey(@NonNull Context context, boolean state) {
         // default preference file
-        SharedPreferences sharedPreferences
-                = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         // preference editor
         SharedPreferences.Editor spEditor = sharedPreferences.edit();
         // if preference key is not created yet, create it and insert a false value
         spEditor.putBoolean(FIRST_LAUNCH_KEY, state);
         // apply changes
         spEditor.apply();
+    }
+
+    public static boolean getPrefValue(@NonNull Context context, String key) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(key, true);
     }
 
 }

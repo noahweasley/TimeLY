@@ -5,6 +5,7 @@ import android.net.Uri;
 import androidx.fragment.app.FragmentActivity;
 
 import com.noah.timely.assignment.AssignmentModel;
+import com.noah.timely.gallery.Image;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class RequestParams {
     private MetaDataType metadataType;
     private Boolean[] alarmRepeatDays;
     private int pagePosition;
+    private List<Image> imageList;
 
     public void setPagePosition(int pagePosition) {
         this.pagePosition = pagePosition;
@@ -153,6 +155,14 @@ public class RequestParams {
 
     public int getPagePosition() {
         return pagePosition;
+    }
+
+    public void setImageList(List<Image> imageList) {
+        this.imageList = imageList;
+    }
+
+    public List<Image> getImageList() {
+        return imageList;
     }
 
     public enum MetaDataType {

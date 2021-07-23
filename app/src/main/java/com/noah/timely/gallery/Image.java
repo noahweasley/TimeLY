@@ -21,7 +21,7 @@ public class Image implements Serializable {
     public Image() {
     }
 
-    public static Image createInstance(Uri uri) {
+    public static Image createImageFromUri(Uri uri) {
         Image image = new Image();
         image.setImageUri(uri);
         return image;

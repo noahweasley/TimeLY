@@ -143,4 +143,5 @@
     <string name="rand">23</string>
     <string name="am">AM</string>
     <string name="pm">PM</string>
+    <string name="default_date_format">dd-mm-yyy</string>
 </resources>

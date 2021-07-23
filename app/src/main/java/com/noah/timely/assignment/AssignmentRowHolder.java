@@ -1,6 +1,7 @@
 package com.noah.timely.assignment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -138,7 +140,28 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     public void bindView() {
         tv_title.setText(assignment.getTitle());
         tv_description.setText(assignment.getDescription());
-        tv_date.setText(assignment.getDate());
+        String[] spd = assignment.getDate().split("[/._-]");
+        String parsedDate;
+
+        String dateKey = "a_date_format";
+        String ddf = mActivity.getString(R.string.default_date_format);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        switch (sharedPreferences.getString(dateKey, ddf)){
+            case "dd_mm_yyyy":
+                parsedDate = TextUtils.join("_", spd);
+                break;
+            case "dd/mm/yyyy":
+                parsedDate = TextUtils.join("/", spd);
+                break;
+            case "dd.mm.yyyy":
+                parsedDate = TextUtils.join(".", spd);
+                break;
+            default:
+                parsedDate = TextUtils.join("-", spd);
+                break;
+        }
+
+        tv_date.setText(parsedDate);
         tv_course.setText(assignment.getCourseCode());
         int rowDrawable = DRAWABLE[getAbsoluteAdapterPosition() % DRAWABLE.length];
         header.setBackground(ContextCompat.getDrawable(mActivity, rowDrawable));
@@ -172,8 +195,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
         int iMax = nameTokens.length - 1;
 
-        int nameLimit
-                = tv_lecturerName.getContext().getResources().getInteger(R.integer.name_limit);
+        int nameLimit = tv_lecturerName.getContext().getResources().getInteger(R.integer.name_limit);
         if (fullName.length() > nameLimit && nameTokens.length > 2) {
             if (startsWithAny(titles, fullName)) {
                 // Append the title if there is one
@@ -241,8 +263,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
     private void trySelectAssignment() {
         isChecked = !isChecked;
         v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        assignmentRowAdapter.onChecked(getAbsoluteAdapterPosition(),
-                                       isChecked, assignment.getPosition());
+        assignmentRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, assignment.getPosition());
     }
 
     private void doDeleteAssignment() {

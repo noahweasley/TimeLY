@@ -13,6 +13,7 @@
         android:clipToPadding="false"
         android:paddingBottom="80dp"
         android:scrollbarStyle="outsideOverlay"
+        external:layout_behavior="@string/appbar_scrolling_view_behavior"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"

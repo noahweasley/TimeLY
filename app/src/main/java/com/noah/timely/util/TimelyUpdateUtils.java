@@ -31,11 +31,12 @@ public class TimelyUpdateUtils {
     private static final int UPDATE_ID = 222;
     private static final String USER = "noahweasley";
     private static final String REPO = "TimeLY";
+    private static boolean nPosted;
 
     public static void checkForUpdates(Context context) {
         AppUpdaterUtils updaterUtils = new AppUpdaterUtils(context);
 
-        postNotification(context, "Checking for updates", null);
+        if (!nPosted) postNotification(context, "Checking for updates", null);
 
         updaterUtils.setUpdateFrom(UpdateFrom.GITHUB);
         updaterUtils.setGitHubUserAndRepo(USER, REPO);
@@ -66,9 +67,11 @@ public class TimelyUpdateUtils {
     private static void dismissNotification(Context context) {
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(UPDATE_ID);
+        nPosted = false;
     }
 
     private static void postNotification(Context context, String updateTitle, Update update) {
+        nPosted = true;
         final String CHANNEL = "TimeLY's update";
         final String UNIQUE_ID = "TimeLY's update";
 

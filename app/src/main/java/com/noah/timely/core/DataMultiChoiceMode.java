@@ -3,7 +3,6 @@ package com.noah.timely.core;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class DataMultiChoiceMode extends MultiChoiceMode {
     private final List<DataModel> dataModels = new ArrayList<>();
 
@@ -28,7 +27,7 @@ public class DataMultiChoiceMode extends MultiChoiceMode {
      *
      * @param item the data model to be removed or deleted
      */
-    public void removeImageUri(DataModel item) {
+    public void removeSelectedItem(DataModel item) {
         dataModels.remove(item);
     }
 

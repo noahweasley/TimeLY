@@ -10,10 +10,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
+        android:layoutAnimation="@anim/list_layout_anim_gravity_top"
         android:paddingHorizontal="@dimen/data_list_padding"
         android:paddingTop="@dimen/data_list_padding"
         android:paddingBottom="80dp"
         android:visibility="gone"
+        external:layout_behavior="@string/appbar_scrolling_view_behavior"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
@@ -33,7 +35,7 @@
         android:id="@+id/no_courses_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
+        android:visibility="gone"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
@@ -94,9 +96,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
             android:layout_margin="@dimen/fab_margin"
+            android:contentDescription="@string/add_course"
             external:fabCustomSize="@dimen/fab_size"
             external:maxImageSize="@dimen/fab_icon_size"
-            android:contentDescription="@string/add_course"
             external:srcCompat="@drawable/ic_add" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

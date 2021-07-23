@@ -1,0 +1,68 @@
+package com.noah.timely.assignment;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+
+import androidx.annotation.Nullable;
+
+import com.noah.timely.core.DataModel;
+import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.ThreadUtils;
+
+import java.util.Calendar;
+import java.util.List;
+
+/**
+ * Service that is responsible for checking the app's database on device start-up, for any assignment that has passed
+ * its submission date. If any assignment was found that matches, it updates that assignment to to reflect it's current
+ * submission status.
+ */
+public class AssignmentCheckerService extends Service {
+    private SchoolDatabase database;
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        database = new SchoolDatabase(this);
+
+        ThreadUtils.runBackgroundTask(() -> {
+            List<DataModel> pendingAssignments = database.getPendingAssignments();
+            if (!pendingAssignments.isEmpty()) {
+                // re-schedule alarms; get alarm data from app's database
+                for (DataModel rawData : pendingAssignments) {
+                    AssignmentModel pendingAssignment = (AssignmentModel) rawData;
+                    performCheck(pendingAssignment);
+                }
+            }
+        });
+
+        return START_STICKY;
+    }
+
+    private void performCheck(AssignmentModel assignment) {
+        Calendar azzCalendar = Calendar.getInstance();
+
+        String submissionDate = assignment.getSubmissionDate();
+        String[] sArr = submissionDate.split("[/._-]");
+        int day = Integer.parseInt(sArr[0]);
+        int month = Integer.parseInt(sArr[1]);
+        int year = Integer.parseInt(sArr[2]);
+        // Time set to 07:00 am
+        azzCalendar.set(year, month, day);
+        azzCalendar.set(Calendar.HOUR_OF_DAY, 7);
+        azzCalendar.set(Calendar.MINUTE, 0);
+        azzCalendar.set(Calendar.SECOND, 0);
+        azzCalendar.set(Calendar.MILLISECOND, 0);
+
+        long CURRENT = azzCalendar.getTimeInMillis();
+        long NOW = System.currentTimeMillis();
+
+        if (CURRENT < NOW) database.updateAssignmentStatus(assignment.getId(), true);
+    }
+}

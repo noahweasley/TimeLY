@@ -42,4 +42,11 @@ public class ImageMultiChoiceMode extends MultiChoiceMode {
     public void removeImageUri(Uri uri) {
         uriList.remove(uri.toString());
     }
+
+    @Override
+    public void clearChoices() {
+        super.clearChoices();
+        uriList.clear();
+    }
+
 }
