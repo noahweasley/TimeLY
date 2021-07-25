@@ -72,9 +72,51 @@
         android:textColor="@color/light_grey"
         android:textSize="@dimen/update_text_size"
         android:textStyle="bold"
+        android:visibility="gone"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toBottomOf="@id/new_badge" />
+
+    <ScrollView
+        android:id="@+id/update_detail_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/layout_gap"
+        android:background="@drawable/bg_notice"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toBottomOf="@id/new_badge" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fix_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="start"
+                android:layout_marginBottom="@dimen/layout_gap"
+                android:text="@string/fix_message_1"
+                android:textColor="@android:color/black"
+                external:drawableLeftCompat="@drawable/ic_circle_fill" />
+
+            <TextView
+                android:id="@+id/fix_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="start"
+                android:text="@string/fix_message_2"
+                android:textColor="@android:color/black"
+                external:drawableLeftCompat="@drawable/ic_circle_fill" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

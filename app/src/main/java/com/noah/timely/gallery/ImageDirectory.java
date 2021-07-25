@@ -1,19 +1,24 @@
 package com.noah.timely.gallery;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,6 +33,10 @@ import com.noah.timely.util.ThreadUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
+
 public class ImageDirectory extends AppCompatActivity implements Runnable {
     public static final int requestCode = 112;
     public static final String STORAGE_ACCESS_ROOT = "Storage access";
@@ -40,6 +49,21 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     private ViewGroup v_noMedia;
     private String accessedStorage;
 
+    private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (SDK_INT >= Build.VERSION_CODES.R) {
+                        if (Environment.isExternalStorageManager()) {
+                            // perform action when allow permission success
+                            new Thread(this).start();
+                        } else {
+                            Toast.makeText(this, "Allow permission for storage access", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.image_gallery);
@@ -48,9 +72,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         indeterminateProgress = findViewById(R.id.indeterminateProgress);
         v_noMedia = findViewById(R.id.no_media);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setTitle("Select Images");
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageList.setHasFixedSize(true);
@@ -58,13 +80,40 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         imageList.setLayoutManager(new GridLayoutManager(this, 2));
         imageList.setClickable(true);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (checkPermission()) {
             ThreadUtils.runBackgroundTask(this);
         } else {
+            requestPermission();
+        }
+    }
+
+    private void requestPermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s", getPackageName())));
+                resultLauncher.launch(intent);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                resultLauncher.launch(intent);
+            }
+        } else {
+            // below android 11
             ActivityCompat.requestPermissions(this,
-                                              new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                              new String[]{READ_EXTERNAL_STORAGE},
                                               requestCode);
+        }
+    }
+
+    private boolean checkPermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int result = ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE);
+            int result1 = ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
         }
     }
 
@@ -87,7 +136,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             new Thread(this).start();
         } else {
-            Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Allow permission for storage access", Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -96,7 +145,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     @SuppressLint("InlinedApi")
     public void run() {
         Uri storageUri;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (SDK_INT >= Build.VERSION_CODES.Q) {
             storageUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
         } else {
             storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
