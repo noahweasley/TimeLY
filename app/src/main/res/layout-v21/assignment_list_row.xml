@@ -72,16 +72,19 @@
 
         <TextView
             android:id="@+id/lecturerName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginStart="@dimen/default_gap"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/default_gap"
-            android:text="@string/default_lecturer_name"
+            android:maxLines="1"
+            android:text="@string/long_text"
             android:textColor="@android:color/black"
             android:textSize="@dimen/assignment_text_size"
             android:textStyle="bold"
+            android:ellipsize="end"
+            external:layout_constraintStart_toEndOf="@id/guidelineMiddle"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintTop_toBottomOf="@id/describe_text"
             tools:ignore="RtlSymmetry" />
@@ -163,6 +166,13 @@
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineMiddle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            external:layout_constraintGuide_percent=".6" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

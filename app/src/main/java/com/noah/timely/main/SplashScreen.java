@@ -30,6 +30,13 @@ public class SplashScreen extends AppCompatActivity {
         tv_version = findViewById(R.id.version);
         tv_appName = findViewById(R.id.app_name);
 
+//        Spannable wordSpan = new SpannableString(getString(R.string.app_name));
+//        ForegroundColorSpan foregroundColorSpan
+//                = new ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent));
+//        wordSpan.setSpan(foregroundColorSpan, 4 /* L and Y */, wordSpan.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+//
+//        tv_appName.setText(wordSpan);
+
         findViewById(R.id.skip).setOnClickListener(this::skipSplashScreen);
 
         String version = BuildConfig.VERSION_NAME;

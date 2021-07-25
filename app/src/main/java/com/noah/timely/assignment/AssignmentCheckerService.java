@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * Service that is responsible for checking the app's database on device start-up, for any assignment that has passed
- * its submission date. If any assignment was found that matches, it updates that assignment to to reflect it's current
+ * its submission date. If any assignment was found that matches, it updates that assignment to reflect it's current
  * submission status.
  */
 public class AssignmentCheckerService extends Service {
@@ -34,7 +34,6 @@ public class AssignmentCheckerService extends Service {
         ThreadUtils.runBackgroundTask(() -> {
             List<DataModel> pendingAssignments = database.getPendingAssignments();
             if (!pendingAssignments.isEmpty()) {
-                // re-schedule alarms; get alarm data from app's database
                 for (DataModel rawData : pendingAssignments) {
                     AssignmentModel pendingAssignment = (AssignmentModel) rawData;
                     performCheck(pendingAssignment);
@@ -60,9 +59,9 @@ public class AssignmentCheckerService extends Service {
         azzCalendar.set(Calendar.SECOND, 0);
         azzCalendar.set(Calendar.MILLISECOND, 0);
 
-        long CURRENT = azzCalendar.getTimeInMillis();
+        long AZZ_TIME = azzCalendar.getTimeInMillis();
         long NOW = System.currentTimeMillis();
 
-        if (CURRENT < NOW) database.updateAssignmentStatus(assignment.getId(), true);
+        if (NOW > AZZ_TIME) database.updateAssignmentStatus(assignment.getId(), true);
     }
 }

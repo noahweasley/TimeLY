@@ -27,6 +27,7 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.timetable.TimetableModel;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -198,7 +199,7 @@ public class AddScheduledActivity extends AppCompatActivity {
             errorOccurred = true;
         } else {
             if (!use24 && !start.matches(timeRegex12)) {
-                edt_startTime.setError("12 hours mode only");
+                edt_startTime.setError("12 hours mode");
                 errorOccurred = true;
             }
         }
@@ -208,7 +209,7 @@ public class AddScheduledActivity extends AppCompatActivity {
             errorOccurred = true;
         } else {
             if (!use24 && !end.matches(timeRegex12)) {
-                edt_endTime.setError("12 hours mode only");
+                edt_endTime.setError("12 hours mode");
                 errorOccurred = true;
             }
         }
@@ -366,9 +367,16 @@ public class AddScheduledActivity extends AppCompatActivity {
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            manager.setExact(AlarmManager.RTC, triggerTime, pi);
-        manager.set(AlarmManager.RTC, triggerTime, pi);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                manager.setExactAndAllowWhileIdle(AlarmManager.RTC, triggerTime, pi);
+            } else {
+                manager.setExact(AlarmManager.RTC, triggerTime, pi);
+            }
+        } else {
+            manager.set(AlarmManager.RTC, triggerTime, pi);
+        }
 
         playAlertTone(context.getApplicationContext(), SCHEDULED_TIMETABLE);
     }

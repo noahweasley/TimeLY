@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,10 +36,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import static com.noah.timely.util.Utility.Alert.COURSE;
-import static com.noah.timely.util.Utility.DAYS;
-import static com.noah.timely.util.Utility.isUserPreferred24Hours;
-import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.timetable.DaysFragment.ARG_CHRONOLOGY;
 import static com.noah.timely.timetable.DaysFragment.ARG_CLASS;
 import static com.noah.timely.timetable.DaysFragment.ARG_DATA;
@@ -49,6 +44,10 @@ import static com.noah.timely.timetable.DaysFragment.ARG_PAGE_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_TIME;
 import static com.noah.timely.timetable.DaysFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Utility.Alert.COURSE;
+import static com.noah.timely.util.Utility.DAYS;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.playAlertTone;
 
 /**
  * A clone of {@link AddTimetableDialog} that would be used as an alternate to adding timetables
@@ -348,7 +347,6 @@ public class AddTimetableActivity extends AppCompatActivity {
         long CURRENT = calendar.getTimeInMillis();
         long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-        Log.d(getClass().getSimpleName(), "Scheduling for: " + new Date(timeInMillis));
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent timetableIntent = new Intent(context, TimetableNotifier.class);

@@ -11,8 +11,7 @@
 
 * **assignment**: Package housing everything about TimeLY's assignment management system.
 
-* **core**: Package housing every interface, enum, class ... that needs to be public to every other
-         package.
+* **core**: Package housing every interface, enum, class ... that needs to be public to every other package.
          
 * **courses**: Package housing everything related TimeLY's courses management system.
 

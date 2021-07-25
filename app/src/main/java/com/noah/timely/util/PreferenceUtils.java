@@ -10,7 +10,11 @@ import androidx.preference.PreferenceManager;
  * All utilities to access TimeLY's preferences
  */
 public class PreferenceUtils {
-    private static final String FIRST_LAUNCH_KEY = "Fist Launch";
+    public static final String FIRST_LAUNCH_KEY = "Fist Launch";
+    public static final String RESTRICTION_ACCESS_KEY = "Remove alarm restrictions";
+    public static final String DENY_ACCESS = "Deny alarm restriction access";
+    public static final String GRANT_ACCESS = "Grant alarm restriction access";
+    public static final String UPDATE_ON_STARTUP = "update_startup";
 
     /**
      * Retrieves TimeLY's first launch preference
@@ -36,15 +40,51 @@ public class PreferenceUtils {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         // preference editor
         SharedPreferences.Editor spEditor = sharedPreferences.edit();
-        // if preference key is not created yet, create it and insert a false value
         spEditor.putBoolean(FIRST_LAUNCH_KEY, state);
         // apply changes
         spEditor.apply();
     }
 
-    public static boolean getPrefValue(@NonNull Context context, String key) {
+    /**
+     * Retrieves a boolean preference value
+     *
+     * @param context      the context to be used to access the preference file
+     * @param key          the preference to be accessed
+     * @param defaultValue the default value to use, when key doesn't exist yet
+     * @return the value of the preference with (<code>key</code>)
+     */
+    public static boolean getBooleanValue(@NonNull Context context, String key, boolean defaultValue) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean(key, true);
+        return sharedPreferences.getBoolean(key, defaultValue);
     }
 
+    /**
+     * Sets or create a string preference
+     *
+     * @param context the context to be used to access the preference file
+     * @param key     the preference key to be accessed
+     * @param value   the value to be written
+     */
+    public static void setStringValue(Context context, String key, String value) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        // preference editor
+        SharedPreferences.Editor spEditor = sharedPreferences.edit();
+        // if preference key is not created yet, create it and insert a default value
+        spEditor.putString(RESTRICTION_ACCESS_KEY, value);
+        // apply changes
+        spEditor.apply();
+    }
+
+    /**
+     * Retrieves a string preference value
+     *
+     * @param context      the context to be used to access the preference file
+     * @param key          the preference to be accessed
+     * @param defaultValue the default value to use, when key doesn't exist yet
+     * @return the value of the preference with (<code>key</code>)
+     */
+    public static String getStringValue(Context context, String key, String defaultValue) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString(key, defaultValue);
+    }
 }

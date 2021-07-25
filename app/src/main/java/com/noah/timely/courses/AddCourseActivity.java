@@ -17,15 +17,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.noah.timely.R;
-import com.noah.timely.util.Utility;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.Utility;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.noah.timely.util.Utility.playAlertTone;
 import static com.noah.timely.courses.SemesterFragment.ARG_POSITION;
+import static com.noah.timely.util.Utility.playAlertTone;
 
 /**
  * A clone of {@link AddCourseDialog} that would be used as an alternate to adding courses

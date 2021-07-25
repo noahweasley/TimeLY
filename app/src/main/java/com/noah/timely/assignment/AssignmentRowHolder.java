@@ -146,7 +146,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
         String dateKey = "a_date_format";
         String ddf = mActivity.getString(R.string.default_date_format);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
-        switch (sharedPreferences.getString(dateKey, ddf)){
+        switch (sharedPreferences.getString(dateKey, ddf)) {
             case "dd_mm_yyyy":
                 parsedDate = TextUtils.join("_", spd);
                 break;

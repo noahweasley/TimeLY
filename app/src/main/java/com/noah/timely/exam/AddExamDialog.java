@@ -24,8 +24,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.ThreadUtils;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 

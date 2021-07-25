@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -254,8 +255,8 @@ public class AddAssignmentActivity extends AppCompatActivity {
         onBackPressed();
     }
 
-    private boolean tryScheduleNotifiers(int year, int month, int day, String title,
-                                         String lecturer, AssignmentModel data, int pos) {
+    private boolean tryScheduleNotifiers(int year, int month, int day, String title, String lecturer,
+                                         AssignmentModel data, int pos) {
         Calendar calendar = Calendar.getInstance();
         // Time set to 07:00 am
         calendar.set(year, month, day);
@@ -290,22 +291,26 @@ public class AddAssignmentActivity extends AppCompatActivity {
                             .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
 
         PendingIntent assignmentPiPrevious = PendingIntent.getBroadcast(this, 147, notifyIntentPrevious,
-                                             PendingIntent.FLAG_UPDATE_CURRENT);
+                                                                        PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent assignmentPiCurrent = PendingIntent.getBroadcast(this, 141, notifyIntentCurrent,
-                                             PendingIntent.FLAG_UPDATE_CURRENT);
-        // Exact alarms not used here, so that android can perform its normal operation on devices
-        // >= 4.4 (KITKAT) to prevent unnecessary battery drain by alarms.
+                                                                       PendingIntent.FLAG_UPDATE_CURRENT);
+        // Exact alarms not used here, so that android can perform its normal operation on devices >= 4.4 (KITKAT) to
+        // prevent unnecessary battery drain by alarms.
         //
-        // Also set alarms for both that day, and a day before the assignment's deadline, to
-        // act as a reminder to the deadline
-        alarmManager.set(AlarmManager.RTC, CURRENT, assignmentPiCurrent);
-        if (PREVIOUS > NOW) alarmManager.set(AlarmManager.RTC, PREVIOUS, assignmentPiPrevious);
+        // Also set alarms for both that day, and a day before the assignment's deadline, to act as a reminder to the
+        // deadline.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC, CURRENT, assignmentPiCurrent);
+            if (PREVIOUS > NOW) alarmManager.setAndAllowWhileIdle(AlarmManager.RTC, PREVIOUS, assignmentPiPrevious);
+        } else {
+            alarmManager.set(AlarmManager.RTC, CURRENT, assignmentPiCurrent);
+            if (PREVIOUS > NOW) alarmManager.set(AlarmManager.RTC, PREVIOUS, assignmentPiPrevious);
+        }
         return true;
     }
 
-    // Truncate lecturer's name to enable user view more of the name because
-    // if the name is too long, the system will add ellipses at the end of the name
-    // thereby removing some important parts of the name.
+    // Truncate lecturer's name to enable user view more of the name because if the name is too long, the system will
+    // add ellipses at the end of the name, thereby removing some important parts of the name.
     private String truncateLecturerName(String fullName) {
         String[] nameTokens = fullName.split(" ");
 

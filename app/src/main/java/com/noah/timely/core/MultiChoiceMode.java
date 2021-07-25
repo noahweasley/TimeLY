@@ -61,7 +61,9 @@ public class MultiChoiceMode implements ChoiceMode {
         sbarr.clear();
         indices.clear();
         indices2.clear();
-        LogUtils.debug(this, "cleared-- sbarr : " + sbarr.size() + ", indices: " + indices.size() + ", indices2: " + indices2.size());
+        LogUtils.debug(this,
+                       "cleared-- sbarr : " + sbarr.size() + ", indices: " + indices.size() + ", indices2: " + indices2
+                               .size());
     }
 
     @Override

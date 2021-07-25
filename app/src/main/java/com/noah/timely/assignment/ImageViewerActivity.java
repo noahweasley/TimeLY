@@ -31,7 +31,6 @@ import com.noah.timely.gallery.Image;
 import com.noah.timely.gallery.ImageDirectory;
 import com.noah.timely.gallery.ImageListRowHolder;
 import com.noah.timely.gallery.ImageMultiChoiceMode;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,7 +38,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -141,7 +139,6 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                LogUtils.debug(this, "Deleting: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
                 RequestRunner runner = RequestRunner.createInstance();
                 RequestRunner.Builder builder = new RequestRunner.Builder();
                 builder.setOwnerContext(ImageViewerActivity.this)
@@ -166,7 +163,6 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
             List<?>[] genericList = database.getAttachedImagesAsUriList(position);
             mediaUris = (List<Uri>) genericList[0];
             imageList = (List<Image>) genericList[1];
-            LogUtils.debug(this, "Retrieved: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
             runOnUiThread(() -> {
                 imageAdapter.notifyDataSetChanged();
                 doViewUpdate(null);
@@ -196,7 +192,6 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doImageUpdate(UUpdateMessage update) {
         int changePos = update.getPosition();
-        LogUtils.debug(this, "Changed: " + update.getData());
         switch (update.getType()) {
             case INSERT:
                 imageAdapter.notifyItemInserted(changePos);
@@ -207,7 +202,6 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
                 imageAdapter.notifyDataSetChanged();
                 break;
         }
-        LogUtils.debug(this, "Results: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
     }
 
     @Override
@@ -219,7 +213,6 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
 
         indeterminateProgress2.setVisibility(View.VISIBLE);
         String[] uriList = intent.getStringArrayExtra(ARG_URI_LIST);
-        LogUtils.debug(this, "onNewIntent got: " + Arrays.toString(uriList));
 
         ThreadUtils.runBackgroundTask(() -> {
             /* use the intent that started this activity */
@@ -386,7 +379,6 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
                    .setImageList(imageList)
                    .setItemIndices(getCheckedImagesIndices());
 
-            LogUtils.debug(this, "M-Deleting: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
             runner.setRequestParams(builder.getParams())
                   .runRequest(MULTIPLE_DELETE_REQUEST);
 

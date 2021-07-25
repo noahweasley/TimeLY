@@ -32,7 +32,7 @@ public class CourseRowHolder extends RecyclerView.ViewHolder {
             R.drawable.rounded_cl_bd,
             R.drawable.rounded_cl_od,
             R.drawable.rounded_cl_rl,
-    };
+            };
     private SemesterFragment user;
     private CourseAdapter courseAdapter;
     private List<DataModel> cList;

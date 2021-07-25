@@ -23,7 +23,10 @@ public class TimeChangeReceiver extends BroadcastReceiver {
                         || TextUtils.equals(Intent.ACTION_DATE_CHANGED, action);
         if (isTimeChangeEvent) {
             Time time = TimeChangeDetector.requestImmediateTime(context);
-            EventBus.getDefault().post(time);
+            EventBus eventBus = EventBus.getDefault();
+            if (eventBus.hasSubscriberForEvent(Time.class)) {
+                eventBus.post(time);
+            }
         }
     }
 }

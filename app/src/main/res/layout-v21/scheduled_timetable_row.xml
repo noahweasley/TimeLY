@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/timetable_space"
                     android:paddingStart="@dimen/timetable_space"
-                    android:text="@string/default_time_2"
+                    android:text="@string/default_time_3"
                     android:textColor="@android:color/black"
                     android:textStyle="bold"
                     external:layout_constraintStart_toStartOf="parent"
@@ -77,8 +77,9 @@
 
                 <TextView
                     android:id="@+id/name"
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_gap"
                     android:layout_marginTop="@dimen/timetable_space"
                     android:layout_marginEnd="@dimen/timetable_space"
                     android:ellipsize="end"
@@ -89,6 +90,7 @@
                     android:textColor="@android:color/black"
                     android:textStyle="bold"
                     external:layout_constraintEnd_toEndOf="parent"
+                    external:layout_constraintStart_toEndOf="@+id/time"
                     external:layout_constraintTop_toTopOf="parent" />
 
                 <TextView

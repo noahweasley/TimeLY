@@ -59,12 +59,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // FIXME: 6/7/2021 Remove this section of code when app is released
-        startService(new Intent(this, AlarmReSchedulerService.class));
-
         setContentView(R.layout.activity_main);
 
-        if (PreferenceUtils.getPrefValue(this, "update_startup"))
+        if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.UPDATE_ON_STARTUP, true))
             TimelyUpdateUtils.checkForUpdates(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -81,19 +78,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tryActivateTimeChangeDetector(); // start OS time and date detection
 
         // ignore power management service to trigger alarms properly
-        String cancelText = getString(android.R.string.cancel);
+        String cancelText = getString(R.string.later);
         String goText = getString(R.string.go);
         String noticeTitle = getString(R.string.noticeTitle);
+        String neutralText = getString(R.string.never);
         String noticeMessage = getString(R.string.noticeMessage);
-
+        final String RESTRICTION_GRANT = PreferenceUtils.getStringValue(this, PreferenceUtils.RESTRICTION_ACCESS_KEY,
+                                                                        PreferenceUtils.GRANT_ACCESS);
+        final boolean ACCESS_DENIED = RESTRICTION_GRANT.equals(PreferenceUtils.DENY_ACCESS);
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
+            if (!ACCESS_DENIED && !powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
                 // notify user of their actions to remove restrictions on battery optimizations
                 new AlertDialog.Builder(this)
                         .setTitle(noticeTitle)
                         .setMessage(noticeMessage)
                         .setNegativeButton(cancelText, this::requestAction)
+                        .setNeutralButton(neutralText, this::requestAction)
                         .setPositiveButton(goText, this::requestAction)
                         .create()
                         .show();
@@ -105,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void requestAction(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE)
             startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+        else if (which == DialogInterface.BUTTON_NEUTRAL)
+            PreferenceUtils.setStringValue(this, PreferenceUtils.RESTRICTION_ACCESS_KEY, PreferenceUtils.DENY_ACCESS);
         dialog.cancel();
     }
 
@@ -139,11 +142,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    // Because launch mode of this activity is set to single task, this callback will be
-    // invoked. When will this be invoked ? It will be invoked when a user clicked on the
-    // notification to view a particular fragment, but onCreate won't be invoked if the
-    // app is already running but onNewIntent will be invoked so, bring MainActivity to front,
-    // and replace fragment to view.
+    // Because launch mode of this activity is set to single task, this callback will be invoked. When will this be
+    // invoked ? It will be invoked when a user clicked on the notification to view a particular fragment, but
+    // onCreate won't be invoked if the app is already running but onNewIntent will be invoked so, bring MainActivity
+    // to front, and replace fragment to view.
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -207,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             loadFragment(ExamFragment.newInstance());
 
         } /*else if (menuItemId == R.id.alarms) {
+
           loadFragment(AlarmHolderFragment.newInstance());
 
         } */ else if (menuItemId == R.id.settings) {
@@ -247,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             PackageManager packageManager = getPackageManager();
             String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp", devCon = "+2347065478947";
             // send message with emojis
-            int waveEmojiUnicode = 0x1F3FC, clapEmojiUnicode = 0x1F44F,
+            int waveEmojiUnicode = 0x1F44B, clapEmojiUnicode = 0x1F44F,
                     faceTongueEmojiUnicode = 0x1F60B, mobilePhoneEmojiUnicode = 0x1F4F1;
 
             char[] waveEmojiChars = Character.toChars(waveEmojiUnicode);
@@ -262,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     + "\n"
                     + "Device Screen Density: " + DeviceInfoUtil.getScreenDensity(this)
                     + "\n"
-                    + "Screen Resolution (dp) : " + deviceRes[0] + " x " + deviceRes[1];
+                    + "Screen Resolution(dp) : " + deviceRes[0] + " x " + deviceRes[1];
 
             String s1 = "Hi Noah ", s2 = ", TimeLY is a nice app ", s3 = ". However, I would like" +
                     " to report a bug .... My name is ... by the way.";

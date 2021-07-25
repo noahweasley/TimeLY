@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
+import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.core.CountEvent;
 import com.noah.timely.core.DataModel;
@@ -237,6 +238,11 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doCountUpdate(CountEvent countEvent) {
         itemCount.setText(String.valueOf(countEvent.getSize()));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doLayoutRefresh(LayoutRefreshEvent event) {
+        tableRowAdapter.notifyDataSetChanged();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

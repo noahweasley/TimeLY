@@ -119,7 +119,7 @@ public class AlarmReSchedulerService extends Service {
     // register pending scheduled timetables
     private void registerPendingScheduledTimetables(Context context, TimetableModel timetable) {
         String time = timetable.getStartTime();
-        String[] sTime = time.split(": ");
+        String[] sTime = time.split("[: ]");
         String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
         int day = timetable.getCalendarDay();
 
@@ -148,9 +148,16 @@ public class AlarmReSchedulerService extends Service {
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            manager.setExact(AlarmManager.RTC, triggerTime, pi);
-        manager.set(AlarmManager.RTC, triggerTime, pi);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                manager.setExactAndAllowWhileIdle(AlarmManager.RTC, triggerTime, pi);
+            } else {
+                manager.setExact(AlarmManager.RTC, triggerTime, pi);
+            }
+        } else {
+            manager.set(AlarmManager.RTC, triggerTime, pi);
+        }
     }
 
     // register previous timetable
@@ -158,7 +165,7 @@ public class AlarmReSchedulerService extends Service {
         int position = timetable.getChronologicalOrder();
         String time = timetable.getStartTime();
         String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
-        String[] t = timetable.getStartTime().split(": ");
+        String[] t = timetable.getStartTime().split("[: ]");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
@@ -187,9 +194,15 @@ public class AlarmReSchedulerService extends Service {
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            manager.setExact(AlarmManager.RTC, timeInMillis, pi);
-        else manager.set(AlarmManager.RTC, timeInMillis, pi);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                manager.setExactAndAllowWhileIdle(AlarmManager.RTC, timeInMillis, pi);
+            } else {
+                manager.setExact(AlarmManager.RTC, timeInMillis, pi);
+            }
+
+        } else manager.set(AlarmManager.RTC, timeInMillis, pi);
     }
 
     // register pending assignments
@@ -244,8 +257,13 @@ public class AlarmReSchedulerService extends Service {
         //
         // Also set alarms for both that day, and a day before the assignment's deadline, to
         // act as a reminder to the deadline
-        alarmManager.set(AlarmManager.RTC, CURRENT, assignmentPiCurrent);
-        if (PREVIOUS > NOW) alarmManager.set(AlarmManager.RTC, PREVIOUS, assignmentPiPrevious);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC, CURRENT, assignmentPiCurrent);
+            if (PREVIOUS > NOW) alarmManager.setAndAllowWhileIdle(AlarmManager.RTC, PREVIOUS, assignmentPiPrevious);
+        } else {
+            alarmManager.set(AlarmManager.RTC, CURRENT, assignmentPiCurrent);
+            if (PREVIOUS > NOW) alarmManager.set(AlarmManager.RTC, PREVIOUS, assignmentPiPrevious);
+        }
     }
 
     // Truncate lecturer's name to enable user view more of the name because

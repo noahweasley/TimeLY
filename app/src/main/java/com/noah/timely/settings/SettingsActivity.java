@@ -144,6 +144,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 = "Turning this " + (b_state ? "OFF" : "ON") + " will ensure that "
                                 + (b_state ? "12" : "24") + "-hours format is used";
                         pref.setSummary(append);
+                        if (!onStart) EventBus.getDefault().post(new LayoutRefreshEvent());
                         performTimeRefresh();
                     }
                     break;

@@ -1256,6 +1256,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         db.close();
         return resCode != -1;
     }
+
     /**
      * Simply updates the assignment in the database at the specified index at
      * {@link AssignmentModel#getPosition()}
@@ -1747,21 +1748,26 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     * Updates the timetable specified by <code>DAY</code>
+     * Updates the timetable specified by <code>timetableName</code>
      *
-     * @param model the data to update
-     * @param DAY   the timetable to update
+     * @param timetable the data to update
+     * @param timetableName   the timetable to update
      * @return true if timetable was updated
      */
-    public boolean updateTimetableData(TimetableModel model, String DAY) {
+    public boolean updateTimetableData(TimetableModel timetable, String timetableName) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues timeTableData = new ContentValues();
-        timeTableData.put(COLUMN_FULL_COURSE_NAME, sanitizeEntry(model.getFullCourseName()));
-        timeTableData.put(COLUMN_END_TIME, model.getEndTime());
-        timeTableData.put(COLUMN_START_TIME, model.getStartTime());
-        timeTableData.put(COLUMN_COURSE_CODE, model.getCourseCode());
+        timeTableData.put(COLUMN_FULL_COURSE_NAME, sanitizeEntry(timetable.getFullCourseName()));
+        timeTableData.put(COLUMN_END_TIME, timetable.getEndTime());
+        timeTableData.put(COLUMN_START_TIME, timetable.getStartTime());
+        timeTableData.put(COLUMN_COURSE_CODE, timetable.getCourseCode());
 
-        int resultCode = db.update(DAY, timeTableData, COLUMN_ID + " = " + model.getId(), null);
+        if (timetableName.equals(SCHEDULED_TIMETABLE)) {
+            timeTableData.put(COLUMN_IMPORTANCE, timetable.getImportance());
+            timeTableData.put(COLUMN_LECTURER_NAME, sanitizeEntry(timetable.getLecturerName()));
+        }
+
+        int resultCode = db.update(timetableName, timeTableData, COLUMN_ID + " = " + timetable.getId(), null);
         return resultCode != -1;
     }
 

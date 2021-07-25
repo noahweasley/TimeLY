@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
+import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.core.CountEvent;
 import com.noah.timely.core.DataModel;
@@ -232,6 +233,11 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
     public void doEmptyTimetableUpdate(EmptyListEvent event) {
         noTimetableView.setVisibility(tList.isEmpty() ? View.VISIBLE : View.GONE);
         rV_timetable.setVisibility(tList.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doLayoutRefresh(LayoutRefreshEvent event) {
+        rowAdapter.notifyDataSetChanged();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

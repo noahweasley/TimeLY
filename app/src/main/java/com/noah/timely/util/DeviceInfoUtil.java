@@ -3,9 +3,11 @@ package com.noah.timely.util;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
-import com.noah.timely.R;
-
 public class DeviceInfoUtil {
+
+    public static float getScreenDensity(Context context) {
+        return context.getResources().getDisplayMetrics().density;
+    }
 
     /**
      * @param context the user of this action
@@ -18,16 +20,4 @@ public class DeviceInfoUtil {
         return new float[]{dpWidth, dpHeight};
     }
 
-    /**
-     * @param context the user of this action
-     * @return the required dialog resolution in dp
-     */
-    public static float getRequiredDialogWidth(Context context) {
-        float w = context.getResources().getDimension(R.dimen.normal_dialog_width);
-        return getDeviceResolutionDP(context)[0] + w;
-    }
-
-    public static float getScreenDensity(Context context) {
-        return context.getResources().getDisplayMetrics().density;
-    }
 }

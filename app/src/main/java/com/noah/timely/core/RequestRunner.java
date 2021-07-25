@@ -16,12 +16,12 @@ import com.noah.timely.alarms.AlarmReceiver;
 import com.noah.timely.assignment.AUpdateMessage;
 import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.assignment.AssignmentModel;
+import com.noah.timely.assignment.ImageViewerActivity;
 import com.noah.timely.assignment.MultiUpdateMessage2;
 import com.noah.timely.assignment.Reminder;
 import com.noah.timely.assignment.SubmissionNotifier;
 import com.noah.timely.assignment.UUpdateMessage;
 import com.noah.timely.assignment.UriUpdateEvent;
-import com.noah.timely.assignment.ImageViewerActivity;
 import com.noah.timely.courses.CUpdateMessage;
 import com.noah.timely.courses.CourseModel;
 import com.noah.timely.courses.CourseRowHolder;
@@ -38,7 +38,6 @@ import com.noah.timely.timetable.DaysFragment;
 import com.noah.timely.timetable.TUpdateMessage;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.timetable.TimetableNotifier;
-import com.noah.timely.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -135,7 +134,7 @@ public class RequestRunner extends Thread {
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
         for (int i : itemIndices) {
-             dataCache.add(params.getModelList().remove(i));
+            dataCache.add(params.getModelList().remove(i));
         }
 
         // Update UI
@@ -196,7 +195,6 @@ public class RequestRunner extends Thread {
         Integer[] itemIndices = params.getItemIndices();
         List<Uri> mediaUris = params.getMediaUris();
         List<Image> images = params.getImageList();
-        LogUtils.debug(this, "Deleting at: " + Arrays.toString(itemIndices));
         // Reverse array of indices in reversed order, because if the indices are not reversed, an error occurs.
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
@@ -205,8 +203,6 @@ public class RequestRunner extends Thread {
             imgCache.add(images.remove(i));
         }
 
-        LogUtils.debug(this, "Removed: " + Arrays.toString(uriCache.toArray(new Uri[0])));
-        LogUtils.debug(this, "Results: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
         // Update UI
         EventBus.getDefault().post(new MultiUpdateMessage2(MultiUpdateMessage2.EventType.REMOVE));
 
@@ -235,12 +231,8 @@ public class RequestRunner extends Thread {
         List<Uri> mediaUris = params.getMediaUris();
         List<Image> images = params.getImageList();
 
-        LogUtils.debug(this, "Deleting: " + Arrays.toString(mediaUris.toArray(new Uri[0])));
-
         Uri uri = mediaUris.remove(params.getAdapterPosition());
         Image image = images.remove(params.getAdapterPosition());
-
-        LogUtils.debug(this, "Removed: " + uri);
 
         int changePos = params.getAdapterPosition();
         EventBus.getDefault().post(new UUpdateMessage(uri, image, changePos, UUpdateMessage.EventType.REMOVE));

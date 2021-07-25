@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -123,7 +122,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
             errorOccurred = true;
         } else {
             if (!use24 && !start.matches(timeRegex12)) {
-                edt_startTime.setError("12 hours mode only");
+                edt_startTime.setError("12 hours mode");
                 errorOccurred = true;
             }
         }
@@ -133,7 +132,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
             errorOccurred = true;
         } else {
             if (!use24 && !end.matches(timeRegex12)) {
-                edt_endTime.setError("12 hours mode only");
+                edt_endTime.setError("12 hours mode");
                 errorOccurred = true;
             }
         }
@@ -241,8 +240,6 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
         long CURRENT = calendar.getTimeInMillis();
         long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-        Log.d(getClass().getSimpleName(), "Cancelling alarm: " + new Date(timeInMillis));
-
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
         timetableIntent.addCategory("com.noah.timely.scheduled")
@@ -273,8 +270,6 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
         long CURRENT = calendar.getTimeInMillis();
         long triggerTime = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-        Log.d(getClass().getSimpleName(), "Scheduling notification for: " + new Date(triggerTime));
-
         AlarmManager manager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 
         Intent scheduleIntent = new Intent(context, ScheduledTaskNotifier.class)
@@ -283,15 +278,21 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
                 .putExtra(ARG_DAY, day)
                 .addCategory("com.noah.timely.scheduled")
                 .setAction("com.noah.timely.scheduled.addAction")
-                .setDataAndType(
-                        Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
-                        "com.noah.timely.scheduled.dataType");
+                .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
+                                "com.noah.timely.scheduled.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            manager.setExact(AlarmManager.RTC, triggerTime, pi);
-        manager.set(AlarmManager.RTC, triggerTime, pi);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                manager.setExactAndAllowWhileIdle(AlarmManager.RTC, triggerTime, pi);
+            } else {
+                manager.setExact(AlarmManager.RTC, triggerTime, pi);
+            }
+        } else {
+            manager.set(AlarmManager.RTC, triggerTime, pi);
+        }
         playAlertTone(context.getApplicationContext(), SCHEDULED_TIMETABLE);
     }
 

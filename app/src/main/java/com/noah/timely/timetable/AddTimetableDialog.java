@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -230,7 +229,7 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
     }
 
     private void cancelTimetableNotifier(Context context, TimetableModel timetable) {
-        String[] t = timetable.getStartTime().split(":");
+        String[] t = timetable.getStartTime().split("[: ]");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
@@ -248,9 +247,8 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
         Intent timetableIntent = new Intent(context, TimetableNotifier.class);
         timetableIntent.addCategory("com.noah.timely.timetable")
                        .setAction("com.noah.timely.timetable.addAction")
-                       .setDataAndType(
-                               Uri.parse("content://com.noah.timely.add." + timeInMillis),
-                               "com.noah.timely.dataType");
+                       .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
+                                       "com.noah.timely.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
                                                       PendingIntent.FLAG_CANCEL_CURRENT);
@@ -258,12 +256,11 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
         manager.cancel(pi);
     }
 
-    private void scheduleTimetableAlarm(Context context, TimetableModel timetable,
-                                        int pagePosition) {
+    private void scheduleTimetableAlarm(Context context, TimetableModel timetable, int pagePosition) {
         int position = timetable.getChronologicalOrder();
         String time = timetable.getStartTime();
         String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
-        String[] t = timetable.getStartTime().split(":");
+        String[] t = timetable.getStartTime().split("[: ]");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
@@ -277,7 +274,6 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
         long CURRENT = calendar.getTimeInMillis();
         long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-        Log.d(getClass().getSimpleName(), "Scheduling for: " + new Date(timeInMillis));
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent timetableIntent = new Intent(context, TimetableNotifier.class);
@@ -288,9 +284,8 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
                        .putExtra(ARG_PAGE_POSITION, pagePosition)
                        .addCategory("com.noah.timely.timetable")
                        .setAction("com.noah.timely.timetable.addAction")
-                       .setDataAndType(
-                               Uri.parse("content://com.noah.timely.add." + timeInMillis),
-                               "com.noah.timely.dataType");
+                       .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
+                                       "com.noah.timely.dataType");
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
                                                       PendingIntent.FLAG_UPDATE_CURRENT);
