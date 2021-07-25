@@ -141,6 +141,6 @@
     <string name="app_name_multi_colored">Time<font color="#FF2424">LY</font></string>
     <string name="never">NEVER</string>
     <string name="later">LATER</string>
-    <string name="fix_message_1">Fixed image access issues on Android 11 devices</string>
+    <string name="fix_message_1">Fixed report action bug on Android 11 devices</string>
     <string name="fix_message_2">Fixed no-scroll behaviour in Info dialog</string>
 </resources>

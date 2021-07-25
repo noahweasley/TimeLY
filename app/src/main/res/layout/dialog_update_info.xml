@@ -111,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:gravity="start"
+                android:layout_marginBottom="@dimen/layout_gap"
                 android:text="@string/fix_message_2"
                 android:textColor="@android:color/black"
                 external:drawableLeftCompat="@drawable/ic_circle_fill" />
