@@ -32,7 +32,6 @@ import com.noah.timely.R;
 import com.noah.timely.about.TimelyBasicInfoDialog;
 import com.noah.timely.about.TimelyUpdateInfoDialog;
 import com.noah.timely.alarms.AlarmHolderFragment;
-import com.noah.timely.alarms.AlarmReSchedulerService;
 import com.noah.timely.alarms.TimeChangeDetector;
 import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.core.SchoolDatabase;
