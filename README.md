@@ -2,6 +2,18 @@
 
 ## An Android app that manages University students activities
 
+### App presentation
+
+![Presentation](/presentation/1.jpg?raw=true)
+
+![Presentation](/presentation/2.jpg?raw=true)
+
+![Presentation](/presentation/3.jpg?raw=true)
+
+![Presentation](/presentation/4.jpg?raw=true)
+
+![Presentation](/presentation/5.jpg?raw=true)
+
 ### Application package usages
 
 * **about**: Package housing everything related to description of both the contributors to this project
