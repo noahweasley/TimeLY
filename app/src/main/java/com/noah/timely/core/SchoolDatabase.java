@@ -87,6 +87,13 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_SNOOZED_TIME = "Snoozed_Time";
     private static final String COLUMN_SNOOZE_STAT = "Snoozed";
 
+    private static final String TODO_TABLE = "Todo";
+    private static final String COLUMN_TODO_CATEGORY = "Category";
+    private static final String COLUMN_TODO_DESCRIPTION = "Description";
+    private static final String COLUMN_TODO_TITLE = "Title";
+    private static final String COLUMN_TODO_DATE = "Completion_date";
+    private static final String COLUMN_TODO_TIME = "Completion_time";
+
     private static boolean mDeleting;
 
     private final String TAG = "SchoolDatabase";
@@ -94,7 +101,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     private final Context context;
 
     public SchoolDatabase(@Nullable Context context) {
-        super(context, "SchoolDatabase.db", null, 1);
+        super(context, "SchoolDatabase.db", null, 2);
         this.context = context;
     }
 
@@ -105,6 +112,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      */
     public static boolean isDeleteTaskRunning() {
         return mDeleting;
+    }
+
+    public List<DataModel> getTodos() {
+        return null;
     }
 
     /**
@@ -207,7 +218,21 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Unused for now, this is just the first version of the app
+        // add or drop tables here
+        if (oldVersion == 1 && newVersion == 2) createTodoListTable(db);
+    }
+
+    private void createTodoListTable(SQLiteDatabase db) {
+
+        String createTodoTables_stmt = "CREATE TABLE " + TODO_TABLE + " (" +
+                COLUMN_ID + " INTEGER, " +
+                COLUMN_TODO_CATEGORY + " TEXT," +
+                COLUMN_TODO_TITLE + " TEXT," +
+                COLUMN_TODO_DESCRIPTION + " TEXT," +
+                COLUMN_TODO_TIME + " TEXT," +
+                COLUMN_TODO_DATE + " TEXT )";
+
+        db.execSQL(createTodoTables_stmt);
     }
 
     private void createExamTables(SQLiteDatabase db, int weekCount) {
@@ -376,8 +401,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
             sortElementCursor.close();
             // Compare all the former timetable entries in database with this timetable entry
-            Comparator<? super TimetableModel> idComparator
-                    = (t1, t2) -> Integer.compare(t1.getId(), t2.getId());
+            Comparator<? super TimetableModel> idComparator = (t1, t2) -> Integer.compare(t1.getId(), t2.getId());
             // impossible to sort timetable entries, linear-search instead
             int searchIndex = linearSearch(timetables, timetable, idComparator);
             return resCode != -1 ? new int[]{searchIndex, timetable.getId()}
@@ -1750,8 +1774,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     /**
      * Updates the timetable specified by <code>timetableName</code>
      *
-     * @param timetable the data to update
-     * @param timetableName   the timetable to update
+     * @param timetable     the data to update
+     * @param timetableName the timetable to update
      * @return true if timetable was updated
      */
     public boolean updateTimetableData(TimetableModel timetable, String timetableName) {
@@ -1887,7 +1911,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues uriValues = new ContentValues();
 
-        Log.d(TAG, "deleteImage() called with: position = [" + position + "], uri = [" + uri + "]");
         String uris = getAttachedImagesAsString(position).replace(uri.toString() + ";", "");
         uriValues.put(COLUMN_ATTACHED_IMAGE, uris);
 

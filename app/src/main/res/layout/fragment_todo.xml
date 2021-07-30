@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:external="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".todo.TodoFragment">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        external:layout_constraintBottom_toBottomOf="parent"
+        external:layout_constraintEnd_toEndOf="parent"
+        external:layout_constraintStart_toStartOf="parent"
+        external:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/p_general"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/todo_group_height"
+                android:layout_margin="@dimen/todo_group_margin"
+                android:background="@drawable/bg_todo"
+                external:layout_constraintEnd_toStartOf="@id/p_work"
+                external:layout_constraintStart_toStartOf="parent"
+                external:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/img_tak_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintVertical_bias="0.173"
+                    external:srcCompat="@drawable/ic_outline_assignment_24" />
+
+                <TextView
+                    android:id="@+id/all_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/all"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/img_tak_all"
+                    external:layout_constraintTop_toBottomOf="@+id/img_tak_all"
+                    external:layout_constraintVertical_bias="0.45" />
+
+                <TextView
+                    android:id="@+id/task_count_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_task_number"
+                    android:textSize="18sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/all_category"
+                    external:layout_constraintTop_toBottomOf="@+id/all_category"
+                    external:layout_constraintVertical_bias="0.13" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/p_work"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/todo_group_height"
+                android:layout_margin="@dimen/todo_group_margin"
+                android:background="@drawable/bg_todo"
+                external:layout_constraintEnd_toEndOf="parent"
+                external:layout_constraintStart_toEndOf="@id/p_general"
+                external:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/img_work"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintVertical_bias="0.17000002"
+                    external:srcCompat="@drawable/ic_baseline_work_outline_24" />
+
+                <TextView
+                    android:id="@+id/category_work"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/work"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/img_work"
+                    external:layout_constraintTop_toBottomOf="@+id/img_work"
+                    external:layout_constraintVertical_bias="0.45" />
+
+                <TextView
+                    android:id="@+id/task_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_task_number"
+                    android:textSize="18sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/category_work"
+                    external:layout_constraintTop_toBottomOf="@+id/category_work"
+                    external:layout_constraintVertical_bias="0.13" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/p_music"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/todo_group_height"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_todo"
+                external:layout_constraintEnd_toEndOf="@id/p_general"
+                external:layout_constraintStart_toStartOf="@+id/p_general"
+                external:layout_constraintTop_toBottomOf="@id/p_general">
+
+                <ImageView
+                    android:id="@+id/img_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintVertical_bias="0.173"
+                    external:srcCompat="@drawable/ic_baseline_headset_24" />
+
+                <TextView
+                    android:id="@+id/music_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/music"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/img_music"
+                    external:layout_constraintTop_toBottomOf="@+id/img_music"
+                    external:layout_constraintVertical_bias="0.45" />
+
+                <TextView
+                    android:id="@+id/task_count_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_task_number"
+                    android:textSize="18sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/music_category"
+                    external:layout_constraintTop_toBottomOf="@+id/music_category"
+                    external:layout_constraintVertical_bias="0.13" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/travel"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/todo_group_height"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_todo"
+                external:layout_constraintEnd_toEndOf="@+id/p_work"
+                external:layout_constraintStart_toStartOf="@+id/p_work"
+                external:layout_constraintTop_toBottomOf="@+id/p_work">
+
+                <ImageView
+                    android:id="@+id/img_tak_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintVertical_bias="0.173"
+                    external:srcCompat="@drawable/ic_baseline_flight_24" />
+
+                <TextView
+                    android:id="@+id/all_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/travel"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/img_tak_all"
+                    external:layout_constraintTop_toBottomOf="@+id/img_tak_all"
+                    external:layout_constraintVertical_bias="0.45" />
+
+                <TextView
+                    android:id="@+id/task_count_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_task_number"
+                    android:textSize="18sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/all_category"
+                    external:layout_constraintTop_toBottomOf="@+id/all_category"
+                    external:layout_constraintVertical_bias="0.13" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/p_study"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/todo_group_height"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_todo"
+                external:layout_constraintEnd_toEndOf="@id/p_general"
+                external:layout_constraintStart_toStartOf="@+id/p_general"
+                external:layout_constraintTop_toBottomOf="@+id/p_music">
+
+                <ImageView
+                    android:id="@+id/img_tak_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintVertical_bias="0.173"
+                    external:srcCompat="@drawable/ic_outline_assignment_24" />
+
+                <TextView
+                    android:id="@+id/all_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/study"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/img_tak_all"
+                    external:layout_constraintTop_toBottomOf="@+id/img_tak_all"
+                    external:layout_constraintVertical_bias="0.45" />
+
+                <TextView
+                    android:id="@+id/task_count_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_task_number"
+                    android:textSize="18sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/all_category"
+                    external:layout_constraintTop_toBottomOf="@+id/all_category"
+                    external:layout_constraintVertical_bias="0.13" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/p_home"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/todo_group_height"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_todo"
+                external:layout_constraintEnd_toEndOf="@+id/p_work"
+                external:layout_constraintStart_toStartOf="@+id/p_work"
+                external:layout_constraintTop_toBottomOf="@+id/travel">
+
+                <ImageView
+                    android:id="@+id/img_tak_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintVertical_bias="0.173"
+                    external:srcCompat="@drawable/ic_outline_assignment_24" />
+
+                <TextView
+                    android:id="@+id/all_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/home"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/img_tak_all"
+                    external:layout_constraintTop_toBottomOf="@+id/img_tak_all"
+                    external:layout_constraintVertical_bias="0.45" />
+
+                <TextView
+                    android:id="@+id/task_count_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_task_number"
+                    android:textSize="18sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/all_category"
+                    external:layout_constraintTop_toBottomOf="@+id/all_category"
+                    external:layout_constraintVertical_bias="0.13" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/p_creativity"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/todo_group_height"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_todo"
+                external:layout_constraintEnd_toEndOf="@id/p_general"
+                external:layout_constraintStart_toStartOf="@+id/p_general"
+                external:layout_constraintTop_toBottomOf="@id/p_study">
+
+                <ImageView
+                    android:id="@+id/img_tak_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintVertical_bias="0.173"
+                    external:srcCompat="@drawable/ic_outline_assignment_24" />
+
+                <TextView
+                    android:id="@+id/all_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/creativity"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/img_tak_all"
+                    external:layout_constraintTop_toBottomOf="@+id/img_tak_all"
+                    external:layout_constraintVertical_bias="0.45" />
+
+                <TextView
+                    android:id="@+id/task_count_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_task_number"
+                    android:textSize="18sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/all_category"
+                    external:layout_constraintTop_toBottomOf="@+id/all_category"
+                    external:layout_constraintVertical_bias="0.13" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/p_shopping"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/todo_group_height"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_todo"
+                external:layout_constraintEnd_toEndOf="@+id/p_work"
+                external:layout_constraintStart_toStartOf="@+id/p_work"
+                external:layout_constraintTop_toBottomOf="@+id/p_home">
+
+                <ImageView
+                    android:id="@+id/img_tak_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintVertical_bias="0.173"
+                    external:srcCompat="@drawable/ic_outline_assignment_24" />
+
+                <TextView
+                    android:id="@+id/all_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/shopping"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/img_tak_all"
+                    external:layout_constraintTop_toBottomOf="@+id/img_tak_all"
+                    external:layout_constraintVertical_bias="0.45" />
+
+                <TextView
+                    android:id="@+id/task_count_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_task_number"
+                    android:textSize="18sp"
+                    external:layout_constraintBottom_toBottomOf="parent"
+                    external:layout_constraintStart_toStartOf="@+id/all_category"
+                    external:layout_constraintTop_toBottomOf="@+id/all_category"
+                    external:layout_constraintVertical_bias="0.13" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

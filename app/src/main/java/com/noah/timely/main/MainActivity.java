@@ -40,6 +40,7 @@ import com.noah.timely.exam.ExamFragment;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TimetableFragment;
+import com.noah.timely.todo.TodoFragment;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.PreferenceUtils;
@@ -207,6 +208,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             loadFragment(ExamFragment.newInstance());
 
+        } else if (menuItemId == R.id.todo_list) {
+
+            loadFragment(TodoFragment.newInstance());
+
         } /*else if (menuItemId == R.id.alarms) {
 
           loadFragment(AlarmHolderFragment.newInstance());
@@ -267,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     + "Screen Resolution(dp) : " + deviceRes[0] + " x " + deviceRes[1];
 
             String s1 = "Hi Noah ", s2 = ", TimeLY is a nice app ", s3 = ". However, I would like" +
-                    " to report a bug .... My name is ... by the way.";
+                    " to report a bug **[___]** My name is **[___]** by the way.";
 
             String message = s1 + String.valueOf(waveEmojiChars) + s2
                     + String.valueOf(clapEmojiChars) + s3 + String.valueOf(faceTongueEmojiChars) + devSpecs;

@@ -61,10 +61,10 @@
         android:layout_height="0dp"
         external:layout_constraintBottom_toTopOf="@id/indicator"
         external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintHorizontal_bias="0.0"
-        external:layout_constraintVertical_chainStyle="packed"
+        external:layout_constraintHorizontal_bias="1.0"
         external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@id/toolbar">
+        external:layout_constraintTop_toBottomOf="@id/toolbar"
+        external:layout_constraintVertical_chainStyle="packed">
 
     </androidx.viewpager2.widget.ViewPager2>
 

@@ -70,4 +70,6 @@
     <dimen name="timetable_list_height">130dp</dimen>
     <dimen name="scheduled_list_row_height">165dp</dimen>
     <dimen name="image_row_size_2B">280dp</dimen>
+    <dimen name="todo_group_margin">8dp</dimen>
+    <dimen name="todo_group_height">200dp</dimen>
 </resources>

@@ -24,5 +24,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="light_grey">#ACABAB</color>
+    <color name="color_td_1">#F1EFF6</color>
+    <color name="color_td_2">#DCB5C2</color>
+    <color name="color_td_3">#B4DCDC</color>
+    <color name="color_td_4">#9899AE</color>
+    <color name="color_td_5">#383345</color>
+    <color name="color_td_6">#6E6990</color>
+    <color name="color_td_7">#CF514B</color>
+    <color name="color_td_8">#8C8F96</color>
     <!--  Spotify Dark Theme  -->
 </resources>

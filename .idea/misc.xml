@@ -52,4 +52,11 @@
   <component name="StateStore">
     <option name="mFastbootTarget" value="boot" />
   </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
+  </component>
 </project>

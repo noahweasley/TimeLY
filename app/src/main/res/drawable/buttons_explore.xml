@@ -4,7 +4,7 @@
     <item android:state_pressed="false">
         <shape>
             <solid android:color="@color/accent" />
-            <corners android:radius="10dp" />
+            <corners android:radius="2000dp" />
             <padding android:left="20dp" android:right="20dp" />
             <stroke android:color="@color/accent_stroke" />
         </shape>

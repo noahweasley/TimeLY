@@ -45,6 +45,11 @@
                     android:icon="@drawable/ic_event_note"
                     android:title="@string/exam_timetable" />
 
+                <item
+                    android:id="@+id/todo_list"
+                    android:icon="@drawable/ic_baseline_event_available_24"
+                    android:title="@string/todo_list" />
+
 <!--                <item-->
 <!--                    android:id="@+id/alarms"-->
 <!--                    android:icon="@drawable/ic_alarm"-->
