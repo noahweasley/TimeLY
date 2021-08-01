@@ -10,6 +10,9 @@
         android:smallScreens="false"
         android:xlargeScreens="true" />
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
@@ -58,6 +61,7 @@
         <activity
             android:name=".main.SplashScreen"
             android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
             android:windowSoftInputMode="adjustPan">
@@ -71,6 +75,7 @@
         <activity
             android:name=".main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.SlideVertical_caller"
@@ -173,7 +178,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-        <receiver android:name=".alarms.AlarmReScheduler">
+        <activity
+            android:name=".todo.AddTodoActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <receiver
+            android:name=".alarms.AlarmReScheduler"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -184,7 +197,9 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".assignment.AssignmentSchedulerChecker">
+        <receiver
+            android:name=".assignment.AssignmentSchedulerChecker"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -201,14 +216,15 @@
         <receiver android:name=".assignment.SubmissionNotifier" />
         <receiver android:name=".scheduled.ScheduledTaskNotifier" />
 
-        <receiver android:name="com.noah.timely.alarms.TimeChangeReceiver">
+        <receiver
+            android:name="com.noah.timely.alarms.TimeChangeReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.DATE_CHANGED" />
             </intent-filter>
         </receiver>
-
 
     </application>
 
