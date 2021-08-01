@@ -4,8 +4,8 @@
     <item android:state_pressed="false">
         <shape>
             <solid android:color="@color/accent" />
-            <corners android:radius="2000dp" />
-            <padding android:left="20dp" android:right="20dp" />
+            <corners android:radius="10dp" />
+            <padding android:left="40dp" android:right="40dp" />
             <stroke android:color="@color/accent_stroke" />
         </shape>
     </item>
@@ -14,7 +14,7 @@
         <shape>
             <solid android:color="@color/colorAccentDarker" />
             <corners android:radius="10dp" />
-            <padding android:left="20dp" android:right="20dp" />
+            <padding android:left="40dp" android:right="40dp" />
             <stroke android:color="@color/accent_stroke" />
         </shape>
     </item>
