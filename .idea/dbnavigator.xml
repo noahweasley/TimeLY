@@ -24,10 +24,14 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="709e0c99-3282-494c-8fa7-dbe62636ced1">
+        <schema name="main" object-types="table, view" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="2443a1ca-5c12-4fdc-9ca5-5d6ae9b8d7cf">
+    <connection id="709e0c99-3282-494c-8fa7-dbe62636ced1">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
@@ -35,10 +39,10 @@
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="2443a1ca-5c12-4fdc-9ca5-5d6ae9b8d7cf" />
+    <connection id="709e0c99-3282-494c-8fa7-dbe62636ced1" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="2443a1ca-5c12-4fdc-9ca5-5d6ae9b8d7cf" dataset="main.Assignment" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="709e0c99-3282-494c-8fa7-dbe62636ced1" dataset="main.General_Todo" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -66,13 +70,13 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="2443a1ca-5c12-4fdc-9ca5-5d6ae9b8d7cf" active="true">
+      <connection id="709e0c99-3282-494c-8fa7-dbe62636ced1" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="3.21" />
+          <database-version value="3.3" />
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />
