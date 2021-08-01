@@ -1,11 +1,16 @@
 package com.noah.timely.exam;
 
-import android.annotation.SuppressLint;
+import static com.noah.timely.util.Utility.Alert;
+import static com.noah.timely.util.Utility.DAYS_3;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.playAlertTone;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -26,12 +31,15 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.ThreadUtils;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.noah.timely.util.Utility.Alert;
-import static com.noah.timely.util.Utility.DAYS_3;
-import static com.noah.timely.util.Utility.playAlertTone;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 @SuppressWarnings("ConstantConditions")
 public class AddExamDialog extends DialogFragment implements View.OnClickListener {
@@ -41,6 +49,9 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
     private CheckBox cbx_clear;
     private String examDay;
     private SchoolDatabase database;
+    private FragmentManager manager;
+    public static final int UNIT_12 = 12;
+    public static final int UNIT_24 = 24;
 
     /**
      * Make this dialog visible to the user
@@ -53,7 +64,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_PAGE_POSITION, pagePos);
         setArguments(bundle);
-        FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
+        manager = ((FragmentActivity) context).getSupportFragmentManager();
         show(manager, AddExamDialog.class.getName());
     }
 
@@ -93,30 +104,44 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
         String start = edt_startTime.getText().toString();
         String code = database.getCourseCodeFromName(course);
 
-        String timeRegex  /* 24 Hours format */
-                = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+        String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+        String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
 
-        boolean errorOccurred = false;
-        if (!start.matches(timeRegex)) {
+        boolean errorOccurred = false, use24 = isUserPreferred24Hours(getContext());
+
+        if (use24 && !start.matches(timeRegex24)) {
             edt_startTime.setError("Format: hh:ss");
             errorOccurred = true;
+        } else {
+            if (!use24 && !start.matches(timeRegex12)) {
+                edt_startTime.setError("12 hours mode");
+                errorOccurred = true;
+            }
         }
 
-        if (!end.matches(timeRegex)) {
+        if (use24 && !end.matches(timeRegex24)) {
             edt_endTime.setError("Format: hh:ss");
             errorOccurred = true;
+        } else {
+            if (!use24 && !end.matches(timeRegex12)) {
+                edt_endTime.setError("12 hours mode");
+                errorOccurred = true;
+            }
         }
 
         if (TextUtils.isEmpty(course)) {
             atv_courseName.setError("Required");
             errorOccurred = true;
         }
+
         if (errorOccurred) return false;
+
+        start = use24 ? start : convert(start, UNIT_24);
+        end = use24 ? end : convert(end, UNIT_24);
 
         int pagePosition = getArguments().getInt(ARG_PAGE_POSITION);
 
-        @SuppressLint("DefaultLocale")
-        String examWeek = String.format("%s_%d", "WEEK", pagePosition + 1);
+        String examWeek = String.format(Locale.US, "%s_%d", "WEEK", pagePosition + 1);
         ExamModel exam = new ExamModel(code, course, start, end);
         exam.setWeek(examWeek);
         exam.setDay(examDay);
@@ -128,9 +153,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
                 if (data[1] != -1) {
                     exam.setId(data[1]);
                     exam.setChronologicalOrder(data[0]);
-                    EventBus.getDefault().post(new EUpdateMessage(exam,
-                                                                  EUpdateMessage.EventType.NEW,
-                                                                  pagePosition));
+                    EventBus.getDefault().post(new EUpdateMessage(exam, EUpdateMessage.EventType.NEW, pagePosition));
                     playAlertTone(context.getApplicationContext(), Alert.EXAM);
                 } else {
                     Toast.makeText(context, "An Error occurred", Toast.LENGTH_LONG).show();
@@ -143,6 +166,20 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
             new ErrorDialog().showErrorMessage(getContext(), builder.build());
         }
         return true;
+    }
+
+    @SuppressWarnings("all")
+    private String convert(String time, int unit) {
+        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+        Date date;
+        try {
+            date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
+        } catch (ParseException e) {
+            return null;
+        }
+        return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
     }
 
     @Override
@@ -183,18 +220,19 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
             edt_startTime = findViewById(R.id.start_time);
             edt_endTime = findViewById(R.id.end_time);
 
+            edt_endTime.setOnTouchListener(this::onTouch);
+            edt_startTime.setOnTouchListener(this::onTouch);
+
             SchoolDatabase database = new SchoolDatabase(getContext());
-            ArrayAdapter<String> courseAdapter
-                    = new ArrayAdapter<>(getContext(),
-                                         android.R.layout.simple_dropdown_item_1line,
-                                         database.getAllRegisteredCourses());
+            ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(getContext(),
+                                                                    android.R.layout.simple_dropdown_item_1line,
+                                                                    database.getAllRegisteredCourses());
             atv_courseName.setAdapter(courseAdapter);
 
             Spinner spin_days = findViewById(R.id.day_spin);
-            ArrayAdapter<String> dayAdapter
-                    = new ArrayAdapter<>(getContext(),
-                                         android.R.layout.simple_spinner_item,
-                                         DAYS_3);
+            ArrayAdapter<String> dayAdapter = new ArrayAdapter<>(getContext(),
+                                                                 android.R.layout.simple_spinner_item,
+                                                                 DAYS_3);
             dayAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
             spin_days.setAdapter(dayAdapter);
             spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -211,6 +249,43 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
             });
             database.close();
         }
+
+        private boolean onTouch(View view, MotionEvent event) {
+            EditText editText = (EditText) view;
+            TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute,
+                                                      int second) -> {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+
+                SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+                SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+                String parsedTime = isUserPreferred24Hours(getContext()) ? timeFormat24.format(calendar.getTime())
+                                                                         : timeFormat12.format(calendar.getTime());
+
+                editText.setText(parsedTime);
+            };
+
+            final int DRAWABLE_RIGHT = 2;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+                if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+                    Calendar calendar = Calendar.getInstance();
+
+                    TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
+                                                                        calendar.get(Calendar.HOUR_OF_DAY),
+                                                                        calendar.get(Calendar.MINUTE),
+                                                                        isUserPreferred24Hours(getContext()));
+                    dpd.setVersion(TimePickerDialog.Version.VERSION_2);
+                    dpd.show(manager, "TimePickerDialog");
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
 }

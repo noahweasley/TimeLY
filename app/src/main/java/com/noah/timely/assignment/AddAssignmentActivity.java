@@ -1,14 +1,23 @@
 package com.noah.timely.assignment;
 
+import static com.noah.timely.assignment.AssignmentFragment.DATE;
+import static com.noah.timely.assignment.AssignmentFragment.DESCRIPTION;
+import static com.noah.timely.assignment.AssignmentFragment.LECTURER_NAME;
+import static com.noah.timely.assignment.AssignmentFragment.TITLE;
+import static com.noah.timely.util.Utility.Alert;
+import static com.noah.timely.util.Utility.playAlertTone;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +30,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,20 +39,16 @@ import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.gallery.ImageDirectory;
 import com.noah.timely.gallery.ImageGallery;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import static com.noah.timely.assignment.AssignmentFragment.DATE;
-import static com.noah.timely.assignment.AssignmentFragment.DESCRIPTION;
-import static com.noah.timely.assignment.AssignmentFragment.LECTURER_NAME;
-import static com.noah.timely.assignment.AssignmentFragment.TITLE;
-import static com.noah.timely.util.Utility.Alert;
-import static com.noah.timely.util.Utility.playAlertTone;
 
 public class AddAssignmentActivity extends AppCompatActivity {
     public static final String SCHEDULE_POS = "Schedule position";
@@ -64,14 +70,18 @@ public class AddAssignmentActivity extends AppCompatActivity {
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
         database = new SchoolDatabase(this);
-
         setContentView(R.layout.add_assignment);
+
+        boolean shouldEdit = getIntent().getAction().equals("Edit");
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // initialize the course code to the first entry to prevent a null value entry
         Spinner spin_courseCode = findViewById(R.id.chooseCourse);
         Button submitButton = findViewById(R.id.submitButton);
+        submitButton.setText(shouldEdit ? R.string.update_text : R.string.register_text);
+
         FloatingActionButton btn_gallery = findViewById(R.id.gallery);
 
         edt_lecturerName = findViewById(R.id.choiceLecturer);
@@ -82,8 +92,10 @@ public class AddAssignmentActivity extends AppCompatActivity {
         lecturerBox = findViewById(R.id.lecturer_box);
         titleBox = findViewById(R.id.title_box);
         descriptionBox = findViewById(R.id.description_box);
+        setupDateForm();
 
         submitButton.setOnClickListener(v -> saveOrUpdateAssignment());
+
         btn_gallery.setOnClickListener(
                 v -> {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
@@ -116,7 +128,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
 
-        if (getIntent().getAction().equals("Edit")) {
+        if (shouldEdit) {
             isToEdit = true;
             String lecturerName = intent.getStringExtra(LECTURER_NAME);
             String title = intent.getStringExtra(TITLE);
@@ -129,6 +141,60 @@ public class AddAssignmentActivity extends AppCompatActivity {
             edt_description.setText(description);
             edt_date.setText(date);
         }
+    }
+
+    private void setupDateForm() {
+
+        DatePickerDialog.OnDateSetListener odsl = (view, year, monthOfYear, dayOfMonth) -> {
+            String parsedDate;
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, monthOfYear, dayOfMonth);
+
+            SimpleDateFormat d_dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            SimpleDateFormat u_s_dateFormat = new SimpleDateFormat("dd_MM_yyyy", Locale.US);
+            SimpleDateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+            SimpleDateFormat p_dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+
+            String dateKey = "a_date_format";
+            String ddf = getString(R.string.default_date_format);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            switch (sharedPreferences.getString(dateKey, ddf)) {
+                case "dd_mm_yyyy":
+                    parsedDate = u_s_dateFormat.format(calendar.getTime());
+                    break;
+                case "dd/mm/yyyy":
+                    parsedDate = s_dateFormat.format(calendar.getTime());
+                    break;
+                case "dd.mm.yyyy":
+                    parsedDate = p_dateFormat.format(calendar.getTime());
+                    break;
+                default:
+                    parsedDate = d_dateFormat.format(calendar.getTime());
+                    break;
+            }
+
+            edt_date.setText(parsedDate);
+        };
+
+        edt_date.setOnTouchListener((v, event) -> {
+            final int DRAWABLE_RIGHT = 2;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                int drawableWidth = edt_date.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+                if (event.getX() >= (edt_date.getWidth() - drawableWidth)) {
+                    Calendar calendar = Calendar.getInstance();
+                    DatePickerDialog dpd = DatePickerDialog.newInstance(odsl,
+                                                                        calendar.get(Calendar.YEAR),
+                                                                        calendar.get(Calendar.MONTH),
+                                                                        calendar.get(Calendar.DAY_OF_MONTH));
+                    dpd.setVersion(DatePickerDialog.Version.VERSION_2);
+                    dpd.show(getSupportFragmentManager(), "DatePickerDialog");
+                    return true;
+                }
+            }
+            return false;
+        });
+
     }
 
     @Override
@@ -163,7 +229,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        getSupportActionBar().setTitle("Register Assignment");
+        getSupportActionBar().setTitle(isToEdit ? "Update Assignment" : "Register Assignment");
     }
 
     private void saveOrUpdateAssignment() {

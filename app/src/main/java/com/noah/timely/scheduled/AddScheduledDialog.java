@@ -1,5 +1,13 @@
 package com.noah.timely.scheduled;
 
+import static android.content.Context.ALARM_SERVICE;
+import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
+import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
+import static com.noah.timely.util.Utility.DAYS;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.playAlertTone;
+
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -11,6 +19,7 @@ import android.os.Bundle;
 import android.os.Process;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -33,6 +42,7 @@ import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.util.ThreadUtils;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -42,14 +52,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import static android.content.Context.ALARM_SERVICE;
-import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
-import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
-import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
-import static com.noah.timely.util.Utility.DAYS;
-import static com.noah.timely.util.Utility.isUserPreferred24Hours;
-import static com.noah.timely.util.Utility.playAlertTone;
 
 public class AddScheduledDialog extends DialogFragment implements View.OnClickListener {
     public static final String ARG_TIME = "Scheduled time";
@@ -62,9 +64,10 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
     private CheckBox cbx_clear;
     public static final int UNIT_12 = 12;
     public static final int UNIT_24 = 24;
+    private FragmentManager manager;
 
     public void show(Context context) {
-        FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
+        manager = ((FragmentActivity) context).getSupportFragmentManager();
         show(manager, AddScheduledDialog.class.getName());
     }
 
@@ -154,8 +157,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
         start = use24 ? start : convert(start, UNIT_24);
         end = use24 ? end : convert(end, UNIT_24);
 
-        TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance,
-                                                         selectedDay);
+        TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance, selectedDay);
 
         Context context = getContext();
         if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT)) {
@@ -334,6 +336,9 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
             edt_lecturerName = findViewById(R.id.lecturer_name);
             imp_group = findViewById(R.id.importance_group);
 
+            edt_endTime.setOnTouchListener(this::onTouch);
+            edt_startTime.setOnTouchListener(this::onTouch);
+
             SchoolDatabase database = new SchoolDatabase(getContext());
             ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(getContext(),
                                                                     android.R.layout.simple_dropdown_item_1line,
@@ -370,6 +375,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
 
                 edt_endTime.setText(data.getEndTime());
                 edt_startTime.setText(data.getStartTime());
+
                 atv_courseName.setText(data.getFullCourseName());
                 edt_lecturerName.setText(data.getLecturerName());
                 spin_days.setSelection(data.getDayIndex());
@@ -387,5 +393,40 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
             database.close();
         }
 
+        private boolean onTouch(View view, MotionEvent event) {
+            EditText editText = (EditText) view;
+            TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute,
+                                                      int second) -> {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+
+                SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+                SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+                String parsedTime = isUserPreferred24Hours(getContext()) ? timeFormat24.format(calendar.getTime())
+                                                                         : timeFormat12.format(calendar.getTime());
+
+                editText.setText(parsedTime);
+            };
+
+            final int DRAWABLE_RIGHT = 2;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+                if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+                    Calendar calendar = Calendar.getInstance();
+
+                    TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
+                                                                        calendar.get(Calendar.HOUR_OF_DAY),
+                                                                        calendar.get(Calendar.MINUTE),
+                                                                        isUserPreferred24Hours(getContext()));
+                    dpd.setVersion(TimePickerDialog.Version.VERSION_2);
+                    dpd.show(manager, "TimePickerDialog");
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

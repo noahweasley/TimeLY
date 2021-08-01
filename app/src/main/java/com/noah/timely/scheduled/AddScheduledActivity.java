@@ -1,5 +1,12 @@
 package com.noah.timely.scheduled;
 
+import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
+import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
+import static com.noah.timely.util.Utility.DAYS;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+import static com.noah.timely.util.Utility.playAlertTone;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +17,7 @@ import android.os.Bundle;
 import android.os.Process;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,8 +35,8 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.timetable.TimetableModel;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -38,13 +46,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
-import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
-import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
-import static com.noah.timely.util.Utility.DAYS;
-import static com.noah.timely.util.Utility.isUserPreferred24Hours;
-import static com.noah.timely.util.Utility.playAlertTone;
 
 /**
  * A clone of {@link AddScheduledDialog} that would be used as an alternate to adding scheduled timetables
@@ -99,6 +100,9 @@ public class AddScheduledActivity extends AppCompatActivity {
         edt_lecturerName = findViewById(R.id.lecturer_name);
         imp_group = findViewById(R.id.importance_group);
 
+        edt_endTime.setOnTouchListener(this::onTouch);
+        edt_startTime.setOnTouchListener(this::onTouch);
+
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
                                                                 android.R.layout.simple_dropdown_item_1line,
                                                                 database.getAllRegisteredCourses());
@@ -136,6 +140,7 @@ public class AddScheduledActivity extends AppCompatActivity {
 
             edt_endTime.setText(data.getEndTime());
             edt_startTime.setText(data.getStartTime());
+
             atv_courseName.setText(data.getFullCourseName());
             edt_lecturerName.setText(data.getLecturerName());
             spin_days.setSelection(data.getDayIndex());
@@ -170,6 +175,42 @@ public class AddScheduledActivity extends AppCompatActivity {
         if (isRegistered)
             onBackPressed();
         return isRegistered;
+    }
+
+    private boolean onTouch(View view, MotionEvent event) {
+        EditText editText = (EditText) view;
+        TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute,
+                                                  int second) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+
+            SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+            SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+            String parsedTime = isUserPreferred24Hours(this) ? timeFormat24.format(calendar.getTime())
+                                                             : timeFormat12.format(calendar.getTime());
+
+            editText.setText(parsedTime);
+        };
+
+        final int DRAWABLE_RIGHT = 2;
+
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+            if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+                Calendar calendar = Calendar.getInstance();
+
+                TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
+                                                                    calendar.get(Calendar.HOUR_OF_DAY),
+                                                                    calendar.get(Calendar.MINUTE),
+                                                                    isUserPreferred24Hours(this));
+                dpd.setVersion(TimePickerDialog.Version.VERSION_2);
+                dpd.show(getSupportFragmentManager(), "TimePickerDialog");
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean registerTimetable() {
