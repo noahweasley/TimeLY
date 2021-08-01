@@ -23,13 +23,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
-import com.noah.timely.assignment.AddAssignmentActivity;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.DataMultiChoiceMode;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
@@ -49,26 +49,69 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
     private static final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
     private static final String MULTIPLE_DELETE_REQUEST = "Delete multiple todos";
     private static final String DELETE_REQUEST = "Delete todo";
+    private static final String ARG_TODO_CATEGORY = "Todo category";
+    public static String category;
 
     public static TodoListActivity newInstance() {
         return new TodoListActivity();
+    }
+
+    public static void start(Context context, String category) {
+        Intent starter = new Intent(context, TodoListActivity.class);
+        starter.putExtra(ARG_TODO_CATEGORY, category);
+        context.startActivity(starter);
+    }
+
+    private String retrieveToolbarTitle(String category) {
+        switch (category) {
+            case Constants.TODO_GENERAL:
+                return "All";
+            case Constants.TODO_WORK:
+                return "Work";
+            case Constants.TODO_MUSIC:
+                return "Music";
+            case Constants.TODO_CREATIVITY:
+                return "Creativity";
+            case Constants.TODO_TRAVEL:
+                return "Travel";
+            case Constants.TODO_STUDY:
+                return "Study";
+            case Constants.TODO_FUN:
+                return "Leisure and Fun";
+            case Constants.TODO_HOME:
+                return "Home";
+            case Constants.TODO_MISCELLANEOUS:
+                return "Miscelaneous";
+            case Constants.TODO_SHOPPING:
+                return "Shopping";
+        }
+        return null;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list);
+        database = new SchoolDatabase(this);
+        category = getIntent().getStringExtra(ARG_TODO_CATEGORY);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(retrieveToolbarTitle(category));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        coordinator = findViewById(R.id.coordinator2);
-        notodoView = findViewById(R.id.no_assignment_view);
+        coordinator = findViewById(R.id.coordinator);
+        notodoView = findViewById(R.id.no_todo_view);
         ProgressBar indeterminateProgress = findViewById(R.id.indeterminateProgress);
+        FloatingActionButton fab_add = findViewById(R.id.fab_add_todo);
+        fab_add.setOnClickListener(v -> startActivity(new Intent(this, AddTodoActivity.class)));
+
+        rv_todoList = findViewById(R.id.todo_list);
+        rv_todoList.setLayoutManager(new LinearLayoutManager(this));
+        rv_todoList.setAdapter(adapter = new TodoListAdapter(choiceMode));
 
         ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-            tdList = database.getTodos();
+            tdList = database.getTodos(category);
             runOnUiThread(() -> {
                 boolean empty = tdList.isEmpty();
                 dismissProgressbar(indeterminateProgress);
@@ -80,12 +123,6 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
             });
         });
 
-        FloatingActionButton fab_add = findViewById(R.id.fab_add);
-        fab_add.setOnClickListener(v -> startActivity(new Intent(this, AddAssignmentActivity.class)));
-
-        rv_todoList = findViewById(R.id.list_todo);
-        rv_todoList.setLayoutManager(new LinearLayoutManager(this));
-        rv_todoList.setAdapter(new TodoListAdapter(choiceMode));
     }
 
     @Override
@@ -95,7 +132,7 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
     }
 
     private void dismissProgressbar(ProgressBar indeterminateProgress) {
-
+        indeterminateProgress.setVisibility(View.GONE);
     }
 
     @Override
@@ -131,7 +168,8 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
         @NonNull
         @Override
         public TodoListRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return null;
+            View rowView = getLayoutInflater().inflate(R.layout.todo_list_row, parent, false);
+            return rowHolder = new TodoListRowHolder(rowView);
         }
 
         @Override
@@ -182,6 +220,7 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
 
         /**
          * @return the number of todos that was selected
+         * ,=;.
          */
         public int getCheckedTodosCount() {
             return choiceMode.getCheckedChoiceCount();

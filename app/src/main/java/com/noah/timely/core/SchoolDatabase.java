@@ -20,6 +20,7 @@ import com.noah.timely.courses.CourseModel;
 import com.noah.timely.exam.ExamModel;
 import com.noah.timely.gallery.Image;
 import com.noah.timely.timetable.TimetableModel;
+import com.noah.timely.todo.TodoModel;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.LogUtils;
@@ -29,8 +30,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static com.noah.timely.util.CollectionUtils.linearSearch;
 
@@ -114,10 +117,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         return mDeleting;
     }
 
-    public List<DataModel> getTodos() {
-        return null;
-    }
-
     /**
      * Sort order of list's in the database
      */
@@ -147,7 +146,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         createTimetable(db, TIMETABLE_THURSDAY);
         createTimetable(db, TIMETABLE_FRIDAY);
         createTimetable(db, TIMETABLE_SATURDAY);
-//        createTimetable(db, TIMETABLE_SUNDAY);
 
         // CREATE THE SCHEDULED TIMETABLE
         createTimetable(db, SCHEDULED_TIMETABLE);
@@ -171,6 +169,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         }
 
         createExamTables(db, weekCount);
+        createTodoListTables(db);
         // CREATE ASSIGNMENT DATA TABLE
         String createAssignmentDB_stmt
                 = "CREATE TABLE " + ASSIGNMENT_TABLE +
@@ -216,15 +215,21 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         db.insertOrThrow(PREFERENCE_TABLE, null, values);
     }
 
+    private void createTodoListTables(SQLiteDatabase db) {
+        for (int j = 0; j < TodoModel.CATEGORIES.length; j++)
+            createTodoListTable(db, TodoModel.CATEGORIES[j]);
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // add or drop tables here
-        if (oldVersion == 1 && newVersion == 2) createTodoListTable(db);
+        if (oldVersion == 1 && newVersion == 2) { createTodoListTables(db); }
+
     }
 
-    private void createTodoListTable(SQLiteDatabase db) {
+    private void createTodoListTable(SQLiteDatabase db, String tableName) {
 
-        String createTodoTables_stmt = "CREATE TABLE " + TODO_TABLE + " (" +
+        String createTodoTables_stmt = "CREATE TABLE IF NOT EXISTS " + tableName + " (" +
                 COLUMN_ID + " INTEGER, " +
                 COLUMN_TODO_CATEGORY + " TEXT," +
                 COLUMN_TODO_TITLE + " TEXT," +
@@ -408,8 +413,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                                  : new int[]{-1, -1};
         } else {
             List<String> sList = new ArrayList<>();
-            Cursor chronologyCursor = db.rawQuery("SELECT " + COLUMN_START_TIME
-                                                          + " FROM " + timetableName, null);
+            Cursor chronologyCursor = db.rawQuery("SELECT " + COLUMN_START_TIME + " FROM " + timetableName, null);
 
             while (chronologyCursor.moveToNext()) sList.add(chronologyCursor.getString(0));
 
@@ -1804,9 +1808,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public boolean isCourseAbsent(CourseModel courseModel) {
         SQLiteDatabase db = getReadableDatabase();
 
-        String search_stmt = "SELECT * FROM " + courseModel.getSemester()
-                + " WHERE " + COLUMN_FULL_COURSE_NAME + " = '"
-                + sanitizeEntry(courseModel.getCourseName()) + "'";
+        String search_stmt =
+                "SELECT * FROM " + courseModel.getSemester()
+                        + " WHERE " + COLUMN_FULL_COURSE_NAME + " = '" + sanitizeEntry(courseModel.getCourseName()) + "'";
 
         Cursor searchCursor = db.rawQuery(search_stmt, null);
 
@@ -2026,8 +2030,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     }
 
     // Delete courses at specified indices
-    private boolean deleteMultipleCourses(String SEMESTER, Integer[] itemIndices,
-                                          List<DataModel> data) {
+    private boolean deleteMultipleCourses(String SEMESTER, Integer[] itemIndices, List<DataModel> data) {
         // Transform all indices from Integers to Strings
         if (SEMESTER == null) throw new IllegalArgumentException("Semester can't be null");
 
@@ -2071,5 +2074,66 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      */
     public List<DataModel> getPendingAssignments() {
         return CollectionUtils.filterList(getAssignmentData(), model -> !((AssignmentModel) model).isSubmitted());
+    }
+
+    /**
+     * @param todoCategory the todoCategory
+     * @return the todos specified by <code>todoCategory</code>
+     */
+    public List<DataModel> getTodos(String todoCategory) {
+        List<DataModel> todoModels = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String getTodos_stmt = "SELECT * FROM " + todoCategory;
+        Cursor todoCursor = db.rawQuery(getTodos_stmt, null);
+
+        while (todoCursor.moveToNext()) {
+
+            String category = todoCursor.getString(1);
+            String title = todoCursor.getString(2);
+            String description = todoCursor.getString(3);
+            String todoTime = todoCursor.getString(4);
+            String date = todoCursor.getString(5);
+
+            todoModels.add(new TodoModel(title, description, category, date, todoTime));
+        }
+
+        return todoModels;
+    }
+
+    /**
+     * @return a {@link HashMap} containing all todos, with the category as the key and category size as the value
+     * @see Map
+     * @see HashMap
+     */
+    public Map<String, Integer> getTodoGroupSizes() {
+        final Map<String, Integer> todoMap = new HashMap<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String[] todoGroups = TodoModel.CATEGORIES;
+        int index = 1;
+        int allSize = 0;
+
+        String[] stmts = {"SELECT COUNT (*) FROM " + todoGroups[0], "SELECT COUNT (*) FROM " + todoGroups[1],
+                          "SELECT COUNT (*) FROM " + todoGroups[2], "SELECT COUNT (*) FROM " + todoGroups[3],
+                          "SELECT COUNT (*) FROM " + todoGroups[4], "SELECT COUNT (*) FROM " + todoGroups[5],
+                          "SELECT COUNT (*) FROM " + todoGroups[6], "SELECT COUNT (*) FROM " + todoGroups[7],
+                          "SELECT COUNT (*) FROM " + todoGroups[8]};
+
+        for (int j = 0; j < stmts.length; j++) {
+            Cursor groupSizeCursor = db.rawQuery(stmts[j], null);
+
+            if (groupSizeCursor.moveToFirst()) {
+                int value = groupSizeCursor.getInt(0);
+                allSize += value;
+                todoMap.put(todoGroups[index++], value);
+            }
+
+            groupSizeCursor.close();
+        }
+
+        // lastly add up all sizes into the general category
+        todoMap.put(todoGroups[0], allSize);
+
+        return todoMap;
     }
 }

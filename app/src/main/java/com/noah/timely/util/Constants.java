@@ -53,4 +53,55 @@ public class Constants {
      * Constants for alarms
      */
     public static final String ALARM = "com.noah.timely.alarms";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_WORK = "Work_Todo";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_GENERAL = "General_Todo";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_CREATIVITY = "Creativity_Todo";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_FUN = "Fun_Todo";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_HOME = "Home_Todo";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_MISCELLANEOUS = "Miscellaneous_Todo";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_SHOPPING = "Shopping_Todo";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_STUDY = "Study_Todo";
+
+    /**
+     * Constants for Work category
+     */
+    public static final String TODO_TRAVEL = "Travel_Todo";
+
+    /**
+     * Constants for Music category
+     */
+    public static final String TODO_MUSIC = "Music_Todo";
+
 }

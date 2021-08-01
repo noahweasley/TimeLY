@@ -2,10 +2,9 @@
 <resources>
     <string name="app_name">TimeLY</string>
     <string name="action_settings">Settings</string>
-    <string name="home">Home</string>
     <string name="school">School</string>
     <string name="assignment">Assignments</string>
-    <string name="miscellaneous">Miscellaneous</string>
+    <string name="miscellaneous">Misc</string>
     <string name="settings">Settings</string>
     <string name="help">Report Issues</string>
     <string name="whats_new">What\'s new</string>
@@ -143,12 +142,10 @@
     <string name="later">LATER</string>
     <string name="fix_message_1">Fixed report action bug on Android 11 devices</string>
     <string name="fix_message_2">Fixed no-scroll behaviour in Info dialog</string>
-    <string name="todo_list">TODO list</string>
+    <string name="todo_list">Todo list</string>
     <string name="no_tasks_yet">No Tasks yet</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="all">All</string>
-    <string name="default_task_number">23 tasks</string>
+    <string name="default_task_number">0 task(s)</string>
     <string name="work">Work</string>
     <string name="music">Music</string>
     <string name="travel">Travel</string>
@@ -156,4 +153,11 @@
     <string name="home">Home</string>
     <string name="creativity">Creativity</string>
     <string name="shopping">Shopping</string>
+    <string name="leisure_fun"><![CDATA[Leisure & Fun]]></string>
+    <string name="todo_default_title">Application Design</string>
+    <string name="todo_default_description">Web application design for $500</string>
+    <string name="no_todos">No Todos yet</string>
+    <string name="category_load">Loading categories</string>
+    <string name="update_text">UPDATE</string>
+    <string name="register_text">REGISTER</string>
 </resources>

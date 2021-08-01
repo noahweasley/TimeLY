@@ -3,6 +3,9 @@ package com.noah.timely.todo;
 import com.noah.timely.core.DataModel;
 
 public class TodoModel extends DataModel {
+    public static final String[] CATEGORIES = {"General_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
+                                               "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
+                                               "Fun_Todo", "Miscellaneous_Todo"};
     private String taskTitle;
     private String taskDescription;
     private String category;
