@@ -75,10 +75,13 @@
                     android:layout_marginRight="@dimen/range_editor_margin"
                     android:layout_weight="5"
                     android:background="@drawable/bg_dialog_form"
+                    android:drawablePadding="8dp"
                     android:hint="@string/start_time_hint"
                     android:inputType="textNoSuggestions"
                     android:maxLength="8"
                     android:maxLines="1"
+                    external:drawableEndCompat="@drawable/ic_access_time"
+                    external:drawableRightCompat="@drawable/ic_access_time"
                     tools:ignore="Autofill,TextFields" />
 
                 <EditText
@@ -90,10 +93,13 @@
                     android:layout_marginRight="@dimen/range_editor_margin"
                     android:layout_weight="5"
                     android:background="@drawable/bg_dialog_form"
+                    android:drawablePadding="8dp"
                     android:hint="@string/end_time_hint"
                     android:inputType="textNoSuggestions"
                     android:maxLength="8"
                     android:maxLines="1"
+                    external:drawableEndCompat="@drawable/ic_access_time"
+                    external:drawableRightCompat="@drawable/ic_access_time"
                     tools:ignore="Autofill,TextFields" />
 
             </LinearLayout>

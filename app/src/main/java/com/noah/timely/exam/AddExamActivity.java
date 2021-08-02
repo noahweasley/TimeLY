@@ -62,7 +62,6 @@ public class AddExamActivity extends AppCompatActivity {
         CheckBox cbx_multiple = findViewById(R.id.multiple);
         cbx_clear = findViewById(R.id.clear);
 
-
         findViewById(R.id.register).setOnClickListener(v -> {
 
             boolean success = cbx_multiple.isChecked() ? registerAndClear() : registerAndClose();
@@ -83,7 +82,7 @@ public class AddExamActivity extends AppCompatActivity {
         edt_endTime = findViewById(R.id.end_time);
 
         edt_endTime.setOnTouchListener(this::onTouch);
-        edt_endTime.setOnTouchListener(this::onTouch);
+        edt_startTime.setOnTouchListener(this::onTouch);
 
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
                                                                 android.R.layout.simple_dropdown_item_1line,
