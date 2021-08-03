@@ -4,15 +4,15 @@
 
 ### App presentation
 
-![Presentation](/presentation/1.jpg?raw=true)
+![Presentation 1](/presentation/1.jpg?raw=true)
 
-![Presentation](/presentation/2.jpg?raw=true)
+![Presentation 2](/presentation/2.jpg?raw=true)
 
-![Presentation](/presentation/3.jpg?raw=true)
+![Presentation 3](/presentation/3.jpg?raw=true)
 
-![Presentation](/presentation/4.jpg?raw=true)
+![Presentation 4](/presentation/4.jpg?raw=true)
 
-![Presentation](/presentation/5.jpg?raw=true)
+![Presentation 5](/presentation/5.jpg?raw=true)
 
 ### Application package usages
 
@@ -44,6 +44,8 @@
 * **settings**: Contains TimeLY's global settings.
 
 * **timetable**: Package that contains TimeLY's timetable management system.
+  
+* **todo**: Package that contains TimeLY's todo management system.
 
 * **util**: Package that contains all utility classes, methods, enums...
 
