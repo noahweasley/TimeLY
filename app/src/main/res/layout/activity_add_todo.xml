@@ -62,84 +62,94 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <View
-                android:id="@+id/divider_top"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/time_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginVertical="16dp"
-                android:background="?android:attr/listDivider"
                 external:layout_constraintEnd_toEndOf="parent"
-                external:layout_constraintStart_toStartOf="parent"
-                external:layout_constraintTop_toBottomOf="@id/task_box" />
-
-            <TextView
-                android:id="@+id/start_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_gap"
-                android:layout_weight="1"
-                android:drawablePadding="8dp"
-                android:text="@string/default_start_time"
-                android:textSize="20sp"
-                external:drawableLeftCompat="@drawable/ic_notification"
-                external:drawableStartCompat="@drawable/ic_notification"
-                external:layout_constraintStart_toStartOf="@+id/task_box"
-                external:layout_constraintTop_toBottomOf="@id/divider_top" />
-
-            <TextView
-                android:id="@+id/to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/to"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                external:layout_constraintEnd_toEndOf="@+id/start_time"
                 external:layout_constraintStart_toStartOf="@id/task_box"
-                external:layout_constraintTop_toBottomOf="@id/start_time" />
+                external:layout_constraintTop_toBottomOf="@id/task_box">
 
-            <TextView
-                android:id="@+id/end_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:text="@string/default_end_time"
-                android:textSize="20sp"
-                external:drawableLeftCompat="@drawable/ic_notification"
-                external:drawableStartCompat="@drawable/ic_notification"
-                external:layout_constraintStart_toStartOf="@+id/start_time"
-                external:layout_constraintTop_toBottomOf="@id/to" />
+                <ImageButton
+                    android:id="@+id/remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@null"
+                    external:layout_constraintEnd_toEndOf="parent"
+                    external:layout_constraintHorizontal_bias="0.7"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:srcCompat="@drawable/ic_clear" />
 
-            <View
-                android:id="@+id/divider_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="24dp"
-                android:background="?android:attr/listDivider"
-                external:layout_constraintEnd_toEndOf="parent"
-                external:layout_constraintStart_toStartOf="parent"
-                external:layout_constraintTop_toBottomOf="@id/end_time" />
+                <View
+                    android:id="@+id/divider_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"
+                    external:layout_constraintEnd_toEndOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toTopOf="parent"/>
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:background="@null"
-                external:layout_constraintEnd_toEndOf="parent"
-                external:layout_constraintHorizontal_bias="0.7"
-                external:layout_constraintTop_toBottomOf="@+id/divider_top"
-                external:srcCompat="@drawable/ic_clear" />
+                <TextView
+                    android:id="@+id/start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_gap"
+                    android:layout_weight="1"
+                    android:drawablePadding="8dp"
+                    android:text="@string/default_start_time"
+                    android:textSize="20sp"
+                    external:drawableLeftCompat="@drawable/ic_notification"
+                    external:drawableStartCompat="@drawable/ic_notification"
+                    external:layout_constraintTop_toTopOf="parent"
+                    external:layout_constraintTop_toBottomOf="@id/divider_top" />
+
+                <TextView
+                    android:id="@+id/to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/to"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    external:layout_constraintEnd_toEndOf="@+id/start_time"
+                    external:layout_constraintStart_toStartOf="@+id/start_time"
+                    external:layout_constraintTop_toBottomOf="@id/start_time" />
+
+                <TextView
+                    android:id="@+id/end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/default_end_time"
+                    android:textSize="20sp"
+                    external:drawableLeftCompat="@drawable/ic_notification"
+                    external:drawableStartCompat="@drawable/ic_notification"
+                    external:layout_constraintStart_toStartOf="@+id/start_time"
+                    external:layout_constraintTop_toBottomOf="@id/to" />
+
+                <View
+                    android:id="@+id/divider_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="24dp"
+                    android:background="?android:attr/listDivider"
+                    external:layout_constraintEnd_toEndOf="parent"
+                    external:layout_constraintStart_toStartOf="parent"
+                    external:layout_constraintTop_toBottomOf="@id/end_time" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 external:layout_constraintBottom_toBottomOf="parent"
                 external:layout_constraintStart_toStartOf="@id/task_box"
-                external:layout_constraintTop_toBottomOf="@id/divider_bottom"
+                external:layout_constraintTop_toBottomOf="@+id/time_container"
                 external:srcCompat="@drawable/ic_tag_fill" />
 
             <Spinner
