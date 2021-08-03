@@ -7,7 +7,7 @@ public class TodoModel extends DataModel {
                                                "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
                                                "Fun_Todo", "Miscellaneous_Todo"};
     private String taskTitle;
-    private String taskDescription;
+    private boolean isTaskCompleted;
     private String category;
     private String completionDate;
     private String completionTime;
@@ -16,10 +16,10 @@ public class TodoModel extends DataModel {
         // required default constructor
     }
 
-    public TodoModel(String taskTitle, String taskDescription, String category, String completionDate,
+    public TodoModel(String taskTitle, boolean taskDescription, String category, String completionDate,
                      String completionTime) {
         this.taskTitle = taskTitle;
-        this.taskDescription = taskDescription;
+        this.isTaskCompleted = isTaskCompleted;
         this.category = category;
         this.completionDate = completionDate;
         this.completionTime = completionTime;
@@ -33,20 +33,20 @@ public class TodoModel extends DataModel {
         this.taskTitle = taskTitle;
     }
 
-    public String getTaskDescription() {
-        return taskDescription;
-    }
-
-    public void setTaskDescription(String taskDescription) {
-        this.taskDescription = taskDescription;
-    }
-
     public String getCategory() {
         return category;
     }
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean isTaskCompleted() {
+        return isTaskCompleted;
+    }
+
+    public void setTaskCompleted(boolean taskCompleted) {
+        isTaskCompleted = taskCompleted;
     }
 
     public String getCompletionDate() {

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Constants;
@@ -62,6 +63,7 @@ public class TodoFragment extends Fragment {
         database.close();
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -72,9 +74,10 @@ public class TodoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        FloatingActionButton fab_add = view.findViewById(R.id.fab_add_todo);
+        fab_add.setOnClickListener(v -> AddTodoActivity.start(getContext(), false, null));
         ViewGroup vg_container = view.findViewById(R.id.p_container);
         ViewGroup vg_loaderView = view.findViewById(R.id.loader_view);
-
         // get the children from the containing layout because they were all cached instead of calling findViewById()
         ViewGroup vg_gen = (ViewGroup) vg_container.getChildAt(0);
         ViewGroup vg_work = (ViewGroup) vg_container.getChildAt(1);

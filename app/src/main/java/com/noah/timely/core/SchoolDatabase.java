@@ -1,5 +1,7 @@
 package com.noah.timely.core;
 
+import static com.noah.timely.util.CollectionUtils.linearSearch;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -34,8 +36,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import static com.noah.timely.util.CollectionUtils.linearSearch;
 
 /**
  * TimeLY's database manager
@@ -92,7 +92,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
     private static final String TODO_TABLE = "Todo";
     private static final String COLUMN_TODO_CATEGORY = "Category";
-    private static final String COLUMN_TODO_DESCRIPTION = "Description";
+    private static final String COLUMN_TODO_IS_COMPLETED = "Task_completed";
     private static final String COLUMN_TODO_TITLE = "Title";
     private static final String COLUMN_TODO_DATE = "Completion_date";
     private static final String COLUMN_TODO_TIME = "Completion_time";
@@ -164,8 +164,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 weekCount = Integer.parseInt(countValue);
             }
         } catch (NumberFormatException exc) {
-            Log.w(getClass().getSimpleName(),
-                  "User specified week count of: " + countValue + " is ignored, using 8 weeks instead ");
+            Log.w(getClass().getSimpleName(), "Week count of: " + countValue + " is ignored, using 8 weeks instead");
         }
 
         createExamTables(db, weekCount);
@@ -233,7 +232,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER, " +
                 COLUMN_TODO_CATEGORY + " TEXT," +
                 COLUMN_TODO_TITLE + " TEXT," +
-                COLUMN_TODO_DESCRIPTION + " TEXT," +
+                COLUMN_TODO_IS_COMPLETED + " TEXT," +
                 COLUMN_TODO_TIME + " TEXT," +
                 COLUMN_TODO_DATE + " TEXT )";
 
@@ -2091,11 +2090,11 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
             String category = todoCursor.getString(1);
             String title = todoCursor.getString(2);
-            String description = todoCursor.getString(3);
+            boolean isTaskCompleted = Boolean.parseBoolean(todoCursor.getString(3));
             String todoTime = todoCursor.getString(4);
             String date = todoCursor.getString(5);
 
-            todoModels.add(new TodoModel(title, description, category, date, todoTime));
+            todoModels.add(new TodoModel(title, isTaskCompleted, category, date, todoTime));
         }
 
         return todoModels;

@@ -154,10 +154,17 @@
     <string name="creativity">Creativity</string>
     <string name="shopping">Shopping</string>
     <string name="leisure_fun"><![CDATA[Leisure & Fun]]></string>
-    <string name="todo_default_title">Application Design</string>
+    <string name="todo_default_title">Play the piano</string>
     <string name="todo_default_description">Web application design for $500</string>
     <string name="no_todos">No Todos yet</string>
     <string name="category_load">Loading categories</string>
     <string name="update_text">UPDATE</string>
     <string name="register_text">REGISTER</string>
+    <string name="default_time_4">Thur, 08:00 AM – 09–00 PM</string>
+    <string name="plan">What are you planning?</string>
+    <string name="task_completion_time">Task completion</string>
+    <string name="default_start_time">08:00 AM</string>
+    <string name="default_end_time">12:00 AM</string>
+    <string name="to">TO</string>
+    <string name="add_task">ADD TASK</string>
 </resources>

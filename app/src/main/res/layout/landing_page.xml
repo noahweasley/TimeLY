@@ -8,6 +8,7 @@
     android:paddingHorizontal="@dimen/layout_gap">
 
     <!-- The text to be displayed on top of the image -->
+
     <TextView
         android:id="@+id/greeting_text"
         android:layout_width="wrap_content"
@@ -50,6 +51,5 @@
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

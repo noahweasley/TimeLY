@@ -21,7 +21,7 @@
     <dimen name="alarm_header_size">56sp</dimen>
     <dimen name="alarm_activity_time_size">30sp</dimen>
     <dimen name="alarm_activity_label_size">18sp</dimen>
-    <dimen name="button_min_height">38dp</dimen>
+    <dimen name="button_min_height">42dp</dimen>
     <dimen name="alarm_time_head_num_size">32sp</dimen>
     <dimen name="alarm_header_text_size_secondary">24sp</dimen>
     <dimen name="alarm_date_size">18sp</dimen>
@@ -76,4 +76,6 @@
     <dimen name="todo_category_textsize">22sp</dimen>
     <dimen name="task_count_textsize">14sp</dimen>
     <dimen name="bottom_overlay_height">90dp</dimen>
+    <dimen name="small_button_padding">20dp</dimen>
+    <dimen name="small_button_corner_radius">8dp</dimen>
 </resources>

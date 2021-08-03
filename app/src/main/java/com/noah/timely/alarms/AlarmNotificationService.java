@@ -1,5 +1,9 @@
 package com.noah.timely.alarms;
 
+import static com.noah.timely.alarms.AlarmReceiver.ALARM_POS;
+import static com.noah.timely.alarms.AlarmReceiver.ID;
+import static com.noah.timely.alarms.AlarmReceiver.NOTIFICATION_ID;
+
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ContentResolver;
@@ -24,10 +28,6 @@ import com.noah.timely.core.SchoolDatabase;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.noah.timely.alarms.AlarmReceiver.ALARM_POS;
-import static com.noah.timely.alarms.AlarmReceiver.ID;
-import static com.noah.timely.alarms.AlarmReceiver.NOTIFICATION_ID;
-
 public class AlarmNotificationService extends Service implements Runnable {
     private static int notificationID;
     private MediaPlayer alarmRingtonePlayer;
@@ -47,6 +47,7 @@ public class AlarmNotificationService extends Service implements Runnable {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int onStartCommand(Intent intent, int flags, int startId) {
         Context aCtxt = getApplicationContext();
         alarmPos = intent.getIntExtra(ALARM_POS, -1);

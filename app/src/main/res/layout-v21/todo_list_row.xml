@@ -3,7 +3,7 @@
     xmlns:external="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="180dp"
     android:layout_marginBottom="@dimen/secondary_card_margin_bottom_21"
     external:cardCornerRadius="@dimen/corner_radius"
     external:cardElevation="@dimen/normal_elevation"
@@ -28,12 +28,14 @@
             android:layout_width="5dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:background="@drawable/bg_decor_left"
             external:layout_constraintBottom_toBottomOf="@+id/bottom_divider"
             external:layout_constraintEnd_toStartOf="@+id/todo_title"
             external:layout_constraintStart_toEndOf="@id/indicator"
-            external:layout_constraintTop_toTopOf="@+id/todo_title" />
+            external:layout_constraintTop_toTopOf="@+id/divider_top" />
 
         <View
             android:id="@+id/divider_top"
@@ -41,7 +43,7 @@
             android:layout_height="1dp"
             android:layout_marginVertical="8dp"
             android:background="?android:attr/listDivider"
-            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintEnd_toStartOf="@id/divider_section"
             external:layout_constraintStart_toEndOf="@+id/indicator_2"
             external:layout_constraintTop_toBottomOf="@id/time" />
 
@@ -53,11 +55,15 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:drawableStart="@drawable/schedule_not_important"
+            android:drawableLeft="@drawable/schedule_not_important"
             android:drawablePadding="8dp"
+            android:textStyle="bold"
             android:gravity="center"
-            android:text="@string/default_time_2"
+            android:text="@string/default_time_4"
             android:textColor="@android:color/black"
-            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintEnd_toStartOf="@id/divider_section"
+            external:layout_constraintHorizontal_bias="0"
+            external:layout_constraintStart_toStartOf="@+id/divider_top"
             external:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -65,32 +71,43 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="start"
-            android:maxLines="1"
-            android:text="@string/todo_default_title"
+            android:gravity="center"
+            android:maxLines="3"
+            android:text="@string/long_text"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:textStyle="bold"
-            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintBottom_toTopOf="@+id/bottom_divider"
+            external:layout_constraintEnd_toStartOf="@+id/divider_section"
             external:layout_constraintStart_toEndOf="@id/indicator_2"
             external:layout_constraintTop_toBottomOf="@+id/divider_top" />
 
-        <TextView
-            android:id="@+id/todo_desc"
-            android:layout_width="0dp"
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="start"
-            android:maxLines="2"
-            android:text="@string/todo_default_description"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            external:layout_constraintBottom_toBottomOf="@+id/bottom_divider"
-            external:layout_constraintEnd_toEndOf="@+id/time"
-            external:layout_constraintHorizontal_bias="0.0"
-            external:layout_constraintStart_toStartOf="@+id/todo_title"
-            external:layout_constraintTop_toBottomOf="@+id/todo_title"
-            external:layout_constraintVertical_bias="0.3" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:checked="true"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintTop_toTopOf="@+id/divider_top"
+            external:layout_constraintBottom_toBottomOf="@+id/bottom_divider" />
+
+        <!--   <TextView
+               android:id="@+id/todo_desc"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:ellipsize="end"
+               android:gravity="start"
+               android:maxLines="2"
+               android:text="@string/todo_default_description"
+               android:textSize="14sp"
+               android:textStyle="bold"
+               external:layout_constraintBottom_toBottomOf="@+id/bottom_divider"
+               external:layout_constraintEnd_toEndOf="parent"
+               external:layout_constraintHorizontal_bias="0.0"
+               external:layout_constraintStart_toStartOf="@+id/todo_title"
+               external:layout_constraintTop_toBottomOf="@+id/todo_title"
+               external:layout_constraintVertical_bias="0.3" />-->
 
         <View
             android:id="@+id/bottom_divider"
@@ -99,7 +116,7 @@
             android:layout_marginBottom="50dp"
             android:background="?android:attr/listDivider"
             external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintEnd_toStartOf="@id/divider_section"
             external:layout_constraintStart_toStartOf="@+id/indicator_2" />
 
         <ImageButton
@@ -109,7 +126,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/delete"
             external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintEnd_toEndOf="@+id/todo_title"
             external:layout_constraintTop_toBottomOf="@+id/bottom_divider"
             external:srcCompat="@drawable/ic_delete" />
 
@@ -130,11 +147,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space"
+            android:layout_marginLeft="@dimen/space"
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toStartOf="@id/editButton"
             external:layout_constraintTop_toBottomOf="@id/bottom_divider"
             external:srcCompat="@drawable/ic_view"
             tools:ignore="ContentDescription" />
+
+        <View
+            android:id="@+id/divider_section"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="?android:attr/listDivider"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toStartOf="@+id/checkBox"
+            external:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -103,7 +103,7 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
         notodoView = findViewById(R.id.no_todo_view);
         ProgressBar indeterminateProgress = findViewById(R.id.indeterminateProgress);
         FloatingActionButton fab_add = findViewById(R.id.fab_add_todo);
-        fab_add.setOnClickListener(v -> startActivity(new Intent(this, AddTodoActivity.class)));
+        fab_add.setOnClickListener(v -> AddTodoActivity.start(this, false, category));
 
         rv_todoList = findViewById(R.id.todo_list);
         rv_todoList.setLayoutManager(new LinearLayoutManager(this));
