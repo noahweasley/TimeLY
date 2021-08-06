@@ -41,7 +41,6 @@
         external:headerLayout="@layout/nav_header"
         external:itemBackground="@drawable/bg_checked"
         external:itemTextColor="@android:color/black"
-        external:itemIconTint="@color/colorPrimary"
-        external:menu="@menu/nav_menu" />
+        external:itemIconTint="@color/colorPrimary" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

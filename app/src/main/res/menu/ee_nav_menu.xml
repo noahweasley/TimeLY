@@ -50,6 +50,11 @@
                     android:icon="@drawable/ic_baseline_event_available_24"
                     android:title="@string/todo_list" />
 
+                <item
+                    android:id="@+id/alarms"
+                    android:icon="@drawable/ic_alarm"
+                    android:title="@string/alarms" />
+
             </group>
 
         </menu>
@@ -74,10 +79,10 @@
                     android:icon="@drawable/ic_whats_new"
                     android:title="@string/whats_new" />
 
-           <!--     <item
-                    android:id="@+id/generate"
-                    android:icon="@drawable/ic_share"
-                    android:title="@string/generate" />-->
+                <!--     <item
+                         android:id="@+id/generate"
+                         android:icon="@drawable/ic_share"
+                         android:title="@string/generate" />-->
 
                 <item
                     android:id="@+id/report"

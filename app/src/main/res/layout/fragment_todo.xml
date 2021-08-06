@@ -564,16 +564,17 @@
         external:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
 
-        <ProgressBar
+        <com.noah.timely.custom.MaterialProgressbar
             android:id="@+id/indeterminateProgress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:indeterminate="true"
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent"
-            external:layout_constraintVertical_bias="0.49" />
-
+            external:mpb_progressStyle="circular" />
         <TextView
             android:id="@+id/loader_text"
             android:layout_width="wrap_content"

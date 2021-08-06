@@ -1,5 +1,6 @@
 package com.noah.timely.todo;
 
+
 import com.noah.timely.core.DataModel;
 
 public class TodoModel extends DataModel {
@@ -7,18 +8,25 @@ public class TodoModel extends DataModel {
                                                "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
                                                "Fun_Todo", "Miscellaneous_Todo"};
     private String taskTitle;
+    private String taskDescription;
     private boolean isTaskCompleted;
     private String category;
     private String completionDate;
     private String completionTime;
+    private String startTime;
+    private String endTime;
 
     public TodoModel() {
         // required default constructor
     }
 
-    public TodoModel(String taskTitle, boolean taskDescription, String category, String completionDate,
-                     String completionTime) {
+    public TodoModel(String taskTitle, String taskDescription, boolean isTaskCompleted, String category,
+                     String completionDate, String startTime, String endTime, String completionTime) {
+
         this.taskTitle = taskTitle;
+        this.taskDescription = taskDescription;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.isTaskCompleted = isTaskCompleted;
         this.category = category;
         this.completionDate = completionDate;
@@ -49,6 +57,14 @@ public class TodoModel extends DataModel {
         isTaskCompleted = taskCompleted;
     }
 
+    public String getTaskDescription() {
+        return taskDescription;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
     public String getCompletionDate() {
         return completionDate;
     }
@@ -63,5 +79,21 @@ public class TodoModel extends DataModel {
 
     public void setCompletionTime(String completionTime) {
         this.completionTime = completionTime;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

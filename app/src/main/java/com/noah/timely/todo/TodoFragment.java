@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
@@ -34,7 +36,7 @@ public class TodoFragment extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of this fragmentf
+     * Use this factory method to create a new instance of this fragment
      *
      * @return A new instance of fragment TodoFragment.
      */
@@ -62,7 +64,6 @@ public class TodoFragment extends Fragment {
         super.onDestroyView();
         database.close();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -173,6 +174,10 @@ public class TodoFragment extends Fragment {
             category = Constants.TODO_TRAVEL;
         }
 
-        TodoListActivity.start(getContext(), category);
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.frame, TodoListFragment.newInstance(category), "Todo")
+                   .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)
+                   .addToBackStack(null).commit();
     }
 }

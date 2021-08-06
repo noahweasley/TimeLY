@@ -32,5 +32,7 @@
     <color name="color_td_6">#6E6990</color>
     <color name="color_td_7">#CF514B</color>
     <color name="color_td_8">#8C8F96</color>
+    <color name="colorPrimary_5">#0D19629C</color>
+    <color name="colorPrimary_5_darker">#40164D79</color>
     <!--  Spotify Dark Theme  -->
 </resources>

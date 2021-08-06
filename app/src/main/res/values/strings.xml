@@ -164,7 +164,10 @@
     <string name="plan">What are you planning?</string>
     <string name="task_completion_time">Task completion</string>
     <string name="default_start_time">08:00 AM</string>
+    <string name="default_start_time_24">08:00</string>
     <string name="default_end_time">12:00 AM</string>
+    <string name="default_end_time_24">12:00</string>
     <string name="to">TO</string>
     <string name="add_task">ADD TASK</string>
+    <string name="add_timeframe">ADD TIMEFRAME</string>
 </resources>

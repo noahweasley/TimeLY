@@ -21,14 +21,14 @@
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 
-    <!--    Android 11 and above-->
+    <!--    Android 11 and above   -->
     <queries>
         <package android:name="com.whatsapp" />
         <package android:name="com.gbwhatsapp" />
@@ -69,7 +69,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity
@@ -173,16 +172,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".todo.TodoListActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
             android:name=".todo.AddTodoActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.SlideVertical_recipient"/>
 
         <receiver
             android:name=".alarms.AlarmReScheduler"

@@ -70,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer = findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
         drawer.addDrawerListener(toggle);
+        // Easter egg activation
+        if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.EASTER_EGG_KEY, false))
+            navView.inflateMenu(R.menu.ee_nav_menu);
+        else navView.inflateMenu(R.menu.nav_menu);
+
         navView.setNavigationItemSelectedListener(this);
         // Set the first viewed fragment on app start
         if (savedInstanceState == null) {
@@ -157,7 +162,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
         else {
-            finish();
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            Fragment fragment1 = manager.findFragmentByTag("Todo");
+            if (fragment1 == null) finish();
+            else super.onBackPressed();
         }
     }
 
@@ -212,11 +221,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             loadFragment(TodoFragment.newInstance());
 
-        } /*else if (menuItemId == R.id.alarms) {
+        } else if (menuItemId == R.id.alarms) {
 
-          loadFragment(AlarmHolderFragment.newInstance());
+            loadFragment(AlarmHolderFragment.newInstance());
 
-        } */ else if (menuItemId == R.id.settings) {
+        } else if (menuItemId == R.id.settings) {
 
             open_upSetting();
 
@@ -263,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             char[] faceTongueEmojiChars = Character.toChars(faceTongueEmojiUnicode);
 
             float[] deviceRes = DeviceInfoUtil.getDeviceResolutionDP(this);
-            String devSpecs = "\n\n Device specs " + String.valueOf(mobilePhoneEmojiChars) +
+            String devSpecs = "\n\nDevice specs " + String.valueOf(mobilePhoneEmojiChars) +
                     "\n"
                     + "Api Level: " + Build.VERSION.SDK_INT
                     + "\n"

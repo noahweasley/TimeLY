@@ -34,9 +34,7 @@ public class VectorDrawableToSVG {
                     }
 
                     String dataString = dataBuilder.toString();
-                    //noinspection ResultOfMethodCallIgnored
-                    String head1 = "<vector xmlns:android=\"http://schemas" +
-                            ".android.com/apk/res/android\"";
+                    String head1 = "<vector xmlns:android=\"http://schemas.android.com/apk/res/android\"";
                     String head2 = "<svg xmlns=\"http://www.w3.org/2000/svg\"";
 
                     String result = dataString.replaceFirst(head1, head2)
@@ -48,11 +46,11 @@ public class VectorDrawableToSVG {
                                               .replaceAll("android:strokeColor", "stroke")
                                               .replaceAll("android:strokeAlpha", "stroke-opacity")
                                               .replaceAll("android:fillAlpha", "fill-opacity")
-                                              .replaceAll("android:strokeWidth",
-                                                          "stroke-width")
+                                              .replaceAll("android:strokeWidth", "stroke-width")
                                               .replaceFirst("android:viewportWidth=\"[\\d]+\"", "")
                                               .replaceFirst("android:viewportHeight=\"[\\d]+\"", "")
                                               .replaceAll("android:fillType", "fill-rule");
+
                     for (int i = 0; i < result.length(); i++) {
                         fileOutputStream.write(result.charAt(i));
                     }

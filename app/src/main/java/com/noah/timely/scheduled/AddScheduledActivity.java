@@ -104,17 +104,18 @@ public class AddScheduledActivity extends AppCompatActivity {
         edt_startTime.setOnTouchListener(this::onTouch);
 
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
-                                                                android.R.layout.simple_dropdown_item_1line,
+                                                                R.layout.simple_dropdown_item_1line,
                                                                 database.getAllRegisteredCourses());
 
+        courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
         atv_courseName.setAdapter(courseAdapter);
 
         Spinner spin_days = findViewById(R.id.day_spin);
         ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(this,
-                                                              android.R.layout.simple_spinner_item,
+                                                              R.layout.simple_spinner_item,
                                                               DAYS);
 
-        daysAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+        daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
         spin_days.setAdapter(daysAdapter);
         spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 

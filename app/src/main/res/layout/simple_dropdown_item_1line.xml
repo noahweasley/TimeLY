@@ -6,5 +6,6 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:ellipsize="marquee"
     android:singleLine="true"
+    android:textAllCaps="true"
     android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
     android:textSize="@dimen/assignment_course_code_text_size" />

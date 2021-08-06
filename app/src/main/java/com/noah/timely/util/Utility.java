@@ -9,11 +9,10 @@ import androidx.preference.PreferenceManager;
 import com.noah.timely.R;
 
 /**
- * This is just a simple class to hold all variables that can be assessed by all the
- * classes in the program. It is used so that in no way would the Context classes in
- * <strong>Android</strong> be assessed through any other means other than how it was meant to be
- * assessed to prevent <strong><em>memory leaks</em> </strong> caused by static instance variables
- * and it also provides a neater way to assess Global variables
+ * This is just a simple class to hold all variables that can be assessed by all the classes in the program. It is used
+ * so that in no way would the Context classes in <strong>Android</strong> be assessed through any other means other
+ * than how it was meant to be assessed to prevent <strong><em>memory leaks</em> </strong> caused by static instance
+ * variables and it also provides a neater way to assess Global variables
  */
 
 public class Utility {
@@ -63,7 +62,7 @@ public class Utility {
     }
 
     public enum Alert {
-        TIMETABLE, SCHEDULED_TIMETABLE, ALARM, NOTIFICATION, ASSIGNMENT, DELETE, COURSE, UNDO, EXAM
+        TIMETABLE, SCHEDULED_TIMETABLE, ALARM, NOTIFICATION, ASSIGNMENT, DELETE, COURSE, UNDO, EXAM, TODO;
     }
 
 }

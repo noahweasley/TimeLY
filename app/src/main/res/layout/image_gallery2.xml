@@ -16,16 +16,23 @@
         external:layout_constraintTop_toTopOf="parent"
         external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <ProgressBar
+    <com.noah.timely.custom.MaterialProgressbar
         android:id="@+id/content_loading"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        style="@style/Widget.MaterialProgressBar.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:indeterminate="true"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
+        android:minWidth="40dp"
+        android:minHeight="40dp"
         android:theme="@style/LightTheme"
         android:visibility="gone"
         external:layout_constraintBottom_toBottomOf="@id/toolbar"
         external:layout_constraintEnd_toEndOf="@id/toolbar"
-        external:layout_constraintTop_toTopOf="@id/toolbar" />
+        external:layout_constraintTop_toTopOf="@id/toolbar"
+        external:mpb_progressStyle="circular" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/imageList"
@@ -42,14 +49,17 @@
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <ProgressBar
+    <com.noah.timely.custom.MaterialProgressbar
         android:id="@+id/indeterminateProgress"
+        style="@style/Widget.MaterialProgressBar.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminate="true"
         external:layout_constraintBottom_toBottomOf="parent"
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent" />
+        external:layout_constraintTop_toTopOf="parent"
+        external:mpb_progressStyle="circular" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/no_media"

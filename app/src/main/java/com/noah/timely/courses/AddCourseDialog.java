@@ -1,5 +1,8 @@
 package com.noah.timely.courses;
 
+import static com.noah.timely.courses.SemesterFragment.ARG_POSITION;
+import static com.noah.timely.util.Utility.playAlertTone;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -29,9 +32,6 @@ import com.noah.timely.util.ThreadUtils;
 import com.noah.timely.util.Utility.Alert;
 
 import org.greenrobot.eventbus.EventBus;
-
-import static com.noah.timely.courses.SemesterFragment.ARG_POSITION;
-import static com.noah.timely.util.Utility.playAlertTone;
 
 @SuppressWarnings("ConstantConditions")
 public class AddCourseDialog extends DialogFragment implements View.OnClickListener {
@@ -186,11 +186,10 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
             });
 
             Spinner spin_credits = findViewById(R.id.credits);
-            ArrayAdapter<Integer> creditAdapter
-                    = new ArrayAdapter<>(getContext(),
-                                         android.R.layout.simple_spinner_item,
-                                         credits);
-            creditAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+            ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(getContext(),
+                                                                     R.layout.simple_spinner_item,
+                                                                     credits);
+            creditAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
             spin_credits.setAdapter(creditAdapter);
             spin_credits.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override

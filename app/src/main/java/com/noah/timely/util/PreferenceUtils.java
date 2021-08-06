@@ -15,6 +15,7 @@ public class PreferenceUtils {
     public static final String DENY_ACCESS = "Deny alarm restriction access";
     public static final String GRANT_ACCESS = "Grant alarm restriction access";
     public static final String UPDATE_ON_STARTUP = "update_startup";
+    public static final String EASTER_EGG_KEY = "View new features";
 
     /**
      * Retrieves TimeLY's first launch preference
@@ -56,6 +57,23 @@ public class PreferenceUtils {
     public static boolean getBooleanValue(@NonNull Context context, String key, boolean defaultValue) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    /**
+     * sets a boolean preference value
+     *
+     * @param context      the context to be used to access the preference file
+     * @param key          the preference to be accessed
+     * @param defaultValue the default value to use, when key doesn't exist yet
+     */
+    public static void  setBooleanValue(@NonNull Context context, String key, boolean value) {
+        // default preference file
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        // preference editor
+        SharedPreferences.Editor spEditor = sharedPreferences.edit();
+        spEditor.putBoolean(key, value);
+        // apply changes
+        spEditor.apply();
     }
 
     /**

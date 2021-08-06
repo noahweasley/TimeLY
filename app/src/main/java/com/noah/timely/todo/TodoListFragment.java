@@ -1,11 +1,11 @@
 package com.noah.timely.todo;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +13,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,22 +28,28 @@ import com.noah.timely.R;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.DataMultiChoiceMode;
+import com.noah.timely.core.EmptyListEvent;
+import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class TodoListActivity extends AppCompatActivity implements ActionMode.Callback {
+public class TodoListFragment extends Fragment implements ActionMode.Callback {
     private List<DataModel> tdList = new ArrayList<>();
     private ActionMode actionMode;
     private CoordinatorLayout coordinator;
     private SchoolDatabase database;
-    private Context context;
+    private AppCompatActivity context;
     private ViewGroup notodoView;
     private RecyclerView rv_todoList;
     private TextView itemCount;
@@ -52,14 +60,12 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
     private static final String ARG_TODO_CATEGORY = "Todo category";
     public static String category;
 
-    public static TodoListActivity newInstance() {
-        return new TodoListActivity();
-    }
-
-    public static void start(Context context, String category) {
-        Intent starter = new Intent(context, TodoListActivity.class);
-        starter.putExtra(ARG_TODO_CATEGORY, category);
-        context.startActivity(starter);
+    public static TodoListFragment newInstance(String category) {
+        TodoListFragment fragment = new TodoListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_TODO_CATEGORY, category);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     private String retrieveToolbarTitle(String category) {
@@ -88,31 +94,37 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
         return null;
     }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_todo_list);
-        database = new SchoolDatabase(this);
-        category = getIntent().getStringExtra(ARG_TODO_CATEGORY);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(retrieveToolbarTitle(category));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_todo_list, container, false);
+    }
 
-        coordinator = findViewById(R.id.coordinator);
-        notodoView = findViewById(R.id.no_todo_view);
-        ProgressBar indeterminateProgress = findViewById(R.id.indeterminateProgress);
-        FloatingActionButton fab_add = findViewById(R.id.fab_add_todo);
-        fab_add.setOnClickListener(v -> AddTodoActivity.start(this, false, category));
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onViewCreated(view, savedInstanceState);
+        context = (AppCompatActivity) getActivity();
+        database = new SchoolDatabase(getContext());
+        category = getArguments().getString(ARG_TODO_CATEGORY);
 
-        rv_todoList = findViewById(R.id.todo_list);
-        rv_todoList.setLayoutManager(new LinearLayoutManager(this));
+        coordinator = view.findViewById(R.id.coordinator);
+        notodoView = view.findViewById(R.id.no_todo_view);
+        ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
+
+        FloatingActionButton fab_add = view.findViewById(R.id.fab_add_todo);
+        fab_add.setOnClickListener(v -> AddTodoActivity.start(getContext(), false, category));
+
+        rv_todoList = view.findViewById(R.id.todo_list);
+        rv_todoList.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_todoList.setAdapter(adapter = new TodoListAdapter(choiceMode));
 
         ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-            tdList = database.getTodos(category);
-            runOnUiThread(() -> {
+            tdList = database.getTodos(TodoListFragment.category);
+            getActivity().runOnUiThread(() -> {
                 boolean empty = tdList.isEmpty();
                 dismissProgressbar(indeterminateProgress);
                 notodoView.setVisibility(empty ? View.VISIBLE : View.GONE);
@@ -122,22 +134,117 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
                 if (itemCount != null) itemCount.setText(String.valueOf(tdList.size()));
             });
         });
-
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.list_menu_todo, menu);
+        View layout = menu.findItem(R.id.list_item_count).getActionView();
+        itemCount = layout.findViewById(R.id.counter);
+        TooltipCompat.setTooltipText(itemCount, "Todo Count");
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void dismissProgressbar(ProgressBar indeterminateProgress) {
         indeterminateProgress.setVisibility(View.GONE);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doTodoUpdate(TDUpdateMessage update) {
+        TodoModel data = update.getData();
+        // data position is not the same as the absolute adapter position in list so, use the change ID that was
+        // gotten from the absolute adapter position to make changes to the list.
+        int changePos = data.getPosition();
+        switch (update.getType()) {
+            case NEW:
+                tdList.add(data);
+                itemCount.setText(String.valueOf(tdList.size()));
+
+                if (tdList.isEmpty()) {
+                    notodoView.setVisibility(View.VISIBLE);
+                    rv_todoList.setVisibility(View.GONE);
+                } else {
+                    notodoView.setVisibility(View.GONE);
+                    rv_todoList.setVisibility(View.VISIBLE);
+                }
+                adapter.notifyItemInserted(changePos);
+                break;
+            case REMOVE:
+                tdList.remove(changePos);
+                itemCount.setText(String.valueOf(tdList.size()));
+                adapter.notifyItemRemoved(changePos);
+                adapter.notifyDataSetChanged();
+
+                if (tdList.isEmpty()) doEmptyListUpdate(null);
+
+                break;
+            case INSERT:
+                tdList.add(changePos, data);
+                itemCount.setText(String.valueOf(tdList.size()));
+                adapter.notifyItemInserted(changePos);
+                adapter.notifyDataSetChanged();
+                doEmptyListUpdate(null);
+                break;
+            default:
+                TodoModel tm = (TodoModel) tdList.remove(changePos);
+                tm.setTaskCompleted(data.isTaskCompleted());
+                tm.setTaskTitle(data.getTaskTitle());
+                tm.setStartTime(data.getStartTime());
+                tm.setEndTime(data.getEndTime());
+                tm.setCompletionTime(data.getCompletionTime());
+                tm.setCompletionDate(data.getCompletionDate());
+                tm.setTaskDescription(data.getTaskDescription());
+                tdList.add(tm);
+                adapter.notifyItemChanged(changePos);
+                break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doEmptyListUpdate(EmptyListEvent e) {
+        notodoView.setVisibility(tdList.isEmpty() ? View.VISIBLE : View.GONE);
+        rv_todoList.setVisibility(tdList.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void doListUpdate(MultiUpdateMessage mUpdate) {
+        if (mUpdate.getType() == MultiUpdateMessage.EventType.REMOVE
+                || mUpdate.getType() == MultiUpdateMessage.EventType.INSERT) {
+            if (actionMode != null)
+                actionMode.finish(); // require onDestroyActionMode() callback
+        }
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null)
+            adapter.getChoiceMode().onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        choiceMode.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(retrieveToolbarTitle(category));
+    }
+
+    @Override
+    public void onDetach() {
+        EventBus.getDefault().unregister(this);
+        database.close();
+        super.onDetach();
+    }
+
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return false;
+        context.getMenuInflater().inflate(R.menu.deleted_items, menu);
+        return true;
     }
 
     @Override
@@ -147,12 +254,15 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
+        adapter.deleteMultiple();
+        return true;
     }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-
+        actionMode = null;
+        adapter.getChoiceMode().clearChoices();
+        adapter.notifyDataSetChanged();
     }
 
     private class TodoListAdapter extends RecyclerView.Adapter<TodoListRowHolder> {
@@ -174,7 +284,7 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
 
         @Override
         public void onBindViewHolder(@NonNull TodoListRowHolder holder, int position) {
-
+            holder.with(position, tdList).bindView();
         }
 
         @Override
@@ -220,7 +330,6 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
 
         /**
          * @return the number of todos that was selected
-         * ,=;.
          */
         public int getCheckedTodosCount() {
             return choiceMode.getCheckedChoiceCount();
@@ -254,7 +363,8 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
             int choiceCount = dmcm.getCheckedChoiceCount();
 
             if (actionMode == null && choiceCount == 1) {
-                actionMode = startSupportActionMode(TodoListActivity.this);
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
+                actionMode = activity.startSupportActionMode(TodoListFragment.this);
                 notifyDataSetChanged();
             } else if (actionMode != null && choiceCount == 0) {
                 actionMode.finish();
@@ -272,7 +382,7 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
         public void deleteMultiple() {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
-            builder.setOwnerContext(TodoListActivity.this)
+            builder.setOwnerContext(getActivity())
                    .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
                    .setModelList(tdList)
                    .setMetadataType(RequestParams.MetaDataType.NO_DATA)
@@ -289,7 +399,7 @@ public class TodoListActivity extends AppCompatActivity implements ActionMode.Ca
                                               Snackbar.LENGTH_LONG);
 
             snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.setAction("UNDO", v -> runner.undoRequest());
+            snackbar.setAction("UNDO", x -> runner.undoRequest());
             snackbar.show();
         }
     }

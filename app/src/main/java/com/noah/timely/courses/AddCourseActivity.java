@@ -1,5 +1,8 @@
 package com.noah.timely.courses;
 
+import static com.noah.timely.courses.SemesterFragment.ARG_POSITION;
+import static com.noah.timely.util.Utility.playAlertTone;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -23,9 +26,6 @@ import com.noah.timely.util.ThreadUtils;
 import com.noah.timely.util.Utility;
 
 import org.greenrobot.eventbus.EventBus;
-
-import static com.noah.timely.courses.SemesterFragment.ARG_POSITION;
-import static com.noah.timely.util.Utility.playAlertTone;
 
 /**
  * A clone of {@link AddCourseDialog} that would be used as an alternate to adding courses
@@ -77,9 +77,9 @@ public class AddCourseActivity extends AppCompatActivity {
 
         Spinner spin_credits = findViewById(R.id.credits);
         ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(this,
-                                                                 android.R.layout.simple_spinner_item,
+                                                                 R.layout.simple_spinner_item,
                                                                  credits);
-        creditAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+        creditAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
         spin_credits.setAdapter(creditAdapter);
 
         spin_credits.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

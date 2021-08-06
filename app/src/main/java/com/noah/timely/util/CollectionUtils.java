@@ -41,4 +41,15 @@ public class CollectionUtils {
             if (c.compare(target.get(i), key) == 0) return i;
         return -1;
     }
+
+    public static <T> int linearSearch(T[] target, T key) {
+        for (int i = 0; i < target.length; i++) {
+            if (key instanceof String) {
+                if (target[i].equals(key)) return i;
+            } else {
+                if (target[i] == key) return i;
+            }
+        }
+        return -1;
+    }
 }

@@ -25,14 +25,17 @@
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent" />
 
-        <ProgressBar
+        <com.noah.timely.custom.MaterialProgressbar
             android:id="@+id/indeterminateProgress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:indeterminate="true"
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent" />
+            external:layout_constraintTop_toTopOf="parent"
+            external:mpb_progressStyle="circular" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/no_timetable_view"

@@ -25,7 +25,6 @@ import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.todo.TodoModel;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
@@ -116,6 +115,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public static boolean isDeleteTaskRunning() {
         return mDeleting;
     }
+
 
     /**
      * Sort order of list's in the database
@@ -233,6 +233,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 COLUMN_TODO_CATEGORY + " TEXT," +
                 COLUMN_TODO_TITLE + " TEXT," +
                 COLUMN_TODO_IS_COMPLETED + " TEXT," +
+                COLUMN_START_TIME + " TEXT," +
+                COLUMN_END_TIME + " TEXT," +
                 COLUMN_TODO_TIME + " TEXT," +
                 COLUMN_TODO_DATE + " TEXT )";
 
@@ -1900,7 +1902,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             attachedImages = attachedImagesCursor.getString(0);
 
         attachedImagesCursor.close();
-        LogUtils.debug(this, "images: " + attachedImages);
         return attachedImages;
     }
 
@@ -1918,7 +1919,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         uriValues.put(COLUMN_ATTACHED_IMAGE, uris);
 
         long updated = db.update(ASSIGNMENT_TABLE, uriValues, COLUMN_ID + " = " + position, null);
-        LogUtils.debug(this, "Results: " + uris);
         return updated != -1 ? uris : null;
     }
 
@@ -1940,7 +1940,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getWritableDatabase();
         long updated = db.update(ASSIGNMENT_TABLE, uriValues, COLUMN_ID + " = " + position, null);
-        LogUtils.debug(this, "Updating to: " + joint);
         return updated != -1;
     }
 
@@ -1955,7 +1954,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public boolean deleteMultipleImages(int position, Integer[] itemIndices) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues uriValues = new ContentValues();
-        LogUtils.debug(this, "Deleting at: " + Arrays.toString(itemIndices));
         List<String> uris = getAttachedImagesAsStringList(position);
         Arrays.sort(itemIndices, Collections.reverseOrder());
 
@@ -1966,7 +1964,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         uriValues.put(COLUMN_ATTACHED_IMAGE, joint);
         long resCode = db.update(ASSIGNMENT_TABLE, uriValues, COLUMN_ID + " = " + position, null);
-        LogUtils.debug(this, "M-Deleting: " + Arrays.toString(s));
         return resCode != -1;
     }
 
@@ -2085,16 +2082,17 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         String getTodos_stmt = "SELECT * FROM " + todoCategory;
         Cursor todoCursor = db.rawQuery(getTodos_stmt, null);
-
         while (todoCursor.moveToNext()) {
 
             String category = todoCursor.getString(1);
-            String title = todoCursor.getString(2);
+            String desc = todoCursor.getString(2);
             boolean isTaskCompleted = Boolean.parseBoolean(todoCursor.getString(3));
-            String todoTime = todoCursor.getString(4);
-            String date = todoCursor.getString(5);
+            String startTime = todoCursor.getString(4);
+            String endTime = todoCursor.getString(5);
+            String todoTime = todoCursor.getString(6);
+            String date = todoCursor.getString(7);
 
-            todoModels.add(new TodoModel(title, isTaskCompleted, category, date, todoTime));
+            todoModels.add(new TodoModel(null, desc, isTaskCompleted, category, date, startTime, endTime, todoTime));
         }
 
         return todoModels;
@@ -2135,4 +2133,26 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         return todoMap;
     }
+
+    /**
+     * Adds a todoTask to the database
+     *
+     * @param todoModel the todoTask to be added
+     * @param category  the category in which this todoTask exists
+     */
+    public boolean addTodo(TodoModel todoModel, String category) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues todoValues = new ContentValues();
+        todoValues.put(COLUMN_TODO_CATEGORY, category);
+        todoValues.put(COLUMN_TODO_DATE, todoModel.getCompletionDate());
+        todoValues.put(COLUMN_TODO_TIME, todoModel.getCompletionTime());
+        todoValues.put(COLUMN_TODO_TITLE, todoModel.getTaskTitle());
+        todoValues.put(COLUMN_TODO_IS_COMPLETED, todoModel.isTaskCompleted() ? "true" : "false");
+        todoValues.put(COLUMN_START_TIME, todoModel.getStartTime());
+        todoValues.put(COLUMN_END_TIME, todoModel.getEndTime());
+
+        long resultCode = db.insertOrThrow(category, null, todoValues);
+        return resultCode != -1;
+    }
+
 }
