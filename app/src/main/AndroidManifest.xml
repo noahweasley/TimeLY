@@ -18,8 +18,7 @@
         android:maxSdkVersion="29"
         tools:ignore="ScopedStorage" />
 
-    <uses-permission
-        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
@@ -31,6 +30,7 @@
     <!--    Android 11 and above   -->
     <queries>
         <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
         <package android:name="com.gbwhatsapp" />
     </queries>
 

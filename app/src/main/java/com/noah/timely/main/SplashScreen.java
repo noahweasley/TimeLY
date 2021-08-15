@@ -5,7 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
@@ -20,11 +21,26 @@ public class SplashScreen extends AppCompatActivity {
     private static final int TIMEOUT = 5000;
     private Handler handler;
     private Runnable startMain;
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
+
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                skipSplashScreen();
+                return true;
+            }
+        });
 
         TextView tv_version, tv_appName;
         tv_version = findViewById(R.id.version);
@@ -37,15 +53,13 @@ public class SplashScreen extends AppCompatActivity {
 //
 //        tv_appName.setText(wordSpan);
 
-        findViewById(R.id.skip).setOnClickListener(this::skipSplashScreen);
-
         String version = BuildConfig.VERSION_NAME;
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             version = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException ignored) {}
 
-        tv_version.setText(String.format("Version %s", version));
+        tv_version.setText(String.format("v%s", version));
         // Load all animations
         tv_appName.startAnimation(AnimationUtils.loadAnimation(this, R.anim.an_anim));
         // Display main screen after the splash screen
@@ -54,7 +68,13 @@ public class SplashScreen extends AppCompatActivity {
 
     }
 
-    private void skipSplashScreen(View v) {
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        return true;
+    }
+
+    private void skipSplashScreen() {
         removeSystemCallback();
         launch();
     }
@@ -84,4 +104,5 @@ public class SplashScreen extends AppCompatActivity {
             handler.removeCallbacks(startMain);
         handler = null;
     }
+
 }

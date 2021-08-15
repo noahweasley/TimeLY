@@ -48,7 +48,7 @@ public class ImageSlideActivity extends AppCompatActivity {
         float mPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8.0f, getResources().getDisplayMetrics());
 
         pager.setPageTransformer(new MarginPageTransformer((int) mPx));
-        pager.setOffscreenPageLimit(images.size());
+        pager.setOffscreenPageLimit(5);
         pager.setCurrentItem(getIntent().getIntExtra(ARG_INITIAL_POSITION, 0), false);
     }
 

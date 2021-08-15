@@ -44,7 +44,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link TodoListFragment#newInstance} factory method to create an instance of this fragment.
+ */
 public class TodoListFragment extends Fragment implements ActionMode.Callback {
+    private static final String ARG_TODO_CATEGORY = "Todo category";
+    private static final String ARG_TODO_TAB_POSITION = "Todo tab position";
     private List<DataModel> tdList = new ArrayList<>();
     private ActionMode actionMode;
     private CoordinatorLayout coordinator;
@@ -57,58 +63,44 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
     private static final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
     private static final String MULTIPLE_DELETE_REQUEST = "Delete multiple todos";
     private static final String DELETE_REQUEST = "Delete todo";
-    private static final String ARG_TODO_CATEGORY = "Todo category";
     public static String category;
+    public static int tabPosition;
 
-    public static TodoListFragment newInstance(String category) {
+    /**
+     * Use this factory method to create a new instance of this fragment
+     *
+     * @return A new instance of fragment TodoListFragment.
+     */
+    public static TodoListFragment newInstance(int position, String category) {
         TodoListFragment fragment = new TodoListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TODO_CATEGORY, category);
+        bundle.putInt(ARG_TODO_TAB_POSITION, position);
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    private String retrieveToolbarTitle(String category) {
-        switch (category) {
-            case Constants.TODO_GENERAL:
-                return "All";
-            case Constants.TODO_WORK:
-                return "Work";
-            case Constants.TODO_MUSIC:
-                return "Music";
-            case Constants.TODO_CREATIVITY:
-                return "Creativity";
-            case Constants.TODO_TRAVEL:
-                return "Travel";
-            case Constants.TODO_STUDY:
-                return "Study";
-            case Constants.TODO_FUN:
-                return "Leisure and Fun";
-            case Constants.TODO_HOME:
-                return "Home";
-            case Constants.TODO_MISCELLANEOUS:
-                return "Miscelaneous";
-            case Constants.TODO_SHOPPING:
-                return "Shopping";
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            category = getArguments().getString(ARG_TODO_CATEGORY);
+            tabPosition = getArguments().getInt(ARG_TODO_TAB_POSITION);
         }
-        return null;
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_todo_list, container, false);
+        return inflater.inflate(R.layout.fragment_todo_list, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         super.onViewCreated(view, savedInstanceState);
         context = (AppCompatActivity) getActivity();
         database = new SchoolDatabase(getContext());
-        category = getArguments().getString(ARG_TODO_CATEGORY);
 
         coordinator = view.findViewById(R.id.coordinator);
         notodoView = view.findViewById(R.id.no_todo_view);
@@ -123,10 +115,13 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
         ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-            tdList = database.getTodos(TodoListFragment.category);
+
+            if (tabPosition == 0) tdList = database.getFilteredTodos(TodoListFragment.category, false);
+            else tdList = database.getFilteredTodos(TodoListFragment.category, true);
+
             getActivity().runOnUiThread(() -> {
                 boolean empty = tdList.isEmpty();
-                dismissProgressbar(indeterminateProgress);
+                indeterminateProgress.setVisibility(View.GONE);
                 notodoView.setVisibility(empty ? View.VISIBLE : View.GONE);
                 rv_todoList.setVisibility(empty ? View.GONE : View.VISIBLE);
                 adapter.notifyDataSetChanged();
@@ -145,58 +140,56 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void dismissProgressbar(ProgressBar indeterminateProgress) {
-        indeterminateProgress.setVisibility(View.GONE);
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doTodoUpdate(TDUpdateMessage update) {
-        TodoModel data = update.getData();
-        // data position is not the same as the absolute adapter position in list so, use the change ID that was
-        // gotten from the absolute adapter position to make changes to the list.
-        int changePos = data.getPosition();
-        switch (update.getType()) {
-            case NEW:
-                tdList.add(data);
-                itemCount.setText(String.valueOf(tdList.size()));
+        if (tabPosition == 0) {
+            TodoModel data = update.getData();
+            // data position is not the same as the absolute adapter position in list so, use the change ID that was
+            // gotten from the absolute adapter position to make changes to the list.
+            int changePos = data.getPosition();
+            switch (update.getType()) {
+                case NEW:
+                    tdList.add(data);
+                    itemCount.setText(String.valueOf(tdList.size()));
 
-                if (tdList.isEmpty()) {
-                    notodoView.setVisibility(View.VISIBLE);
-                    rv_todoList.setVisibility(View.GONE);
-                } else {
-                    notodoView.setVisibility(View.GONE);
-                    rv_todoList.setVisibility(View.VISIBLE);
-                }
-                adapter.notifyItemInserted(changePos);
-                break;
-            case REMOVE:
-                tdList.remove(changePos);
-                itemCount.setText(String.valueOf(tdList.size()));
-                adapter.notifyItemRemoved(changePos);
-                adapter.notifyDataSetChanged();
+                    if (tdList.isEmpty()) {
+                        notodoView.setVisibility(View.VISIBLE);
+                        rv_todoList.setVisibility(View.GONE);
+                    } else {
+                        notodoView.setVisibility(View.GONE);
+                        rv_todoList.setVisibility(View.VISIBLE);
+                    }
+                    adapter.notifyItemInserted(changePos);
+                    break;
+                case REMOVE:
+                    tdList.remove(changePos);
+                    itemCount.setText(String.valueOf(tdList.size()));
+                    adapter.notifyItemRemoved(changePos);
+                    adapter.notifyDataSetChanged();
 
-                if (tdList.isEmpty()) doEmptyListUpdate(null);
+                    if (tdList.isEmpty()) doEmptyListUpdate(null);
 
-                break;
-            case INSERT:
-                tdList.add(changePos, data);
-                itemCount.setText(String.valueOf(tdList.size()));
-                adapter.notifyItemInserted(changePos);
-                adapter.notifyDataSetChanged();
-                doEmptyListUpdate(null);
-                break;
-            default:
-                TodoModel tm = (TodoModel) tdList.remove(changePos);
-                tm.setTaskCompleted(data.isTaskCompleted());
-                tm.setTaskTitle(data.getTaskTitle());
-                tm.setStartTime(data.getStartTime());
-                tm.setEndTime(data.getEndTime());
-                tm.setCompletionTime(data.getCompletionTime());
-                tm.setCompletionDate(data.getCompletionDate());
-                tm.setTaskDescription(data.getTaskDescription());
-                tdList.add(tm);
-                adapter.notifyItemChanged(changePos);
-                break;
+                    break;
+                case INSERT:
+                    tdList.add(changePos, data);
+                    itemCount.setText(String.valueOf(tdList.size()));
+                    adapter.notifyItemInserted(changePos);
+                    adapter.notifyDataSetChanged();
+                    doEmptyListUpdate(null);
+                    break;
+                default:
+                    TodoModel tm = (TodoModel) tdList.remove(changePos);
+                    tm.setTaskCompleted(data.isTaskCompleted());
+                    tm.setTaskTitle(data.getTaskTitle());
+                    tm.setStartTime(data.getStartTime());
+                    tm.setEndTime(data.getEndTime());
+                    tm.setCompletionTime(data.getCompletionTime());
+                    tm.setCompletionDate(data.getCompletionDate());
+                    tm.setTaskDescription(data.getTaskDescription());
+                    tdList.add(tm);
+                    adapter.notifyItemChanged(changePos);
+                    break;
+            }
         }
     }
 
@@ -231,6 +224,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
     @Override
     public void onResume() {
         super.onResume();
+        setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(retrieveToolbarTitle(category));
     }
 
@@ -352,7 +346,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
         /**
          * @param position           the position where the change occurred
          * @param state              the new state of the change
-         * @param assignmentPosition the position of the assignment in database.
+         * @param todoPosition the position of the assignment in database.
          */
         public void onChecked(int position, boolean state, int todoPosition) {
             boolean isFinished = false;
@@ -403,4 +397,31 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
             snackbar.show();
         }
     }
+
+    private String retrieveToolbarTitle(String category) {
+        switch (category) {
+            case Constants.TODO_GENERAL:
+                return "All";
+            case Constants.TODO_WORK:
+                return "Work";
+            case Constants.TODO_MUSIC:
+                return "Music";
+            case Constants.TODO_CREATIVITY:
+                return "Creativity";
+            case Constants.TODO_TRAVEL:
+                return "Travel";
+            case Constants.TODO_STUDY:
+                return "Study";
+            case Constants.TODO_FUN:
+                return "Leisure and Fun";
+            case Constants.TODO_HOME:
+                return "Home";
+            case Constants.TODO_MISCELLANEOUS:
+                return "Miscelaneous";
+            case Constants.TODO_SHOPPING:
+                return "Shopping";
+        }
+        return null;
+    }
+
 }

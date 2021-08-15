@@ -1,5 +1,7 @@
 package com.noah.timely.alarms;
 
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -18,8 +20,6 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 
 import java.util.Locale;
-
-import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 
 public class AlarmReceiver extends BroadcastReceiver {
     static final int NOTIFICATION_ID = 11789;
@@ -103,6 +103,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                .setSmallIcon(R.drawable.ic_n_alarm)
                .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
                .setContentIntent(pi)
+               .setSilent(true)
                .setFullScreenIntent(pi, true)
                .addAction(new NotificationCompat.Action(R.drawable.ic_n_snooze, "Snooze", actionSnooze))
                .addAction(new NotificationCompat.Action(R.drawable.ic_n_cancel, "Dismiss", actionDismiss));

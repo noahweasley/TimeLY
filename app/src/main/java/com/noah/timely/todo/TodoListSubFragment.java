@@ -1,4 +1,4 @@
-package com.noah.timely;
+package com.noah.timely.todo;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +13,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.noah.timely.todo.TodoListFragment;
+import com.noah.timely.R;
+import com.noah.timely.util.LogUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +32,7 @@ public class TodoListSubFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of this fragment
      *
-     * @return A new instance of fragment TodoListFragment.
+     * @return A new instance of fragment TodoListSubFragment.
      */
     public static TodoListSubFragment newInstance(String category) {
         TodoListSubFragment fragment = new TodoListSubFragment();
@@ -46,12 +47,12 @@ public class TodoListSubFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             category = getArguments().getString(ARG_TODO_CATEGORY);
+            LogUtils.debug(this, "Received: " + category);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_horizontal_pagers, container, false);
     }
@@ -64,8 +65,8 @@ public class TodoListSubFragment extends Fragment {
         pager.setOffscreenPageLimit(2);
         pager.setAdapter(new TodoSubListAdapter(this));
         TabLayout tabs = view.findViewById(R.id.tabs);
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabs.setTabGravity(TabLayout.GRAVITY_CENTER);
+        tabs.setTabMode(TabLayout.MODE_FIXED);
+        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
         new TabLayoutMediator(tabs, pager,
                               (tab, position) -> tab.setText(position == 0 ? "ACTIVE" : "FINISHED")).attach();

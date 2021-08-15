@@ -1,5 +1,7 @@
 package com.noah.timely.gallery;
 
+import static com.noah.timely.assignment.ImageViewerActivity.ARG_URI_LIST;
+
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Intent;
@@ -30,8 +32,6 @@ import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.noah.timely.assignment.ImageViewerActivity.ARG_URI_LIST;
 
 @SuppressLint("InlinedApi")
 public class ImageGallery extends AppCompatActivity implements Runnable, ActionMode.Callback {
@@ -128,7 +128,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
             String fileName = imgCursor.getString(displayNameColumn);
             String folderName = imgCursor.getString(bucketDisplayNameColumn);
 
-            Uri contentUri = ContentUris.withAppendedId(storageUri, id);
+            Uri contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
             images.add(new Image(contentUri, size, fileName, folderName));
         }
 

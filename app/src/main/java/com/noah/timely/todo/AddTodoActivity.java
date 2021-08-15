@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentManager;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.Utility;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -115,7 +116,7 @@ public class AddTodoActivity extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                category = TodoModel.CATEGORIES[position];
+                category = TodoModel.CATEGORIES_2[position];
             }
 
             @Override
@@ -154,6 +155,7 @@ public class AddTodoActivity extends AppCompatActivity {
     }
 
     private void addTask() {
+        LogUtils.debug(this, "Adding to: " + category);
         TodoModel todoModel = new TodoModel();
         int tc_VisibilityFlag = vg_timeContainer.getVisibility();
 
@@ -174,7 +176,8 @@ public class AddTodoActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, isEditable ? "Todo added" : "Todo updated", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM, 0, 100);
             toast.show();
-            EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.NEW));
+            if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
+                EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.NEW));
             playAlertTone(this, Utility.Alert.TODO);
         }
 

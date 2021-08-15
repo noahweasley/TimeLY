@@ -69,7 +69,7 @@ public class LandingPageFragment extends Fragment {
                 case DEFAULT_INTERVAL_DAY:
                     if (tv_gText != null) {
                         // use an array of arbitrary greeting text
-                        String[] gs = {"Hi there", "Good Day", "Hello, Good to see you"};
+                        String[] gs = {"Hi there", "Good Day", "Hello"};
                         int r = new Random(System.currentTimeMillis()).nextInt(gs.length);
                         tv_gText.setText(gs[r]);
                     }

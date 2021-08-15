@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:fontFamily="@font/roboto_black"
+                android:fontFamily="@font/wendy_one"
                 android:text="@string/no_todos"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/no_task_text_size"

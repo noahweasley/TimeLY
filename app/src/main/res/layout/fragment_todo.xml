@@ -562,7 +562,7 @@
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <com.noah.timely.custom.MaterialProgressbar
             android:id="@+id/indeterminateProgress"
@@ -575,6 +575,7 @@
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent"
             external:mpb_progressStyle="circular" />
+
         <TextView
             android:id="@+id/loader_text"
             android:layout_width="wrap_content"

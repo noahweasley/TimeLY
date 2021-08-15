@@ -2,12 +2,10 @@ package com.noah.timely.assignment;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,12 +56,7 @@ public class AssignmentViewDialog extends DialogFragment {
             tv_description.setText(assignment.getDescription());
 
             // Start image viewer
-            btn_viewImages.setOnClickListener(v -> {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
-                    ImageViewerActivity.start(getContext(), position, title);
-                else Toast.makeText(getContext(), "Not supported yet", Toast.LENGTH_LONG).show();
-
-            });
+            btn_viewImages.setOnClickListener(v -> ImageViewerActivity.start(getContext(), position, title));
         }
     }
 }

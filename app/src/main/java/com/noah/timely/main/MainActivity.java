@@ -3,16 +3,12 @@ package com.noah.timely.main;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -44,6 +40,7 @@ import com.noah.timely.todo.TodoFragment;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.PreferenceUtils;
+import com.noah.timely.util.ReportActionUtil;
 import com.noah.timely.util.TimelyUpdateUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -259,9 +256,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void reportAction(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            // start WhatsApp
-            PackageManager packageManager = getPackageManager();
-            String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp", devCon = "+2347065478947";
             // send message with emojis
             int waveEmojiUnicode = 0x1F44B, clapEmojiUnicode = 0x1F44F,
                     faceTongueEmojiUnicode = 0x1F60B, mobilePhoneEmojiUnicode = 0x1F4F1;
@@ -281,37 +275,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     + "Screen Resolution(dp) : " + deviceRes[0] + " x " + deviceRes[1];
 
             String s1 = "Hi Noah ", s2 = ", TimeLY is a nice app ", s3 = ". However, I would like" +
-                    " to report a bug **[___]** My name is **[___]** by the way.";
+                    " to report a bug *_____* My name is *______* by the way.";
 
             String message = s1 + String.valueOf(waveEmojiChars) + s2
                     + String.valueOf(clapEmojiChars) + s3 + String.valueOf(faceTongueEmojiChars) + devSpecs;
 
-            String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s", devCon, message);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataString));
-            try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(whatsappPkgName, PackageManager.GET_META_DATA);
-
-                intent.setPackage(whatsappPkgName);
-                startActivity(intent);
-
-            } catch (PackageManager.NameNotFoundException e) {
-                // if whatsapp not installed, try to open GBWhatsapp
-                try {
-                    PackageInfo packageInfo = packageManager.getPackageInfo(gbwhatsappPkgName,
-                                                                            PackageManager.GET_META_DATA);
-                    intent.setPackage(gbwhatsappPkgName);
-                    startActivity(intent);
-                } catch (PackageManager.NameNotFoundException nameNotFoundException) {
-                    Toast.makeText(this, "Whatsapp not installed", Toast.LENGTH_LONG).show();
-                }
-            }
+            ReportActionUtil.reportBug(this, message);
 
         }
         // whatever the button clicked, close dialog
         dialog.cancel();
-
     }
+
 
     // Get intent actions and update UI
     private void doUpdateFragment(Intent intent) {
@@ -351,9 +326,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void loadFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
+
+        //  Remove TodoFragment from the backstack on navigation item click
+        Fragment fragment2 = manager.findFragmentByTag("Todo");
+        if (fragment2 != null) {
+            for (int fx = 0; fx < manager.getBackStackEntryCount(); ++fx) {
+                manager.popBackStack();
+            }
+        }
+
         final String TAG = fragment.getClass().getName();
         Fragment fragment1 = manager.findFragmentByTag(TAG);
-
         if (fragment1 == null) {
             transaction.replace(R.id.frame, fragment, TAG).commit();
         }

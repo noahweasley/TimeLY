@@ -112,7 +112,7 @@
     <string name="report_message">You will be re-directed to Whatsapp to report this bug,Continue?</string>
     <string name="report_title">Report Bug</string>
     <string name="yes">Yes</string>
-    <string name="version">V1.0.0</string>
+    <string name="version">v1.0.0</string>
     <string name="dialog_pref">Use dialogs to add new task and reminders. This won\'t work for smaller screen sizes</string>
     <string name="add_timetable">Add timetable</string>
     <string name="add_exam">add exams</string>
@@ -170,4 +170,5 @@
     <string name="to">TO</string>
     <string name="add_task">ADD TASK</string>
     <string name="add_timeframe">ADD TIMEFRAME</string>
+    <string name="noticeMessage_2">To add assignment images, TimeLY needs to access media files on your device; Click <b>GO</b> to grant access</string>
 </resources>

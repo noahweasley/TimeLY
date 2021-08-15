@@ -10,8 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
@@ -85,8 +83,8 @@ public class TodoFragment extends Fragment {
         ViewGroup vg_music = (ViewGroup) vg_container.getChildAt(2);
         ViewGroup vg_travel = (ViewGroup) vg_container.getChildAt(3);
         ViewGroup vg_study = (ViewGroup) vg_container.getChildAt(4);
-        ViewGroup vg_creativity = (ViewGroup) vg_container.getChildAt(5);
-        ViewGroup vg_home = (ViewGroup) vg_container.getChildAt(6);
+        ViewGroup vg_home = (ViewGroup) vg_container.getChildAt(5);
+        ViewGroup vg_creativity = (ViewGroup) vg_container.getChildAt(6);
         ViewGroup vg_shopping = (ViewGroup) vg_container.getChildAt(7);
         ViewGroup vg_fun = (ViewGroup) vg_container.getChildAt(8);
         ViewGroup vg_misc = (ViewGroup) vg_container.getChildAt(9);
@@ -174,10 +172,9 @@ public class TodoFragment extends Fragment {
             category = Constants.TODO_TRAVEL;
         }
 
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.frame, TodoListFragment.newInstance(category), "Todo")
-                   .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)
-                   .addToBackStack(null).commit();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                     .replace(R.id.frame, TodoListSubFragment.newInstance(category), "Todo")
+                     .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)
+                     .addToBackStack(null).commit();
     }
 }

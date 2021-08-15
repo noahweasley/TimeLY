@@ -97,13 +97,9 @@ public class AddAssignmentActivity extends AppCompatActivity {
         submitButton.setOnClickListener(v -> saveOrUpdateAssignment());
 
         btn_gallery.setOnClickListener(
-                v -> {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
-                        startActivity(new Intent(this, ImageDirectory.class)
-                                              .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
-                                              .setAction(ADD_NEW));
-                    else Toast.makeText(this, "Not supported yet", Toast.LENGTH_LONG).show();
-                });
+                v -> startActivity(new Intent(this, ImageDirectory.class)
+                                      .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
+                                      .setAction(ADD_NEW)));
 
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
                                                                 R.layout.simple_spinner_item,

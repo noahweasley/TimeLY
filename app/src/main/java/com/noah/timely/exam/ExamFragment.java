@@ -19,7 +19,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.noah.timely.R;
 import com.noah.timely.main.MainActivity;
 
-@SuppressWarnings("ConstantConditions")
 public class ExamFragment extends Fragment {
     private int weekCount;
 
@@ -52,8 +51,7 @@ public class ExamFragment extends Fragment {
         TabLayout tabs = view.findViewById(R.id.tabs);
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabs.setTabGravity(TabLayout.GRAVITY_CENTER);
-        new TabLayoutMediator(tabs, pager,
-                              (tab, position) -> tab.setText("WEEK " + (position + 1))).attach();
+        new TabLayoutMediator(tabs, pager, (tab, position) -> tab.setText("WEEK " + (position + 1))).attach();
     }
 
     @Override

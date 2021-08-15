@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -27,6 +28,8 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.io.IOException;
 
 public class AlarmNotificationService extends Service implements Runnable {
     private static int notificationID;
@@ -75,7 +78,18 @@ public class AlarmNotificationService extends Service implements Runnable {
             final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                               : SYSTEM_DEFAULT;
 
-            alarmRingtonePlayer = MediaPlayer.create(aCtxt, DEFAULT_URI);
+            alarmRingtonePlayer = new MediaPlayer();
+
+            try {
+
+                alarmRingtonePlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                alarmRingtonePlayer.setDataSource(this, DEFAULT_URI);
+                alarmRingtonePlayer.setLooping(true); // repeatedly play alarm tone
+                alarmRingtonePlayer.prepare();
+                alarmRingtonePlayer.start();
+
+            } catch (IOException ignored) { }
+
         }
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -88,13 +102,10 @@ public class AlarmNotificationService extends Service implements Runnable {
                 vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, START));
             } else {
                 // backward compatibility for Android API < 26
-                // noinspection Deprecation
+                // noinspection deprecation
                 vibrator.vibrate(vibratePattern, START);
             }
         }
-
-        alarmRingtonePlayer.setLooping(true); // repeatedly play alarm tone
-        alarmRingtonePlayer.start();
 
         notificationID = intent.getIntExtra(ID, NOTIFICATION_ID); // get id of notification to cancel
 
@@ -143,11 +154,12 @@ public class AlarmNotificationService extends Service implements Runnable {
             return;
         }
         String ss = preferences.getString("snoozeOnStop", "Snooze");
-        if (ss.equals("Snooze"))
-            sendBroadcast(new Intent(this, NotificationActionReceiver.class)
-                                  .putExtra("action", "Snooze")
-                                  .putExtra(ID, NOTIFICATION_ID)
-                                  .putExtra(ALARM_POS, alarmPos));
+
+        if (ss.equals("Snooze")) sendBroadcast(new Intent(this, NotificationActionReceiver.class)
+                                                       .putExtra("action", "Snooze")
+                                                       .putExtra(ID, NOTIFICATION_ID)
+                                                       .putExtra(ALARM_POS, alarmPos));
+
         else sendBroadcast(new Intent(this, NotificationActionReceiver.class)
                                    .putExtra("action", "Dismiss")
                                    .putExtra(ID, NOTIFICATION_ID)

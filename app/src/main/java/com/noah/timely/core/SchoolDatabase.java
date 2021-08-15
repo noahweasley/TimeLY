@@ -25,6 +25,7 @@ import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.todo.TodoModel;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
@@ -2076,6 +2077,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @param todoCategory the todoCategory
      * @return the todos specified by <code>todoCategory</code>
      */
+    @SuppressWarnings("unused")
     public List<DataModel> getTodos(String todoCategory) {
         List<DataModel> todoModels = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -2085,7 +2087,36 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         while (todoCursor.moveToNext()) {
 
             String category = todoCursor.getString(1);
-            String desc = todoCursor.getString(2);
+            String desc = retrieveEntry(todoCursor.getString(2));
+            boolean isTaskCompleted = Boolean.parseBoolean(todoCursor.getString(3));
+            String startTime = todoCursor.getString(4);
+            String endTime = todoCursor.getString(5);
+            String todoTime = todoCursor.getString(6);
+            String date = todoCursor.getString(7);
+
+            todoModels.add(new TodoModel(null, desc, isTaskCompleted, category, date, startTime, endTime, todoTime));
+        }
+
+        return todoModels;
+    }
+
+    /**
+     * @param todoCategory the todoCategory
+     * @return the todos specified by <code>todoCategory</code>
+     */
+    public List<DataModel> getFilteredTodos(String todoCategory, boolean filter) {
+        LogUtils.debug(this, "Received: " + todoCategory);
+        List<DataModel> todoModels = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String DB_filter = " = '" + filter + "'";
+        String getTodos_stmt = "SELECT * FROM " + todoCategory + " WHERE " + COLUMN_TODO_IS_COMPLETED + DB_filter;
+
+        Cursor todoCursor = db.rawQuery(getTodos_stmt, null);
+        while (todoCursor.moveToNext()) {
+
+            String category = todoCursor.getString(1);
+            String desc = retrieveEntry(todoCursor.getString(2));
             boolean isTaskCompleted = Boolean.parseBoolean(todoCursor.getString(3));
             String startTime = todoCursor.getString(4);
             String endTime = todoCursor.getString(5);
@@ -2106,15 +2137,17 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public Map<String, Integer> getTodoGroupSizes() {
         final Map<String, Integer> todoMap = new HashMap<>();
         SQLiteDatabase db = getReadableDatabase();
+        //noinspection StatementWithEmptyBody
+        while(!db.isOpen());
         String[] todoGroups = TodoModel.CATEGORIES;
         int index = 1;
         int allSize = 0;
 
-        String[] stmts = {"SELECT COUNT (*) FROM " + todoGroups[0], "SELECT COUNT (*) FROM " + todoGroups[1],
-                          "SELECT COUNT (*) FROM " + todoGroups[2], "SELECT COUNT (*) FROM " + todoGroups[3],
+        String[] stmts = {"SELECT COUNT (*) FROM " + todoGroups[1], "SELECT COUNT (*) FROM " + todoGroups[2],
+                          "SELECT COUNT (*) FROM " + todoGroups[3], "SELECT COUNT (*) FROM " + todoGroups[4],
                           "SELECT COUNT (*) FROM " + todoGroups[4], "SELECT COUNT (*) FROM " + todoGroups[5],
-                          "SELECT COUNT (*) FROM " + todoGroups[6], "SELECT COUNT (*) FROM " + todoGroups[7],
-                          "SELECT COUNT (*) FROM " + todoGroups[8]};
+                          "SELECT COUNT (*) FROM " + todoGroups[7], "SELECT COUNT (*) FROM " + todoGroups[8],
+                          "SELECT COUNT (*) FROM " + todoGroups[9]};
 
         for (int j = 0; j < stmts.length; j++) {
             Cursor groupSizeCursor = db.rawQuery(stmts[j], null);
@@ -2146,13 +2179,14 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         todoValues.put(COLUMN_TODO_CATEGORY, category);
         todoValues.put(COLUMN_TODO_DATE, todoModel.getCompletionDate());
         todoValues.put(COLUMN_TODO_TIME, todoModel.getCompletionTime());
-        todoValues.put(COLUMN_TODO_TITLE, todoModel.getTaskTitle());
+        todoValues.put(COLUMN_TODO_TITLE, sanitizeEntry(todoModel.getTaskTitle()));
         todoValues.put(COLUMN_TODO_IS_COMPLETED, todoModel.isTaskCompleted() ? "true" : "false");
         todoValues.put(COLUMN_START_TIME, todoModel.getStartTime());
         todoValues.put(COLUMN_END_TIME, todoModel.getEndTime());
 
-        long resultCode = db.insertOrThrow(category, null, todoValues);
-        return resultCode != -1;
+        long resultCode1 = db.insertOrThrow(category, null, todoValues);
+        long resultCode2 = db.insertOrThrow(TodoModel.CATEGORIES[0], null, todoValues);
+        return resultCode1 != -1 && resultCode2 != -1;
     }
 
 }

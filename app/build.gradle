@@ -66,6 +66,7 @@ android {
         implementation 'com.airbnb.android:lottie:3.7.0'
         implementation 'com.github.javiersantos:AppUpdater:2.7'
         implementation 'me.zhanghai.android.materialprogressbar:library:1.1.6'
+        implementation 'androidx.legacy:legacy-support-v4:1.0.0'
         implementation ('com.wdullaer:materialdatetimepicker:4.2.3') {
             exclude group: 'androidx.appcompat'
             exclude group: 'androidx.recyclerview'
