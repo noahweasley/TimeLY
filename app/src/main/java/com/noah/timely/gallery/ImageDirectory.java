@@ -194,8 +194,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
                     MediaStore.Images.Media.DISPLAY_NAME};
 
             Cursor imgCursor
-                    = getApplicationContext().getContentResolver().query(storageUri, projection, null, null,
-                                                                         null);
+                    = getApplicationContext().getContentResolver().query(storageUri, projection, null, null, null);
 
             int bucketId = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
             int imgSize = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);

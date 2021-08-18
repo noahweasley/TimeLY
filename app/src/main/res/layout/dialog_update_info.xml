@@ -90,33 +90,10 @@
         external:layout_constraintTop_toBottomOf="@id/new_badge" >
 
         <LinearLayout
+            android:id="@+id/update_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/fix_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="start"
-                android:layout_marginBottom="@dimen/layout_gap"
-                android:text="@string/fix_message_1"
-                android:textColor="@android:color/black"
-                external:drawableLeftCompat="@drawable/ic_circle_fill" />
-
-            <TextView
-                android:id="@+id/fix_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="start"
-                android:layout_marginBottom="@dimen/layout_gap"
-                android:text="@string/fix_message_2"
-                android:textColor="@android:color/black"
-                external:drawableLeftCompat="@drawable/ic_circle_fill" />
-
-        </LinearLayout>
+            android:orientation="vertical"/>
 
     </ScrollView>
 
