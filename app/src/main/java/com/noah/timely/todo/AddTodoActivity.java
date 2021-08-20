@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
+import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.LogUtils;
@@ -172,12 +173,18 @@ public class AddTodoActivity extends AppCompatActivity {
         todoModel.setTaskCompleted(false);
 
         boolean added = database.addTodo(todoModel, category);
+
         if (added) {
             Toast toast = Toast.makeText(this, isEditable ? "Todo added" : "Todo updated", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM, 0, 100);
             toast.show();
+
             if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
                 EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.NEW));
+
+            if (EventBus.getDefault().hasSubscriberForEvent(LayoutRefreshEvent.class))
+                EventBus.getDefault().post(new LayoutRefreshEvent());
+
             playAlertTone(this, Utility.Alert.TODO);
         }
 

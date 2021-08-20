@@ -288,7 +288,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
         @Override
         public int getItemCount() {
-            return tdList.size();
+            return 7;
         }
 
         /**

@@ -10,12 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
+import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -48,6 +53,7 @@ public class TodoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         database = new SchoolDatabase(getContext());
     }
 
@@ -61,6 +67,18 @@ public class TodoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         database.close();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onRefreshLayout(LayoutRefreshEvent refreshEvent) {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.detach(this).attach(TodoFragment.newInstance());
     }
 
     @Override

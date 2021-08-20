@@ -4,7 +4,7 @@
     <dimen name="default_gap">10dp</dimen>
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="card_margin_bottom">10dp</dimen>
-    <dimen name="layout_gap">16dp</dimen>
+    <dimen name="layout_gap">10dp</dimen>
     <dimen name="space">8dp</dimen>
     <dimen name="header_size">26dp</dimen>
     <dimen name="no_task_text_size">28sp</dimen>
@@ -82,4 +82,5 @@
     <dimen name="layout_gap_secondary">42dp</dimen>
     <dimen name="timeframe_text_size">20sp</dimen>
     <dimen name="todo_row_height">180dp</dimen>
+    <dimen name="task_text_size_small">14sp</dimen>
 </resources>

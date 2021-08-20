@@ -14,7 +14,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.noah.timely.R;
-import com.noah.timely.util.LogUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +46,6 @@ public class TodoListSubFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             category = getArguments().getString(ARG_TODO_CATEGORY);
-            LogUtils.debug(this, "Received: " + category);
         }
     }
 
