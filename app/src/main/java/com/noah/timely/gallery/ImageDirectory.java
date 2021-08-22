@@ -1,9 +1,6 @@
 package com.noah.timely.gallery;
 
-import static android.os.Build.VERSION.SDK_INT;
-
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,23 +49,16 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
     private final ActivityResultLauncher<Intent> requestPermissionLauncher2 =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    if (SDK_INT >= Build.VERSION_CODES.R) {
-                        if (Environment.isExternalStorageManager()) {
-                            // Permission is granted. Continue the action or workflow.
-                            ThreadUtils.runBackgroundTask(this);
-                        } else {
-                            // Explain to the user that the feature is unavailable because the
-                            // features requires a permission that the was denied.
-                            Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
-                            finish();
-                        }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Environment.isExternalStorageManager()) {
+                        // Permission is granted. Continue the action or workflow.
+                        ThreadUtils.runBackgroundTask(this);
+                    } else {
+                        // Explain to the user that the feature is unavailable because the feature requires a
+                        // permission that the was denied.
+                        Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
+                        finish();
                     }
-                } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // features requires a permission that the was denied.
-                    Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
-                    finish();
                 }
             });
 
@@ -76,7 +66,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     // Permission is granted. Continue the action or workflow.
-                    if (SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         if (!Environment.isExternalStorageManager()) {
                             Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                             requestPermissionLauncher2.launch(intent);
@@ -87,8 +77,8 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
                         ThreadUtils.runBackgroundTask(this);
                     }
                 } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // features requires a permission that the was denied.
+                    // Explain to the user that the feature is unavailable because the feature requires a permission
+                    // that the was denied.
                     Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
                     finish();
                 }
@@ -115,7 +105,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             // You can use the API that requires the permission.
-            if (SDK_INT >= Build.VERSION_CODES.R) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (!Environment.isExternalStorageManager()) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                     requestPermissionLauncher2.launch(intent);
@@ -181,7 +171,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
     public void run() {
         try {
             Uri storageUri;
-            if (SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 storageUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
             } else {
                 storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
