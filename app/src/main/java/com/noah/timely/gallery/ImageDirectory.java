@@ -91,10 +91,9 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         imageList = findViewById(R.id.imageList);
         indeterminateProgress = findViewById(R.id.indeterminateProgress);
         v_noMedia = findViewById(R.id.no_media);
+
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setTitle("Select Images");
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageList.setHasFixedSize(true);
@@ -115,8 +114,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
             } else {
                 ThreadUtils.runBackgroundTask(this);
             }
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                                                                       Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             // Show educational UI
             showInContextUI();
         } else {
@@ -130,7 +128,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
         String noticeTitle = getString(R.string.noticeTitle);
         String noticeMessage = getString(R.string.noticeMessage_2);
         String goText = getString(R.string.go);
-        String cancelText = getString(android.R.string.cancel);
+        String cancelText = getString(R.string.deny);
 
         new AlertDialog.Builder(this)
                 .setTitle(noticeTitle)
