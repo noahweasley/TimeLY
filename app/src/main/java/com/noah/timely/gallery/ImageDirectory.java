@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noah.timely.R;
-import com.noah.timely.util.ReportActionUtil;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
@@ -167,69 +166,63 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
 
     @Override
     public void run() {
-        try {
-            Uri storageUri;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                storageUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
-            } else {
-                storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            }
-
-            String[] projection = {
-                    MediaStore.Images.Media._ID,
-                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-                    MediaStore.Images.Media.SIZE,
-                    MediaStore.Images.Media.DISPLAY_NAME};
-
-            Cursor imgCursor
-                    = getApplicationContext().getContentResolver().query(storageUri, projection, null, null, null);
-
-            int bucketId = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
-            int imgSize = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
-            int name = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-            int bucketName = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-
-            List<String> directoryDictionary = new ArrayList<>();
-            List<Image> generalList = new ArrayList<>();
-            while (imgCursor.moveToNext()) {
-                long id = imgCursor.getLong(bucketId);
-                int size = imgCursor.getInt(imgSize);
-                String fileName = imgCursor.getString(name);
-                String folderName = imgCursor.getString(bucketName);
-
-                Uri contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-                Image currentImage = new Image(contentUri, size, fileName, folderName);
-                // add all images to the general image list, but modifying the directory name
-                Image genImage = new Image(contentUri, size, fileName, "All Media");
-                generalList.add(genImage);
-
-                int directoryIndex = linearSearch(directoryDictionary, folderName);
-                // if search result (directoryIndex) passes this test, then it means that there is
-                // no such directory in list of directory names
-                if (directoryIndex < 0) {
-                    imageDirectoryList.add(new ArrayList<>());
-                    directoryDictionary.add(folderName);
-                    directoryIndex = linearSearch(directoryDictionary, folderName);
-                    if (directoryIndex >= 0)
-                        imageDirectoryList.get(directoryIndex).add(currentImage);
-                } else {
-                    imageDirectoryList.get(directoryIndex).add(currentImage);
-                }
-            }
-
-            //...then add it if the image list of folder is > 2
-            if (imageDirectoryList.size() > 2) imageDirectoryList.add(0, generalList);
-
-            imgCursor.close();
-            runOnUiThread(() -> {
-                imageAdapter.notifyDataSetChanged();
-                doViewUpdate();
-            });
-        } catch (Exception exc) {
-            Toast.makeText(this, "Sending bug report", Toast.LENGTH_LONG).show();
-            ReportActionUtil.reportBug(this, exc.getMessage());
-            finish();
+        Uri storageUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            storageUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        } else {
+            storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         }
+
+        String[] projection = {
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Images.Media.DISPLAY_NAME};
+
+        Cursor imgCursor
+                = getApplicationContext().getContentResolver().query(storageUri, projection, null, null, null);
+
+        int bucketId = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+        int imgSize = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
+        int name = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+        int bucketName = imgCursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+        List<String> directoryDictionary = new ArrayList<>();
+        List<Image> generalList = new ArrayList<>();
+        while (imgCursor.moveToNext()) {
+            long id = imgCursor.getLong(bucketId);
+            int size = imgCursor.getInt(imgSize);
+            String fileName = imgCursor.getString(name);
+            String folderName = imgCursor.getString(bucketName);
+
+            Uri contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            Image currentImage = new Image(contentUri, size, fileName, folderName);
+            // add all images to the general image list, but modifying the directory name
+            Image genImage = new Image(contentUri, size, fileName, "All Media");
+            generalList.add(genImage);
+
+            int directoryIndex = linearSearch(directoryDictionary, folderName);
+            // if search result (directoryIndex) passes this test, then it means that there is
+            // no such directory in list of directory names
+            if (directoryIndex < 0) {
+                imageDirectoryList.add(new ArrayList<>());
+                directoryDictionary.add(folderName);
+                directoryIndex = linearSearch(directoryDictionary, folderName);
+                if (directoryIndex >= 0)
+                    imageDirectoryList.get(directoryIndex).add(currentImage);
+            } else {
+                imageDirectoryList.get(directoryIndex).add(currentImage);
+            }
+        }
+
+        //...then add it if the image list of folder is > 2
+        if (imageDirectoryList.size() > 2) imageDirectoryList.add(0, generalList);
+
+        imgCursor.close();
+        runOnUiThread(() -> {
+            imageAdapter.notifyDataSetChanged();
+            doViewUpdate();
+        });
     }
 
     private void doViewUpdate() {
