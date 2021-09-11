@@ -7,7 +7,7 @@
     android:layout_height="@dimen/image_row_size"
     android:layout_margin="2dp">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/rowImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -16,6 +16,7 @@
         external:layout_constraintEnd_toEndOf="parent"
         external:layout_constraintStart_toStartOf="parent"
         external:layout_constraintTop_toTopOf="parent"
+        external:shapeAppearanceOverlay="@style/Rounded_Image_Corners"
         tools:ignore="ContentDescription" />
 
     <!--to display the image directory details-->
