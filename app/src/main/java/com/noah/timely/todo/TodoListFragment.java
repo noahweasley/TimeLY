@@ -122,8 +122,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
             getActivity().runOnUiThread(() -> {
                 boolean empty = tdList.isEmpty();
                 indeterminateProgress.setVisibility(View.GONE);
-                notodoView.setVisibility(!empty ? View.VISIBLE : View.GONE);
-                rv_todoList.setVisibility(!empty ? View.GONE : View.VISIBLE);
+                notodoView.setVisibility(empty ? View.VISIBLE : View.GONE);
+                rv_todoList.setVisibility(empty ? View.GONE : View.VISIBLE);
                 adapter.notifyDataSetChanged();
 
                 if (itemCount != null) itemCount.setText(String.valueOf(tdList.size()));
@@ -259,7 +259,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
         adapter.notifyDataSetChanged();
     }
 
-    private class TodoListAdapter extends RecyclerView.Adapter<TodoListRowHolder> {
+    class TodoListAdapter extends RecyclerView.Adapter<TodoListRowHolder> {
         private final ChoiceMode choiceMode;
         private boolean multiSelectionEnabled;
         private TodoListRowHolder rowHolder;
@@ -278,7 +278,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
         @Override
         public void onBindViewHolder(@NonNull TodoListRowHolder holder, int position) {
-//            holder.with(position, tdList).bindView();
+            holder.with(this, position, tdList).bindView();
         }
 
         @Override
@@ -288,7 +288,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
         @Override
         public int getItemCount() {
-            return 7;
+            return tdList.size();
         }
 
         /**
@@ -344,8 +344,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
         }
 
         /**
-         * @param position           the position where the change occurred
-         * @param state              the new state of the change
+         * @param position     the position where the change occurred
+         * @param state        the new state of the change
          * @param todoPosition the position of the assignment in database.
          */
         public void onChecked(int position, boolean state, int todoPosition) {

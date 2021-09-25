@@ -18,15 +18,17 @@ import java.util.List;
 
 @SuppressWarnings("all")
 public class TodoListRowHolder extends RecyclerView.ViewHolder {
+    private TodoListFragment.TodoListAdapter todoRowAdapter;
     /*      views       */
     private CheckBox cbx_state;
     private TextView tv_title, tv_category, tv_description, tv_time, tv_date;
     private ImageView img_overflow;
     private ExpandableLayout expl_detailLayout;
-    private View bottomDivider;
+    private View bottomDivider, v_selectionOverlay;
     private ImageButton btn_delete, btn_edit;
     /*      others      */
     private int position;
+    private boolean isChecked;
     private List<DataModel> tdList;
     private TodoModel todo;
 
@@ -52,12 +54,42 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
                         .setDuration(expl_detailLayout.getDuration());
         });
 
+        // Multi - Select actions
+        itemView.setOnLongClickListener(l -> {
+            trySelectTodo();
+            todoRowAdapter.setMultiSelectionEnabled(!todoRowAdapter.isMultiSelectionEnabled()
+                                                            || todoRowAdapter.getCheckedTodosCount() != 0);
+            return true;
+        });
+
+        itemView.setOnClickListener(c -> {
+            if (todoRowAdapter.isMultiSelectionEnabled()) {
+                trySelectTodo();
+                if (todoRowAdapter.getCheckedTodosCount() == 0) {
+                    todoRowAdapter.setMultiSelectionEnabled(false);
+                }
+            }
+        });
+
     }
 
-    public TodoListRowHolder with(int position, List<DataModel> tdList) {
+    private void tryDisableViews(boolean disable) {
+        btn_edit.setEnabled(!disable);
+        btn_edit.setFocusable(!disable);
+        btn_delete.setEnabled(!disable);
+        btn_delete.setFocusable(!disable);
+    }
+
+    private void trySelectTodo() {
+        isChecked = !isChecked;
+        v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        todoRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, todo.getPosition());
+    }
+
+    public TodoListRowHolder with(TodoListFragment.TodoListAdapter todoRowAdapter, int position, List<DataModel> tdList) {
+        this.todoRowAdapter = todoRowAdapter;
         this.position = position;
         this.tdList = tdList;
-
 
         return this;
     }
