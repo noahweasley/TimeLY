@@ -43,18 +43,27 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
         tv_date = itemView.findViewById(R.id.date);
         btn_delete = itemView.findViewById(R.id.delete);
         btn_edit = itemView.findViewById(R.id.edit);
+
+        img_overflow.setOnClickListener(v -> {
+            expl_detailLayout.toggle();
+            boolean isExpanded = expl_detailLayout.isExpanded();
+            img_overflow.animate()
+                        .rotation(isExpanded ? 180 : 0)
+                        .setDuration(expl_detailLayout.getDuration());
+        });
+
     }
 
     public TodoListRowHolder with(int position, List<DataModel> tdList) {
         this.position = position;
         this.tdList = tdList;
-        this.todo = (TodoModel) tdList.get(getAbsoluteAdapterPosition());
+
 
         return this;
     }
 
     public void bindView() {
-
+        this.todo = (TodoModel) tdList.get(getAbsoluteAdapterPosition());
 
     }
 }

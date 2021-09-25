@@ -122,8 +122,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
             getActivity().runOnUiThread(() -> {
                 boolean empty = tdList.isEmpty();
                 indeterminateProgress.setVisibility(View.GONE);
-                notodoView.setVisibility(empty ? View.VISIBLE : View.GONE);
-                rv_todoList.setVisibility(empty ? View.GONE : View.VISIBLE);
+                notodoView.setVisibility(!empty ? View.VISIBLE : View.GONE);
+                rv_todoList.setVisibility(!empty ? View.GONE : View.VISIBLE);
                 adapter.notifyDataSetChanged();
 
                 if (itemCount != null) itemCount.setText(String.valueOf(tdList.size()));
@@ -278,7 +278,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
         @Override
         public void onBindViewHolder(@NonNull TodoListRowHolder holder, int position) {
-            holder.with(position, tdList).bindView();
+//            holder.with(position, tdList).bindView();
         }
 
         @Override

@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/layout_gap"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="@dimen/secondary_card_margin_bottom_21"
+    android:layout_marginBottom="@dimen/secondary_card_margin_bottom"
     external:cardCornerRadius="@dimen/corner_radius"
     external:cardElevation="@dimen/normal_elevation"
     external:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             external:el_duration="250"
-            external:el_expanded="true"
+            external:el_expanded="false"
             external:el_parallax="0.5">
 
             <LinearLayout
