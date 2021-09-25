@@ -42,6 +42,13 @@ public class CollectionUtils {
         return -1;
     }
 
+    /**
+     * Searches for an item in an array
+     *
+     * @param target the array to perform the search on
+     * @param key    the item to be found
+     * @return the index of the the item or -1 if not found
+     */
     public static <T> int linearSearch(T[] target, T key) {
         for (int i = 0; i < target.length; i++) {
             if (key instanceof String) {

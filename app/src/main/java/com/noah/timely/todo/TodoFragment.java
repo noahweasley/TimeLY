@@ -21,6 +21,8 @@ import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -75,6 +77,7 @@ public class TodoFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshLayout(LayoutRefreshEvent refreshEvent) {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
