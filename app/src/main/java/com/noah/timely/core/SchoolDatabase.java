@@ -60,7 +60,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_END_TIME = "End_time";
     private static final String COLUMN_START_TIME = "Start_time";
     private static final String COLUMN_ASSIGNMENT_TITLE = "Title";
-    private static final String COLUMN_ASSIGNMENT_DESCRIPTION = "Description";
+    private static final String COLUMN_DESCRIPTION = "Description";
     private static final String COLUMN_COURSE_CODE = "Course_Code";
     private static final String COLUMN_SUBMISSION_DATE = "Submission_Date";
     private static final String COLUMN_ATTACHED_PDF = "PDF";
@@ -117,16 +117,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         return mDeleting;
     }
 
-
-    /**
-     * Sort order of list's in the database
-     */
-    @SuppressWarnings("unused")
-    public
-    enum SortOrder {
-        NATURAL_ORDER, UNORDERED, REVERSED_ORDERED
-    }
-
     public Context getContext() {
         return context;
     }
@@ -147,44 +137,40 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         createTimetable(db, TIMETABLE_THURSDAY);
         createTimetable(db, TIMETABLE_FRIDAY);
         createTimetable(db, TIMETABLE_SATURDAY);
-
         // CREATE THE SCHEDULED TIMETABLE
         createTimetable(db, SCHEDULED_TIMETABLE);
-
         // CREATE THE COURSE TABLE FOR BOTH FIRST AND SECOND SEMESTER
         createSemesterTable(db, FIRST_SEMESTER);
         createSemesterTable(db, SECOND_SEMESTER);
         createSemesterTable(db, REGISTERED_COURSES);
-
-        int weekCount = 8;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String countValue = null;
-        try {
-            countValue = prefs.getString("exam weeks", "8");
-            if (countValue != null) {
-                weekCount = Integer.parseInt(countValue);
-            }
-        } catch (NumberFormatException exc) {
-            Log.w(getClass().getSimpleName(), "Week count of: " + countValue + " is ignored, using 8 weeks instead");
-        }
-
-        createExamTables(db, weekCount);
+        createExamTables(db);
         createTodoListTables(db);
-        // CREATE ASSIGNMENT DATA TABLE
-        String createAssignmentDB_stmt
-                = "CREATE TABLE " + ASSIGNMENT_TABLE +
-                "( " + COLUMN_ID + " INTEGER ,"
-                + COLUMN_LECTURER_NAME + " TEXT , " +
-                COLUMN_ASSIGNMENT_TITLE + " TEXT , " +
-                COLUMN_ASSIGNMENT_DESCRIPTION + " TEXT , " +
-                COLUMN_COURSE_CODE + " TEXT NOT NULL, " +
-                COLUMN_SUBMISSION_DATE + " TEXT ," +
-                COLUMN_ATTACHED_PDF + " TEXT , " +
-                COLUMN_ATTACHED_IMAGE + " TEXT, " +
-                COLUMN_SUBMITTED + " TEXT"
-                + ")";
+        createAssignmentTable(db);
+        createAlarmTable(db);
+        createPrefTable(db);
+        // Insert default value in exam week count. Although it is not useful, as value will never
+        // be retrieved, this is useful to use the update database operation on this table.
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EXAM_WEEK_COUNT, 8);
 
-        // CREATE ALARM TABLE
+        db.insertOrThrow(PREFERENCE_TABLE, null, values);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // add or drop tables here
+        if (oldVersion == 1 && newVersion == 2) { createTodoListTables(db); }
+
+    }
+
+    // CREATE PREFS TABLE
+    private void createPrefTable(SQLiteDatabase db) {
+        String createPrefsDB_stmt = "CREATE TABLE " + PREFERENCE_TABLE + " (" + COLUMN_EXAM_WEEK_COUNT + " INTEGER )";
+        db.execSQL(createPrefsDB_stmt);
+    }
+
+    // CREATE ALARM TABLE
+    private void createAlarmTable(SQLiteDatabase db) {
         String createAlarmDB_stmt = "CREATE TABLE " + ALARMS_TABLE + " (" +
                 COLUMN_POS + " INTEGER , " +
                 COLUMN_INITIAL_POS + " INTEGER , " +
@@ -200,31 +186,30 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 COLUMN_SNOOZED_TIME + " TEXT "
                 + ")";
 
-        // CREATE PREFS TABLE
-        String createPrefsDB_stmt = "CREATE TABLE " + PREFERENCE_TABLE + " (" + COLUMN_EXAM_WEEK_COUNT + " INTEGER )";
-
-        db.execSQL(createPrefsDB_stmt);
         db.execSQL(createAlarmDB_stmt);
+    }
+
+    // CREATE ASSIGNMENT DATA TABLE
+    private void createAssignmentTable(SQLiteDatabase db) {
+        String createAssignmentDB_stmt
+                = "CREATE TABLE " + ASSIGNMENT_TABLE +
+                "( " + COLUMN_ID + " INTEGER ,"
+                + COLUMN_LECTURER_NAME + " TEXT , " +
+                COLUMN_ASSIGNMENT_TITLE + " TEXT , " +
+                COLUMN_DESCRIPTION + " TEXT , " +
+                COLUMN_COURSE_CODE + " TEXT NOT NULL, " +
+                COLUMN_SUBMISSION_DATE + " TEXT ," +
+                COLUMN_ATTACHED_PDF + " TEXT , " +
+                COLUMN_ATTACHED_IMAGE + " TEXT, " +
+                COLUMN_SUBMITTED + " TEXT"
+                + ")";
+
         db.execSQL(createAssignmentDB_stmt);
-
-        // Insert default value in exam week count. Although it is not useful, as value will never
-        // be retrieved, this is useful to use the update database operation on this table.
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_EXAM_WEEK_COUNT, 8);
-
-        db.insertOrThrow(PREFERENCE_TABLE, null, values);
     }
 
     private void createTodoListTables(SQLiteDatabase db) {
         for (int j = 0; j < TodoModel.CATEGORIES.length; j++)
             createTodoListTable(db, TodoModel.CATEGORIES[j]);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // add or drop tables here
-        if (oldVersion == 1 && newVersion == 2) { createTodoListTables(db); }
-
     }
 
     private void createTodoListTable(SQLiteDatabase db, String tableName) {
@@ -233,6 +218,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER, " +
                 COLUMN_TODO_CATEGORY + " TEXT," +
                 COLUMN_TODO_TITLE + " TEXT," +
+                COLUMN_DESCRIPTION + " TEXT," +
                 COLUMN_TODO_IS_COMPLETED + " TEXT," +
                 COLUMN_START_TIME + " TEXT," +
                 COLUMN_END_TIME + " TEXT," +
@@ -242,7 +228,19 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         db.execSQL(createTodoTables_stmt);
     }
 
-    private void createExamTables(SQLiteDatabase db, int weekCount) {
+    private void createExamTables(SQLiteDatabase db) {
+        int weekCount = 8;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String countValue = null;
+        try {
+            countValue = prefs.getString("exam weeks", "8");
+            if (countValue != null) {
+                weekCount = Integer.parseInt(countValue);
+            }
+        } catch (NumberFormatException exc) {
+            Log.w(getClass().getSimpleName(), "Week count of: " + countValue + " is ignored, using 8 weeks instead");
+        }
+
         for (int w = 1; w <= weekCount; w++) {
             String createExamTables_stmt = "CREATE TABLE " + "WEEK_" + w + " (" +
                     COLUMN_ID + " INTEGER, " +
@@ -314,7 +312,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         assignmentData.put(COLUMN_ID, assignment.getPosition());
         assignmentData.put(COLUMN_LECTURER_NAME, sanitizeEntry(assignment.getLecturerName()));
-        assignmentData.put(COLUMN_ASSIGNMENT_DESCRIPTION, sanitizeEntry(assignment.getDescription()));
+        assignmentData.put(COLUMN_DESCRIPTION, sanitizeEntry(assignment.getDescription()));
         assignmentData.put(COLUMN_ASSIGNMENT_TITLE, sanitizeEntry(assignment.getTitle()));
         assignmentData.put(COLUMN_COURSE_CODE, assignment.getCourseCode());
         assignmentData.put(COLUMN_SUBMISSION_DATE, assignment.getSubmissionDate());
@@ -502,7 +500,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         String selectStmt
                 = "SELECT " + COLUMN_ASSIGNMENT_TITLE + ", "
                 + COLUMN_SUBMISSION_DATE + ", "
-                + COLUMN_ASSIGNMENT_DESCRIPTION + ", "
+                + COLUMN_DESCRIPTION + ", "
                 + COLUMN_LECTURER_NAME + ", "
                 + COLUMN_COURSE_CODE + ", "
                 + COLUMN_ATTACHED_IMAGE + ", "
@@ -1300,7 +1298,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         assignmentData.put(COLUMN_ID, model.getPosition());
         assignmentData.put(COLUMN_LECTURER_NAME, sanitizeEntry(model.getLecturerName()));
-        assignmentData.put(COLUMN_ASSIGNMENT_DESCRIPTION, sanitizeEntry(model.getDescription()));
+        assignmentData.put(COLUMN_DESCRIPTION, sanitizeEntry(model.getDescription()));
         assignmentData.put(COLUMN_ASSIGNMENT_TITLE, sanitizeEntry(model.getTitle()));
         assignmentData.put(COLUMN_COURSE_CODE, model.getCourseCode());
         assignmentData.put(COLUMN_SUBMISSION_DATE, model.getSubmissionDate());
@@ -2087,14 +2085,15 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         while (todoCursor.moveToNext()) {
 
             String category = todoCursor.getString(1);
-            String desc = retrieveEntry(todoCursor.getString(2));
+            String title = retrieveEntry(todoCursor.getString(2));
+            String desc = retrieveEntry(todoCursor.getString(3));
             boolean isTaskCompleted = Boolean.parseBoolean(todoCursor.getString(3));
             String startTime = todoCursor.getString(4);
             String endTime = todoCursor.getString(5);
             String todoTime = todoCursor.getString(6);
             String date = todoCursor.getString(7);
 
-            todoModels.add(new TodoModel(null, desc, isTaskCompleted, category, date, startTime, endTime, todoTime));
+            todoModels.add(new TodoModel(title, desc, isTaskCompleted, category, date, startTime, endTime, todoTime));
         }
 
         return todoModels;
@@ -2116,15 +2115,18 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         while (todoCursor.moveToNext()) {
 
             String category = todoCursor.getString(1);
-            String desc = retrieveEntry(todoCursor.getString(2));
+            String title = retrieveEntry(todoCursor.getString(2));
+            String desc = retrieveEntry(todoCursor.getString(3));
             boolean isTaskCompleted = Boolean.parseBoolean(todoCursor.getString(3));
             String startTime = todoCursor.getString(4);
             String endTime = todoCursor.getString(5);
             String todoTime = todoCursor.getString(6);
             String date = todoCursor.getString(7);
 
-            todoModels.add(new TodoModel(null, desc, isTaskCompleted, category, date, startTime, endTime, todoTime));
+            todoModels.add(new TodoModel(title, desc, isTaskCompleted, category, date, startTime, endTime, todoTime));
         }
+
+        LogUtils.debug(this, "Retrieving: " + todoModels.size() + " todo(s)");
 
         return todoModels;
     }
@@ -2138,7 +2140,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         final Map<String, Integer> todoMap = new HashMap<>();
         SQLiteDatabase db = getReadableDatabase();
         //noinspection StatementWithEmptyBody
-        while(!db.isOpen());
+        while (!db.isOpen()) ;
         String[] todoGroups = TodoModel.CATEGORIES;
         int index = 1;
         int allSize = 0;
@@ -2180,6 +2182,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         todoValues.put(COLUMN_TODO_DATE, todoModel.getCompletionDate());
         todoValues.put(COLUMN_TODO_TIME, todoModel.getCompletionTime());
         todoValues.put(COLUMN_TODO_TITLE, sanitizeEntry(todoModel.getTaskTitle()));
+        todoValues.put(COLUMN_DESCRIPTION, sanitizeEntry(todoModel.getTaskDescription()));
         todoValues.put(COLUMN_TODO_IS_COMPLETED, todoModel.isTaskCompleted() ? "true" : "false");
         todoValues.put(COLUMN_START_TIME, todoModel.getStartTime());
         todoValues.put(COLUMN_END_TIME, todoModel.getEndTime());

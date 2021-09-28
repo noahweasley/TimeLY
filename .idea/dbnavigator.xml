@@ -24,10 +24,14 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39">
+        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb">
+    <connection id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
@@ -35,19 +39,12 @@
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" />
+    <connection id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Creativity_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Music_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Work_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Shopping_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Study_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Miscellaneous_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Travel_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Home_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.Fun_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" dataset="main.General_Todo" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" dataset="main.Music_Todo" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" dataset="main.Miscellaneous_Todo" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" dataset="main.General_Todo" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -75,7 +72,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="d0e8a5ac-2be7-4e16-958b-512a9ed45fcb" active="true">
+      <connection id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -90,7 +87,7 @@
           <port value="" />
           <database value="" />
           <files>
-            <file path="C:\Users\Noah\Desktop\SchoolDatabase.db" schema="main" />
+            <file path="C:\Users\Noah\Desktop\presentation\SchoolDatabase.db" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

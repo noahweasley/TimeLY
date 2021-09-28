@@ -2,8 +2,6 @@ package com.noah.timely.core;
 
 import android.os.Bundle;
 
-import com.noah.timely.util.LogUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,9 +59,6 @@ public class MultiChoiceMode implements ChoiceMode {
         sbarr.clear();
         indices.clear();
         indices2.clear();
-        LogUtils.debug(this,
-                       "cleared-- sbarr : " + sbarr.size() + ", indices: " + indices.size() + ", indices2: " + indices2
-                               .size());
     }
 
     @Override

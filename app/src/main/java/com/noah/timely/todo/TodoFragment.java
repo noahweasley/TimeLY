@@ -194,7 +194,7 @@ public class TodoFragment extends Fragment {
         }
 
         getActivity().getSupportFragmentManager().beginTransaction()
-                     .replace(R.id.frame, TodoListSubFragment.newInstance(category), "Todo")
+                     .replace(R.id.frame, TodoContainerFragment.newInstance(category), "Todo")
                      .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)
                      .addToBackStack(null).commit();
     }

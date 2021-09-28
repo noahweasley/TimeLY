@@ -4,20 +4,22 @@ package com.noah.timely.todo;
 import com.noah.timely.core.DataModel;
 
 public class TodoModel extends DataModel {
-    public static final String[] CATEGORIES = {"General_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
-                                               "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
-                                               "Fun_Todo", "Miscellaneous_Todo"};
-    public static final String[] CATEGORIES_2= {"Miscellaneous_Todo", "Work_Todo", "Music_Todo", "Creativity_Todo",
-                                               "Travel_Todo", "Study_Todo", "Fun_Todo", "Home_Todo",
-                                               "Shopping_Todo"};
+    private boolean isTaskCompleted;
     private String taskTitle;
     private String taskDescription;
-    private boolean isTaskCompleted;
     private String category;
     private String completionDate;
     private String completionTime;
     private String startTime;
     private String endTime;
+
+    public static final String[] CATEGORIES = {"General_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
+                                               "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
+                                               "Fun_Todo", "Miscellaneous_Todo"};
+
+    public static final String[] CATEGORIES_2 = {"Miscellaneous_Todo", "Work_Todo", "Music_Todo", "Creativity_Todo",
+                                                 "Travel_Todo", "Study_Todo", "Fun_Todo", "Home_Todo",
+                                                 "Shopping_Todo"};
 
     public TodoModel() {
         // required default constructor

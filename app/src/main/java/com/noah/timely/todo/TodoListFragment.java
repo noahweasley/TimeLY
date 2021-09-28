@@ -34,6 +34,7 @@ import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Constants;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -119,6 +120,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
             if (tabPosition == 0) tdList = database.getFilteredTodos(TodoListFragment.category, false);
             else tdList = database.getFilteredTodos(TodoListFragment.category, true);
 
+            LogUtils.debug(this, "Todo size: " + tdList.size());
+
             getActivity().runOnUiThread(() -> {
                 boolean empty = tdList.isEmpty();
                 indeterminateProgress.setVisibility(View.GONE);
@@ -142,23 +145,21 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void doTodoUpdate(TDUpdateMessage update) {
+        LogUtils.debug(this, "Received update: " + update.getType());
         if (tabPosition == 0) {
             TodoModel data = update.getData();
             // data position is not the same as the absolute adapter position in list so, use the change ID that was
             // gotten from the absolute adapter position to make changes to the list.
             int changePos = data.getPosition();
+            boolean listEmpty = tdList.isEmpty();
             switch (update.getType()) {
                 case NEW:
                     tdList.add(data);
                     itemCount.setText(String.valueOf(tdList.size()));
 
-                    if (tdList.isEmpty()) {
-                        notodoView.setVisibility(View.VISIBLE);
-                        rv_todoList.setVisibility(View.GONE);
-                    } else {
-                        notodoView.setVisibility(View.GONE);
-                        rv_todoList.setVisibility(View.VISIBLE);
-                    }
+                    notodoView.setVisibility(listEmpty ? View.VISIBLE : View.GONE);
+                    rv_todoList.setVisibility(listEmpty ? View.GONE : View.VISIBLE);
+
                     adapter.notifyItemInserted(changePos);
                     break;
                 case REMOVE:
@@ -167,7 +168,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
                     adapter.notifyItemRemoved(changePos);
                     adapter.notifyDataSetChanged();
 
-                    if (tdList.isEmpty()) doEmptyListUpdate(null);
+                    if (listEmpty) doEmptyListUpdate(null);
 
                     break;
                 case INSERT:

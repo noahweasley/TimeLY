@@ -158,17 +158,17 @@ public class AddTodoActivity extends AppCompatActivity {
     private void addTask() {
         LogUtils.debug(this, "Adding to: " + category);
         TodoModel todoModel = new TodoModel();
+
         int tc_VisibilityFlag = vg_timeContainer.getVisibility();
-
-        todoModel.setCategory(category);
-        todoModel.setTaskTitle(edt_taskEditor.getText().toString());
-
         String startTime = tv_startTime.getText().toString();
         String endTime = tv_endTime.getText().toString();
         String completionTime = startTime + " - " + endTime;
 
+        todoModel.setCategory(category);
+        todoModel.setTaskTitle(edt_taskEditor.getText().toString());
         todoModel.setStartTime(startTime);
         todoModel.setEndTime(endTime);
+        todoModel.setTaskDescription(null);
         todoModel.setCompletionTime(tc_VisibilityFlag == View.VISIBLE ? completionTime : "");
         todoModel.setTaskCompleted(false);
 

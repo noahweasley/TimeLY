@@ -17,14 +17,14 @@ import com.noah.timely.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TodoListSubFragment#newInstance} factory method to
+ * Use the {@link TodoContainerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodoListSubFragment extends Fragment {
+public class TodoContainerFragment extends Fragment {
     private static final String ARG_TODO_CATEGORY = "Todo category";
     private String category;
 
-    public TodoListSubFragment() {
+    public TodoContainerFragment() {
         // Required empty public constructor
     }
 
@@ -33,8 +33,8 @@ public class TodoListSubFragment extends Fragment {
      *
      * @return A new instance of fragment TodoListSubFragment.
      */
-    public static TodoListSubFragment newInstance(String category) {
-        TodoListSubFragment fragment = new TodoListSubFragment();
+    public static TodoContainerFragment newInstance(String category) {
+        TodoContainerFragment fragment = new TodoContainerFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TODO_CATEGORY, category);
         fragment.setArguments(bundle);
@@ -71,7 +71,6 @@ public class TodoListSubFragment extends Fragment {
     }
 
     private class TodoSubListAdapter extends FragmentStateAdapter {
-
 
         public TodoSubListAdapter(@NonNull Fragment fragment) {
             super(fragment);
