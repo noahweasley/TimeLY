@@ -64,8 +64,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
     private static final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
     private static final String MULTIPLE_DELETE_REQUEST = "Delete multiple todos";
     private static final String DELETE_REQUEST = "Delete todo";
-    public static String category;
-    public static int tabPosition;
+    public String category;
+    public int tabPosition;
 
     /**
      * Use this factory method to create a new instance of this fragment
@@ -117,8 +117,9 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
         ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
-            if (tabPosition == 0) tdList = database.getFilteredTodos(TodoListFragment.category, false);
-            else tdList = database.getFilteredTodos(TodoListFragment.category, true);
+            LogUtils.debug(this, "In Background: Received: " + tabPosition);
+            if (tabPosition == 0) tdList = database.getFilteredTodos(category, false);
+            else tdList = database.getFilteredTodos(category, true);
 
             LogUtils.debug(this, "Todo size: " + tdList.size());
 

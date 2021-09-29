@@ -43,7 +43,7 @@ public class AddTodoActivity extends AppCompatActivity {
     public static final String[] CATEGORIES = {"Miscelaneous", "Work", "Music", "Creativity", "Travel", "Study"
             , "Leisure and Fun", "Home", "Shopping"};
     private String category = TodoModel.CATEGORIES[0];
-    private EditText edt_taskEditor;
+    private EditText edt_taskEditor, edt_taskDescription;
     private TextView tv_startTime, tv_endTime;
     private boolean isEditable;
     private ViewGroup vg_timeContainer;
@@ -68,6 +68,7 @@ public class AddTodoActivity extends AppCompatActivity {
 
         Button btn_addTask = findViewById(R.id.add_task);
         edt_taskEditor = findViewById(R.id.task_editor);
+        edt_taskDescription = findViewById(R.id.task_description);
         tv_startTime = findViewById(R.id.start_time);
         tv_endTime = findViewById(R.id.end_time);
 
@@ -162,10 +163,13 @@ public class AddTodoActivity extends AppCompatActivity {
         int tc_VisibilityFlag = vg_timeContainer.getVisibility();
         String startTime = tv_startTime.getText().toString();
         String endTime = tv_endTime.getText().toString();
+        String taskTitle = edt_taskEditor.getText().toString();
+        String taskDescription = edt_taskDescription.getText().toString();
         String completionTime = startTime + " - " + endTime;
 
         todoModel.setCategory(category);
-        todoModel.setTaskTitle(edt_taskEditor.getText().toString());
+        todoModel.setTaskTitle(taskTitle);
+        todoModel.setTaskDescription(taskDescription);
         todoModel.setStartTime(startTime);
         todoModel.setEndTime(endTime);
         todoModel.setTaskDescription(null);

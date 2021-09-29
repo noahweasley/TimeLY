@@ -53,6 +53,37 @@
                     android:hint="@string/plan"
                     android:imeOptions="actionDone"
                     android:inputType="textMultiLine"
+                    android:maxLines="2"
+                    android:minHeight="48dp"
+                    android:minLines="2"
+                    android:textColor="@android:color/black"
+                    android:textCursorDrawable="@drawable/colored_cursor"
+                    tools:ignore="Autofill" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/task_description_box"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/layout_gap"
+                android:layout_marginTop="@dimen/layout_gap"
+                android:background="@drawable/bg_dialog_form"
+                external:errorEnabled="true"
+                external:layout_constraintEnd_toEndOf="parent"
+                external:layout_constraintStart_toStartOf="parent"
+                external:layout_constraintTop_toBottomOf="@id/task_box">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/task_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="top|start"
+                    android:hint="@string/optional_info"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
                     android:maxLines="@integer/task_editor_row_size"
                     android:minHeight="48dp"
                     android:minLines="@integer/task_editor_row_size"
@@ -70,9 +101,9 @@
                 android:background="@drawable/bg_color_primary_5"
                 android:visibility="gone"
                 external:layout_constraintBottom_toTopOf="@+id/tag"
-                external:layout_constraintEnd_toEndOf="@id/task_box"
-                external:layout_constraintStart_toStartOf="@id/task_box"
-                external:layout_constraintTop_toBottomOf="@id/task_box"
+                external:layout_constraintEnd_toEndOf="@id/task_description_box"
+                external:layout_constraintStart_toStartOf="@id/task_description_box"
+                external:layout_constraintTop_toBottomOf="@id/task_description_box"
                 external:layout_goneMarginBottom="8dp"
                 external:layout_goneMarginTop="8dp"
                 tools:visibility="visible">

@@ -346,12 +346,12 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
     private String sanitizeEntry(String data) {
         // replace with character code value
-        return data.replaceAll("'", "%39");
+        return TextUtils.isEmpty(data) ? null : data.replaceAll("'", "%39");
     }
 
     private String retrieveEntry(String data) {
         // replace with real value
-        return data.replaceAll("%39", "'");
+        return TextUtils.isEmpty(data) ? null : data.replaceAll("%39", "'");
     }
 
     /**
@@ -2103,7 +2103,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
      * @param todoCategory the todoCategory
      * @return the todos specified by <code>todoCategory</code>
      */
-    public List<DataModel> getFilteredTodos(String todoCategory, boolean filter) {
+    public synchronized List<DataModel> getFilteredTodos(String todoCategory, boolean filter) {
         LogUtils.debug(this, "Received: " + todoCategory);
         List<DataModel> todoModels = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -2111,9 +2111,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         String DB_filter = " = '" + filter + "'";
         String getTodos_stmt = "SELECT * FROM " + todoCategory + " WHERE " + COLUMN_TODO_IS_COMPLETED + DB_filter;
 
+        LogUtils.debug(this, "Query: " + getTodos_stmt);
+
         Cursor todoCursor = db.rawQuery(getTodos_stmt, null);
         while (todoCursor.moveToNext()) {
-
             String category = todoCursor.getString(1);
             String title = retrieveEntry(todoCursor.getString(2));
             String desc = retrieveEntry(todoCursor.getString(3));
@@ -2183,9 +2184,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         todoValues.put(COLUMN_TODO_TIME, todoModel.getCompletionTime());
         todoValues.put(COLUMN_TODO_TITLE, sanitizeEntry(todoModel.getTaskTitle()));
         todoValues.put(COLUMN_DESCRIPTION, sanitizeEntry(todoModel.getTaskDescription()));
-        todoValues.put(COLUMN_TODO_IS_COMPLETED, todoModel.isTaskCompleted() ? "true" : "false");
-        todoValues.put(COLUMN_START_TIME, todoModel.getStartTime());
         todoValues.put(COLUMN_END_TIME, todoModel.getEndTime());
+        todoValues.put(COLUMN_START_TIME, todoModel.getStartTime());
+        todoValues.put(COLUMN_TODO_IS_COMPLETED, todoModel.isTaskCompleted() ? "true" : "false");
 
         long resultCode1 = db.insertOrThrow(category, null, todoValues);
         long resultCode2 = db.insertOrThrow(TodoModel.CATEGORIES[0], null, todoValues);

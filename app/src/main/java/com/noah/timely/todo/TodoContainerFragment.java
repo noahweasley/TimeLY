@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.noah.timely.R;
+import com.noah.timely.util.LogUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,6 +80,7 @@ public class TodoContainerFragment extends Fragment {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
+            LogUtils.debug(this, "sending position: " + position);
             return TodoListFragment.newInstance(position, category);
         }
 

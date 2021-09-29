@@ -173,4 +173,5 @@
     <string name="noticeMessage_2">To add assignment images, TimeLY needs to access media files on your device; Click <b>GO</b> to grant access</string>
     <string name="default_category">Work</string>
     <string name="deny">Deny</string>
+    <string name="optional_info">More info on task (Optional)</string>
 </resources>
