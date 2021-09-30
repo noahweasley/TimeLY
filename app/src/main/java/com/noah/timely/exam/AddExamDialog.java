@@ -1,5 +1,6 @@
 package com.noah.timely.exam;
 
+import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.Utility.Alert;
 import static com.noah.timely.util.Utility.DAYS_3;
 import static com.noah.timely.util.Utility.isUserPreferred24Hours;
@@ -30,15 +31,14 @@ import androidx.fragment.app.FragmentManager;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.util.Converter;
 import com.noah.timely.util.ThreadUtils;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 @SuppressWarnings("ConstantConditions")
@@ -136,8 +136,8 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
 
         if (errorOccurred) return false;
 
-        start = use24 ? start : convert(start, UNIT_24);
-        end = use24 ? end : convert(end, UNIT_24);
+        start = use24 ? start : convertTime(start, Converter.UNIT_24);
+        end = use24 ? end : convertTime(end, Converter.UNIT_24);
 
         int pagePosition = getArguments().getInt(ARG_PAGE_POSITION);
 
@@ -168,19 +168,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
         return true;
     }
 
-    @SuppressWarnings("all")
-    private String convert(String time, int unit) {
-        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
-        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
 
-        Date date;
-        try {
-            date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
-        } catch (ParseException e) {
-            return null;
-        }
-        return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
-    }
 
     @Override
     public void onClick(View v) {

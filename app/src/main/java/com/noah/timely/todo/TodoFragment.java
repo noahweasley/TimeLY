@@ -95,7 +95,7 @@ public class TodoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FloatingActionButton fab_add = view.findViewById(R.id.fab_add_todo);
-        fab_add.setOnClickListener(v -> AddTodoActivity.start(getContext(), false, null));
+        fab_add.setOnClickListener(v -> AddTodoActivity.start(getContext(), false, "Miscelaneous"));
         ViewGroup vg_container = view.findViewById(R.id.p_container);
         ViewGroup vg_loaderView = view.findViewById(R.id.loader_view);
         // get the children from the containing layout because they were all cached instead of calling findViewById()

@@ -2,6 +2,7 @@ package com.noah.timely.scheduled;
 
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
 import static com.noah.timely.util.Utility.DAYS;
 import static com.noah.timely.util.Utility.isUserPreferred24Hours;
@@ -35,15 +36,14 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.timetable.TimetableModel;
+import com.noah.timely.util.Converter;
 import com.noah.timely.util.ThreadUtils;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -135,8 +135,8 @@ public class AddScheduledActivity extends AppCompatActivity {
             TimetableModel data = (TimetableModel) getIntent().getSerializableExtra(ARG_DATA);
 
             if (!isUserPreferred24Hours(this)) {
-                data.setStartTime(convert(data.getStartTime(), UNIT_12));
-                data.setEndTime(convert(data.getEndTime(), UNIT_12));
+                data.setStartTime(convertTime(data.getStartTime(), Converter.UNIT_12));
+                data.setEndTime(convertTime(data.getEndTime(), Converter.UNIT_12));
             }
 
             edt_endTime.setText(data.getEndTime());
@@ -270,8 +270,8 @@ public class AddScheduledActivity extends AppCompatActivity {
             return false;
         }
 
-        start = use24 ? start : convert(start, UNIT_24);
-        end = use24 ? end : convert(end, UNIT_24);
+        start = use24 ? start : convertTime(start, Converter.UNIT_24);
+        end = use24 ? end : convertTime(end, Converter.UNIT_24);
 
         TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance,
                                                          selectedDay);
@@ -325,19 +325,6 @@ public class AddScheduledActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    private String convert(String time, int unit) {
-        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
-        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
-
-        Date date;
-        try {
-            date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
-        } catch (ParseException e) {
-            return null;
-        }
-        return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
     }
 
     private boolean registerAndClear() {

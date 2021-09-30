@@ -79,6 +79,7 @@
         external:layout_constraintTop_toBottomOf="@id/intro_pager"
         external:tabBackground="@drawable/tab_selector"
         external:tabGravity="center"
+        external:tabRippleColor="@null"
         external:tabIndicatorHeight="0dp" />
 
     <androidx.constraintlayout.widget.Guideline

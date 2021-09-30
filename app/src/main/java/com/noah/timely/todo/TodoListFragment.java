@@ -62,7 +62,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
     private TextView itemCount;
     private TodoListAdapter adapter;
     private static final ChoiceMode choiceMode = ChoiceMode.DATA_MULTI_SELECT;
-    private static final String MULTIPLE_DELETE_REQUEST = "Delete multiple todos";
+    public static final String MULTIPLE_DELETE_REQUEST = "Delete multiple todos";
     private static final String DELETE_REQUEST = "Delete todo";
     public String category;
     public int tabPosition;
@@ -117,11 +117,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
         ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
-            LogUtils.debug(this, "In Background: Received: " + tabPosition);
             if (tabPosition == 0) tdList = database.getFilteredTodos(category, false);
             else tdList = database.getFilteredTodos(category, true);
-
-            LogUtils.debug(this, "Todo size: " + tdList.size());
 
             getActivity().runOnUiThread(() -> {
                 boolean empty = tdList.isEmpty();
@@ -280,7 +277,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
         @Override
         public void onBindViewHolder(@NonNull TodoListRowHolder holder, int position) {
-            holder.with(this, position, tdList).bindView();
+            holder.with(this, position, tdList, database, coordinator, getActivity()).bindView();
         }
 
         @Override

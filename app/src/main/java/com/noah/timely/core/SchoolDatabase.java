@@ -2115,6 +2115,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
         Cursor todoCursor = db.rawQuery(getTodos_stmt, null);
         while (todoCursor.moveToNext()) {
+            int id = todoCursor.getInt(0);
             String category = todoCursor.getString(1);
             String title = retrieveEntry(todoCursor.getString(2));
             String desc = retrieveEntry(todoCursor.getString(3));
@@ -2124,7 +2125,11 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             String todoTime = todoCursor.getString(6);
             String date = todoCursor.getString(7);
 
-            todoModels.add(new TodoModel(title, desc, isTaskCompleted, category, date, startTime, endTime, todoTime));
+            TodoModel model = new TodoModel(title, desc, isTaskCompleted, category,
+                                            date, startTime, endTime, todoTime);
+            model.setId(id);
+
+            todoModels.add(model);
         }
 
         LogUtils.debug(this, "Retrieving: " + todoModels.size() + " todo(s)");
@@ -2179,6 +2184,16 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     public boolean addTodo(TodoModel todoModel, String category) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues todoValues = new ContentValues();
+
+        String getIdStmt = "SELECT " + COLUMN_ID + " FROM " + TODO_TABLE;
+        Cursor idCursor = db.rawQuery(getIdStmt, null);
+
+        int lastID;
+        if (idCursor.moveToLast())
+            lastID = idCursor.getInt(0);
+        else lastID = -1;
+
+        todoValues.put(COLUMN_ID, ++lastID);
         todoValues.put(COLUMN_TODO_CATEGORY, category);
         todoValues.put(COLUMN_TODO_DATE, todoModel.getCompletionDate());
         todoValues.put(COLUMN_TODO_TIME, todoModel.getCompletionTime());
@@ -2193,4 +2208,28 @@ public class SchoolDatabase extends SQLiteOpenHelper {
         return resultCode1 != -1 && resultCode2 != -1;
     }
 
+    /**
+     * updated a todoTask state
+     *
+     * @param id the unique ID of the todoTask
+     * @param isChecked the state of the todoTask
+     */
+    public void updateTodoState(int id, boolean isChecked) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TODO_IS_COMPLETED, String.valueOf(isChecked));
+        long resultCode = db.update(TODO_TABLE, values, COLUMN_ID + " = " + id, null );
+    }
+
+    /**
+     * Deletes a todoTask
+     *
+     * @param model the todoTask to be deleted
+     * @return true if successful
+     */
+    public boolean deleteTodo(DataModel model) {
+        SQLiteDatabase db = getWritableDatabase();
+        long resultCode = db.delete(TODO_TABLE, COLUMN_ID + " = " + model.getId(), null);
+        return resultCode != -1;
+    }
 }

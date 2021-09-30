@@ -166,6 +166,6 @@ public class RequestParams {
     }
 
     public enum MetaDataType {
-        COURSE, NO_DATA, TIMETABLE, EXAM
+        COURSE, NO_DATA, TIMETABLE, EXAM, TODO
     }
 }

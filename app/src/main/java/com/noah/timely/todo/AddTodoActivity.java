@@ -6,6 +6,7 @@ import static com.noah.timely.util.Utility.playAlertTone;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import com.noah.timely.R;
 import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.CollectionUtils;
-import com.noah.timely.util.LogUtils;
+import com.noah.timely.util.Converter;
 import com.noah.timely.util.Utility;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -37,21 +38,41 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class AddTodoActivity extends AppCompatActivity {
-    private SchoolDatabase database;
+    private static final String EXTRA_TODO_TITLE = "Todo title";
+    private static final String EXTRA_TODO_DESCRIPTION = "Todo description";
+    private static final String EXTRA_START_TIME = "Todo start time";
+    private static final String EXTRA_END_TIME = "Todo end time";
+    private static final String EXTRA_DATE = "Todo date";
     public static final String EXTRA_IS_EDITABLE = "com.noah.timely.todo.edit";
     public static final String EXTRA_DEFAULT_CATEGORY = "com.noah.timely.todo.category.default";
+
+    private ViewGroup vg_timeContainer;
+    private TextView tv_startTime, tv_endTime;
+    private EditText edt_taskTitle, edt_taskDescription;
+
+    private SchoolDatabase database;
+
+    private boolean isEditable;
+    private String category = TodoModel.CATEGORIES[0];
+
     public static final String[] CATEGORIES = {"Miscelaneous", "Work", "Music", "Creativity", "Travel", "Study"
             , "Leisure and Fun", "Home", "Shopping"};
-    private String category = TodoModel.CATEGORIES[0];
-    private EditText edt_taskEditor, edt_taskDescription;
-    private TextView tv_startTime, tv_endTime;
-    private boolean isEditable;
-    private ViewGroup vg_timeContainer;
 
     public static void start(Context context, boolean toEdit, String defCategory) {
         Intent starter = new Intent(context, AddTodoActivity.class);
         starter.putExtra(EXTRA_IS_EDITABLE, toEdit);
         starter.putExtra(EXTRA_DEFAULT_CATEGORY, defCategory);
+        context.startActivity(starter);
+    }
+
+    public static void start(Context context, boolean toEdit, TodoModel todoToEdit) {
+        Intent starter = new Intent(context, AddTodoActivity.class);
+        starter.putExtra(EXTRA_TODO_TITLE, todoToEdit.getTaskTitle());
+        starter.putExtra(EXTRA_TODO_DESCRIPTION, todoToEdit.getTaskDescription());
+        starter.putExtra(EXTRA_START_TIME, todoToEdit.getStartTime());
+        starter.putExtra(EXTRA_END_TIME, todoToEdit.getEndTime());
+        starter.putExtra(EXTRA_DATE, todoToEdit.getCompletionDate());
+        starter.putExtra(EXTRA_IS_EDITABLE, toEdit);
         context.startActivity(starter);
     }
 
@@ -62,12 +83,11 @@ public class AddTodoActivity extends AppCompatActivity {
         database = new SchoolDatabase(this);
         setSupportActionBar(findViewById(R.id.toolbar));
 
-        isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
         getSupportActionBar().setTitle(isEditable ? "Update Task" : "New Task");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Button btn_addTask = findViewById(R.id.add_task);
-        edt_taskEditor = findViewById(R.id.task_editor);
+        edt_taskTitle = findViewById(R.id.task_editor);
         edt_taskDescription = findViewById(R.id.task_description);
         tv_startTime = findViewById(R.id.start_time);
         tv_endTime = findViewById(R.id.end_time);
@@ -105,6 +125,31 @@ public class AddTodoActivity extends AppCompatActivity {
         tv_startTime.setOnClickListener(this::onClick);
         tv_endTime.setOnClickListener(this::onClick);
 
+        setupSpinner();
+
+        // editing current todoTask
+        isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
+        if (isEditable) {
+            Intent intent = getIntent();
+            edt_taskTitle.setText(intent.getStringExtra(EXTRA_TODO_TITLE));
+            edt_taskDescription.setText(intent.getStringExtra(EXTRA_TODO_DESCRIPTION));
+
+            String startTime = intent.getStringExtra(EXTRA_START_TIME);
+            String endTime = intent.getStringExtra(EXTRA_END_TIME);
+
+            if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)) {
+                int visibilityFlag = btn_addTimeFrame.getVisibility();
+                if (visibilityFlag == View.VISIBLE) {
+                    btn_addTimeFrame.setVisibility(View.GONE);
+                    vg_timeContainer.setVisibility(View.VISIBLE);
+                }
+                tv_startTime.setText(startTime);
+                tv_endTime.setText(endTime);
+            }
+        }
+    }
+
+    private void setupSpinner() {
         Spinner spin_category = findViewById(R.id.category);
 
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CATEGORIES);
@@ -157,24 +202,22 @@ public class AddTodoActivity extends AppCompatActivity {
     }
 
     private void addTask() {
-        LogUtils.debug(this, "Adding to: " + category);
         TodoModel todoModel = new TodoModel();
 
         int tc_VisibilityFlag = vg_timeContainer.getVisibility();
         String startTime = tv_startTime.getText().toString();
         String endTime = tv_endTime.getText().toString();
-        String taskTitle = edt_taskEditor.getText().toString();
+        String taskTitle = edt_taskTitle.getText().toString();
         String taskDescription = edt_taskDescription.getText().toString();
         String completionTime = startTime + " - " + endTime;
 
-        todoModel.setCategory(category);
+        todoModel.setDBcategory(category);
         todoModel.setTaskTitle(taskTitle);
         todoModel.setTaskDescription(taskDescription);
-        todoModel.setStartTime(startTime);
-        todoModel.setEndTime(endTime);
-        todoModel.setTaskDescription(null);
-        todoModel.setCompletionTime(tc_VisibilityFlag == View.VISIBLE ? completionTime : "");
         todoModel.setTaskCompleted(false);
+        todoModel.setCompletionTime(tc_VisibilityFlag == View.VISIBLE ? completionTime : "");
+        todoModel.setStartTime(Converter.convertTime(startTime, Converter.UNIT_24));
+        todoModel.setEndTime(Converter.convertTime(endTime, Converter.UNIT_24));
 
         boolean added = database.addTodo(todoModel, category);
 

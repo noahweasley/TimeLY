@@ -1,5 +1,8 @@
 package com.noah.timely.exam;
 
+import static com.noah.timely.util.Converter.convertTime;
+import static com.noah.timely.util.Utility.isUserPreferred24Hours;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -18,11 +21,9 @@ import com.noah.timely.R;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.util.Converter;
 
 import java.util.List;
-import java.util.Locale;
-
-import static com.noah.timely.util.Utility.isUserPreferred24Hours;
 
 public class ExamRowHolder extends RecyclerView.ViewHolder {
     public static final String DELETE_REQUEST = "Delete Exam";
@@ -149,31 +150,11 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
             start = exam.getStart();
             end = exam.getEnd();
         } else {
-            start = convertTime(exam.getStart());
-            end = convertTime(exam.getEnd());
+            start = convertTime(exam.getStart(), Converter.UNIT_12);
+            end = convertTime(exam.getEnd(), Converter.UNIT_12);
         }
         tv_time.setText(String.format("%s - %s", start, end));
         tryDisableViews(examRowAdapter.isMultiSelectionEnabled());
     }
 
-    // Convert to 12 hours clock format
-    private String convertTime(String time) {
-        try {
-            String[] st = time.split(":");
-            int hh = Integer.parseInt(st[0]);
-            int mm = Integer.parseInt(st[1]);
-
-            String formattedHrAM = String.format(Locale.US, "%02d", (hh == 0 ? 12 : hh));
-            String formattedHrPM = String.format(Locale.US, "%02d", (hh % 12 == 0 ? 12 : hh % 12));
-            String formattedMinAM = String.format(Locale.US, "%02d", mm) + " AM";
-            String formattedMinPM = String.format(Locale.US, "%02d", mm) + " PM";
-
-            boolean isAM = hh >= 0 && hh < 12;
-
-            return isAM ? formattedHrAM + ":" + formattedMinAM
-                        : formattedHrPM + ":" + formattedMinPM;
-        } catch (NumberFormatException exc) {
-            return null;
-        }
-    }
 }

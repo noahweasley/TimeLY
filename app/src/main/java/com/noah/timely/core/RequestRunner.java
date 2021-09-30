@@ -1,5 +1,9 @@
 package com.noah.timely.core;
 
+import static com.noah.timely.util.Utility.Alert;
+import static com.noah.timely.util.Utility.deleteTaskRunning;
+import static com.noah.timely.util.Utility.playAlertTone;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -38,6 +42,10 @@ import com.noah.timely.timetable.DaysFragment;
 import com.noah.timely.timetable.TUpdateMessage;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.timetable.TimetableNotifier;
+import com.noah.timely.todo.TDUpdateMessage;
+import com.noah.timely.todo.TodoListFragment;
+import com.noah.timely.todo.TodoListRowHolder;
+import com.noah.timely.todo.TodoModel;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -47,10 +55,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static com.noah.timely.util.Utility.Alert;
-import static com.noah.timely.util.Utility.deleteTaskRunning;
-import static com.noah.timely.util.Utility.playAlertTone;
 
 /**
  * Thread to handle all delete requests
@@ -98,6 +102,7 @@ public class RequestRunner extends Thread {
             case ScheduledTimetableFragment.MULTIPLE_DELETE_REQUEST:
             case DaysFragment.MULTIPLE_DELETE_REQUEST:
             case ExamTimetableFragment.MULTIPLE_DELETE_REQUEST:
+            case TodoListFragment.MULTIPLE_DELETE_REQUEST:
                 doDataModelMultiDelete();
                 break;
             case AssignmentFragment.DELETE_REQUEST:
@@ -121,6 +126,9 @@ public class RequestRunner extends Thread {
                 break;
             case ImageViewerActivity.MULTIPLE_DELETE_REQUEST:
                 doImageMultiDelete();
+                break;
+            case TodoListRowHolder.DELETE_REQUEST:
+                doTodoDelete();
                 break;
             default:
                 throw new IllegalArgumentException(request + " is invalid");
@@ -181,6 +189,35 @@ public class RequestRunner extends Thread {
                                                           dataCache);
 
             if (isDeleted) {
+                playAlertTone(appContext, Alert.DELETE);
+                if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
+            }
+        }
+    }
+
+    private void doTodoDelete() {
+        DataModel model = params.getModelList().get(params.getAdapterPosition());
+        params.getModelList().remove(params.getAdapterPosition());
+        int pos = params.getPagePosition();
+        EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, TDUpdateMessage.EventType.REMOVE));
+            /*
+            wait 3 seconds to perform actual delete request, because an undo request might also be issued, which
+            delete request would have to be cancelled. The sleep timer is also synchronized   with the undo
+            Snackbar's display timeout, which also is 3 seconds.
+            */
+        try {
+            Thread.sleep(WAIT_TIME);
+        } catch (InterruptedException e) {
+            /*
+            will be executed when the deleteRequestDiscarded property has been set,
+            meaning an undo request
+            */
+            params.getModelList().add(params.getAdapterPosition(), model);
+            EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, TDUpdateMessage.EventType.INSERT));
+        }
+        if (!deleteRequestDiscarded) {
+            TodoModel examModel = (TodoModel) model;
+            if (database.deleteTodo(model)) {
                 playAlertTone(appContext, Alert.DELETE);
                 if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
             }
