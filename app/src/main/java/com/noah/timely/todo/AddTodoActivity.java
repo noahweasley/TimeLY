@@ -28,6 +28,7 @@ import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Converter;
+import com.noah.timely.util.SimpleOnItemSelectedListener;
 import com.noah.timely.util.Utility;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -151,24 +152,16 @@ public class AddTodoActivity extends AppCompatActivity {
 
     private void setupSpinner() {
         Spinner spin_category = findViewById(R.id.category);
-
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CATEGORIES);
-
         courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
-
         spin_category.setAdapter(courseAdapter);
         spin_category.setSelection(CollectionUtils.linearSearch(CATEGORIES,
                                                                 getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY)));
-        spin_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+        spin_category.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 category = TodoModel.CATEGORIES_2[position];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }

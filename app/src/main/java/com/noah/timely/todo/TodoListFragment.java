@@ -117,8 +117,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
         ThreadUtils.runBackgroundTask(() -> {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
-            if (tabPosition == 0) tdList = database.getFilteredTodos(category, false);
-            else tdList = database.getFilteredTodos(category, true);
+            if (tabPosition == 0) tdList = database.getFilteredTodos(category, /* Tast completed */ false);
+            else tdList = database.getFilteredTodos(category, /* Tast completed */ true);
 
             getActivity().runOnUiThread(() -> {
                 boolean empty = tdList.isEmpty();

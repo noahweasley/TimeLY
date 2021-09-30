@@ -68,16 +68,17 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
         btn_delete.setOnClickListener(c -> doTodoDelete());
 
         img_overflow.setOnClickListener(v -> {
+            boolean isExpanded = expl_detailLayout.isExpanded();
+            img_overflow.animate()
+                        .rotation(isExpanded ? 180 : 0)
+                        .setDuration(expl_detailLayout.getDuration());
             // no-op
+            // don't toggle description layout visibility if description is available
             if (TextUtils.isEmpty(todo.getTaskDescription())) {
                 Toast.makeText(img_overflow.getContext(), "Description not available", Toast.LENGTH_LONG).show();
                 return;
             }
             expl_detailLayout.toggle();
-            boolean isExpanded = expl_detailLayout.isExpanded();
-            img_overflow.animate()
-                        .rotation(isExpanded ? 180 : 0)
-                        .setDuration(expl_detailLayout.getDuration());
         });
 
         cbx_state.setOnCheckedChangeListener((v, isChecked) -> db.updateTodoState(todo.getId(), isChecked));
