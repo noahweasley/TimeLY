@@ -7,22 +7,22 @@ package com.noah.timely.core;
  * a DATA MODEL.
  */
 public class DataModel {
-    protected int id;
-    protected int position;
+   protected int id;
+   protected int position;
 
-    public int getId() {
-        return id;
-    }
+   public int getId() {
+      return id;
+   }
 
-    public int getPosition() {
-        return position;
-    }
+   public void setId(int id) {
+      this.id = id;
+   }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+   public int getPosition() {
+      return position;
+   }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
+   public void setPosition(int position) {
+      this.position = position;
+   }
 }

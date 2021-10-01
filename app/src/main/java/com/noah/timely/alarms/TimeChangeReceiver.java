@@ -11,22 +11,22 @@ import org.greenrobot.eventbus.EventBus;
 
 public class TimeChangeReceiver extends BroadcastReceiver {
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        // Retrieve time and post to any UI controller that is current in it's active state
+   @Override
+   public void onReceive(Context context, Intent intent) {
+      // Retrieve time and post to any UI controller that is current in it's active state
 
-        // also check the action that was sent to this receiver
-        String action = intent.getAction();
-        boolean isTimeChangeEvent =
-                TextUtils.equals(Intent.ACTION_TIME_CHANGED, action)
-                        || TextUtils.equals(Intent.ACTION_TIMEZONE_CHANGED, action)
-                        || TextUtils.equals(Intent.ACTION_DATE_CHANGED, action);
-        if (isTimeChangeEvent) {
-            Time time = TimeChangeDetector.requestImmediateTime(context);
-            EventBus eventBus = EventBus.getDefault();
-            if (eventBus.hasSubscriberForEvent(Time.class)) {
-                eventBus.post(time);
-            }
-        }
-    }
+      // also check the action that was sent to this receiver
+      String action = intent.getAction();
+      boolean isTimeChangeEvent =
+              TextUtils.equals(Intent.ACTION_TIME_CHANGED, action)
+                      || TextUtils.equals(Intent.ACTION_TIMEZONE_CHANGED, action)
+                      || TextUtils.equals(Intent.ACTION_DATE_CHANGED, action);
+      if (isTimeChangeEvent) {
+         Time time = TimeChangeDetector.requestImmediateTime(context);
+         EventBus eventBus = EventBus.getDefault();
+         if (eventBus.hasSubscriberForEvent(Time.class)) {
+            eventBus.post(time);
+         }
+      }
+   }
 }

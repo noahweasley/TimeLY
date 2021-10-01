@@ -3,10 +3,10 @@ package com.noah.timely.scheduled;
 import static android.content.Context.ALARM_SERVICE;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
-import static com.noah.timely.util.Utility.Alert.SCHEDULED_TIMETABLE;
-import static com.noah.timely.util.Utility.DAYS;
-import static com.noah.timely.util.Utility.isUserPreferred24Hours;
-import static com.noah.timely.util.Utility.playAlertTone;
+import static com.noah.timely.util.MiscUtil.Alert.SCHEDULED_TIMETABLE;
+import static com.noah.timely.util.MiscUtil.DAYS;
+import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
+import static com.noah.timely.util.MiscUtil.playAlertTone;
 
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -54,380 +54,380 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class AddScheduledDialog extends DialogFragment implements View.OnClickListener {
-    public static final String ARG_TIME = "Scheduled time";
-    public static final String ARG_COURSE = "Course code";
-    public static final String ARG_DAY = "Schedule Repeat day";
-    private static String selectedDay = DAYS[0];
-    private AutoCompleteTextView atv_courseName;
-    private EditText edt_startTime, edt_endTime, edt_lecturerName;
-    private RadioGroup imp_group;
-    private CheckBox cbx_clear;
-    public static final int UNIT_12 = 12;
-    public static final int UNIT_24 = 24;
-    private FragmentManager manager;
+   public static final String ARG_TIME = "Scheduled time";
+   public static final String ARG_COURSE = "Course code";
+   public static final String ARG_DAY = "Schedule Repeat day";
+   public static final int UNIT_12 = 12;
+   public static final int UNIT_24 = 24;
+   private static String selectedDay = DAYS[0];
+   private AutoCompleteTextView atv_courseName;
+   private EditText edt_startTime, edt_endTime, edt_lecturerName;
+   private RadioGroup imp_group;
+   private CheckBox cbx_clear;
+   private FragmentManager manager;
 
-    public void show(Context context) {
-        manager = ((FragmentActivity) context).getSupportFragmentManager();
-        show(manager, AddScheduledDialog.class.getName());
-    }
+   public void show(Context context) {
+      manager = ((FragmentActivity) context).getSupportFragmentManager();
+      show(manager, AddScheduledDialog.class.getName());
+   }
 
-    public void show(Context context, boolean toEdit, TimetableModel timetable) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(ARG_TO_EDIT, toEdit);
-        bundle.putSerializable(ARG_DATA, timetable);
-        setArguments(bundle);
-        FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
-        show(manager, AddScheduledDialog.class.getName());
-    }
+   public void show(Context context, boolean toEdit, TimetableModel timetable) {
+      Bundle bundle = new Bundle();
+      bundle.putBoolean(ARG_TO_EDIT, toEdit);
+      bundle.putSerializable(ARG_DATA, timetable);
+      setArguments(bundle);
+      FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
+      show(manager, AddScheduledDialog.class.getName());
+   }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        return new ASDialog(getContext());
-    }
+   @NonNull
+   @Override
+   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+      return new ASDialog(getContext());
+   }
 
-    @Override
-    public void onClick(View v) {
-        dismiss();
-    }
+   @Override
+   public void onClick(View v) {
+      dismiss();
+   }
 
-    private boolean registerAndClose() {
-        boolean isRegistered = registerTimetable();
-        if (isRegistered) dismiss();
-        return isRegistered;
-    }
+   private boolean registerAndClose() {
+      boolean isRegistered = registerTimetable();
+      if (isRegistered) dismiss();
+      return isRegistered;
+   }
 
-    private boolean registerTimetable() {
-        SchoolDatabase database = new SchoolDatabase(getContext());
-        String course = atv_courseName.getText().toString();
-        String end = edt_endTime.getText().toString();
-        String start = edt_startTime.getText().toString();
-        String lecturerName = edt_lecturerName.getText().toString();
-        String code = database.getCourseCodeFromName(course);
+   private boolean registerTimetable() {
+      SchoolDatabase database = new SchoolDatabase(getContext());
+      String course = atv_courseName.getText().toString();
+      String end = edt_endTime.getText().toString();
+      String start = edt_startTime.getText().toString();
+      String lecturerName = edt_lecturerName.getText().toString();
+      String code = database.getCourseCodeFromName(course);
 
-        String importance;
-        int checkedRadioButtonId = imp_group.getCheckedRadioButtonId();
-        if (checkedRadioButtonId == R.id.less_important) {
-            importance = "Less Important";
-        } else if (checkedRadioButtonId == R.id.very_important) {
-            importance = "Very Important";
-        } else {
-            importance = "Not Important";
-        }
+      String importance;
+      int checkedRadioButtonId = imp_group.getCheckedRadioButtonId();
+      if (checkedRadioButtonId == R.id.less_important) {
+         importance = "Less Important";
+      } else if (checkedRadioButtonId == R.id.very_important) {
+         importance = "Very Important";
+      } else {
+         importance = "Not Important";
+      }
 
-        String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
-        String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
+      String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+      String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
 
-        boolean errorOccurred = false, use24 = isUserPreferred24Hours(getContext());
+      boolean errorOccurred = false, use24 = isUserPreferred24Hours(getContext());
 
-        if (use24 && !start.matches(timeRegex24)) {
-            edt_startTime.setError("Format: HH:SS");
+      if (use24 && !start.matches(timeRegex24)) {
+         edt_startTime.setError("Format: HH:SS");
+         errorOccurred = true;
+      } else {
+         if (!use24 && !start.matches(timeRegex12)) {
+            edt_startTime.setError("12 hours mode");
             errorOccurred = true;
-        } else {
-            if (!use24 && !start.matches(timeRegex12)) {
-                edt_startTime.setError("12 hours mode");
-                errorOccurred = true;
-            }
-        }
+         }
+      }
 
-        if (use24 && !end.matches(timeRegex24)) {
-            edt_endTime.setError("Format: HH:SS");
+      if (use24 && !end.matches(timeRegex24)) {
+         edt_endTime.setError("Format: HH:SS");
+         errorOccurred = true;
+      } else {
+         if (!use24 && !end.matches(timeRegex12)) {
+            edt_endTime.setError("12 hours mode");
             errorOccurred = true;
-        } else {
-            if (!use24 && !end.matches(timeRegex12)) {
-                edt_endTime.setError("12 hours mode");
-                errorOccurred = true;
-            }
-        }
+         }
+      }
 
-        if (TextUtils.isEmpty(course)) {
-            atv_courseName.setError("Required");
-            errorOccurred = true;
-        }
+      if (TextUtils.isEmpty(course)) {
+         atv_courseName.setError("Required");
+         errorOccurred = true;
+      }
 
-        if (TextUtils.isEmpty(lecturerName)) {
-            edt_lecturerName.setError("Required");
-            errorOccurred = true;
-        }
+      if (TextUtils.isEmpty(lecturerName)) {
+         edt_lecturerName.setError("Required");
+         errorOccurred = true;
+      }
 
-        if (errorOccurred) {
-            return false;
-        }
+      if (errorOccurred) {
+         return false;
+      }
 
-        start = use24 ? start : convert(start, UNIT_24);
-        end = use24 ? end : convert(end, UNIT_24);
+      start = use24 ? start : convert(start, UNIT_24);
+      end = use24 ? end : convert(end, UNIT_24);
 
-        TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance, selectedDay);
+      TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance, selectedDay);
 
-        Context context = getContext();
-        if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT)) {
-            TimetableModel formerTimetable = (TimetableModel) getArguments().getSerializable(ARG_DATA);
-            boolean updated = database.updateTimetableData(newTimetable, SchoolDatabase.SCHEDULED_TIMETABLE);
+      Context context = getContext();
+      if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT)) {
+         TimetableModel formerTimetable = (TimetableModel) getArguments().getSerializable(ARG_DATA);
+         boolean updated = database.updateTimetableData(newTimetable, SchoolDatabase.SCHEDULED_TIMETABLE);
 
-            if (updated) {
-                newTimetable.setId(formerTimetable.getId());
-                newTimetable.setChronologicalOrder(formerTimetable.getChronologicalOrder());
-                // after updating database, update the UI and re-schedule notification
-                cancelTimetableNotifier(context, formerTimetable);
-                EventBus.getDefault()
-                        .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.UPDATE_CURRENT));
-                scheduleTimetableAlarm(context, newTimetable);
-            } else Toast.makeText(context, "An Error Occurred", Toast.LENGTH_SHORT).show();
+         if (updated) {
+            newTimetable.setId(formerTimetable.getId());
+            newTimetable.setChronologicalOrder(formerTimetable.getChronologicalOrder());
+            // after updating database, update the UI and re-schedule notification
+            cancelTimetableNotifier(context, formerTimetable);
+            EventBus.getDefault()
+                    .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.UPDATE_CURRENT));
+            scheduleTimetableAlarm(context, newTimetable);
+         } else Toast.makeText(context, "An Error Occurred", Toast.LENGTH_SHORT).show();
 
-        } else {
-            if (database.isTimeTableAbsent(SchoolDatabase.SCHEDULED_TIMETABLE, newTimetable)) {
-                ThreadUtils.runBackgroundTask(() -> {
-                    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                    int[] insertData = database.addTimeTableData(newTimetable, SchoolDatabase.SCHEDULED_TIMETABLE);
-                    if (insertData[1] != -1) {
-                        // set the id to be used with view holder's item Id
-                        newTimetable.setChronologicalOrder(insertData[0]);
-                        newTimetable.setId(insertData[1]);
-                        // after adding to database, update the UI and schedule notification
-                        EventBus.getDefault()
-                                .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.NEW));
-                        scheduleTimetableAlarm(context, newTimetable);
-                    } else {
-                        Toast.makeText(context, "An Error Occurred", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                // Error message
-                ErrorDialog.Builder builder = new ErrorDialog.Builder();
-                builder.setDialogMessage("Duplicate start time present")
-                       .setShowSuggestions(false);
-                new ErrorDialog().showErrorMessage(context, builder.build());
-            }
-        }
-        database.close();
-        return true;
-    }
-
-    private String convert(String time, int unit) {
-        SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
-        SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
-
-        Date date;
-        try {
-            date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
-        } catch (ParseException e) {
-            return null;
-        }
-        return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
-    }
-
-    private boolean registerAndClear() {
-        boolean isRegistered = registerTimetable();
-        if (isRegistered && cbx_clear.isChecked()) {
-            atv_courseName.setText(null);
-            edt_startTime.setText(null);
-            edt_endTime.setText(null);
-            edt_lecturerName.setText(null);
-        }
-        return isRegistered;
-    }
-
-    private void cancelTimetableNotifier(Context context, TimetableModel timetable) {
-        String[] t = timetable.getStartTime().split("[: ]");
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(t[0]));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(t[1]));
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.setTimeInMillis(calendar.getTimeInMillis() - TimeUnit.MINUTES.toMillis(10));
-
-        long NOW = System.currentTimeMillis();
-        long CURRENT = calendar.getTimeInMillis();
-        long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
-
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
-        timetableIntent.addCategory("com.noah.timely.scheduled")
-                       .setAction("com.noah.timely.scheduled.addAction")
-                       .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
-                                       "com.noah.timely.scheduled.dataType");
-
-        PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
-                                                      PendingIntent.FLAG_CANCEL_CURRENT);
-        pi.cancel();
-        manager.cancel(pi);
-    }
-
-    private void scheduleTimetableAlarm(Context context, TimetableModel timetable) {
-        String[] sTime = timetable.getStartTime().split("[: ]");
-        String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
-        int day = timetable.getCalendarDay();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(sTime[0]));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(sTime[1]));
-        calendar.set(Calendar.DAY_OF_WEEK, day);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.setTimeInMillis(calendar.getTimeInMillis() - TimeUnit.MINUTES.toMillis(10));
-
-        long NOW = System.currentTimeMillis();
-        long CURRENT = calendar.getTimeInMillis();
-        long triggerTime = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
-
-        AlarmManager manager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-
-        Intent scheduleIntent = new Intent(context, ScheduledTaskNotifier.class)
-                .putExtra(ARG_TIME, timetable.getStartTime())
-                .putExtra(ARG_COURSE, course)
-                .putExtra(ARG_DAY, day)
-                .addCategory("com.noah.timely.scheduled")
-                .setAction("com.noah.timely.scheduled.addAction")
-                .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
-                                "com.noah.timely.scheduled.dataType");
-
-        PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                manager.setExactAndAllowWhileIdle(AlarmManager.RTC, triggerTime, pi);
-            } else {
-                manager.setExact(AlarmManager.RTC, triggerTime, pi);
-            }
-        } else {
-            manager.set(AlarmManager.RTC, triggerTime, pi);
-        }
-        playAlertTone(context.getApplicationContext(), SCHEDULED_TIMETABLE);
-    }
-
-    private class ASDialog extends Dialog {
-
-        public ASDialog(Context context) {
-            super(context, R.style.Dialog);
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges);
-            setContentView(R.layout.dialog_add_scheduled);
-            setCanceledOnTouchOutside(false);
-            cbx_clear = findViewById(R.id.clear);
-            CheckBox cbx_multiple = findViewById(R.id.multiple);
-
-            findViewById(R.id.cancel).setOnClickListener(AddScheduledDialog.this);
-            findViewById(R.id.register).setOnClickListener(v -> {
-                boolean success = cbx_multiple.isChecked() ? registerAndClear()
-                                                           : registerAndClose();
-                int m;
-                if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT))
-                    m = R.string.update_pending;
-                else m = R.string.registration_pending;
-
-                if (success) {
-                    Toast message = Toast.makeText(getContext(), m, Toast.LENGTH_SHORT);
-                    if (!cbx_multiple.isChecked()) message.setGravity(Gravity.CENTER, 0, 0);
-                    message.show();
-                } else Toast.makeText(getContext(), "Error occurred", Toast.LENGTH_SHORT).show();
+      } else {
+         if (database.isTimeTableAbsent(SchoolDatabase.SCHEDULED_TIMETABLE, newTimetable)) {
+            ThreadUtils.runBackgroundTask(() -> {
+               Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+               int[] insertData = database.addTimeTableData(newTimetable, SchoolDatabase.SCHEDULED_TIMETABLE);
+               if (insertData[1] != -1) {
+                  // set the id to be used with view holder's item Id
+                  newTimetable.setChronologicalOrder(insertData[0]);
+                  newTimetable.setId(insertData[1]);
+                  // after adding to database, update the UI and schedule notification
+                  EventBus.getDefault()
+                          .post(new SUpdateMessage(newTimetable, SUpdateMessage.EventType.NEW));
+                  scheduleTimetableAlarm(context, newTimetable);
+               } else {
+                  Toast.makeText(context, "An Error Occurred", Toast.LENGTH_SHORT).show();
+               }
             });
+         } else {
+            // Error message
+            ErrorDialog.Builder builder = new ErrorDialog.Builder();
+            builder.setDialogMessage("Duplicate start time present")
+                    .setShowSuggestions(false);
+            new ErrorDialog().showErrorMessage(context, builder.build());
+         }
+      }
+      database.close();
+      return true;
+   }
 
-            atv_courseName = findViewById(R.id.course_name);
-            edt_startTime = findViewById(R.id.start_time);
-            edt_endTime = findViewById(R.id.end_time);
-            edt_lecturerName = findViewById(R.id.lecturer_name);
-            imp_group = findViewById(R.id.importance_group);
+   private String convert(String time, int unit) {
+      SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+      SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
 
-            edt_endTime.setOnTouchListener(this::onTouch);
-            edt_startTime.setOnTouchListener(this::onTouch);
+      Date date;
+      try {
+         date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
+      } catch (ParseException e) {
+         return null;
+      }
+      return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
+   }
 
-            SchoolDatabase database = new SchoolDatabase(getContext());
-            ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(getContext(),
-                                                                    R.layout.simple_dropdown_item_1line,
-                                                                    database.getAllRegisteredCourses());
+   private boolean registerAndClear() {
+      boolean isRegistered = registerTimetable();
+      if (isRegistered && cbx_clear.isChecked()) {
+         atv_courseName.setText(null);
+         edt_startTime.setText(null);
+         edt_endTime.setText(null);
+         edt_lecturerName.setText(null);
+      }
+      return isRegistered;
+   }
 
-            courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
-            atv_courseName.setAdapter(courseAdapter);
+   private void cancelTimetableNotifier(Context context, TimetableModel timetable) {
+      String[] t = timetable.getStartTime().split("[: ]");
 
-            Spinner spin_days = findViewById(R.id.day_spin);
-            ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(getContext(),
-                                                                  R.layout.simple_spinner_item,
-                                                                  DAYS);
-            daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
-            spin_days.setAdapter(daysAdapter);
-            spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      Calendar calendar = Calendar.getInstance();
+      calendar.set(Calendar.DAY_OF_WEEK, timetable.getCalendarDay());
+      calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(t[0]));
+      calendar.set(Calendar.MINUTE, Integer.parseInt(t[1]));
+      calendar.set(Calendar.SECOND, 0);
+      calendar.set(Calendar.MILLISECOND, 0);
+      calendar.setTimeInMillis(calendar.getTimeInMillis() - TimeUnit.MINUTES.toMillis(10));
 
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                    selectedDay = DAYS[pos];
-                }
+      long NOW = System.currentTimeMillis();
+      long CURRENT = calendar.getTimeInMillis();
+      long timeInMillis = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    // unused, but had to implement.
-                }
-            });
+      AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+      Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
+      timetableIntent.addCategory("com.noah.timely.scheduled")
+              .setAction("com.noah.timely.scheduled.addAction")
+              .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
+                      "com.noah.timely.scheduled.dataType");
 
-            if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT)) {
-                TimetableModel data = (TimetableModel) getArguments().getSerializable(ARG_DATA);
+      PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
+              PendingIntent.FLAG_CANCEL_CURRENT);
+      pi.cancel();
+      manager.cancel(pi);
+   }
 
-                if (!isUserPreferred24Hours(getContext())) {
-                    data.setStartTime(convert(data.getStartTime(), UNIT_12));
-                    data.setEndTime(convert(data.getEndTime(), UNIT_12));
-                }
+   private void scheduleTimetableAlarm(Context context, TimetableModel timetable) {
+      String[] sTime = timetable.getStartTime().split("[: ]");
+      String course = timetable.getFullCourseName() + " (" + timetable.getCourseCode() + ")";
+      int day = timetable.getCalendarDay();
 
-                edt_endTime.setText(data.getEndTime());
-                edt_startTime.setText(data.getStartTime());
+      Calendar calendar = Calendar.getInstance();
+      calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(sTime[0]));
+      calendar.set(Calendar.MINUTE, Integer.parseInt(sTime[1]));
+      calendar.set(Calendar.DAY_OF_WEEK, day);
+      calendar.set(Calendar.SECOND, 0);
+      calendar.set(Calendar.MILLISECOND, 0);
+      calendar.setTimeInMillis(calendar.getTimeInMillis() - TimeUnit.MINUTES.toMillis(10));
 
-                atv_courseName.setText(data.getFullCourseName());
-                edt_lecturerName.setText(data.getLecturerName());
-                spin_days.setSelection(data.getDayIndex());
-                switch (data.getImportance()) {
-                    case "Not Important":
-                        imp_group.check(R.id.not_important);
-                        break;
-                    case "Less Important":
-                        imp_group.check(R.id.less_important);
-                        break;
-                    default:
-                        imp_group.check(R.id.very_important);
-                }
+      long NOW = System.currentTimeMillis();
+      long CURRENT = calendar.getTimeInMillis();
+      long triggerTime = CURRENT < NOW ? CURRENT + TimeUnit.DAYS.toMillis(7) : CURRENT;
+
+      AlarmManager manager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+
+      Intent scheduleIntent = new Intent(context, ScheduledTaskNotifier.class)
+              .putExtra(ARG_TIME, timetable.getStartTime())
+              .putExtra(ARG_COURSE, course)
+              .putExtra(ARG_DAY, day)
+              .addCategory("com.noah.timely.scheduled")
+              .setAction("com.noah.timely.scheduled.addAction")
+              .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
+                      "com.noah.timely.scheduled.dataType");
+
+      PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            manager.setExactAndAllowWhileIdle(AlarmManager.RTC, triggerTime, pi);
+         } else {
+            manager.setExact(AlarmManager.RTC, triggerTime, pi);
+         }
+      } else {
+         manager.set(AlarmManager.RTC, triggerTime, pi);
+      }
+      playAlertTone(context.getApplicationContext(), SCHEDULED_TIMETABLE);
+   }
+
+   private class ASDialog extends Dialog {
+
+      public ASDialog(Context context) {
+         super(context, R.style.Dialog);
+      }
+
+      @Override
+      protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+         getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges);
+         setContentView(R.layout.dialog_add_scheduled);
+         setCanceledOnTouchOutside(false);
+         cbx_clear = findViewById(R.id.clear);
+         CheckBox cbx_multiple = findViewById(R.id.multiple);
+
+         findViewById(R.id.cancel).setOnClickListener(AddScheduledDialog.this);
+         findViewById(R.id.register).setOnClickListener(v -> {
+            boolean success = cbx_multiple.isChecked() ? registerAndClear()
+                                                       : registerAndClose();
+            int m;
+            if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT))
+               m = R.string.update_pending;
+            else m = R.string.registration_pending;
+
+            if (success) {
+               Toast message = Toast.makeText(getContext(), m, Toast.LENGTH_SHORT);
+               if (!cbx_multiple.isChecked()) message.setGravity(Gravity.CENTER, 0, 0);
+               message.show();
+            } else Toast.makeText(getContext(), "Error occurred", Toast.LENGTH_SHORT).show();
+         });
+
+         atv_courseName = findViewById(R.id.course_name);
+         edt_startTime = findViewById(R.id.start_time);
+         edt_endTime = findViewById(R.id.end_time);
+         edt_lecturerName = findViewById(R.id.lecturer_name);
+         imp_group = findViewById(R.id.importance_group);
+
+         edt_endTime.setOnTouchListener(this::onTouch);
+         edt_startTime.setOnTouchListener(this::onTouch);
+
+         SchoolDatabase database = new SchoolDatabase(getContext());
+         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(getContext(),
+                 R.layout.simple_dropdown_item_1line,
+                 database.getAllRegisteredCourses());
+
+         courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
+         atv_courseName.setAdapter(courseAdapter);
+
+         Spinner spin_days = findViewById(R.id.day_spin);
+         ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(getContext(),
+                 R.layout.simple_spinner_item,
+                 DAYS);
+         daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
+         spin_days.setAdapter(daysAdapter);
+         spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+               selectedDay = DAYS[pos];
             }
-            database.close();
-        }
 
-        private boolean onTouch(View view, MotionEvent event) {
-            EditText editText = (EditText) view;
-            TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute,
-                                                      int second) -> {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-
-                SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
-                SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
-
-                String parsedTime = isUserPreferred24Hours(getContext()) ? timeFormat24.format(calendar.getTime())
-                                                                         : timeFormat12.format(calendar.getTime());
-
-                editText.setText(parsedTime);
-            };
-
-            final int DRAWABLE_RIGHT = 2;
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                if (event.getX() >= (editText.getWidth() - drawableWidth)) {
-                    Calendar calendar = Calendar.getInstance();
-
-                    TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
-                                                                        calendar.get(Calendar.HOUR_OF_DAY),
-                                                                        calendar.get(Calendar.MINUTE),
-                                                                        isUserPreferred24Hours(getContext()));
-                    dpd.setVersion(TimePickerDialog.Version.VERSION_2);
-                    dpd.show(manager, "TimePickerDialog");
-                    return true;
-                }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+               // unused, but had to implement.
             }
-            return false;
-        }
-    }
+         });
+
+         if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT)) {
+            TimetableModel data = (TimetableModel) getArguments().getSerializable(ARG_DATA);
+
+            if (!isUserPreferred24Hours(getContext())) {
+               data.setStartTime(convert(data.getStartTime(), UNIT_12));
+               data.setEndTime(convert(data.getEndTime(), UNIT_12));
+            }
+
+            edt_endTime.setText(data.getEndTime());
+            edt_startTime.setText(data.getStartTime());
+
+            atv_courseName.setText(data.getFullCourseName());
+            edt_lecturerName.setText(data.getLecturerName());
+            spin_days.setSelection(data.getDayIndex());
+            switch (data.getImportance()) {
+               case "Not Important":
+                  imp_group.check(R.id.not_important);
+                  break;
+               case "Less Important":
+                  imp_group.check(R.id.less_important);
+                  break;
+               default:
+                  imp_group.check(R.id.very_important);
+            }
+         }
+         database.close();
+      }
+
+      private boolean onTouch(View view, MotionEvent event) {
+         EditText editText = (EditText) view;
+         TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute,
+                                                   int second) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+
+            SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+            SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+            String parsedTime = isUserPreferred24Hours(getContext()) ? timeFormat24.format(calendar.getTime())
+                                                                     : timeFormat12.format(calendar.getTime());
+
+            editText.setText(parsedTime);
+         };
+
+         final int DRAWABLE_RIGHT = 2;
+
+         if (event.getAction() == MotionEvent.ACTION_UP) {
+            int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+            if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+               Calendar calendar = Calendar.getInstance();
+
+               TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
+                       calendar.get(Calendar.HOUR_OF_DAY),
+                       calendar.get(Calendar.MINUTE),
+                       isUserPreferred24Hours(getContext()));
+               dpd.setVersion(TimePickerDialog.Version.VERSION_2);
+               dpd.show(manager, "TimePickerDialog");
+               return true;
+            }
+         }
+         return false;
+      }
+   }
 }

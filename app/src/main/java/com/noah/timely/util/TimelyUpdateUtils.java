@@ -28,110 +28,110 @@ import java.util.Locale;
  * Utility class wrapping TimeLY's update service
  */
 public class TimelyUpdateUtils {
-    private static final int UPDATE_ID = 222;
-    private static final String USER = "noahweasley";
-    private static final String REPO = "TimeLY";
-    private static boolean nPosted;
+   private static final int UPDATE_ID = 222;
+   private static final String USER = "noahweasley";
+   private static final String REPO = "TimeLY";
+   private static boolean nPosted;
 
-    public static void checkForUpdates(Context context) {
-        AppUpdaterUtils updaterUtils = new AppUpdaterUtils(context);
+   public static void checkForUpdates(Context context) {
+      AppUpdaterUtils updaterUtils = new AppUpdaterUtils(context);
 
-        if (!nPosted) postNotification(context, "Checking for updates", null);
+      if (!nPosted) postNotification(context, "Checking for updates", null);
 
-        updaterUtils.setUpdateFrom(UpdateFrom.GITHUB);
-        updaterUtils.setGitHubUserAndRepo(USER, REPO);
-        updaterUtils.withListener(new TimelyUpdateListener(context));
-        updaterUtils.start();
-    }
+      updaterUtils.setUpdateFrom(UpdateFrom.GITHUB);
+      updaterUtils.setGitHubUserAndRepo(USER, REPO);
+      updaterUtils.withListener(new TimelyUpdateListener(context));
+      updaterUtils.start();
+   }
 
-    private static class TimelyUpdateListener implements AppUpdaterUtils.UpdateListener {
-        private final Context context;
+   private static void dismissNotification(Context context) {
+      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      manager.cancel(UPDATE_ID);
+      nPosted = false;
+   }
 
-        public TimelyUpdateListener(Context context) {
-            this.context = context;
-        }
+   private static void postNotification(Context context, String updateTitle, Update update) {
+      nPosted = true;
+      final String CHANNEL = "TimeLY's update";
+      final String UNIQUE_ID = "TimeLY's update";
 
-        @Override
-        public void onSuccess(Update update, Boolean isUpdateAvailable) {
-            if (isUpdateAvailable) postNotification(context, "Update available", update);
-            else dismissNotification(context);
-        }
+      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        @Override
-        public void onFailed(AppUpdaterError error) {
-            dismissNotification(context);
-        }
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL) == null) {
+         // Create a notification channel if it doesn't exist yet, so as to abide to the new
+         // rule of android api level 26: "All notifications must have a channel"
+         manager.createNotificationChannel(new NotificationChannel(UNIQUE_ID, CHANNEL,
+                 NotificationManager.IMPORTANCE_DEFAULT));
+      }
 
-    }
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
 
-    private static void dismissNotification(Context context) {
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.cancel(UPDATE_ID);
-        nPosted = false;
-    }
+      Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon);
 
-    private static void postNotification(Context context, String updateTitle, Update update) {
-        nPosted = true;
-        final String CHANNEL = "TimeLY's update";
-        final String UNIQUE_ID = "TimeLY's update";
+      if (updateTitle.equals("Update available")) {
+         Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+         Uri APP_DEFAULT = new Uri.Builder()
+                 .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                 .authority(context.getPackageName())
+                 .path(String.valueOf(R.raw.arpeggio1))
+                 .build();
 
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+         String type = PreferenceManager.getDefaultSharedPreferences(context)
+                 .getString("Uri Type", "TimeLY's Default");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL) == null) {
-            // Create a notification channel if it doesn't exist yet, so as to abide to the new
-            // rule of android api level 26: "All notifications must have a channel"
-            manager.createNotificationChannel(new NotificationChannel(UNIQUE_ID, CHANNEL,
-                                                                      NotificationManager.IMPORTANCE_DEFAULT));
-        }
+         final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
+                                                                                           : SYSTEM_DEFAULT;
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
+         String v = update.getLatestVersion();
+         // corresponding link to direct download link which was in sync with the actual build version
+         String githubLink = "https://github.com/noahweasley/TimeLY/releases/download/"
+                 + "v" + v + "/" + REPO + "_v" + v + ".apk";
+         Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
+         notificationIntent.setData(Uri.parse(githubLink));
+         PendingIntent pi = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon);
+         String contentText = String.format(Locale.US, "TimeLY_v%s is out, Click to update", v);
 
-        if (updateTitle.equals("Update available")) {
-            Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Uri APP_DEFAULT = new Uri.Builder()
-                    .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-                    .authority(context.getPackageName())
-                    .path(String.valueOf(R.raw.arpeggio1))
-                    .build();
+         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
+                 .setAutoCancel(true)
+                 .setContentTitle(updateTitle)
+                 .setContentText(contentText)
+                 .setSound(DEFAULT_URI)
+                 .setSmallIcon(R.drawable.ic_n_upgrade)
+                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                 .setLargeIcon(icon)
+                 .setContentIntent(pi);
+      } else {
+         builder.setContentTitle(updateTitle)
+                 .setOngoing(true)
+                 .setSilent(true)
+                 .setAutoCancel(false)
+                 .setSmallIcon(R.drawable.ic_n_upgrade)
+                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                 .setLargeIcon(icon);
+      }
 
-            String type = PreferenceManager.getDefaultSharedPreferences(context)
-                                           .getString("Uri Type", "TimeLY's Default");
+      manager.notify(UPDATE_ID, builder.build());
+   }
 
-            final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
-                                                                                              : SYSTEM_DEFAULT;
+   private static class TimelyUpdateListener implements AppUpdaterUtils.UpdateListener {
+      private final Context context;
 
-            String v = update.getLatestVersion();
-            // corresponding link to direct download link which was in sync with the actual build version
-            String githubLink = "https://github.com/noahweasley/TimeLY/releases/download/"
-                    + "v" + v + "/" + REPO + "_v" + v + ".apk";
-            Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
-            notificationIntent.setData(Uri.parse(githubLink));
-            PendingIntent pi = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+      public TimelyUpdateListener(Context context) {
+         this.context = context;
+      }
 
-            String contentText = String.format(Locale.US, "TimeLY_v%s is out, Click to update", v);
+      @Override
+      public void onSuccess(Update update, Boolean isUpdateAvailable) {
+         if (isUpdateAvailable) postNotification(context, "Update available", update);
+         else dismissNotification(context);
+      }
 
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
-                   .setAutoCancel(true)
-                   .setContentTitle(updateTitle)
-                   .setContentText(contentText)
-                   .setSound(DEFAULT_URI)
-                   .setSmallIcon(R.drawable.ic_n_upgrade)
-                   .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                   .setLargeIcon(icon)
-                   .setContentIntent(pi);
-        } else {
-            builder.setContentTitle(updateTitle)
-                   .setOngoing(true)
-                   .setSilent(true)
-                   .setAutoCancel(false)
-                   .setSmallIcon(R.drawable.ic_n_upgrade)
-                   .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                   .setLargeIcon(icon);
-        }
+      @Override
+      public void onFailed(AppUpdaterError error) {
+         dismissNotification(context);
+      }
 
-        manager.notify(UPDATE_ID, builder.build());
-    }
+   }
 
 }

@@ -1,9 +1,9 @@
 package com.noah.timely.exam;
 
 import static com.noah.timely.util.Converter.convertTime;
-import static com.noah.timely.util.Utility.DAYS_3;
-import static com.noah.timely.util.Utility.isUserPreferred24Hours;
-import static com.noah.timely.util.Utility.playAlertTone;
+import static com.noah.timely.util.MiscUtil.DAYS_3;
+import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
+import static com.noah.timely.util.MiscUtil.playAlertTone;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,8 +26,8 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Converter;
+import com.noah.timely.util.MiscUtil;
 import com.noah.timely.util.ThreadUtils;
-import com.noah.timely.util.Utility;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,209 +40,209 @@ import java.util.Locale;
  * A clone of {@link AddExamDialog} that would be used as an alternate to adding exams
  */
 public class AddExamActivity extends AppCompatActivity {
-    static final String ARG_PAGE_POSITION = "Tab position";
-    private SchoolDatabase database;
-    private AutoCompleteTextView atv_courseName;
-    private EditText edt_startTime, edt_endTime;
-    private CheckBox cbx_clear;
-    private String examDay;
+   static final String ARG_PAGE_POSITION = "Tab position";
+   private SchoolDatabase database;
+   private AutoCompleteTextView atv_courseName;
+   private EditText edt_startTime, edt_endTime;
+   private CheckBox cbx_clear;
+   private String examDay;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_exam);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle("Register Exams");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+   @Override
+   protected void onCreate(@Nullable Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_add_exam);
+      setSupportActionBar(findViewById(R.id.toolbar));
+      getSupportActionBar().setTitle("Register Exams");
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        database = new SchoolDatabase(this);
+      database = new SchoolDatabase(this);
 
-        CheckBox cbx_multiple = findViewById(R.id.multiple);
-        cbx_clear = findViewById(R.id.clear);
+      CheckBox cbx_multiple = findViewById(R.id.multiple);
+      cbx_clear = findViewById(R.id.clear);
 
-        findViewById(R.id.register).setOnClickListener(v -> {
+      findViewById(R.id.register).setOnClickListener(v -> {
 
-            boolean success = cbx_multiple.isChecked() ? registerAndClear() : registerAndClose();
+         boolean success = cbx_multiple.isChecked() ? registerAndClear() : registerAndClose();
 
-            if (success) {
-                Toast message = Toast.makeText(this, R.string.registration_pending, Toast.LENGTH_SHORT);
+         if (success) {
+            Toast message = Toast.makeText(this, R.string.registration_pending, Toast.LENGTH_SHORT);
 
-                if (!cbx_multiple.isChecked())
-                    message.setGravity(Gravity.CENTER, 0, 0);
+            if (!cbx_multiple.isChecked())
+               message.setGravity(Gravity.CENTER, 0, 0);
 
-                message.show();
-            } else
-                Toast.makeText(this, "Error occurred", Toast.LENGTH_SHORT).show();
-        });
+            message.show();
+         } else
+            Toast.makeText(this, "Error occurred", Toast.LENGTH_SHORT).show();
+      });
 
-        atv_courseName = findViewById(R.id.course_name);
-        edt_startTime = findViewById(R.id.start_time);
-        edt_endTime = findViewById(R.id.end_time);
+      atv_courseName = findViewById(R.id.course_name);
+      edt_startTime = findViewById(R.id.start_time);
+      edt_endTime = findViewById(R.id.end_time);
 
-        edt_endTime.setOnTouchListener(this::onTouch);
-        edt_startTime.setOnTouchListener(this::onTouch);
+      edt_endTime.setOnTouchListener(this::onTouch);
+      edt_startTime.setOnTouchListener(this::onTouch);
 
-        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
-                                                                R.layout.simple_dropdown_item_1line,
-                                                                database.getAllRegisteredCourses());
-        courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
-        atv_courseName.setAdapter(courseAdapter);
+      ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
+              R.layout.simple_dropdown_item_1line,
+              database.getAllRegisteredCourses());
+      courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
+      atv_courseName.setAdapter(courseAdapter);
 
-        Spinner spin_days = findViewById(R.id.day_spin);
-        ArrayAdapter<String> dayAdapter = new ArrayAdapter<>(this,
-                                                             R.layout.simple_spinner_item,
-                                                             DAYS_3);
+      Spinner spin_days = findViewById(R.id.day_spin);
+      ArrayAdapter<String> dayAdapter = new ArrayAdapter<>(this,
+              R.layout.simple_spinner_item,
+              DAYS_3);
 
-        dayAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
-        spin_days.setAdapter(dayAdapter);
-        spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      dayAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
+      spin_days.setAdapter(dayAdapter);
+      spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos,
-                                       long id) {
-                examDay = DAYS_3[pos];
-            }
+         @Override
+         public void onItemSelected(AdapterView<?> parent, View view, int pos,
+                                    long id) {
+            examDay = DAYS_3[pos];
+         }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+         @Override
+         public void onNothingSelected(AdapterView<?> parent) {
+         }
+      });
 
-    }
+   }
 
-    private boolean onTouch(View view, MotionEvent event) {
-        EditText editText = (EditText) view;
-        TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute, int second) -> {
+   private boolean onTouch(View view, MotionEvent event) {
+      EditText editText = (EditText) view;
+      TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute, int second) -> {
+         Calendar calendar = Calendar.getInstance();
+         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+         calendar.set(Calendar.MINUTE, minute);
+
+         SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+         SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+
+         String parsedTime = isUserPreferred24Hours(this) ? timeFormat24.format(calendar.getTime())
+                                                          : timeFormat12.format(calendar.getTime());
+
+         editText.setText(parsedTime);
+      };
+
+      final int DRAWABLE_RIGHT = 2;
+
+      if (event.getAction() == MotionEvent.ACTION_UP) {
+         int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+         if (event.getX() >= (editText.getWidth() - drawableWidth)) {
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            calendar.set(Calendar.MINUTE, minute);
 
-            SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
-            SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+            FragmentManager manager = getSupportFragmentManager();
+            TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    isUserPreferred24Hours(this));
+            dpd.setVersion(TimePickerDialog.Version.VERSION_2);
+            dpd.show(manager, "TimePickerDialog");
+            return true;
+         }
+      }
+      return false;
+   }
 
-            String parsedTime = isUserPreferred24Hours(this) ? timeFormat24.format(calendar.getTime())
-                                                             : timeFormat12.format(calendar.getTime());
+   @Override
+   protected void onDestroy() {
+      database.close();
+      super.onDestroy();
+   }
 
-            editText.setText(parsedTime);
-        };
+   @Override
+   public boolean onSupportNavigateUp() {
+      onBackPressed();
+      return true;
+   }
 
-        final int DRAWABLE_RIGHT = 2;
+   private boolean registerAndClear() {
+      boolean registered = registerExam();
+      if (registered && cbx_clear.isChecked()) {
+         edt_endTime.setText(null);
+         edt_startTime.setText(null);
+         atv_courseName.setText(null);
+      }
+      return registered;
+   }
 
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-            if (event.getX() >= (editText.getWidth() - drawableWidth)) {
-                Calendar calendar = Calendar.getInstance();
+   private boolean registerAndClose() {
+      boolean registered = registerExam();
+      if (registered)
+         onBackPressed();
+      return registered;
+   }
 
-                FragmentManager manager = getSupportFragmentManager();
-                TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
-                                                                    calendar.get(Calendar.HOUR_OF_DAY),
-                                                                    calendar.get(Calendar.MINUTE),
-                                                                    isUserPreferred24Hours(this));
-                dpd.setVersion(TimePickerDialog.Version.VERSION_2);
-                dpd.show(manager, "TimePickerDialog");
-                return true;
-            }
-        }
-        return false;
-    }
+   private boolean registerExam() {
+      String course = atv_courseName.getText().toString();
+      String end = edt_endTime.getText().toString();
+      String start = edt_startTime.getText().toString();
+      String code = database.getCourseCodeFromName(course);
 
-    @Override
-    protected void onDestroy() {
-        database.close();
-        super.onDestroy();
-    }
+      String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
+      String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
 
-    private boolean registerAndClear() {
-        boolean registered = registerExam();
-        if (registered && cbx_clear.isChecked()) {
-            edt_endTime.setText(null);
-            edt_startTime.setText(null);
-            atv_courseName.setText(null);
-        }
-        return registered;
-    }
+      boolean errorOccurred = false, use24 = isUserPreferred24Hours(this);
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    private boolean registerAndClose() {
-        boolean registered = registerExam();
-        if (registered)
-            onBackPressed();
-        return registered;
-    }
-
-    private boolean registerExam() {
-        String course = atv_courseName.getText().toString();
-        String end = edt_endTime.getText().toString();
-        String start = edt_startTime.getText().toString();
-        String code = database.getCourseCodeFromName(course);
-
-        String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
-        String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
-
-        boolean errorOccurred = false, use24 = isUserPreferred24Hours(this);
-
-        if (use24 && !start.matches(timeRegex24)) {
-            edt_startTime.setError("Format: HH:SS");
+      if (use24 && !start.matches(timeRegex24)) {
+         edt_startTime.setError("Format: HH:SS");
+         errorOccurred = true;
+      } else {
+         if (!use24 && !start.matches(timeRegex12)) {
+            edt_startTime.setError("12 hours mode");
             errorOccurred = true;
-        } else {
-            if (!use24 && !start.matches(timeRegex12)) {
-                edt_startTime.setError("12 hours mode");
-                errorOccurred = true;
-            }
-        }
+         }
+      }
 
-        if (use24 && !end.matches(timeRegex24)) {
-            edt_endTime.setError("Format: HH:SS");
+      if (use24 && !end.matches(timeRegex24)) {
+         edt_endTime.setError("Format: HH:SS");
+         errorOccurred = true;
+      } else {
+         if (!use24 && !end.matches(timeRegex12)) {
+            edt_endTime.setError("12 hours mode");
             errorOccurred = true;
-        } else {
-            if (!use24 && !end.matches(timeRegex12)) {
-                edt_endTime.setError("12 hours mode");
-                errorOccurred = true;
+         }
+      }
+
+      if (TextUtils.isEmpty(course)) {
+         atv_courseName.setError("Required");
+         errorOccurred = true;
+      }
+
+      if (errorOccurred) return false;
+
+      start = use24 ? start : convertTime(start, Converter.UNIT_24);
+      end = use24 ? end : convertTime(end, Converter.UNIT_24);
+
+      int pagePosition = getIntent().getIntExtra(ARG_PAGE_POSITION, 0);
+
+      String examWeek = String.format(Locale.US, "%s_%d", "WEEK", pagePosition + 1);
+      ExamModel exam = new ExamModel(code, course, start, end);
+      exam.setWeek(examWeek);
+      exam.setDay(examDay);
+
+      if (database.isExamAbsent(examWeek, exam)) {
+         ThreadUtils.runBackgroundTask(() -> {
+            int[] data = database.addExam(exam, examWeek);
+            if (data[1] != -1) {
+               exam.setId(data[1]);
+               exam.setChronologicalOrder(data[0]);
+               EventBus.getDefault().post(new EUpdateMessage(exam, EUpdateMessage.EventType.NEW, pagePosition));
+               playAlertTone(getApplicationContext(), MiscUtil.Alert.EXAM);
+            } else {
+               Toast.makeText(this, "An Error occurred", Toast.LENGTH_LONG).show();
             }
-        }
-
-        if (TextUtils.isEmpty(course)) {
-            atv_courseName.setError("Required");
-            errorOccurred = true;
-        }
-
-        if (errorOccurred) return false;
-
-        start = use24 ? start : convertTime(start, Converter.UNIT_24);
-        end = use24 ? end : convertTime(end, Converter.UNIT_24);
-
-        int pagePosition = getIntent().getIntExtra(ARG_PAGE_POSITION, 0);
-
-        String examWeek = String.format(Locale.US, "%s_%d", "WEEK", pagePosition + 1);
-        ExamModel exam = new ExamModel(code, course, start, end);
-        exam.setWeek(examWeek);
-        exam.setDay(examDay);
-
-        if (database.isExamAbsent(examWeek, exam)) {
-            ThreadUtils.runBackgroundTask(() -> {
-                int[] data = database.addExam(exam, examWeek);
-                if (data[1] != -1) {
-                    exam.setId(data[1]);
-                    exam.setChronologicalOrder(data[0]);
-                    EventBus.getDefault().post(new EUpdateMessage(exam, EUpdateMessage.EventType.NEW, pagePosition));
-                    playAlertTone(getApplicationContext(), Utility.Alert.EXAM);
-                } else {
-                    Toast.makeText(this, "An Error occurred", Toast.LENGTH_LONG).show();
-                }
-            });
-        } else {
-            ErrorDialog.Builder builder = new ErrorDialog.Builder();
-            builder.setShowSuggestions(false)
-                   .setDialogMessage("Duplicate Exam Found");
-            new ErrorDialog().showErrorMessage(this, builder.build());
-        }
-        return true;
-    }
+         });
+      } else {
+         ErrorDialog.Builder builder = new ErrorDialog.Builder();
+         builder.setShowSuggestions(false)
+                 .setDialogMessage("Duplicate Exam Found");
+         new ErrorDialog().showErrorMessage(this, builder.build());
+      }
+      return true;
+   }
 
 
 }

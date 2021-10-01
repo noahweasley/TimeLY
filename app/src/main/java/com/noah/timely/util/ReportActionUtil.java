@@ -13,42 +13,42 @@ import android.widget.Toast;
  */
 public class ReportActionUtil {
 
-    public static void reportBug(Context context, String message) {
-        // start WhatsApp
-        PackageManager packageManager = context.getPackageManager();
-        String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp", w4bPkgName = "com.whatsapp.w4b",
-                devCon = "+2347065478947";
+   public static void reportBug(Context context, String message) {
+      // start WhatsApp
+      PackageManager packageManager = context.getPackageManager();
+      String whatsappPkgName = "com.whatsapp", gbwhatsappPkgName = "com.gbwhatsapp", w4bPkgName = "com.whatsapp.w4b",
+              devCon = "+2347065478947";
 
-        String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s", devCon, message);
+      String dataString = String.format("https://api.whatsapp.com/send?phone=%s&text=%s", devCon, message);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataString));
-        try {
-            PackageInfo packageInfo = packageManager.getPackageInfo(whatsappPkgName, PackageManager.GET_META_DATA);
+      Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataString));
+      try {
+         PackageInfo packageInfo = packageManager.getPackageInfo(whatsappPkgName, PackageManager.GET_META_DATA);
 
-            intent.setPackage(whatsappPkgName);
+         intent.setPackage(whatsappPkgName);
+         context.startActivity(intent);
+
+      } catch (PackageManager.NameNotFoundException e) {
+         // if whatsapp not installed, try to open W4B
+         try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(gbwhatsappPkgName, PackageManager.GET_META_DATA);
+
+            intent.setPackage(gbwhatsappPkgName);
             context.startActivity(intent);
 
-        } catch (PackageManager.NameNotFoundException e) {
-            // if whatsapp not installed, try to open W4B
+         } catch (PackageManager.NameNotFoundException e1) {
+            // if W4B not installed, try to open GBWhatsapp
             try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(gbwhatsappPkgName, PackageManager.GET_META_DATA);
+               PackageInfo packageInfo = packageManager.getPackageInfo(w4bPkgName, PackageManager.GET_META_DATA);
 
-                intent.setPackage(gbwhatsappPkgName);
-                context.startActivity(intent);
+               intent.setPackage(w4bPkgName);
+               context.startActivity(intent);
 
-            } catch (PackageManager.NameNotFoundException e1) {
-                // if W4B not installed, try to open GBWhatsapp
-                try {
-                    PackageInfo packageInfo = packageManager.getPackageInfo(w4bPkgName, PackageManager.GET_META_DATA);
-
-                    intent.setPackage(w4bPkgName);
-                    context.startActivity(intent);
-
-                } catch (PackageManager.NameNotFoundException e2) {
-                    Toast.makeText(context, "Whatsapp not installed", Toast.LENGTH_LONG).show();
-                }
+            } catch (PackageManager.NameNotFoundException e2) {
+               Toast.makeText(context, "Whatsapp not installed", Toast.LENGTH_LONG).show();
             }
-        }
-    }
+         }
+      }
+   }
 
 }

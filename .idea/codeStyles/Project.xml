@@ -26,6 +26,9 @@
         <option name="ITERATION_ELEMENTS_WRAPPING" value="chop_down_if_not_single" />
       </formatting-settings>
     </DBN-SQL>
+    <JavaCodeStyleSettings>
+      <option name="SPACE_BEFORE_OPENING_ANGLE_BRACKET_IN_TYPE_PARAMETER" value="true" />
+    </JavaCodeStyleSettings>
     <DBN-PSQL>
       <case-options enabled="true">
         <option name="KEYWORD_CASE" value="lower" />
@@ -51,22 +54,13 @@
       </formatting-settings>
     </DBN-SQL>
     <codeStyleSettings language="JAVA">
-      <option name="ALIGN_MULTILINE_CHAINED_METHODS" value="true" />
-      <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
-      <option name="ALIGN_MULTILINE_ASSIGNMENT" value="true" />
       <option name="ALIGN_MULTILINE_TERNARY_OPERATION" value="true" />
-      <option name="ALIGN_MULTILINE_METHOD_BRACKETS" value="true" />
-      <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="true" />
-      <option name="CALL_PARAMETERS_WRAP" value="1" />
-      <option name="PREFER_PARAMETERS_WRAP" value="true" />
-      <option name="METHOD_CALL_CHAIN_WRAP" value="1" />
       <option name="TERNARY_OPERATION_WRAP" value="1" />
-      <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="true" />
-      <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
-      <option name="KEEP_SIMPLE_LAMBDAS_IN_ONE_LINE" value="true" />
-      <option name="KEEP_SIMPLE_CLASSES_IN_ONE_LINE" value="true" />
-      <option name="ARRAY_INITIALIZER_WRAP" value="1" />
-      <option name="WRAP_LONG_LINES" value="true" />
+      <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
+      <indentOptions>
+        <option name="INDENT_SIZE" value="3" />
+        <option name="TAB_SIZE" value="3" />
+      </indentOptions>
       <arrangement>
         <groups>
           <group>

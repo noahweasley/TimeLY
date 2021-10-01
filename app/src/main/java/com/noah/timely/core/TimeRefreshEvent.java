@@ -5,14 +5,14 @@ package com.noah.timely.core;
  */
 public class TimeRefreshEvent {
 
-    private Object data;
+   private Object data;
 
-    public Object getData() {
-        return data;
-    }
+   public Object getData() {
+      return data;
+   }
 
-    public void setData(Object data) {
-        this.data = data;
-    }
+   public void setData(Object data) {
+      this.data = data;
+   }
 
 }

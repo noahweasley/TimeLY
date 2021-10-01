@@ -20,52 +20,53 @@ import com.noah.timely.BuildConfig;
 import com.noah.timely.R;
 
 public class TimelyBasicInfoDialog extends DialogFragment implements View.OnClickListener {
-    public static final String TAG = "com.noah.timely.about.TimelyInfoDialog";
+   public static final String TAG = "com.noah.timely.about.TimelyInfoDialog";
 
-    public void show(Context context) {
-        FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
-        show(manager, TAG);
-    }
+   public void show(Context context) {
+      FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
+      show(manager, TAG);
+   }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.close)
-            dismiss();
-    }
+   @Override
+   public void onClick(View v) {
+      if (v.getId() == R.id.close)
+         dismiss();
+   }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        return new InfoDialog(getContext());
-    }
+   @NonNull
+   @Override
+   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+      return new InfoDialog(getContext());
+   }
 
-    private class InfoDialog extends Dialog {
+   private class InfoDialog extends Dialog {
 
-        public InfoDialog(@NonNull Context context) {
-            super(context, R.style.Dialog_Closeable);
-        }
+      public InfoDialog(@NonNull Context context) {
+         super(context, R.style.Dialog_Closeable);
+      }
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges);
-            setContentView(R.layout.dialog_about);
+      @Override
+      protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+         getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges);
+         setContentView(R.layout.dialog_about);
 
-            ImageButton btn_close = findViewById(R.id.close);
-            btn_close.setOnClickListener(TimelyBasicInfoDialog.this);
+         ImageButton btn_close = findViewById(R.id.close);
+         btn_close.setOnClickListener(TimelyBasicInfoDialog.this);
 
-            TextView tv_version = findViewById(R.id.version);
+         TextView tv_version = findViewById(R.id.version);
 
-            String version = BuildConfig.VERSION_NAME;
-            String packageName = "com.noah.timely";
+         String version = BuildConfig.VERSION_NAME;
+         String packageName = "com.noah.timely";
 
-            try {
-                PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(packageName, 0);
-                version = packageInfo.versionName;
-            } catch (PackageManager.NameNotFoundException ignored) {}
+         try {
+            PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(packageName, 0);
+            version = packageInfo.versionName;
+         } catch (PackageManager.NameNotFoundException ignored) {
+         }
 
-            tv_version.setText(String.format("V%s", version));
-        }
-    }
+         tv_version.setText(String.format("V%s", version));
+      }
+   }
 }

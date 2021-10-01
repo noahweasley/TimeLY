@@ -6,8 +6,8 @@ package com.noah.timely.assignment;
  */
 public class Reminder extends AssignmentNotifier {
 
-    @Override
-    public String getDay() {
-        return "tomorrow";
-    }
+   @Override
+   public String getDay() {
+      return "tomorrow";
+   }
 }

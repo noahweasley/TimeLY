@@ -5,9 +5,9 @@
 
     <supports-screens
         android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
         android:smallScreens="false"
+        android:normalScreens="true"
+        android:largeScreens="true"
         android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />

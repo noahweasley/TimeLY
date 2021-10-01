@@ -1,18 +1,18 @@
 package com.noah.timely.core;
 
 public class MultiUpdateMessage {
-    private final EventType type;
+   private final EventType type;
 
-    public MultiUpdateMessage(EventType type) {
-        this.type = type;
-    }
+   public MultiUpdateMessage(EventType type) {
+      this.type = type;
+   }
 
-    public EventType getType() {
-        return type;
-    }
+   public EventType getType() {
+      return type;
+   }
 
-    public enum EventType {
-        INSERT, REMOVE
-    }
+   public enum EventType {
+      INSERT, REMOVE
+   }
 }
 

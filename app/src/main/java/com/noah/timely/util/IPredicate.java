@@ -7,6 +7,6 @@ package com.noah.timely.util;
  * @see java.util.function.Predicate
  */
 @FunctionalInterface
-public interface IPredicate<T> {
-    boolean test(T type);
+public interface IPredicate <T> {
+   boolean test(T type);
 }

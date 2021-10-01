@@ -8,21 +8,21 @@ import java.util.concurrent.Executors;
  */
 public class ThreadUtils {
 
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
+   private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-    /**
-     * Utility method to inline background threads with normal program execution
-     *
-     * @param target the task to be run
-     */
-    public static void runBackgroundTask(Runnable target) {
-        executorService.execute(target);
-    }
+   /**
+    * Utility method to inline background threads with normal program execution
+    *
+    * @param target the task to be run
+    */
+   public static void runBackgroundTask(Runnable target) {
+      executorService.execute(target);
+   }
 
-    /**
-     * Shutdown all tasks
-     */
-    public static void shutdownAllTasks() {
-        executorService.shutdown();
-    }
+   /**
+    * Shutdown all tasks
+    */
+   public static void shutdownAllTasks() {
+      executorService.shutdown();
+   }
 }

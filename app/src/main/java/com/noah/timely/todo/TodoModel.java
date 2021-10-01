@@ -4,105 +4,116 @@ package com.noah.timely.todo;
 import com.noah.timely.core.DataModel;
 
 public class TodoModel extends DataModel {
-    private boolean isTaskCompleted;
-    private String taskTitle;
-    private String taskDescription;
-    private String DBcategory;
-    private String completionDate;
-    private String completionTime;
-    private String startTime;
-    private String endTime;
+   public static final String[] CATEGORIES = {"General_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
+           "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
+           "Fun_Todo", "Miscellaneous_Todo"};
+   public static final String[] CATEGORIES_2 = {"Miscellaneous_Todo", "Work_Todo", "Music_Todo", "Creativity_Todo",
+           "Travel_Todo", "Study_Todo", "Fun_Todo", "Home_Todo",
+           "Shopping_Todo"};
+   private boolean isTaskCompleted;
+   private String taskTitle;
+   private String taskDescription;
+   private String DBcategory;
+   private String completionDate;
+   private String completionTime;
+   private String startTime;
+   private String endTime;
 
-    public static final String[] CATEGORIES = {"General_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
-                                               "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
-                                               "Fun_Todo", "Miscellaneous_Todo"};
+   public TodoModel() {
+      // required default constructor
+   }
 
-    public static final String[] CATEGORIES_2 = {"Miscellaneous_Todo", "Work_Todo", "Music_Todo", "Creativity_Todo",
-                                                 "Travel_Todo", "Study_Todo", "Fun_Todo", "Home_Todo",
-                                                 "Shopping_Todo"};
+   public TodoModel(String taskTitle, String taskDescription, boolean isTaskCompleted, String DBcategory,
+                    String completionDate, String startTime, String endTime, String completionTime) {
 
-    public TodoModel() {
-        // required default constructor
-    }
+      this.taskTitle = taskTitle;
+      this.taskDescription = taskDescription;
+      this.startTime = startTime;
+      this.endTime = endTime;
+      this.isTaskCompleted = isTaskCompleted;
+      this.DBcategory = DBcategory;
+      this.completionDate = completionDate;
+      this.completionTime = completionTime;
+   }
 
-    public TodoModel(String taskTitle, String taskDescription, boolean isTaskCompleted, String DBcategory,
-                     String completionDate, String startTime, String endTime, String completionTime) {
+   public TodoModel(int id, String taskTitle, String taskDescription, boolean isTaskCompleted, String DBcategory,
+                    String completionDate, String startTime, String endTime, String completionTime) {
 
-        this.taskTitle = taskTitle;
-        this.taskDescription = taskDescription;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.isTaskCompleted = isTaskCompleted;
-        this.DBcategory = DBcategory;
-        this.completionDate = completionDate;
-        this.completionTime = completionTime;
-    }
+      this(taskTitle, taskDescription, isTaskCompleted, DBcategory,
+              completionDate, startTime, endTime, completionTime);
 
-    public String getTaskTitle() {
-        return taskTitle;
-    }
+      this.id = id;
+   }
 
-    public void setTaskTitle(String taskTitle) {
-        this.taskTitle = taskTitle;
-    }
+   public String getTaskTitle() {
+      return taskTitle;
+   }
 
-    public String getDBcategory() {
-        return DBcategory;
-    }
+   public void setTaskTitle(String taskTitle) {
+      this.taskTitle = taskTitle;
+   }
 
-    public void setDBcategory(String DBcategory) {
-        this.DBcategory = DBcategory;
-    }
+   public String getDBcategory() {
+      return DBcategory;
+   }
 
-    public String getCategory() {
-        return getDBcategory().replace("_Todo", "");
-    }
+   public void setDBcategory(String DBcategory) {
+      this.DBcategory = DBcategory;
+   }
 
-    public boolean isTaskCompleted() {
-        return isTaskCompleted;
-    }
+   public String getCategory() {
+      String todoCategory = getDBcategory().replace("_Todo", "");
+      if (todoCategory.equals("Fun")) {
+         todoCategory = todoCategory + " & Leisure";
+      }
+      return todoCategory;
+   }
 
-    public void setTaskCompleted(boolean taskCompleted) {
-        isTaskCompleted = taskCompleted;
-    }
+   public boolean isTaskCompleted() {
+      return isTaskCompleted;
+   }
 
-    public String getTaskDescription() {
-        return taskDescription;
-    }
+   public void setTaskCompleted(boolean taskCompleted) {
+      isTaskCompleted = taskCompleted;
+   }
 
-    public void setTaskDescription(String taskDescription) {
-        this.taskDescription = taskDescription;
-    }
+   public String getTaskDescription() {
+      return taskDescription;
+   }
 
-    public String getCompletionDate() {
-        return completionDate;
-    }
+   public void setTaskDescription(String taskDescription) {
+      this.taskDescription = taskDescription;
+   }
 
-    public void setCompletionDate(String completionDate) {
-        this.completionDate = completionDate;
-    }
+   public String getCompletionDate() {
+      return completionDate;
+   }
 
-    public String getCompletionTime() {
-        return completionTime;
-    }
+   public void setCompletionDate(String completionDate) {
+      this.completionDate = completionDate;
+   }
 
-    public void setCompletionTime(String completionTime) {
-        this.completionTime = completionTime;
-    }
+   public String getCompletionTime() {
+      return completionTime;
+   }
 
-    public String getStartTime() {
-        return startTime;
-    }
+   public void setCompletionTime(String completionTime) {
+      this.completionTime = completionTime;
+   }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
+   public String getStartTime() {
+      return startTime;
+   }
 
-    public String getEndTime() {
-        return endTime;
-    }
+   public void setStartTime(String startTime) {
+      this.startTime = startTime;
+   }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
+   public String getEndTime() {
+      return endTime;
+   }
+
+   public void setEndTime(String endTime) {
+      this.endTime = endTime;
+   }
 }

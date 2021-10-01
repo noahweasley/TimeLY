@@ -19,49 +19,49 @@ import java.util.List;
  * submission status.
  */
 public class AssignmentCheckerService extends Service {
-    private SchoolDatabase database;
+   private SchoolDatabase database;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+   @Override
+   public int onStartCommand(Intent intent, int flags, int startId) {
+      database = new SchoolDatabase(this);
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        database = new SchoolDatabase(this);
-
-        ThreadUtils.runBackgroundTask(() -> {
-            List<DataModel> pendingAssignments = database.getPendingAssignments();
-            if (!pendingAssignments.isEmpty()) {
-                for (DataModel rawData : pendingAssignments) {
-                    AssignmentModel pendingAssignment = (AssignmentModel) rawData;
-                    performCheck(pendingAssignment);
-                }
+      ThreadUtils.runBackgroundTask(() -> {
+         List<DataModel> pendingAssignments = database.getPendingAssignments();
+         if (!pendingAssignments.isEmpty()) {
+            for (DataModel rawData : pendingAssignments) {
+               AssignmentModel pendingAssignment = (AssignmentModel) rawData;
+               performCheck(pendingAssignment);
             }
-        });
+         }
+      });
 
-        return START_STICKY;
-    }
+      return START_STICKY;
+   }
 
-    private void performCheck(AssignmentModel assignment) {
-        Calendar azzCalendar = Calendar.getInstance();
+   @Nullable
+   @Override
+   public IBinder onBind(Intent intent) {
+      return null;
+   }
 
-        String submissionDate = assignment.getSubmissionDate();
-        String[] sArr = submissionDate.split("[/._-]");
-        int day = Integer.parseInt(sArr[0]);
-        int month = Integer.parseInt(sArr[1]);
-        int year = Integer.parseInt(sArr[2]);
-        // Time set to 07:00 am
-        azzCalendar.set(year, month, day);
-        azzCalendar.set(Calendar.HOUR_OF_DAY, 7);
-        azzCalendar.set(Calendar.MINUTE, 0);
-        azzCalendar.set(Calendar.SECOND, 0);
-        azzCalendar.set(Calendar.MILLISECOND, 0);
+   private void performCheck(AssignmentModel assignment) {
+      Calendar azzCalendar = Calendar.getInstance();
 
-        long AZZ_TIME = azzCalendar.getTimeInMillis();
-        long NOW = System.currentTimeMillis();
+      String submissionDate = assignment.getSubmissionDate();
+      String[] sArr = submissionDate.split("[/._-]");
+      int day = Integer.parseInt(sArr[0]);
+      int month = Integer.parseInt(sArr[1]);
+      int year = Integer.parseInt(sArr[2]);
+      // Time set to 07:00 am
+      azzCalendar.set(year, month, day);
+      azzCalendar.set(Calendar.HOUR_OF_DAY, 7);
+      azzCalendar.set(Calendar.MINUTE, 0);
+      azzCalendar.set(Calendar.SECOND, 0);
+      azzCalendar.set(Calendar.MILLISECOND, 0);
 
-        if (NOW > AZZ_TIME) database.updateAssignmentStatus(assignment.getId(), true);
-    }
+      long AZZ_TIME = azzCalendar.getTimeInMillis();
+      long NOW = System.currentTimeMillis();
+
+      if (NOW > AZZ_TIME) database.updateAssignmentStatus(assignment.getId(), true);
+   }
 }

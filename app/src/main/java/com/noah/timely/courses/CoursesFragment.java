@@ -18,49 +18,49 @@ import com.noah.timely.main.MainActivity;
 
 public class CoursesFragment extends Fragment {
 
-    public static Fragment newInstance() {
-        return new CoursesFragment();
-    }
+   public static Fragment newInstance() {
+      return new CoursesFragment();
+   }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_horizontal_pagers, container, false);
-    }
+   @Nullable
+   @Override
+   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                            @Nullable Bundle savedInstanceState) {
+      return inflater.inflate(R.layout.fragment_horizontal_pagers, container, false);
+   }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ViewPager2 pager = view.findViewById(R.id.pager);
-        pager.setAdapter(new SemesterCoursesAdapter(this));
-        TabLayout tabs = view.findViewById(R.id.tabs);
-        new TabLayoutMediator(tabs, pager, (tab, position) -> tab.setText(position == 0 ? "First Semester"
-                                                                                        : "Second Semester")).attach();
-    }
+   @Override
+   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+      ViewPager2 pager = view.findViewById(R.id.pager);
+      pager.setAdapter(new SemesterCoursesAdapter(this));
+      TabLayout tabs = view.findViewById(R.id.tabs);
+      new TabLayoutMediator(tabs, pager, (tab, position) -> tab.setText(position == 0 ? "First Semester"
+                                                                                      : "Second Semester")).attach();
+   }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Registered Courses");
-    }
+   @Override
+   public void onResume() {
+      super.onResume();
+      ((MainActivity) getActivity()).getSupportActionBar().setTitle("Registered Courses");
+   }
 
-    // The horizontal paging adapter of the viewpager
-    private static class SemesterCoursesAdapter extends FragmentStateAdapter {
+   // The horizontal paging adapter of the viewpager
+   private static class SemesterCoursesAdapter extends FragmentStateAdapter {
 
-        public SemesterCoursesAdapter(@NonNull Fragment fragment) {
-            super(fragment);
-        }
+      public SemesterCoursesAdapter(@NonNull Fragment fragment) {
+         super(fragment);
+      }
 
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            return SemesterFragment.newInstance(position);
-        }
+      @NonNull
+      @Override
+      public Fragment createFragment(int position) {
+         return SemesterFragment.newInstance(position);
+      }
 
-        @Override
-        public int getItemCount() {
-            return 2;
-        }
-    }
+      @Override
+      public int getItemCount() {
+         return 2;
+      }
+   }
 
 }
