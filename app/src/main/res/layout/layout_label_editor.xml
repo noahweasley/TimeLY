@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/secondary_dialog_width"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="@dimen/secondary_dialog_width"
+   android:layout_height="wrap_content"
+   android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:fontFamily="sans-serif"
-        android:text="@string/alarm_label"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+   <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="16dp"
+      android:layout_marginTop="16dp"
+      android:fontFamily="sans-serif"
+      android:text="@string/alarm_label"
+      android:textColor="@android:color/black"
+      android:textSize="20sp"
+      android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/alarm_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="@dimen/layout_gap"
-        android:maxLines="1"
-        android:textCursorDrawable="@drawable/colored_cursor"
-        external:backgroundTint="@color/colorPrimaryDark"
-        tools:ignore="Autofill,LabelFor,TextFields" />
+   <EditText
+      android:id="@+id/alarm_label"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="16dp"
+      android:layout_marginTop="@dimen/layout_gap"
+      android:maxLines="1"
+      android:textCursorDrawable="@drawable/colored_cursor"
+      external:backgroundTint="@color/colorPrimaryDark"
+      tools:ignore="Autofill,LabelFor,TextFields" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="@dimen/layout_gap"
-        android:layout_marginHorizontal="@dimen/layout_gap"
-        android:orientation="horizontal">
+   <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end"
+      android:layout_marginHorizontal="@dimen/layout_gap"
+      android:layout_marginTop="@dimen/layout_gap"
+      android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="@android:color/transparent"
-            android:text="@android:string/cancel"
-            android:textColor="@color/action_button"
-            tools:ignore="ButtonStyle" />
+      <Button
+         android:id="@+id/cancel_button"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="end"
+         android:background="@android:color/transparent"
+         android:text="@android:string/cancel"
+         android:textColor="@color/action_button"
+         tools:ignore="ButtonStyle" />
 
-        <Button
-            android:id="@+id/ok_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="@android:color/transparent"
-            android:text="@android:string/ok"
-            android:textColor="@color/action_button"
-            tools:ignore="ButtonStyle" />
+      <Button
+         android:id="@+id/ok_button"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="end"
+         android:background="@android:color/transparent"
+         android:text="@android:string/ok"
+         android:textColor="@color/action_button"
+         tools:ignore="ButtonStyle" />
 
-    </LinearLayout>
+   </LinearLayout>
 
 </LinearLayout>

@@ -1,80 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent"
-        external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+   <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="0dp"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/imageList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@id/toolbar" />
+   <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/imageList"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <com.noah.timely.custom.MaterialProgressbar
-        android:id="@+id/indeterminateProgress"
-        style="@style/Widget.MaterialProgressBar.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent"
-        external:mpb_progressStyle="circular" />
+   <com.noah.timely.custom.MaterialProgressbar
+      android:id="@+id/indeterminateProgress"
+      style="@style/Widget.MaterialProgressBar.ProgressBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:indeterminate="true"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:mpb_progressStyle="circular" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/no_media"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent">
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/no_media"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
-            android:fontFamily="@font/wendy_one"
-            android:text="@string/no_image"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/no_task_text_size"
-            external:layout_constraintBottom_toTopOf="@id/img_no_event"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent"
-            external:layout_constraintVertical_chainStyle="packed" />
+      <TextView
+         android:id="@+id/header"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:fontFamily="@font/wendy_one"
+         android:text="@string/no_image"
+         android:textColor="@color/colorPrimaryDark"
+         android:textSize="@dimen/no_task_text_size"
+         external:layout_constraintBottom_toTopOf="@id/img_no_event"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_chainStyle="packed" />
 
-        <ImageView
-            android:id="@+id/img_no_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
-            android:contentDescription="@string/no_task"
-            android:paddingHorizontal="16dp"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@id/header"
-            external:layout_constraintVertical_bias="0.78"
-            external:srcCompat="@drawable/image_availability" />
+      <ImageView
+         android:id="@+id/img_no_event"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:contentDescription="@string/no_task"
+         android:paddingHorizontal="16dp"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@id/header"
+         external:layout_constraintVertical_bias="0.78"
+         external:srcCompat="@drawable/image_availability" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

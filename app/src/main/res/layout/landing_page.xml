@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_day_and_night"
-    android:paddingHorizontal="@dimen/layout_gap">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@drawable/bg_day_and_night"
+   android:paddingHorizontal="@dimen/layout_gap">
 
-    <!-- The text to be displayed on top of the image -->
+   <!-- The text to be displayed on top of the image -->
 
-    <TextView
-        android:id="@+id/greeting_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/wendy_one"
-        android:gravity="center"
-        android:text="@string/good_morning"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/no_task_text_size"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent"
-        external:layout_constraintVertical_bias="0.060000002" />
+   <TextView
+      android:id="@+id/greeting_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:fontFamily="@font/wendy_one"
+      android:gravity="center"
+      android:text="@string/good_morning"
+      android:textColor="@color/colorPrimaryDark"
+      android:textSize="@dimen/no_task_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:layout_constraintVertical_bias="0.060000002" />
 
-    <!-- Vector image displaying a no-data entry -->
+   <!-- Vector image displaying a no-data entry -->
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/no_task"
-        external:layout_constraintBottom_toTopOf="@+id/discover"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintHorizontal_bias="0.488"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@+id/greeting_text"
-        external:srcCompat="@mipmap/task_infographics" />
+   <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="16dp"
+      android:contentDescription="@string/no_task"
+      external:layout_constraintBottom_toTopOf="@+id/discover"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.488"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/greeting_text"
+      external:srcCompat="@mipmap/task_infographics" />
 
-    <Button
-        android:id="@+id/discover"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/buttons_explore"
-        android:text="@string/discover"
-        android:minHeight="@dimen/button_min_height"
-        android:textSize="@dimen/button_text_size"
-        android:textColor="@android:color/white"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent" />
+   <Button
+      android:id="@+id/discover"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:background="@drawable/buttons_explore"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/discover"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator2"
-    android:layout_width="match_parent"
-    android:background="@drawable/bg_day_and_night"
-    android:layout_height="match_parent">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:id="@+id/coordinator2"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@drawable/bg_day_and_night">
 
-    <include layout="@layout/assignment_content" />
+   <include layout="@layout/assignment_content" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="@dimen/fab_margin"
-        external:fabCustomSize="@dimen/fab_size"
-        external:maxImageSize="@dimen/fab_icon_size"
-        external:srcCompat="@drawable/ic_add"
-        android:contentDescription="@string/add" />
+   <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/fab_add"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|center_horizontal"
+      android:layout_margin="@dimen/fab_margin"
+      android:contentDescription="@string/add"
+      external:fabCustomSize="@dimen/fab_size"
+      external:maxImageSize="@dimen/fab_icon_size"
+      external:srcCompat="@drawable/ic_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

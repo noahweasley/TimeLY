@@ -1,103 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
-    android:orientation="vertical">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="?attr/selectableItemBackground"
+   android:clickable="true"
+   android:focusable="true"
+   android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+   <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/internal_storage"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/storage_view_container_height"
-        android:layout_marginVertical="@dimen/layout_gap"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent">
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/internal_storage"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/storage_view_container_height"
+      android:layout_marginVertical="@dimen/layout_gap"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/internal_storage_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/layout_gap"
-            android:background="@drawable/bg_rounded_accent_dark"
-            android:contentDescription="@string/internal_storage"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent"
-            external:srcCompat="@drawable/ic_baseline_phone_android_24" />
+      <ImageView
+         android:id="@+id/internal_storage_icon"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="@dimen/layout_gap"
+         android:background="@drawable/bg_rounded_accent_dark"
+         android:contentDescription="@string/internal_storage"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:srcCompat="@drawable/ic_baseline_phone_android_24" />
 
-        <TextView
-            android:id="@+id/int_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:text="@string/internal"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/storage_viewer_text_size"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintStart_toEndOf="@id/internal_storage_icon"
-            external:layout_constraintTop_toTopOf="parent" />
+      <TextView
+         android:id="@+id/int_label"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="16dp"
+         android:text="@string/internal"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/storage_viewer_text_size"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toEndOf="@id/internal_storage_icon"
+         external:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintStart_toStartOf="@id/int_label" />
+      <View
+         android:layout_width="0dp"
+         android:layout_height="1dp"
+         android:background="?android:attr/listDivider"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="@id/int_label" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/external_storage"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginBottom="@dimen/layout_gap"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent">
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/external_storage"
+      android:layout_width="match_parent"
+      android:layout_height="80dp"
+      android:layout_marginBottom="@dimen/layout_gap"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/external_storage_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/layout_gap"
-            android:background="@drawable/bg_rounded_accent"
-            android:contentDescription="@string/internal_storage"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent"
-            external:srcCompat="@drawable/ic_baseline_sd_storage_24" />
+      <ImageView
+         android:id="@+id/external_storage_icon"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="@dimen/layout_gap"
+         android:background="@drawable/bg_rounded_accent"
+         android:contentDescription="@string/internal_storage"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:srcCompat="@drawable/ic_baseline_sd_storage_24" />
 
-        <TextView
-            android:id="@+id/ext_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:text="@string/external"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/storage_viewer_text_size"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintStart_toEndOf="@id/external_storage_icon"
-            external:layout_constraintTop_toTopOf="parent" />
+      <TextView
+         android:id="@+id/ext_label"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="16dp"
+         android:text="@string/external"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/storage_viewer_text_size"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toEndOf="@id/external_storage_icon"
+         external:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintStart_toStartOf="@id/ext_label" />
+      <View
+         android:layout_width="0dp"
+         android:layout_height="1dp"
+         android:background="?android:attr/listDivider"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="@id/ext_label" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

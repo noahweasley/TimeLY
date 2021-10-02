@@ -1,180 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/assignment_list_height_21"
-    android:layout_marginBottom="@dimen/secondary_card_margin_bottom_21"
-    external:cardCornerRadius="@dimen/corner_radius"
-    external:cardElevation="@dimen/normal_elevation"
-    external:layout_constraintEnd_toEndOf="parent"
-    external:layout_constraintStart_toStartOf="parent"
-    external:layout_constraintTop_toTopOf="parent">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="@dimen/assignment_list_height_21"
+   android:layout_marginBottom="@dimen/secondary_card_margin_bottom_21"
+   external:cardCornerRadius="@dimen/corner_radius"
+   external:cardElevation="@dimen/normal_elevation"
+   external:layout_constraintEnd_toEndOf="parent"
+   external:layout_constraintStart_toStartOf="parent"
+   external:layout_constraintTop_toTopOf="parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/header"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/header_size"
-            android:background="@drawable/bg_decor_top"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent" />
+      <View
+         android:id="@+id/header"
+         android:layout_width="0dp"
+         android:layout_height="@dimen/header_size"
+         android:background="@drawable/bg_decor_top"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/layout_gap"
-            android:layout_marginTop="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/heading"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/assignment_text_size"
-            android:textStyle="bold"
-            external:layout_constraintEnd_toStartOf="@id/deadline"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@id/header"
-            tools:ignore="RtlSymmetry" />
+      <TextView
+         android:id="@+id/title"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="@dimen/layout_gap"
+         android:layout_marginTop="8dp"
+         android:ellipsize="end"
+         android:maxLines="1"
+         android:text="@string/heading"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/assignment_text_size"
+         android:textStyle="bold"
+         external:layout_constraintEnd_toStartOf="@id/deadline"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@id/header"
+         tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:id="@+id/deadline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_gap"
-            android:layout_marginEnd="@dimen/default_gap"
-            android:text="@string/default_date_2"
-            android:textColor="@android:color/holo_red_dark"
-            android:textSize="@dimen/assignment_text_size"
-            android:textStyle="bold"
-            external:layout_constraintBottom_toBottomOf="@id/title"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintTop_toTopOf="@id/title"
-            tools:ignore="RtlSymmetry" />
+      <TextView
+         android:id="@+id/deadline"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="@dimen/default_gap"
+         android:layout_marginEnd="@dimen/default_gap"
+         android:text="@string/default_date_2"
+         android:textColor="@android:color/holo_red_dark"
+         android:textSize="@dimen/assignment_text_size"
+         android:textStyle="bold"
+         external:layout_constraintBottom_toBottomOf="@id/title"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintTop_toTopOf="@id/title"
+         tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:id="@+id/describe_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="@string/describe"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/assignment_text_size"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@id/title" />
+      <TextView
+         android:id="@+id/describe_text"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:ellipsize="end"
+         android:maxLines="2"
+         android:text="@string/describe"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/assignment_text_size"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@id/title" />
 
-        <TextView
-            android:id="@+id/lecturerName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="@dimen/default_gap"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="@dimen/default_gap"
-            android:ellipsize="end"
-            android:gravity="end"
-            android:maxLines="1"
-            android:text="@string/long_text"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/assignment_text_size"
-            android:textStyle="bold"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toEndOf="@id/guidelineMiddle"
-            external:layout_constraintTop_toBottomOf="@id/describe_text"
-            tools:ignore="RtlSymmetry" />
+      <TextView
+         android:id="@+id/lecturerName"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_gravity="end"
+         android:layout_marginStart="@dimen/default_gap"
+         android:layout_marginTop="8dp"
+         android:layout_marginEnd="@dimen/default_gap"
+         android:ellipsize="end"
+         android:gravity="end"
+         android:maxLines="1"
+         android:text="@string/long_text"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/assignment_text_size"
+         android:textStyle="bold"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toEndOf="@id/guidelineMiddle"
+         external:layout_constraintTop_toBottomOf="@id/describe_text"
+         tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:id="@+id/course"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_margin="8dp"
-            android:text="@string/default_course"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/assignment_text_size"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintTop_toBottomOf="@id/lecturerName"
-            tools:ignore="RtlSymmetry" />
+      <TextView
+         android:id="@+id/course"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="end"
+         android:layout_margin="8dp"
+         android:text="@string/default_course"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/assignment_text_size"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintTop_toBottomOf="@id/lecturerName"
+         tools:ignore="RtlSymmetry" />
 
-        <View
-            android:id="@+id/buttonTopDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="?android:attr/dividerHorizontal"
-            external:layout_constraintTop_toBottomOf="@id/course" />
+      <View
+         android:id="@+id/buttonTopDivider"
+         android:layout_width="match_parent"
+         android:layout_height="1dp"
+         android:layout_marginTop="8dp"
+         android:background="?android:attr/dividerHorizontal"
+         external:layout_constraintTop_toBottomOf="@id/course" />
 
-        <ImageButton
-            android:id="@+id/deleteButton"
-            style="@android:style/Widget.Holo.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
-            external:srcCompat="@drawable/ic_delete"
-            tools:ignore="ContentDescription" />
+      <ImageButton
+         android:id="@+id/deleteButton"
+         style="@android:style/Widget.Holo.Button.Borderless"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
+         external:srcCompat="@drawable/ic_delete"
+         tools:ignore="ContentDescription" />
 
-        <ImageButton
-            android:id="@+id/editButton"
-            style="@android:style/Widget.Holo.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toStartOf="@+id/deleteButton"
-            external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
-            external:srcCompat="@drawable/ic_edit"
-            tools:ignore="ContentDescription" />
+      <ImageButton
+         android:id="@+id/editButton"
+         style="@android:style/Widget.Holo.Button.Borderless"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toStartOf="@+id/deleteButton"
+         external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
+         external:srcCompat="@drawable/ic_edit"
+         tools:ignore="ContentDescription" />
 
-        <ImageButton
-            android:id="@+id/viewButton"
-            style="@android:style/Widget.Holo.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toStartOf="@id/editButton"
-            external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
-            external:srcCompat="@drawable/ic_view"
-            tools:ignore="ContentDescription" />
+      <ImageButton
+         android:id="@+id/viewButton"
+         style="@android:style/Widget.Holo.Button.Borderless"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="@dimen/space"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toStartOf="@id/editButton"
+         external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
+         external:srcCompat="@drawable/ic_view"
+         tools:ignore="ContentDescription" />
 
-        <ImageView
-            android:id="@+id/stats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:contentDescription="@string/assignment_status"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
-            external:srcCompat="@drawable/ic_round_check_circle"
-            tools:ignore="RtlSymmetry" />
+      <ImageView
+         android:id="@+id/stats"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="16dp"
+         android:contentDescription="@string/assignment_status"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
+         external:srcCompat="@drawable/ic_round_check_circle"
+         tools:ignore="RtlSymmetry" />
 
-        <View
-            android:id="@+id/checked_overlay"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/image_background_2"
-            android:visibility="gone"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent" />
+      <View
+         android:id="@+id/checked_overlay"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         android:background="@color/image_background_2"
+         android:visibility="gone"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineMiddle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            external:layout_constraintGuide_percent=".6" />
+      <androidx.constraintlayout.widget.Guideline
+         android:id="@+id/guidelineMiddle"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         external:layout_constraintGuide_percent=".6" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

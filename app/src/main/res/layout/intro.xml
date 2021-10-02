@@ -1,106 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_day_and_night">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@drawable/bg_day_and_night">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        external:contentInsetEnd="8dp"
-        external:contentInsetLeft="8dp"
-        external:contentInsetRight="8dp"
-        external:contentInsetStart="8dp"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent"
-        external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        external:subtitleTextColor="@android:color/white">
+   <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      external:contentInsetEnd="8dp"
+      external:contentInsetLeft="8dp"
+      external:contentInsetRight="8dp"
+      external:contentInsetStart="8dp"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+      external:subtitleTextColor="@android:color/white">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+      <androidx.constraintlayout.widget.ConstraintLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/introduction"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                external:layout_constraintBottom_toBottomOf="parent"
-                external:layout_constraintEnd_toEndOf="parent"
-                external:layout_constraintStart_toStartOf="parent"
-                external:layout_constraintTop_toTopOf="parent" />
+         <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/introduction"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+      </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.appcompat.widget.Toolbar>
+   </androidx.appcompat.widget.Toolbar>
 
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/close"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_margin="16dp"-->
-    <!--        android:layout_marginEnd="16dp"-->
-    <!--        android:layout_marginRight="16dp"-->
-    <!--        android:background="@null"-->
-    <!--        android:contentDescription="@string/close_description"-->
-    <!--        external:srcCompat="@drawable/ic_x_circle_fill"-->
-    <!--        external:layout_constraintEnd_toEndOf="parent"-->
-    <!--        external:layout_constraintTop_toBottomOf="@id/top_guideline" />-->
+   <!--    <ImageButton-->
+   <!--        android:id="@+id/close"-->
+   <!--        android:layout_width="wrap_content"-->
+   <!--        android:layout_height="wrap_content"-->
+   <!--        android:layout_margin="16dp"-->
+   <!--        android:layout_marginEnd="16dp"-->
+   <!--        android:layout_marginRight="16dp"-->
+   <!--        android:background="@null"-->
+   <!--        android:contentDescription="@string/close_description"-->
+   <!--        external:srcCompat="@drawable/ic_x_circle_fill"-->
+   <!--        external:layout_constraintEnd_toEndOf="parent"-->
+   <!--        external:layout_constraintTop_toBottomOf="@id/top_guideline" />-->
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/intro_pager"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        external:layout_constraintBottom_toTopOf="@id/indicator"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintHorizontal_bias="1.0"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@id/toolbar"
-        external:layout_constraintVertical_chainStyle="packed">
+   <androidx.viewpager2.widget.ViewPager2
+      android:id="@+id/intro_pager"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      external:layout_constraintBottom_toTopOf="@id/indicator"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="1.0"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/toolbar"
+      external:layout_constraintVertical_chainStyle="packed">
 
-    </androidx.viewpager2.widget.ViewPager2>
+   </androidx.viewpager2.widget.ViewPager2>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        external:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@id/intro_pager"
-        external:tabBackground="@drawable/tab_selector"
-        external:tabGravity="center"
-        external:tabRippleColor="@null"
-        external:tabIndicatorHeight="0dp" />
+   <com.google.android.material.tabs.TabLayout
+      android:id="@+id/indicator"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      external:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/intro_pager"
+      external:tabBackground="@drawable/tab_selector"
+      external:tabGravity="center"
+      external:tabIndicatorHeight="0dp"
+      external:tabRippleColor="@null" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/bottom_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        external:layout_constraintGuide_percent="0.85" />
+   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/bottom_guideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      external:layout_constraintGuide_percent="0.85" />
 
-    <Button
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/buttons_explore"
-        android:text="@string/start"
-        android:minHeight="@dimen/button_min_height"
-        android:textSize="@dimen/button_text_size"
-        android:textColor="@android:color/white"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent" />
+   <Button
+      android:id="@+id/start"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:background="@drawable/buttons_explore"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/start"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

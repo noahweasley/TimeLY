@@ -1,24 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.noah.timely.todo.TodoListActivity">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   tools:context="com.noah.timely.todo.TodoListActivity">
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        external:showAsAction="never" />
+   <item
+      android:id="@+id/action_settings"
+      android:orderInCategory="100"
+      android:title="@string/action_settings"
+      external:showAsAction="never" />
 
-    <item
-        android:id="@+id/update"
-        android:title="@string/check_update"
-        external:showAsAction="never" />
+   <item
+      android:id="@+id/update"
+      android:title="@string/check_update"
+      external:showAsAction="never" />
 
-    <item
-        android:id="@+id/list_item_count"
-        android:title=""
-        external:actionLayout="@layout/todo_count"
-        external:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+   <item
+      android:id="@+id/list_item_count"
+      android:title=""
+      external:actionLayout="@layout/todo_count"
+      external:showAsAction="always"
+      tools:ignore="AlwaysShowAction" />
 
 </menu>

@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_day_and_night">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@drawable/bg_day_and_night">
 
-    <FrameLayout
-        android:id="@+id/alarm_time_fragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        external:layout_constraintBottom_toTopOf="@id/guideA"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent" />
+   <FrameLayout
+      android:id="@+id/alarm_time_fragment"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      external:layout_constraintBottom_toTopOf="@id/guideA"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/alarm_list_fragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/layout_gap"
-        android:layout_marginLeft="@dimen/layout_gap"
-        android:layout_marginEnd="@dimen/layout_gap"
-        android:layout_marginRight="@dimen/layout_gap"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@id/guideB" />
+   <FrameLayout
+      android:id="@+id/alarm_list_fragment"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginStart="@dimen/layout_gap"
+      android:layout_marginLeft="@dimen/layout_gap"
+      android:layout_marginEnd="@dimen/layout_gap"
+      android:layout_marginRight="@dimen/layout_gap"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/guideB" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        external:layout_constraintGuide_begin="@dimen/alarm_time_bottom_position" />
+   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideA"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      external:layout_constraintGuide_begin="@dimen/alarm_time_bottom_position" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        external:layout_constraintGuide_begin="@dimen/alarm_list_top_position" />
+   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideB"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      external:layout_constraintGuide_begin="@dimen/alarm_list_top_position" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

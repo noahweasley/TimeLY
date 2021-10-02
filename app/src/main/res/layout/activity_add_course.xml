@@ -1,162 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_day_and_night">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@drawable/bg_day_and_night">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent"
-        external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        external:subtitleTextColor="@android:color/white" />
+   <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="0dp"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+      external:subtitleTextColor="@android:color/white" />
 
-    <ScrollView
-        android:id="@+id/scroller"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        external:layout_constraintBottom_toTopOf="@id/bottom_actions_container"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@id/toolbar">
+   <ScrollView
+      android:id="@+id/scroller"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      external:layout_constraintBottom_toTopOf="@id/bottom_actions_container"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+      <androidx.constraintlayout.widget.ConstraintLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/course_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/layout_gap"
-                android:layout_marginLeft="@dimen/layout_gap"
-                android:layout_marginTop="@dimen/layout_gap"
-                android:layout_marginEnd="@dimen/layout_gap"
-                android:layout_marginRight="@dimen/layout_gap"
-                android:background="@drawable/bg_dialog_form"
-                android:drawablePadding="8dp"
-                android:hint="@string/name_hint"
-                android:maxLines="2"
-                android:minLines="2"
-                external:layout_constraintBottom_toTopOf="@id/course_code"
-                external:layout_constraintEnd_toEndOf="parent"
-                external:layout_constraintStart_toStartOf="parent"
-                external:layout_constraintTop_toTopOf="parent"
-                tools:ignore="Autofill,TextFields" />
+         <EditText
+            android:id="@+id/course_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/layout_gap"
+            android:layout_marginLeft="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:layout_marginEnd="@dimen/layout_gap"
+            android:layout_marginRight="@dimen/layout_gap"
+            android:background="@drawable/bg_dialog_form"
+            android:drawablePadding="8dp"
+            android:hint="@string/name_hint"
+            android:maxLines="2"
+            android:minLines="2"
+            external:layout_constraintBottom_toTopOf="@id/course_code"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            tools:ignore="Autofill,TextFields" />
 
-            <EditText
-                android:id="@+id/course_code"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_gap"
-                android:background="@drawable/bg_dialog_form"
-                android:hint="@string/code_hint"
-                android:maxLength="20"
-                android:maxLines="1"
-                external:layout_constraintBottom_toTopOf="@id/semester_group"
-                external:layout_constraintEnd_toEndOf="@+id/course_name"
-                external:layout_constraintStart_toStartOf="@id/course_name"
-                external:layout_constraintTop_toBottomOf="@id/course_name"
-                tools:ignore="Autofill,TextFields" />
+         <EditText
+            android:id="@+id/course_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_dialog_form"
+            android:hint="@string/code_hint"
+            android:maxLength="20"
+            android:maxLines="1"
+            external:layout_constraintBottom_toTopOf="@id/semester_group"
+            external:layout_constraintEnd_toEndOf="@+id/course_name"
+            external:layout_constraintStart_toStartOf="@id/course_name"
+            external:layout_constraintTop_toBottomOf="@id/course_name"
+            tools:ignore="Autofill,TextFields" />
 
-            <RadioGroup
-                android:id="@+id/semester_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/layout_gap"
-                android:layout_marginTop="@dimen/layout_gap"
-                external:layout_constraintBottom_toTopOf="@id/credits"
-                external:layout_constraintEnd_toEndOf="parent"
-                external:layout_constraintTop_toBottomOf="@+id/course_code">
-
-                <RadioButton
-                    android:id="@+id/first"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/first_semester" />
-
-                <RadioButton
-                    android:id="@+id/second"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/second_semester" />
-
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/layout_gap"
-                android:text="@string/credits"
-                android:textStyle="bold"
-                external:layout_constraintBottom_toBottomOf="@id/credits"
-                external:layout_constraintStart_toStartOf="parent"
-                external:layout_constraintTop_toTopOf="@id/credits" />
-
-            <Spinner
-                android:id="@+id/credits"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginVertical="@dimen/layout_gap"
-                external:layout_constraintBottom_toBottomOf="parent"
-                external:layout_constraintStart_toEndOf="@+id/text"
-                external:layout_constraintTop_toBottomOf="@+id/semester_group" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_actions_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        external:layout_constraintBottom_toTopOf="@id/register"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent">
-
-        <CheckBox
-            android:id="@+id/multiple"
+         <RadioGroup
+            android:id="@+id/semester_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
-            android:checked="true"
-            android:text="@string/multiple"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
+            external:layout_constraintBottom_toTopOf="@id/credits"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/course_code">
 
-        <CheckBox
-            android:id="@+id/clear"
+            <RadioButton
+               android:id="@+id/first"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:checked="true"
+               android:text="@string/first_semester" />
+
+            <RadioButton
+               android:id="@+id/second"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/second_semester" />
+
+         </RadioGroup>
+
+         <TextView
+            android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
-            android:text="@string/clear_data"
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:text="@string/credits"
+            android:textStyle="bold"
+            external:layout_constraintBottom_toBottomOf="@id/credits"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="@id/credits" />
+
+         <Spinner
+            android:id="@+id/credits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="@dimen/layout_gap"
             external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintStart_toStartOf="parent" />
+            external:layout_constraintStart_toEndOf="@+id/text"
+            external:layout_constraintTop_toBottomOf="@+id/semester_group" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+      </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/register"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/layout_gap"
-        android:background="@drawable/bg_submit"
-        android:minHeight="@dimen/button_min_height"
-        android:text="@string/register"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/button_text_size"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent" />
+   </ScrollView>
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/bottom_actions_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      external:layout_constraintBottom_toTopOf="@id/register"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent">
+
+      <CheckBox
+         android:id="@+id/multiple"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:checked="true"
+         android:text="@string/multiple"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent" />
+
+      <CheckBox
+         android:id="@+id/clear"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:text="@string/clear_data"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="parent" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+   <Button
+      android:id="@+id/register"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/layout_gap"
+      android:background="@drawable/bg_submit"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/register"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,226 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_day_and_night"
-    android:orientation="vertical">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@drawable/bg_day_and_night"
+   android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent"
-        external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+   <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="0dp"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingBottom="@dimen/layout_gap"
-        external:layout_constraintBottom_toTopOf="@+id/bottom_actions_container"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintHorizontal_bias="1.0"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toBottomOf="@id/toolbar">
+   <ScrollView
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:paddingBottom="@dimen/layout_gap"
+      external:layout_constraintBottom_toTopOf="@+id/bottom_actions_container"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="1.0"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <LinearLayout
+      <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical">
+
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/lecturer_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_dialog_form"
+            external:errorEnabled="true">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lecturer_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/layout_gap"
-                android:layout_marginTop="@dimen/layout_gap"
-                android:background="@drawable/bg_dialog_form"
-                external:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/choiceLecturer"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="8dp"
+               android:background="@android:color/transparent"
+               android:hint="@string/lecturer"
+               android:imeOptions="actionNext"
+               android:inputType="textMultiLine"
+               android:maxLines="1"
+               android:minHeight="48dp"
+               android:textColor="@android:color/black"
+               android:textCursorDrawable="@drawable/colored_cursor"
+               tools:ignore="Autofill" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/choiceLecturer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@android:color/transparent"
-                    android:hint="@string/lecturer"
-                    android:imeOptions="actionNext"
-                    android:inputType="textMultiLine"
-                    android:maxLines="1"
-                    android:minHeight="48dp"
-                    android:textColor="@android:color/black"
-                    android:textCursorDrawable="@drawable/colored_cursor"
-                    tools:ignore="Autofill" />
+         </com.google.android.material.textfield.TextInputLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/title_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/layout_gap"
-                android:layout_marginTop="@dimen/layout_gap"
-                android:background="@drawable/bg_dialog_form"
-                external:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/assignment_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@android:color/transparent"
-                    android:hint="@string/title"
-                    android:imeOptions="actionNext"
-                    android:inputType="textMultiLine"
-                    android:maxLines="1"
-                    android:minHeight="48dp"
-                    android:textCursorDrawable="@drawable/colored_cursor"
-                    tools:ignore="Autofill" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/description_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/layout_gap"
-                android:layout_marginTop="@dimen/layout_gap"
-                android:background="@drawable/bg_dialog_form"
-                external:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@android:color/transparent"
-                    android:hint="@string/description"
-                    android:imeOptions="actionNext"
-                    android:inputType="textMultiLine"
-                    android:gravity="top|start"
-                    android:maxLines="@integer/editor_large_input_size"
-                    android:minHeight="48dp"
-                    android:minLines="@integer/editor_large_input_size"
-                    android:textColor="@android:color/black"
-                    android:textCursorDrawable="@drawable/colored_cursor"
-                    tools:ignore="Autofill" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/date_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/layout_gap"
-                android:layout_marginTop="@dimen/layout_gap"
-                android:background="@drawable/bg_dialog_form"
-                external:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/submission_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:drawablePadding="8dp"
-                    android:hint="@string/submission_date"
-                    android:imeOptions="actionDone"
-                    android:inputType="date"
-                    android:maxLines="1"
-                    android:minHeight="48dp"
-                    android:textColor="@android:color/black"
-                    android:textCursorDrawable="@drawable/colored_cursor"
-                    external:drawableEndCompat="@drawable/ic_date_48"
-                    external:drawableRightCompat="@drawable/ic_date_48"
-                    tools:ignore="Autofill" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/layout_gap"
-                    android:layout_marginTop="@dimen/layout_gap"
-                    android:text="@string/choose_course"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/assignment_course_code_text_size" />
-
-                <Spinner
-                    android:id="@+id/chooseCourse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/layout_gap"
-                    android:layout_marginTop="@dimen/layout_gap" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/bottom_actions_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/title_box"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_dialog_form"
+            external:errorEnabled="true">
 
-            <Button
-                android:id="@+id/submitButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/layout_gap"
-                android:background="@drawable/bg_submit"
-                android:minHeight="@dimen/button_min_height"
-                android:text="@string/register"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/button_text_size"
-                external:layout_constraintBottom_toBottomOf="parent"
-                external:layout_constraintEnd_toStartOf="@id/gallery"
-                external:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/assignment_title"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="8dp"
+               android:background="@android:color/transparent"
+               android:hint="@string/title"
+               android:imeOptions="actionNext"
+               android:inputType="textMultiLine"
+               android:maxLines="1"
+               android:minHeight="48dp"
+               android:textCursorDrawable="@drawable/colored_cursor"
+               tools:ignore="Autofill" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:contentDescription="@string/todo"
-                external:backgroundTint="@color/colorPrimaryDark"
-                external:fabCustomSize="@dimen/fab_size"
-                external:layout_constraintBottom_toBottomOf="@id/submitButton"
-                external:layout_constraintEnd_toEndOf="parent"
-                external:layout_constraintTop_toTopOf="@id/submitButton"
-                external:maxImageSize="@dimen/fab_icon_size"
-                external:srcCompat="@drawable/ic_image" />
+         </com.google.android.material.textfield.TextInputLayout>
 
-            <!--	<com.google.android.material.floatingactionbutton.FloatingActionButton-->
-            <!--		android:id = "@+id/camera"-->
-            <!--		android:layout_width = "wrap_content"-->
-            <!--		android:layout_height = "wrap_content"-->
-            <!--		android:layout_margin = "24dp"-->
-            <!--		external:fabSize = "auto"-->
-            <!--		external:layout_constraintBottom_toBottomOf = "parent"-->
-            <!--		external:layout_constraintEnd_toEndOf = "parent"-->
-            <!--		external:srcCompat = "@drawable/ic_camera" />-->
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/description_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_dialog_form"
+            external:errorEnabled="true">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/description"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="8dp"
+               android:background="@android:color/transparent"
+               android:gravity="top|start"
+               android:hint="@string/description"
+               android:imeOptions="actionNext"
+               android:inputType="textMultiLine"
+               android:maxLines="@integer/editor_large_input_size"
+               android:minHeight="48dp"
+               android:minLines="@integer/editor_large_input_size"
+               android:textColor="@android:color/black"
+               android:textCursorDrawable="@drawable/colored_cursor"
+               tools:ignore="Autofill" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/date_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_dialog_form"
+            external:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/submission_date"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:background="@android:color/transparent"
+               android:drawablePadding="8dp"
+               android:hint="@string/submission_date"
+               android:imeOptions="actionDone"
+               android:inputType="date"
+               android:maxLines="1"
+               android:minHeight="48dp"
+               android:textColor="@android:color/black"
+               android:textCursorDrawable="@drawable/colored_cursor"
+               external:drawableEndCompat="@drawable/ic_date_48"
+               external:drawableRightCompat="@drawable/ic_date_48"
+               tools:ignore="Autofill" />
+
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+               android:id="@+id/text"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_marginTop="@dimen/layout_gap"
+               android:text="@string/choose_course"
+               android:textColor="@android:color/black"
+               android:textSize="@dimen/assignment_course_code_text_size" />
+
+            <Spinner
+               android:id="@+id/chooseCourse"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_marginTop="@dimen/layout_gap" />
+
+         </LinearLayout>
+
+      </LinearLayout>
+
+   </ScrollView>
+
+   <androidx.coordinatorlayout.widget.CoordinatorLayout
+      android:id="@+id/bottom_actions_container"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+
+         <Button
+            android:id="@+id/submitButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_gap"
+            android:background="@drawable/bg_submit"
+            android:minHeight="@dimen/button_min_height"
+            android:text="@string/register"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/button_text_size"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toStartOf="@id/gallery"
+            external:layout_constraintStart_toStartOf="parent" />
+
+         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:contentDescription="@string/todo"
+            external:backgroundTint="@color/colorPrimaryDark"
+            external:fabCustomSize="@dimen/fab_size"
+            external:layout_constraintBottom_toBottomOf="@id/submitButton"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintTop_toTopOf="@id/submitButton"
+            external:maxImageSize="@dimen/fab_icon_size"
+            external:srcCompat="@drawable/ic_image" />
+
+         <!--	<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+         <!--		android:id = "@+id/camera"-->
+         <!--		android:layout_width = "wrap_content"-->
+         <!--		android:layout_height = "wrap_content"-->
+         <!--		android:layout_margin = "24dp"-->
+         <!--		external:fabSize = "auto"-->
+         <!--		external:layout_constraintBottom_toBottomOf = "parent"-->
+         <!--		external:layout_constraintEnd_toEndOf = "parent"-->
+         <!--		external:srcCompat = "@drawable/ic_camera" />-->
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+   </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,99 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/list_border">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@drawable/list_border">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/alarm_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="80dp"
-        android:scrollbarStyle="outsideOverlay"
-        external:layout_behavior="@string/appbar_scrolling_view_behavior"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent" />
+   <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/alarm_list"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:clipToPadding="false"
+      android:paddingBottom="80dp"
+      android:scrollbarStyle="outsideOverlay"
+      external:layout_behavior="@string/appbar_scrolling_view_behavior"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent" />
 
-    <com.noah.timely.custom.MaterialProgressbar
-        android:id="@+id/indeterminateProgress"
-        style="@style/Widget.MaterialProgressBar.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent"
-        external:mpb_progressStyle="circular" />
+   <com.noah.timely.custom.MaterialProgressbar
+      android:id="@+id/indeterminateProgress"
+      style="@style/Widget.MaterialProgressBar.ProgressBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:indeterminate="true"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:mpb_progressStyle="circular" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/no_alarm_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/no_alarm_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/wendy_one"
-            android:text="@string/no_alarms"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/no_task_text_size"
-            external:layout_constraintBottom_toTopOf="@id/img_no_event"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent" />
+      <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="8dp"
+         android:fontFamily="@font/wendy_one"
+         android:text="@string/no_alarms"
+         android:textColor="@color/colorPrimaryDark"
+         android:textSize="@dimen/no_task_text_size"
+         external:layout_constraintBottom_toTopOf="@id/img_no_event"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/img_no_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="@string/no_task"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent"
-            external:layout_constraintVertical_bias=".6"
-            external:srcCompat="@drawable/ic_alarm_clock" />
+      <ImageView
+         android:id="@+id/img_no_event"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:layout_marginBottom="8dp"
+         android:contentDescription="@string/no_task"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_bias=".6"
+         external:srcCompat="@drawable/ic_alarm_clock" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:background="@drawable/shadow_gradient"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent" />
+   <View
+      android:layout_width="match_parent"
+      android:layout_height="90dp"
+      android:background="@drawable/shadow_gradient"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+   <androidx.coordinatorlayout.widget.CoordinatorLayout
+      android:id="@+id/coordinator"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_alarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_margin="@dimen/fab_margin"
-            android:contentDescription="@string/add"
-            external:fabCustomSize="@dimen/fab_size"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:maxImageSize="@dimen/fab_icon_size"
-            external:srcCompat="@drawable/ic_add" />
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+         android:id="@+id/add_alarm"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center_horizontal|bottom"
+         android:layout_margin="@dimen/fab_margin"
+         android:contentDescription="@string/add"
+         external:fabCustomSize="@dimen/fab_size"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:maxImageSize="@dimen/fab_icon_size"
+         external:srcCompat="@drawable/ic_add" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+   </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

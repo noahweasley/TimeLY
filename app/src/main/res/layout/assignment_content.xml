@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:external="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:showIn="@layout/fragment_assignment">
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   tools:showIn="@layout/fragment_assignment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/assignment_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:layoutAnimation="@anim/list_layout_anim_gravity_top"
-        android:paddingHorizontal="@dimen/layout_gap"
-        android:paddingTop="@dimen/layout_gap"
-        android:paddingBottom="80dp"
-        android:visibility="gone"
-        external:layout_behavior="@string/appbar_scrolling_view_behavior"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent" />
+   <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/assignment_list"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:clipToPadding="false"
+      android:layoutAnimation="@anim/list_layout_anim_gravity_top"
+      android:paddingHorizontal="@dimen/layout_gap"
+      android:paddingTop="@dimen/layout_gap"
+      android:paddingBottom="80dp"
+      android:visibility="gone"
+      external:layout_behavior="@string/appbar_scrolling_view_behavior"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent" />
 
-    <com.noah.timely.custom.MaterialProgressbar
-        android:id="@+id/indeterminateProgress"
-        style="@style/Widget.MaterialProgressBar.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent"
-        external:mpb_progressStyle="circular" />
+   <com.noah.timely.custom.MaterialProgressbar
+      android:id="@+id/indeterminateProgress"
+      style="@style/Widget.MaterialProgressBar.ProgressBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:indeterminate="true"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:mpb_progressStyle="circular" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/no_assignment_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent"
-        external:layout_constraintTop_toTopOf="parent">
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/no_assignment_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/wendy_one"
-            android:text="@string/no_assignments_yet"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/no_task_text_size"
-            external:layout_constraintBottom_toTopOf="@id/img_no_event"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent" />
+      <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="8dp"
+         android:fontFamily="@font/wendy_one"
+         android:text="@string/no_assignments_yet"
+         android:textColor="@color/colorPrimaryDark"
+         android:textSize="@dimen/no_task_text_size"
+         external:layout_constraintBottom_toTopOf="@id/img_no_event"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/img_no_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="@string/no_task"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent"
-            external:layout_constraintVertical_bias=".5"
-            external:srcCompat="@drawable/ic_no_task" />
+      <ImageView
+         android:id="@+id/img_no_event"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:layout_marginBottom="8dp"
+         android:contentDescription="@string/no_task"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_bias=".5"
+         external:srcCompat="@drawable/ic_no_task" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:background="@drawable/shadow_gradient"
-        external:layout_constraintBottom_toBottomOf="parent"
-        external:layout_constraintEnd_toEndOf="parent"
-        external:layout_constraintStart_toStartOf="parent" />
+   <View
+      android:layout_width="match_parent"
+      android:layout_height="90dp"
+      android:background="@drawable/shadow_gradient"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

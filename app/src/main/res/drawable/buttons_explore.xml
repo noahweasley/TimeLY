@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_pressed="false">
-        <shape>
-            <solid android:color="@color/accent" />
-            <corners android:radius="@dimen/small_button_corner_radius" />
-            <padding android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" />
-            <stroke android:color="@color/accent_stroke" />
-        </shape>
-    </item>
+   <item android:state_pressed="false">
+      <shape>
+         <solid android:color="@color/accent" />
+         <corners android:radius="@dimen/small_button_corner_radius" />
+         <padding android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" />
+         <stroke android:color="@color/accent_stroke" />
+      </shape>
+   </item>
 
-    <item android:state_pressed="true">
-        <shape>
-            <solid android:color="@color/colorAccentDarker" />
-            <corners android:radius="@dimen/small_button_corner_radius" />
-            <padding android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" />
-            <stroke android:color="@color/accent_stroke" />
-        </shape>
-    </item>
+   <item android:state_pressed="true">
+      <shape>
+         <solid android:color="@color/colorAccentDarker" />
+         <corners android:radius="@dimen/small_button_corner_radius" />
+         <padding android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" />
+         <stroke android:color="@color/accent_stroke" />
+      </shape>
+   </item>
 
 </selector>

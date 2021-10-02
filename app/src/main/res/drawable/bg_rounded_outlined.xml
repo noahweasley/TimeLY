@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape>
-            <stroke android:width="2dp" android:color="@color/colorAccent" />
-            <corners android:radius="200dp" />
-            <padding android:bottom="8dp" android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" android:top="8dp" />
-        </shape>
-    </item>
+   <item>
+      <shape>
+         <stroke android:width="2dp" android:color="@color/colorAccent" />
+         <corners android:radius="200dp" />
+         <padding android:bottom="8dp" android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" android:top="8dp" />
+      </shape>
+   </item>
 </selector>
