@@ -2211,10 +2211,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     * @param id        the unique ID of the todoTask
     * @param isChecked the state of the todoTask
     */
-   public void updateTodoState(TodoModel todo, boolean isChecked) {
+   public void updateTodoState(TodoModel todo, boolean isCompleted) {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues values = new ContentValues();
-      values.put(COLUMN_TODO_IS_COMPLETED, String.valueOf(isChecked));
+      values.put(COLUMN_TODO_IS_COMPLETED, String.valueOf(isCompleted));
       long resultCode = db.update(todo.getDBcategory(), values, COLUMN_ID + " = " + todo.getId(), null);
    }
 

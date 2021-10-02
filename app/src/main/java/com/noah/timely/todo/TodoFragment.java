@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
@@ -21,7 +22,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -178,7 +178,7 @@ public class TodoFragment extends Fragment {
    }
 
    private void findRefreshTodoCountState(TodoModel dataModel) {
-      int searchIndex = Arrays.binarySearch(TodoModel.CATEGORIES, dataModel.getDBcategory());
+      int searchIndex = CollectionUtils.linearSearch(TodoModel.CATEGORIES, dataModel.getDBcategory());
       ViewGroup child = (ViewGroup) vg_container.getChildAt(searchIndex);
       TextView grandChildTextView = (TextView) child.getChildAt(2);
       String groupSize = String.format(Locale.US, "%d %s", sizes[searchIndex] = ++sizes[searchIndex], "task(s)");

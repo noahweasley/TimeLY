@@ -174,4 +174,5 @@
     <string name="default_category">Work</string>
     <string name="deny">Deny</string>
     <string name="optional_info">More info on task (Optional)</string>
+    <string name="update_task">UPDATE TASK</string>
 </resources>

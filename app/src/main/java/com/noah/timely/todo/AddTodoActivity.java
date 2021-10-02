@@ -145,6 +145,7 @@ public class AddTodoActivity extends AppCompatActivity {
             }
             tv_startTime.setText(startTime);
             tv_endTime.setText(endTime);
+            btn_addTask.setText(R.string.update_task);
          }
       }
    }
@@ -155,10 +156,7 @@ public class AddTodoActivity extends AppCompatActivity {
       courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_category.setAdapter(courseAdapter);
       int selectionIndex = linearSearch(CATEGORIES_2, getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
-      LogUtils.debug(this, "Spinner setup, got: " + getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
-      LogUtils.debug(this, "Category search: " + CATEGORIES_2[selectionIndex] + " at " + selectionIndex);
       spin_category.setSelection(selectionIndex);
-
       spin_category.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
          @Override
          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -220,16 +218,17 @@ public class AddTodoActivity extends AppCompatActivity {
          toast.setGravity(Gravity.BOTTOM, 0, 100);
          toast.show();
 
+         // Refresh the _todo list size
          if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
             EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.NEW));
-
+         // Refresh the _todo group size
          if (EventBus.getDefault().hasSubscriberForEvent(LayoutRefreshEvent.class))
             EventBus.getDefault().post(new TodoRefreshEvent(todoModel));
 
          playAlertTone(this, MiscUtil.Alert.TODO);
       }
 
-      finish();
+      onBackPressed(); // simulate when the user taps the back button
    }
 
    @Override

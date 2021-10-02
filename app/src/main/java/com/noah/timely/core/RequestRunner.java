@@ -201,8 +201,10 @@ public class RequestRunner extends Thread {
    private void doTodoDelete() {
       DataModel model = params.getModelList().get(params.getAdapterPosition());
       params.getModelList().remove(params.getAdapterPosition());
-      int pos = params.getPagePosition();
-      EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, TDUpdateMessage.EventType.REMOVE));
+      int changePosition = params.getAdapterPosition();
+
+      EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, changePosition,
+                                                     TDUpdateMessage.EventType.REMOVE));
             /*
             wait 3 seconds to perform actual delete request, because an undo request might also be issued, which
             delete request would have to be cancelled. The sleep timer is also synchronized   with the undo
@@ -215,8 +217,9 @@ public class RequestRunner extends Thread {
             will be executed when the deleteRequestDiscarded property has been set,
             meaning an undo request
             */
-         params.getModelList().add(params.getAdapterPosition(), model);
-         EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, TDUpdateMessage.EventType.INSERT));
+         params.getModelList().add(changePosition, model);
+         EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model,changePosition,
+                                                        TDUpdateMessage.EventType.INSERT));
       }
       if (!deleteRequestDiscarded) {
          TodoModel examModel = (TodoModel) model;

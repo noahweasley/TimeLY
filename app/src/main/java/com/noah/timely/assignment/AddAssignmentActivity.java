@@ -98,12 +98,12 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
       btn_gallery.setOnClickListener(
               v -> startActivity(new Intent(this, ImageDirectory.class)
-                      .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
-                      .setAction(ADD_NEW)));
+                                         .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
+                                         .setAction(ADD_NEW)));
 
       ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
-              R.layout.simple_spinner_item,
-              courseList = database.getAllRegisteredCourseCodes());
+                                                              R.layout.simple_spinner_item,
+                                                              courseList = database.getAllRegisteredCourseCodes());
 
       courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
 
@@ -192,9 +192,9 @@ public class AddAssignmentActivity extends AppCompatActivity {
             if (event.getX() >= (edt_date.getWidth() - drawableWidth)) {
                Calendar calendar = Calendar.getInstance();
                DatePickerDialog dpd = DatePickerDialog.newInstance(odsl,
-                       calendar.get(Calendar.YEAR),
-                       calendar.get(Calendar.MONTH),
-                       calendar.get(Calendar.DAY_OF_MONTH));
+                                                                   calendar.get(Calendar.YEAR),
+                                                                   calendar.get(Calendar.MONTH),
+                                                                   calendar.get(Calendar.DAY_OF_MONTH));
                dpd.setVersion(DatePickerDialog.Version.VERSION_2);
                dpd.show(getSupportFragmentManager(), "DatePickerDialog");
                return true;
@@ -291,10 +291,10 @@ public class AddAssignmentActivity extends AppCompatActivity {
       if (database.isAssignmentPresent(data) && !tryScheduleNotifiers(yy, mm, dd, tt, ln, data, pos)) {
          ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
          errorBuilder.setDialogMessage("Invalid assignment")
-                 .setShowSuggestions(true)
-                 .setSuggestionCount(2)
-                 .setSuggestion1("Try setting assignments to the future")
-                 .setSuggestion2("Check for assignment duplicates");
+                     .setShowSuggestions(true)
+                     .setSuggestionCount(2)
+                     .setSuggestion1("Try setting assignments to the future")
+                     .setSuggestion2("Check for assignment duplicates");
 
          new ErrorDialog().showErrorMessage(this, errorBuilder.build());
          return;
@@ -342,24 +342,24 @@ public class AddAssignmentActivity extends AppCompatActivity {
       String ln = truncateLecturerName(lecturer);
       Intent notifyIntentCurrent = new Intent(this, SubmissionNotifier.class);
       notifyIntentCurrent.putExtra(LECTURER_NAME, ln)
-              .putExtra(TITLE, title)
-              .putExtra(POSITION, pos)
-              .addCategory(getPackageName() + ".category")
-              .setAction(getPackageName() + ".update")
-              .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
+                         .putExtra(TITLE, title)
+                         .putExtra(POSITION, pos)
+                         .addCategory(getPackageName() + ".category")
+                         .setAction(getPackageName() + ".update")
+                         .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
 
       Intent notifyIntentPrevious = new Intent(this, Reminder.class);
       notifyIntentPrevious.putExtra(LECTURER_NAME, ln)
-              .putExtra(TITLE, title)
-              .putExtra(NEXT_ALARM, CURRENT)
-              .addCategory(getPackageName() + ".category")
-              .setAction(getPackageName() + ".update")
-              .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
+                          .putExtra(TITLE, title)
+                          .putExtra(NEXT_ALARM, CURRENT)
+                          .addCategory(getPackageName() + ".category")
+                          .setAction(getPackageName() + ".update")
+                          .setDataAndType(Uri.parse("content://" + getPackageName()), data.toString());
 
       PendingIntent assignmentPiPrevious = PendingIntent.getBroadcast(this, 147, notifyIntentPrevious,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                                      PendingIntent.FLAG_UPDATE_CURRENT);
       PendingIntent assignmentPiCurrent = PendingIntent.getBroadcast(this, 141, notifyIntentCurrent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                                     PendingIntent.FLAG_UPDATE_CURRENT);
       // Exact alarms not used here, so that android can perform its normal operation on devices >= 4.4 (KITKAT) to
       // prevent unnecessary battery drain by alarms.
       //
@@ -381,7 +381,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
       String[] nameTokens = fullName.split(" ");
 
       String[] titles = {"Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr", "Mr",
-              "Mister", "Mrs", "Ms", "Prof", "Professor"};
+                         "Mister", "Mrs", "Ms", "Prof", "Professor"};
 
       StringBuilder nameBuilder = new StringBuilder();
       String shortenedName = "";

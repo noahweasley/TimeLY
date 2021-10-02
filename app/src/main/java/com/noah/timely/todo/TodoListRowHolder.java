@@ -96,7 +96,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
          expl_detailLayout.toggle();
       });
 
-      cbx_state.setOnCheckedChangeListener((v, isChecked) -> db.updateTodoState(todo, isChecked));
+      cbx_state.setOnCheckedChangeListener((v, isActive) -> db.updateTodoState(todo, !isActive));
 
       // Multi - Select actions
       itemView.setOnLongClickListener(l -> {

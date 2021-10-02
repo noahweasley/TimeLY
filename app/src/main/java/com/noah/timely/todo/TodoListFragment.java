@@ -101,6 +101,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
    @Override
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(retrieveToolbarTitle(category));
+
       context = (AppCompatActivity) getActivity();
       database = new SchoolDatabase(getContext());
 
@@ -142,9 +144,14 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
    @Override
    public void onResume() {
+      // Prevent glitch on adding menu to the toolbar. Only show a particular semester's course
+      // count, if that is the only visible semester
+      setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
+      // could have used ViewPager.OnPageChangedListener to increase code readability, but
+      // this was used to reduce code size as there is not much work to be done when ViewPager
+      // scrolls
+      if (actionMode != null) actionMode.finish();
       super.onResume();
-      setHasOptionsMenu(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(retrieveToolbarTitle(category));
    }
 
    @Override
@@ -165,6 +172,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
       inflater.inflate(R.menu.list_menu_todo, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
+      itemCount.setText(String.valueOf(tdList.size()));
+
       TooltipCompat.setTooltipText(itemCount, "Todo Count");
       super.onCreateOptionsMenu(menu, inflater);
    }
@@ -175,7 +184,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
       TodoModel data = update.getData();
       // data position is not the same as the absolute adapter position in list so, use the change ID that was
       // gotten from the absolute adapter position to make changes to the list.
-      int changePos = data.getPosition();
+      int changePos = update.getChangePosition();
       boolean listEmpty = tdList.isEmpty();
       switch (update.getType()) {
          case NEW:

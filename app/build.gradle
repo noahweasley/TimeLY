@@ -71,5 +71,8 @@ android {
             exclude group: 'androidx.appcompat'
             exclude group: 'androidx.recyclerview'
         }
+
+        // debugImplementation because all these dependencies should only run in debug builds.
+        debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
     }
 }
