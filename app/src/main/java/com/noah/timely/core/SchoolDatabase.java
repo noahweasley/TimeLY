@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -216,7 +215,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
    private void createTodoListTable(SQLiteDatabase db, String tableName) {
 
-      String createTodoTables_stmt = "CREATE TABLE" + tableName + " (" +
+      String createTodoTables_stmt = "CREATE TABLE " + tableName + " (" +
               COLUMN_ID + " INTEGER, " +
               COLUMN_TODO_CATEGORY + " TEXT," +
               COLUMN_TODO_TITLE + " TEXT," +
@@ -387,9 +386,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       if (timetableName.equals(SCHEDULED_TIMETABLE)) {
          // Begin exam sorting
          Cursor sortElementCursor = db.rawQuery("SELECT " + COLUMN_START_TIME
-                 + "," + COLUMN_DAY
-                 + "," + COLUMN_ID
-                 + " FROM " + timetableName, null);
+                                                        + "," + COLUMN_DAY
+                                                        + "," + COLUMN_ID
+                                                        + " FROM " + timetableName, null);
 
          List<TimetableModel> timetables = new ArrayList<>();
          while (sortElementCursor.moveToNext()) {
@@ -732,7 +731,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     */
    public List<DataModel> getAlarms() {
       SQLiteDatabase db = getReadableDatabase();
-      List<DataModel> alarms = new LinkedList<>();
+      List<DataModel> alarms = new ArrayList<>();
 
       String alarmsQuery_stmt =
               "SELECT " + COLUMN_POS
@@ -784,9 +783,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       SQLiteDatabase db = getReadableDatabase();
       Cursor stateCursor =
               db.rawQuery("SELECT " + COLUMN_SNOOZE_STAT + ", "
-                      + COLUMN_SNOOZED_TIME +
-                      " FROM " + ALARMS_TABLE +
-                      " WHERE " + COLUMN_POS + " = " + position, null);
+                                  + COLUMN_SNOOZED_TIME +
+                                  " FROM " + ALARMS_TABLE +
+                                  " WHERE " + COLUMN_POS + " = " + position, null);
 
       String snoozedState = null, snoozedTime = null;
 
@@ -1312,9 +1311,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       assignmentData.put(COLUMN_ATTACHED_PDF, model.getAttachedPDF());
 
       long isUpdated = db.update(ASSIGNMENT_TABLE,
-              assignmentData,
-              COLUMN_ID + " = " + model.getPosition(),
-              null);
+                                 assignmentData,
+                                 COLUMN_ID + " = " + model.getPosition(),
+                                 null);
 
       return isUpdated != -1;
    }
@@ -1472,7 +1471,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       // begin get course chronological order
       List<String> names = new ArrayList<>();
       Cursor c = db.rawQuery("SELECT " + COLUMN_FULL_COURSE_NAME + " FROM "
-              + SEMESTER + " ORDER BY " + COLUMN_FULL_COURSE_NAME, null);
+                                     + SEMESTER + " ORDER BY " + COLUMN_FULL_COURSE_NAME, null);
 
       while (c.moveToNext()) names.add(c.getString(0));
 
@@ -1497,7 +1496,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       int resultCode = db.delete(SEMESTER, COLUMN_ID + " = " + model.getId(), null);
       // Delete from global course code
       db.delete(REGISTERED_COURSES,
-              COLUMN_FULL_COURSE_NAME + " = '" + sanitizeEntry(model.getCourseName()) + "'", null);
+                COLUMN_FULL_COURSE_NAME + " = '" + sanitizeEntry(model.getCourseName()) + "'", null);
 
       return resultCode != -1;
    }
@@ -1749,7 +1748,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       // Begin exam sorting
       Cursor sortElementCursor
               = db.rawQuery("SELECT " + COLUMN_START_TIME + "," + COLUMN_DAY + "," + COLUMN_ID + " FROM " + examWeek,
-              null);
+                            null);
 
       List<ExamModel> exams = new ArrayList<>();
       while (sortElementCursor.moveToNext()) {
@@ -2007,6 +2006,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          case Constants.TIMETABLE_MODEL:
             resultCode = deleteMultipleTimetables(metadata[2], itemIndices);
             break;
+         case Constants.TODO_MODEL:
+            resultCode = deleteMultipleTodos(itemIndices, metadata[3]);
          default:
             throw new IllegalArgumentException(clazz.getName() + " is not supported");
       }
@@ -2074,6 +2075,19 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       return resCode;
    }
 
+   // Delete todos at specified indices
+   private boolean deleteMultipleTodos(Integer[] itemIndices, final String TODO_CATEGORY) {
+      // Delete assignments with  the whereArgs specified
+      boolean resCode = false;
+      SQLiteDatabase db = getWritableDatabase();
+
+      for (int index : itemIndices) {
+         resCode |= db.delete(TODO_CATEGORY, COLUMN_ID + " = " + index, null) != -1;
+      }
+
+      return resCode;
+   }
+
    /**
     * @return list of  alarms currently be in their active states
     */
@@ -2112,7 +2126,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          String date = todoCursor.getString(8);
 
          TodoModel model = new TodoModel(id, title, desc, isTaskCompleted, category,
-                 date, startTime, endTime, todoTime);
+                                         date, startTime, endTime, todoTime);
 
          todoModels.add(model);
       }
@@ -2135,10 +2149,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       int generalGroupSize = 0;
 
       String[] stmts = {"SELECT COUNT (*) FROM " + todoGroups[1], "SELECT COUNT (*) FROM " + todoGroups[2],
-              "SELECT COUNT (*) FROM " + todoGroups[3], "SELECT COUNT (*) FROM " + todoGroups[4],
-              "SELECT COUNT (*) FROM " + todoGroups[4], "SELECT COUNT (*) FROM " + todoGroups[5],
-              "SELECT COUNT (*) FROM " + todoGroups[7], "SELECT COUNT (*) FROM " + todoGroups[8],
-              "SELECT COUNT (*) FROM " + todoGroups[9]};
+                        "SELECT COUNT (*) FROM " + todoGroups[3], "SELECT COUNT (*) FROM " + todoGroups[4],
+                        "SELECT COUNT (*) FROM " + todoGroups[4], "SELECT COUNT (*) FROM " + todoGroups[5],
+                        "SELECT COUNT (*) FROM " + todoGroups[7], "SELECT COUNT (*) FROM " + todoGroups[8],
+                        "SELECT COUNT (*) FROM " + todoGroups[9]};
 
       for (int j = 0; j < stmts.length; j++) {
          Cursor groupSizeCursor = db.rawQuery(stmts[j], null);

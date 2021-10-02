@@ -162,7 +162,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
       } else {
          ErrorDialog.Builder builder = new ErrorDialog.Builder();
          builder.setShowSuggestions(false)
-                 .setDialogMessage("Duplicate Exam Found");
+                .setDialogMessage("Duplicate Exam Found");
          new ErrorDialog().showErrorMessage(getContext(), builder.build());
       }
       return true;
@@ -195,7 +195,7 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
                                                        : registerAndClose();
             if (success) {
                Toast message = Toast.makeText(getContext(), R.string.registration_pending,
-                       Toast.LENGTH_SHORT);
+                                              Toast.LENGTH_SHORT);
                if (!cbx_multiple.isChecked())
                   message.setGravity(Gravity.CENTER, 0, 0);
                message.show();
@@ -212,15 +212,15 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
 
          SchoolDatabase database = new SchoolDatabase(getContext());
          ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(getContext(),
-                 R.layout.simple_dropdown_item_1line,
-                 database.getAllRegisteredCourses());
+                                                                 R.layout.simple_dropdown_item_1line,
+                                                                 database.getAllRegisteredCourses());
          courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          atv_courseName.setAdapter(courseAdapter);
 
          Spinner spin_days = findViewById(R.id.day_spin);
          ArrayAdapter<String> dayAdapter = new ArrayAdapter<>(getContext(),
-                 R.layout.simple_spinner_item,
-                 DAYS_3);
+                                                              R.layout.simple_spinner_item,
+                                                              DAYS_3);
          dayAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          spin_days.setAdapter(dayAdapter);
          spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -263,9 +263,9 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
                Calendar calendar = Calendar.getInstance();
 
                TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
-                       calendar.get(Calendar.HOUR_OF_DAY),
-                       calendar.get(Calendar.MINUTE),
-                       isUserPreferred24Hours(getContext()));
+                                                                   calendar.get(Calendar.HOUR_OF_DAY),
+                                                                   calendar.get(Calendar.MINUTE),
+                                                                   isUserPreferred24Hours(getContext()));
                dpd.setVersion(TimePickerDialog.Version.VERSION_2);
                dpd.show(manager, "TimePickerDialog");
                return true;

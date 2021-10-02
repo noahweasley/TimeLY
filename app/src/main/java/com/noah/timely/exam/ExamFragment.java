@@ -42,7 +42,7 @@ public class ExamFragment extends Fragment {
          weekCount = Integer.parseInt(countValue);
       } catch (NumberFormatException exc) {
          Log.w(getClass().getSimpleName(),
-                 "Week count of: " + countValue + " is ignored, using" + " 8 weeks instead ");
+               "Week count of: " + countValue + " is ignored, using" + " 8 weeks instead ");
          weekCount = 8;
       }
 

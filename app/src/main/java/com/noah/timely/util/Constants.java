@@ -30,6 +30,11 @@ public class Constants {
    public static final String TIMETABLE_MODEL = "com.noah.timely.timetable.TimetableModel";
 
    /**
+    * Constants for TodoModel
+    */
+   public static final String TODO_MODEL = "com.noah.timely.todo.TodoModel";
+
+   /**
     * Constant for Scheduled Timetable
     */
    public static final String SCHEDULED_TIMETABLE = "com.noah.timely.scheduled";
@@ -103,5 +108,4 @@ public class Constants {
     * Constants for Music category
     */
    public static final String TODO_MUSIC = "Music_Todo";
-
 }

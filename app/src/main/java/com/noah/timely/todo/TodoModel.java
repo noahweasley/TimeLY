@@ -5,11 +5,11 @@ import com.noah.timely.core.DataModel;
 
 public class TodoModel extends DataModel {
    public static final String[] CATEGORIES = {"General_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
-           "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
-           "Fun_Todo", "Miscellaneous_Todo"};
+                                              "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
+                                              "Fun_Todo", "Miscellaneous_Todo"};
    public static final String[] CATEGORIES_2 = {"Miscellaneous_Todo", "Work_Todo", "Music_Todo", "Creativity_Todo",
-           "Travel_Todo", "Study_Todo", "Fun_Todo", "Home_Todo",
-           "Shopping_Todo"};
+                                                "Travel_Todo", "Study_Todo", "Fun_Todo", "Home_Todo",
+                                                "Shopping_Todo"};
    private boolean isTaskCompleted;
    private String taskTitle;
    private String taskDescription;
@@ -40,7 +40,7 @@ public class TodoModel extends DataModel {
                     String completionDate, String startTime, String endTime, String completionTime) {
 
       this(taskTitle, taskDescription, isTaskCompleted, DBcategory,
-              completionDate, startTime, endTime, completionTime);
+           completionDate, startTime, endTime, completionTime);
 
       this.id = id;
    }

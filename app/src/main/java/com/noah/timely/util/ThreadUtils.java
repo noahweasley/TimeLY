@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
  * Set of utility methods to be used to efficiently manage Thread execution.
  */
 public class ThreadUtils {
-
    private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
    /**

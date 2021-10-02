@@ -28,6 +28,7 @@ public class RequestParams {
    private Boolean[] alarmRepeatDays;
    private int pagePosition;
    private List<Image> imageList;
+   private String todoCategory;
 
    public String getSemester() {
       return semester;
@@ -163,6 +164,14 @@ public class RequestParams {
 
    public void setImageList(List<Image> imageList) {
       this.imageList = imageList;
+   }
+
+   public void setTodoCategory(String category) {
+      this.todoCategory = category;
+   }
+
+   public String getTodoCategory() {
+      return todoCategory;
    }
 
    public enum MetaDataType {

@@ -102,12 +102,12 @@ public class TimelyUpdateInfoDialog extends DialogFragment implements View.OnCli
       private View createTextNode(String text) {
          AppCompatTextView tv_text = new AppCompatTextView(getContext());
          MarginLayoutParams layoutParams = new MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                 ViewGroup.LayoutParams.WRAP_CONTENT);
+                                                                  ViewGroup.LayoutParams.WRAP_CONTENT);
 
          // Converts 8 dip into its equivalent px
          int mPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                 8.0f,
-                 getResources().getDisplayMetrics());
+                                                   8.0f,
+                                                   getResources().getDisplayMetrics());
          layoutParams.setMargins(mPx, mPx, mPx, mPx);
          tv_text.setLayoutParams(layoutParams);
          tv_text.setText(text);

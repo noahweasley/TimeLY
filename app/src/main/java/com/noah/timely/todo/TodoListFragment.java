@@ -172,51 +172,52 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
    @Subscribe(threadMode = ThreadMode.MAIN)
    public void doTodoUpdate(TDUpdateMessage update) {
       LogUtils.debug(this, "Received update: " + update.getType());
-      if (tabPosition == 0) {
-         TodoModel data = update.getData();
-         // data position is not the same as the absolute adapter position in list so, use the change ID that was
-         // gotten from the absolute adapter position to make changes to the list.
-         int changePos = data.getPosition();
-         boolean listEmpty = tdList.isEmpty();
-         switch (update.getType()) {
-            case NEW:
+      TodoModel data = update.getData();
+      // data position is not the same as the absolute adapter position in list so, use the change ID that was
+      // gotten from the absolute adapter position to make changes to the list.
+      int changePos = data.getPosition();
+      boolean listEmpty = tdList.isEmpty();
+      switch (update.getType()) {
+         case NEW:
+            LogUtils.debug(this, "Updating tab: " + tabPosition);
+            if (tabPosition == 0) {
+               LogUtils.debug(this, "Updated tab: " + tabPosition);
                tdList.add(data);
                itemCount.setText(String.valueOf(tdList.size()));
 
-               notodoView.setVisibility(listEmpty ? View.VISIBLE : View.GONE);
-               rv_todoList.setVisibility(listEmpty ? View.GONE : View.VISIBLE);
-
-               adapter.notifyItemInserted(changePos);
-               break;
-            case REMOVE:
-               tdList.remove(changePos);
-               itemCount.setText(String.valueOf(tdList.size()));
-               adapter.notifyItemRemoved(changePos);
-               adapter.notifyDataSetChanged();
-
-               if (listEmpty) doEmptyListUpdate(null);
-
-               break;
-            case INSERT:
-               tdList.add(changePos, data);
-               itemCount.setText(String.valueOf(tdList.size()));
-               adapter.notifyItemInserted(changePos);
-               adapter.notifyDataSetChanged();
                doEmptyListUpdate(null);
+
+               adapter.notifyItemInserted(changePos);
                break;
-            default:
-               TodoModel tm = (TodoModel) tdList.remove(changePos);
-               tm.setTaskCompleted(data.isTaskCompleted());
-               tm.setTaskTitle(data.getTaskTitle());
-               tm.setStartTime(data.getStartTime());
-               tm.setEndTime(data.getEndTime());
-               tm.setCompletionTime(data.getCompletionTime());
-               tm.setCompletionDate(data.getCompletionDate());
-               tm.setTaskDescription(data.getTaskDescription());
-               tdList.add(tm);
-               adapter.notifyItemChanged(changePos);
-               break;
-         }
+            }
+         case REMOVE:
+            tdList.remove(changePos);
+            itemCount.setText(String.valueOf(tdList.size()));
+            adapter.notifyItemRemoved(changePos);
+            adapter.notifyDataSetChanged();
+
+            if (listEmpty) doEmptyListUpdate(null);
+
+            break;
+         case INSERT:
+            tdList.add(changePos, data);
+            itemCount.setText(String.valueOf(tdList.size()));
+            adapter.notifyItemInserted(changePos);
+            adapter.notifyDataSetChanged();
+            doEmptyListUpdate(null);
+            break;
+         default:
+            TodoModel tm = (TodoModel) tdList.remove(changePos);
+            tm.setTaskCompleted(data.isTaskCompleted());
+            tm.setTaskTitle(data.getTaskTitle());
+            tm.setStartTime(data.getStartTime());
+            tm.setEndTime(data.getEndTime());
+            tm.setCompletionTime(data.getCompletionTime());
+            tm.setCompletionDate(data.getCompletionDate());
+            tm.setTaskDescription(data.getTaskDescription());
+            tdList.add(tm);
+            adapter.notifyItemChanged(changePos);
+            break;
       }
    }
 
@@ -403,20 +404,21 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
          RequestRunner runner = RequestRunner.createInstance();
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(getActivity())
-                 .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                 .setModelList(tdList)
-                 .setMetadataType(RequestParams.MetaDataType.TODO)
-                 .setItemIndices(getCheckedTodosIndices())
-                 .setPositionIndices(getCheckedTodosPositions())
-                 .setDataProvider(TodoModel.class);
+                .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                .setModelList(tdList)
+                .setTodoCategory(category)
+                .setMetadataType(RequestParams.MetaDataType.TODO)
+                .setItemIndices(getCheckedTodosIndices())
+                .setPositionIndices(getCheckedTodosPositions())
+                .setDataProvider(TodoModel.class);
 
          runner.setRequestParams(builder.getParams())
-                 .runRequest(MULTIPLE_DELETE_REQUEST);
+               .runRequest(MULTIPLE_DELETE_REQUEST);
 
          final int count = getCheckedTodosCount();
          Snackbar snackbar = Snackbar.make(coordinator,
-                 count + " Todo" + (count > 1 ? "s" : "") + " Deleted",
-                 Snackbar.LENGTH_LONG);
+                                           count + " Todo" + (count > 1 ? "s" : "") + " Deleted",
+                                           Snackbar.LENGTH_LONG);
 
          snackbar.setActionTextColor(Color.YELLOW);
          snackbar.setAction("UNDO", x -> runner.undoRequest());

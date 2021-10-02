@@ -299,7 +299,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
       @Override
       public void onBindViewHolder(@NonNull ExamRowHolder holder, int position) {
          holder.with(ExamTimetableFragment.this, examRowAdapter, eList, coordinator)
-                 .bindView();
+               .bindView();
       }
 
       @Override
@@ -403,20 +403,20 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
          RequestRunner runner = RequestRunner.createInstance();
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(getActivity())
-                 .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                 .setModelList(eList)
-                 .setMetadataType(RequestParams.MetaDataType.EXAM)
-                 .setItemIndices(getCheckedExamsIndices())
-                 .setPositionIndices(getCheckedExamsPositions())
-                 .setDataProvider(ExamModel.class);
+                .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                .setModelList(eList)
+                .setMetadataType(RequestParams.MetaDataType.EXAM)
+                .setItemIndices(getCheckedExamsIndices())
+                .setPositionIndices(getCheckedExamsPositions())
+                .setDataProvider(ExamModel.class);
 
          runner.setRequestParams(builder.getParams())
-                 .runRequest(MULTIPLE_DELETE_REQUEST);
+               .runRequest(MULTIPLE_DELETE_REQUEST);
 
          final int count = getCheckedCoursesCount();
          Snackbar snackbar = Snackbar.make(coordinator,
-                 count + " Exam" + (count > 1 ? "s" : "") + " Deleted",
-                 Snackbar.LENGTH_LONG);
+                                           count + " Exam" + (count > 1 ? "s" : "") + " Deleted",
+                                           Snackbar.LENGTH_LONG);
          snackbar.setActionTextColor(Color.YELLOW);
          snackbar.setAction("UNDO", v -> runner.undoRequest());
          snackbar.show();

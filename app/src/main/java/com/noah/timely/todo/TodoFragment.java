@@ -213,8 +213,8 @@ public class TodoFragment extends Fragment {
 
       // Navigate to contents of clicked todo
       getActivity().getSupportFragmentManager().beginTransaction()
-              .replace(R.id.frame, TodoContainerFragment.newInstance(category), "Todo")
-              .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)
-              .addToBackStack(null).commit();
+                   .replace(R.id.frame, TodoContainerFragment.newInstance(category), "Todo")
+                   .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)
+                   .addToBackStack(null).commit();
    }
 }

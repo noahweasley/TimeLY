@@ -153,8 +153,8 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          int position = isExpanded ? getAbsoluteAdapterPosition() : -1;
          rootView.setActivated(isExpanded);
          expandStatus.animate()
-                 .rotation(isExpanded ? 180 : 0)
-                 .setDuration(detailLayout.getDuration());
+                     .rotation(isExpanded ? 180 : 0)
+                     .setDuration(detailLayout.getDuration());
       });
 
       // display the days to repeat if repeat checkbox is checked
@@ -236,14 +236,14 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(mActivity)
-                    .setAdapterPosition(this.getAbsoluteAdapterPosition())
-                    .setModelList(alarmModelList)
-                    .setAlarmRepeatDays(selectedDays)
-                    .setAlarmLabel(label)
-                    .setAlarmTime(time);
+                   .setAdapterPosition(this.getAbsoluteAdapterPosition())
+                   .setModelList(alarmModelList)
+                   .setAlarmRepeatDays(selectedDays)
+                   .setAlarmLabel(label)
+                   .setAlarmTime(time);
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(DELETE_REQUEST);
+                  .runRequest(DELETE_REQUEST);
 
             Snackbar snackBar = Snackbar.make(coordinator, "Alarm Deleted", Snackbar.LENGTH_LONG);
             snackBar.setActionTextColor(Color.YELLOW);
@@ -397,11 +397,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                         PendingIntent.FLAG_UPDATE_CURRENT);
       alarmPI.cancel();
       alarmManager.cancel(alarmPI);
    }
@@ -453,11 +453,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                         PendingIntent.FLAG_CANCEL_CURRENT);
       alarmPI.cancel();
       alarmManager.cancel(alarmPI);
 
@@ -492,11 +492,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                         PendingIntent.FLAG_CANCEL_CURRENT);
       alarmPI.cancel();
       alarmManager.cancel(alarmPI);
    }
@@ -513,11 +513,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                         PendingIntent.FLAG_UPDATE_CURRENT);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -586,11 +586,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                         PendingIntent.FLAG_UPDATE_CURRENT);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -653,11 +653,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                         PendingIntent.FLAG_UPDATE_CURRENT);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -705,11 +705,11 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarms" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                         PendingIntent.FLAG_UPDATE_CURRENT);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -764,26 +764,26 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
    private void onSelectRingtone(View v) {
       RingtonePickerDialog.Builder builder = new RingtonePickerDialog.Builder(mActivity, mgr);
       builder.setCancelButtonText(android.R.string.cancel)
-              .setPositiveButtonText(android.R.string.ok)
-              .setTitle("Select Ringtone")
-              .displaySilentRingtone(true)
-              .displayDefaultRingtone(true)
-              .setPlaySampleWhileSelection(true)
-              .addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
-              .setListener((String ringtoneName, @Nullable Uri ringtoneUri) -> {
+             .setPositiveButtonText(android.R.string.ok)
+             .setTitle("Select Ringtone")
+             .displaySilentRingtone(true)
+             .displayDefaultRingtone(true)
+             .setPlaySampleWhileSelection(true)
+             .addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
+             .setListener((String ringtoneName, @Nullable Uri ringtoneUri) -> {
 
-                 String ringtone = null;
-                 if (ringtoneUri != null) ringtone = RingtoneUtils.getRingtoneName(mActivity, ringtoneUri);
-                 String actualRingtoneName = ringtoneName.equals("Default") ? ringtone : ringtoneName;
-                 btn_rngPicker.setText(actualRingtoneName);
-                 thisAlarm.setRingtone(actualRingtoneName);
+                String ringtone = null;
+                if (ringtoneUri != null) ringtone = RingtoneUtils.getRingtoneName(mActivity, ringtoneUri);
+                String actualRingtoneName = ringtoneName.equals("Default") ? ringtone : ringtoneName;
+                btn_rngPicker.setText(actualRingtoneName);
+                thisAlarm.setRingtone(actualRingtoneName);
 
-                 ThreadUtils.runBackgroundTask(() -> {
-                    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                    database.updateRingtone(getAbsoluteAdapterPosition(), ringtoneName, ringtoneUri);
-                 });
+                ThreadUtils.runBackgroundTask(() -> {
+                   Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                   database.updateRingtone(getAbsoluteAdapterPosition(), ringtoneName, ringtoneUri);
+                });
 
-              }).show();
+             }).show();
    }
 
    void bindView() {
@@ -867,9 +867,9 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
          FragmentManager manager = mActivity.getSupportFragmentManager();
          TimePickerDialog dpd = TimePickerDialog.newInstance(this,
-                 calendar.get(Calendar.HOUR_OF_DAY),
-                 calendar.get(Calendar.MINUTE),
-                 is24);
+                                                             calendar.get(Calendar.HOUR_OF_DAY),
+                                                             calendar.get(Calendar.MINUTE),
+                                                             is24);
          dpd.setVersion(TimePickerDialog.Version.VERSION_2);
          dpd.show(manager, "TimePickerDialog");
       }

@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       String neutralText = getString(R.string.never);
       String noticeMessage = getString(R.string.noticeMessage);
       final String RESTRICTION_GRANT = PreferenceUtils.getStringValue(this, PreferenceUtils.RESTRICTION_ACCESS_KEY,
-              PreferenceUtils.GRANT_ACCESS);
+                                                                      PreferenceUtils.GRANT_ACCESS);
       final boolean ACCESS_DENIED = RESTRICTION_GRANT.equals(PreferenceUtils.DENY_ACCESS);
       PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

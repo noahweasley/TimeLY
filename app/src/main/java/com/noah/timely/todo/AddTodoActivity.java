@@ -1,5 +1,6 @@
 package com.noah.timely.todo;
 
+import static com.noah.timely.todo.TodoModel.CATEGORIES_2;
 import static com.noah.timely.util.CollectionUtils.linearSearch;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
 import static com.noah.timely.util.MiscUtil.playAlertTone;
@@ -28,6 +29,7 @@ import com.noah.timely.R;
 import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Converter;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.MiscUtil;
 import com.noah.timely.util.SimpleOnItemSelectedListener;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -70,6 +72,7 @@ public class AddTodoActivity extends AppCompatActivity {
       starter.putExtra(EXTRA_END_TIME, todoToEdit.getEndTime());
       starter.putExtra(EXTRA_DATE, todoToEdit.getCompletionDate());
       starter.putExtra(EXTRA_IS_EDITABLE, toEdit);
+      starter.putExtra(EXTRA_DEFAULT_CATEGORY, todoToEdit.getDBcategory());
       context.startActivity(starter);
    }
 
@@ -88,10 +91,10 @@ public class AddTodoActivity extends AppCompatActivity {
       edt_taskDescription = findViewById(R.id.task_description);
       tv_startTime = findViewById(R.id.start_time);
       tv_endTime = findViewById(R.id.end_time);
+      vg_timeContainer = findViewById(R.id.time_container);
 
       btn_addTask.setOnClickListener(v -> addTask());
 
-      vg_timeContainer = findViewById(R.id.time_container);
       ImageButton btn_remove = (ImageButton) vg_timeContainer.getChildAt(0);
       Button btn_addTimeFrame = findViewById(R.id.add_timeframe);
 
@@ -119,8 +122,8 @@ public class AddTodoActivity extends AppCompatActivity {
          tv_endTime.setText(R.string.default_end_time_24);
       }
 
-      tv_startTime.setOnClickListener(this::onClick);
-      tv_endTime.setOnClickListener(this::onClick);
+      tv_startTime.setOnClickListener(this::onTimeRangeClick);
+      tv_endTime.setOnClickListener(this::onTimeRangeClick);
 
       setupSpinner();
 
@@ -151,17 +154,20 @@ public class AddTodoActivity extends AppCompatActivity {
       ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CATEGORIES);
       courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_category.setAdapter(courseAdapter);
-      spin_category.setSelection(linearSearch(CATEGORIES, getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY)));
+      int selectionIndex = linearSearch(CATEGORIES_2, getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
+      LogUtils.debug(this, "Spinner setup, got: " + getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
+      LogUtils.debug(this, "Category search: " + CATEGORIES_2[selectionIndex] + " at " + selectionIndex);
+      spin_category.setSelection(selectionIndex);
 
       spin_category.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
          @Override
          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            category = TodoModel.CATEGORIES_2[position];
+            category = CATEGORIES_2[position];
          }
       });
    }
 
-   private void onClick(View view) {
+   private void onTimeRangeClick(View view) {
       TextView text = (TextView) view;
       boolean is24HourMode = isUserPreferred24Hours(this);
       TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute, int second) -> {
@@ -182,9 +188,9 @@ public class AddTodoActivity extends AppCompatActivity {
 
       FragmentManager manager = getSupportFragmentManager();
       TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
-              calendar.get(Calendar.HOUR_OF_DAY),
-              calendar.get(Calendar.MINUTE),
-              is24HourMode);
+                                                          calendar.get(Calendar.HOUR_OF_DAY),
+                                                          calendar.get(Calendar.MINUTE),
+                                                          is24HourMode);
       dpd.setVersion(TimePickerDialog.Version.VERSION_2);
       dpd.show(manager, "TimePickerDialog");
    }

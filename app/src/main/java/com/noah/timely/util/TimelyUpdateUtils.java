@@ -61,7 +61,7 @@ public class TimelyUpdateUtils {
          // Create a notification channel if it doesn't exist yet, so as to abide to the new
          // rule of android api level 26: "All notifications must have a channel"
          manager.createNotificationChannel(new NotificationChannel(UNIQUE_ID, CHANNEL,
-                 NotificationManager.IMPORTANCE_DEFAULT));
+                                                                   NotificationManager.IMPORTANCE_DEFAULT));
       }
 
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
@@ -77,7 +77,7 @@ public class TimelyUpdateUtils {
                  .build();
 
          String type = PreferenceManager.getDefaultSharedPreferences(context)
-                 .getString("Uri Type", "TimeLY's Default");
+                                        .getString("Uri Type", "TimeLY's Default");
 
          final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                            : SYSTEM_DEFAULT;
@@ -93,22 +93,22 @@ public class TimelyUpdateUtils {
          String contentText = String.format(Locale.US, "TimeLY_v%s is out, Click to update", v);
 
          builder.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
-                 .setAutoCancel(true)
-                 .setContentTitle(updateTitle)
-                 .setContentText(contentText)
-                 .setSound(DEFAULT_URI)
-                 .setSmallIcon(R.drawable.ic_n_upgrade)
-                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                 .setLargeIcon(icon)
-                 .setContentIntent(pi);
+                .setAutoCancel(true)
+                .setContentTitle(updateTitle)
+                .setContentText(contentText)
+                .setSound(DEFAULT_URI)
+                .setSmallIcon(R.drawable.ic_n_upgrade)
+                .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setLargeIcon(icon)
+                .setContentIntent(pi);
       } else {
          builder.setContentTitle(updateTitle)
-                 .setOngoing(true)
-                 .setSilent(true)
-                 .setAutoCancel(false)
-                 .setSmallIcon(R.drawable.ic_n_upgrade)
-                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                 .setLargeIcon(icon);
+                .setOngoing(true)
+                .setSilent(true)
+                .setAutoCancel(false)
+                .setSmallIcon(R.drawable.ic_n_upgrade)
+                .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setLargeIcon(icon);
       }
 
       manager.notify(UPDATE_ID, builder.build());

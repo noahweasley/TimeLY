@@ -47,6 +47,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -57,7 +58,7 @@ public class AlarmListFragment extends Fragment {
    private final Calendar calendar = Calendar.getInstance();
    FragmentActivity mActivity;
    private ConstraintLayout no_alarm_view;
-   private LinkedList<DataModel> aList;
+   private ArrayList<DataModel> aList;
    private AlarmAdapter alarmAdapter;
    private SchoolDatabase database;
    private CoordinatorLayout coordinator;
@@ -70,7 +71,7 @@ public class AlarmListFragment extends Fragment {
       mActivity = getActivity();
       database = new SchoolDatabase(mActivity);
       alarmAdapter = new AlarmAdapter();
-      aList = new LinkedList<>();
+      aList = new ArrayList<>();
       EventBus.getDefault().register(this);
    }
 
@@ -89,7 +90,7 @@ public class AlarmListFragment extends Fragment {
 
       ThreadUtils.runBackgroundTask(() -> {
          Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-         aList = (LinkedList<DataModel>) database.getAlarms();
+         aList = (ArrayList<DataModel>) database.getAlarms();
          if (isAdded())
             getActivity().runOnUiThread(() -> {
                no_alarm_view.setVisibility(aList.isEmpty() ? View.VISIBLE : View.GONE);
@@ -170,9 +171,9 @@ public class AlarmListFragment extends Fragment {
 
          FragmentManager manager = mActivity.getSupportFragmentManager();
          TimePickerDialog dpd = TimePickerDialog.newInstance(this,
-                 calendar.get(Calendar.HOUR_OF_DAY),
-                 calendar.get(Calendar.MINUTE),
-                 is24);
+                                                             calendar.get(Calendar.HOUR_OF_DAY),
+                                                             calendar.get(Calendar.MINUTE),
+                                                             is24);
          dpd.setVersion(TimePickerDialog.Version.VERSION_2);
          dpd.show(manager, "TimePickerDialog");
       }
@@ -209,10 +210,10 @@ public class AlarmListFragment extends Fragment {
 
             ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
             errorBuilder.setShowSuggestions(true)
-                    .setDialogMessage(String.format("Alarm for %s exists", sTime))
-                    .setSuggestionCount(2)
-                    .setSuggestion1("Consider editing former alarm")
-                    .setSuggestion2("Delete former alarm");
+                        .setDialogMessage(String.format("Alarm for %s exists", sTime))
+                        .setSuggestionCount(2)
+                        .setSuggestion1("Consider editing former alarm")
+                        .setSuggestion2("Delete former alarm");
 
             new ErrorDialog().showErrorMessage(getContext(), errorBuilder.build());
 
@@ -276,11 +277,11 @@ public class AlarmListFragment extends Fragment {
             alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
             alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
             alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-                    "com.noah.timely.alarm.dataType");
+                                               "com.noah.timely.alarm.dataType");
 
             AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
             PendingIntent alarmPI = PendingIntent.getBroadcast(mActivity, 11789, alarmReceiverIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                                                               PendingIntent.FLAG_CANCEL_CURRENT);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                // alarm has to be triggered even when device is in idle or doze mode.

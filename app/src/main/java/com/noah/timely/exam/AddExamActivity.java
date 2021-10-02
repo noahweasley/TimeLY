@@ -83,15 +83,15 @@ public class AddExamActivity extends AppCompatActivity {
       edt_startTime.setOnTouchListener(this::onTouch);
 
       ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
-              R.layout.simple_dropdown_item_1line,
-              database.getAllRegisteredCourses());
+                                                              R.layout.simple_dropdown_item_1line,
+                                                              database.getAllRegisteredCourses());
       courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       atv_courseName.setAdapter(courseAdapter);
 
       Spinner spin_days = findViewById(R.id.day_spin);
       ArrayAdapter<String> dayAdapter = new ArrayAdapter<>(this,
-              R.layout.simple_spinner_item,
-              DAYS_3);
+                                                           R.layout.simple_spinner_item,
+                                                           DAYS_3);
 
       dayAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_days.setAdapter(dayAdapter);
@@ -135,9 +135,9 @@ public class AddExamActivity extends AppCompatActivity {
 
             FragmentManager manager = getSupportFragmentManager();
             TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    isUserPreferred24Hours(this));
+                                                                calendar.get(Calendar.HOUR_OF_DAY),
+                                                                calendar.get(Calendar.MINUTE),
+                                                                isUserPreferred24Hours(this));
             dpd.setVersion(TimePickerDialog.Version.VERSION_2);
             dpd.show(manager, "TimePickerDialog");
             return true;
@@ -238,7 +238,7 @@ public class AddExamActivity extends AppCompatActivity {
       } else {
          ErrorDialog.Builder builder = new ErrorDialog.Builder();
          builder.setShowSuggestions(false)
-                 .setDialogMessage("Duplicate Exam Found");
+                .setDialogMessage("Duplicate Exam Found");
          new ErrorDialog().showErrorMessage(this, builder.build());
       }
       return true;

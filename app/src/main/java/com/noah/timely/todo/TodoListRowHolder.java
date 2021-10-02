@@ -85,8 +85,8 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       img_overflow.setOnClickListener(v -> {
          boolean isExpanded = expl_detailLayout.isExpanded();
          img_overflow.animate()
-                 .rotation(isExpanded ? 180 : 0)
-                 .setDuration(expl_detailLayout.getDuration());
+                     .rotation(isExpanded ? 180 : 0)
+                     .setDuration(expl_detailLayout.getDuration());
          // no-op
          // don't toggle description layout visibility if description is available
          if (TextUtils.isEmpty(todo.getTaskDescription())) {
@@ -102,7 +102,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       itemView.setOnLongClickListener(l -> {
          trySelectTodo();
          todoRowAdapter.setMultiSelectionEnabled(!todoRowAdapter.isMultiSelectionEnabled()
-                 || todoRowAdapter.getCheckedTodosCount() != 0);
+                                                         || todoRowAdapter.getCheckedTodosCount() != 0);
          return true;
       });
 
@@ -121,15 +121,15 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       RequestRunner runner = RequestRunner.createInstance();
       RequestRunner.Builder builder = new RequestRunner.Builder();
       builder.setOwnerContext(activity)
-              .setAdapterPosition(getAbsoluteAdapterPosition())
-              .setModelList(tdList);
+             .setAdapterPosition(getAbsoluteAdapterPosition())
+             .setModelList(tdList);
 
       runner.setRequestParams(builder.getParams())
-              .runRequest(DELETE_REQUEST);
+            .runRequest(DELETE_REQUEST);
 
       Snackbar snackbar = Snackbar.make(coordinator, "Todo Deleted", Snackbar.LENGTH_LONG)
-              .setAction("undo", (view) -> runner.undoRequest())
-              .setActionTextColor(Color.YELLOW);
+                                  .setAction("undo", (view) -> runner.undoRequest())
+                                  .setActionTextColor(Color.YELLOW);
       snackbar.show();
    }
 

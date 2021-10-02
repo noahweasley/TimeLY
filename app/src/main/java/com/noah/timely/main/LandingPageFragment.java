@@ -93,7 +93,7 @@ public class LandingPageFragment extends Fragment {
       gestureDetector = new GestureDetector(context, new EasterEggActivationListener());
 
       view.findViewById(R.id.discover)
-              .setOnClickListener((v) -> ((MainActivity) getActivity()).drawer.openDrawer(GravityCompat.START));
+          .setOnClickListener((v) -> ((MainActivity) getActivity()).drawer.openDrawer(GravityCompat.START));
 
       tv_gText = view.findViewById(R.id.greeting_text);
       tv_gText.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));

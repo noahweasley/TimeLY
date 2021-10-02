@@ -64,7 +64,7 @@ public class AlarmReceiver extends BroadcastReceiver {
          // Create a notification channel if it doesn't exist yet, so as to abide to the new
          // rule of android api level 26: "All notifications must have a channel"
          manager.createNotificationChannel(new NotificationChannel(UNIQUE_ID, CHANNEL,
-                 NotificationManager.IMPORTANCE_HIGH));
+                                                                   NotificationManager.IMPORTANCE_HIGH));
       }
 
       String alarmLabel = database.getInitialAlarmLabelAt(dataPos);
@@ -84,34 +84,34 @@ public class AlarmReceiver extends BroadcastReceiver {
 
       Intent receiverSnooze = new Intent(context, NotificationActionReceiver.class);
       receiverSnooze.putExtra("action", "Snooze")
-              .putExtra(ID, NOTIFICATION_ID)
-              .putExtra(ALARM_POS, dataPos);
+                    .putExtra(ID, NOTIFICATION_ID)
+                    .putExtra(ALARM_POS, dataPos);
 
       Intent receiverDismiss = new Intent(context, NotificationActionReceiver.class);
       receiverDismiss.putExtra("action", "Dismiss")
-              .putExtra(ID, NOTIFICATION_ID)
-              .putExtra(ALARM_POS, dataPos);
+                     .putExtra(ID, NOTIFICATION_ID)
+                     .putExtra(ALARM_POS, dataPos);
 
       PendingIntent actionDismiss = PendingIntent.getBroadcast(context, 113, receiverDismiss,
-              PendingIntent.FLAG_ONE_SHOT);
+                                                               PendingIntent.FLAG_ONE_SHOT);
       PendingIntent actionSnooze = PendingIntent.getBroadcast(context, 114, receiverSnooze,
-              PendingIntent.FLAG_ONE_SHOT);
+                                                              PendingIntent.FLAG_ONE_SHOT);
 
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
       builder.setContentTitle("Alarm for: " + (is24 ? _24H : _12H) + (isSnoozeAction ? " (Snoozed)" : ""))
-              .setContentText(alarmLabel)
-              .setSmallIcon(R.drawable.ic_n_alarm)
-              .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
-              .setContentIntent(pi)
-              .setSilent(true)
-              .setFullScreenIntent(pi, true)
-              .addAction(new NotificationCompat.Action(R.drawable.ic_n_snooze, "Snooze", actionSnooze))
-              .addAction(new NotificationCompat.Action(R.drawable.ic_n_cancel, "Dismiss", actionDismiss));
+             .setContentText(alarmLabel)
+             .setSmallIcon(R.drawable.ic_n_alarm)
+             .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+             .setContentIntent(pi)
+             .setSilent(true)
+             .setFullScreenIntent(pi, true)
+             .addAction(new NotificationCompat.Action(R.drawable.ic_n_snooze, "Snooze", actionSnooze))
+             .addAction(new NotificationCompat.Action(R.drawable.ic_n_cancel, "Dismiss", actionDismiss));
 
       manager.notify(NOTIFICATION_ID, builder.build());
       // start playing alarm tone using the AlarmNotificationService
       context.startService(new Intent(context, AlarmNotificationService.class)
-              .putExtra(ID, NOTIFICATION_ID)
-              .putExtra(ALARM_POS, dataPos));
+                                   .putExtra(ID, NOTIFICATION_ID)
+                                   .putExtra(ALARM_POS, dataPos));
    }
 }

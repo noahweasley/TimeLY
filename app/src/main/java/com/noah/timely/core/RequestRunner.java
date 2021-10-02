@@ -164,7 +164,7 @@ public class RequestRunner extends Thread {
       if (!deleteRequestDiscarded) {
          // Delete the data model from SchoolDatabase using their positions
          String[] metadata;
-         // metadata: [0] = semester; [1] = exam; [2] = timetable; ALL_NULL = Assignment
+         // metadata: ALL_NULL = Assignment; [0] = semester; [1] = exam; [2] = timetable; [3] = _todo;
          switch (params.getMetadataType()) {
             case NO_DATA:
                metadata = new String[]{null, null, null, null};
@@ -179,14 +179,17 @@ public class RequestRunner extends Thread {
             case TIMETABLE:
                metadata = new String[]{null, null, params.getTimetable(), null};
                break;
+            case TODO:
+               metadata = new String[]{null, null, null, params.getTodoCategory()};
+               break;
             default:
                throw new IllegalArgumentException("Specified metadata is invalid");
          }
 
          boolean isDeleted = database.deleteDataModels(params.getDataClass(),
-                 metadata,
-                 params.getPositionIndices(),
-                 dataCache);
+                                                       metadata,
+                                                       params.getPositionIndices(),
+                                                       dataCache);
 
          if (isDeleted) {
             playAlertTone(appContext, Alert.DELETE);
@@ -382,7 +385,7 @@ public class RequestRunner extends Thread {
          EventBus.getDefault().post(new SUpdateMessage((TimetableModel) model, SUpdateMessage.EventType.REMOVE));
       else
          EventBus.getDefault().post(new TUpdateMessage((TimetableModel) model, pagePosition,
-                 TUpdateMessage.EventType.REMOVE));
+                                                       TUpdateMessage.EventType.REMOVE));
       // wait 3 seconds to perform actual delete request, because an undo request
       // might also be issued, which delete request would have to be cancelled.
       // The sleep timer is also synchronized with the undo Snackbar's display timeout,
@@ -400,7 +403,7 @@ public class RequestRunner extends Thread {
             EventBus.getDefault().post(new SUpdateMessage((TimetableModel) model, SUpdateMessage.EventType.INSERT));
          else
             EventBus.getDefault().post(new TUpdateMessage((TimetableModel) model, pagePosition,
-                    TUpdateMessage.EventType.INSERT));
+                                                          TUpdateMessage.EventType.INSERT));
       }
       if (!deleteRequestDiscarded) {
          boolean isDeleted;
@@ -439,12 +442,12 @@ public class RequestRunner extends Thread {
       AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
       Intent timetableIntent = new Intent(appContext, TimetableNotifier.class);
       timetableIntent.addCategory("com.noah.timely.timetable")
-              .setAction("com.noah.timely.timetable.addAction")
-              .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
-                      "com.noah.timely.dataType");
+                     .setAction("com.noah.timely.timetable.addAction")
+                     .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
+                                     "com.noah.timely.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(appContext, 555, timetableIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                    PendingIntent.FLAG_CANCEL_CURRENT);
       pi.cancel();
       manager.cancel(pi);
    }
@@ -521,12 +524,12 @@ public class RequestRunner extends Thread {
       AlarmManager manager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
       Intent timetableIntent = new Intent(appContext, ScheduledTaskNotifier.class);
       timetableIntent.addCategory("com.noah.timely.scheduled")
-              .setAction("com.noah.timely.scheduled.addAction")
-              .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
-                      "com.noah.timely.scheduled.dataType");
+                     .setAction("com.noah.timely.scheduled.addAction")
+                     .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
+                                     "com.noah.timely.scheduled.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(appContext, 1156, timetableIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                    PendingIntent.FLAG_CANCEL_CURRENT);
       pi.cancel();
       manager.cancel(pi);
    }
@@ -534,13 +537,13 @@ public class RequestRunner extends Thread {
    private void cancelAssignmentNotifier(AssignmentModel data) {
       Intent notifyIntentCurrent = new Intent(appContext, SubmissionNotifier.class);
       notifyIntentCurrent.addCategory(appContext.getPackageName() + ".category")
-              .setAction(appContext.getPackageName() + ".update")
-              .setDataAndType(Uri.parse("content://" + appContext.getPackageName()), data.toString());
+                         .setAction(appContext.getPackageName() + ".update")
+                         .setDataAndType(Uri.parse("content://" + appContext.getPackageName()), data.toString());
 
       Intent notifyIntentPrevious = new Intent(appContext, Reminder.class);
       notifyIntentPrevious.addCategory(appContext.getPackageName() + ".category")
-              .setAction(appContext.getPackageName() + ".update")
-              .setDataAndType(Uri.parse("content://" + appContext.getPackageName()), data.toString());
+                          .setAction(appContext.getPackageName() + ".update")
+                          .setDataAndType(Uri.parse("content://" + appContext.getPackageName()), data.toString());
 
       PendingIntent assignmentPiPrevious
               = PendingIntent.getBroadcast(appContext, 147, notifyIntentPrevious, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -576,12 +579,12 @@ public class RequestRunner extends Thread {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
 
       PendingIntent alarmPI = PendingIntent.getBroadcast(appContext, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                         PendingIntent.FLAG_CANCEL_CURRENT);
       alarmPI.cancel();
       alarmManager.cancel(alarmPI);
    }
@@ -635,12 +638,12 @@ public class RequestRunner extends Thread {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
 
       PendingIntent alarmPI = PendingIntent.getBroadcast(appContext, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                         PendingIntent.FLAG_CANCEL_CURRENT);
       alarmPI.cancel();
       alarmManager.cancel(alarmPI);
    }
@@ -745,6 +748,11 @@ public class RequestRunner extends Thread {
 
       public Builder setImageList(List<Image> imageList) {
          requestParams.setImageList(imageList);
+         return this;
+      }
+
+      public Builder setTodoCategory(String category) {
+         requestParams.setTodoCategory(category);
          return this;
       }
    }

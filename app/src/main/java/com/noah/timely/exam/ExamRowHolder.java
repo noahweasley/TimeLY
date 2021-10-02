@@ -67,11 +67,11 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
          RequestRunner runner = RequestRunner.createInstance();
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(user.getActivity())
-                 .setModelList(eList)
-                 .setAdapterPosition(getAbsoluteAdapterPosition());
+                .setModelList(eList)
+                .setAdapterPosition(getAbsoluteAdapterPosition());
 
          runner.setRequestParams(builder.getParams())
-                 .runRequest(DELETE_REQUEST);
+               .runRequest(DELETE_REQUEST);
 
          Snackbar bar = Snackbar.make(coordinator, "Exam Deleted", Snackbar.LENGTH_LONG);
          bar.setActionTextColor(Color.YELLOW);
@@ -83,10 +83,10 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
          if (TextUtils.equals(tv_courseCode.getText(), "NIL")) {
             ErrorDialog.Builder builder = new ErrorDialog.Builder();
             builder.setDialogMessage("No matching course code found")
-                    .setShowSuggestions(true)
-                    .setSuggestionCount(2)
-                    .setSuggestion1("Register courses first")
-                    .setSuggestion2("After registration, use that course title");
+                   .setShowSuggestions(true)
+                   .setSuggestionCount(2)
+                   .setSuggestion1("Register courses first")
+                   .setSuggestion2("After registration, use that course title");
             new ErrorDialog().showErrorMessage(user.getContext(), builder.build());
          }
       });
@@ -95,7 +95,7 @@ public class ExamRowHolder extends RecyclerView.ViewHolder {
       rootView.setOnLongClickListener(l -> {
          trySelectExam();
          examRowAdapter.setMultiSelectionEnabled(!examRowAdapter.isMultiSelectionEnabled()
-                 || examRowAdapter.getCheckedCoursesCount() != 0);
+                                                         || examRowAdapter.getCheckedCoursesCount() != 0);
          return true;
       });
 
