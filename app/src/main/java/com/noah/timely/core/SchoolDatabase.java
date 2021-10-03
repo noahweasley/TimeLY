@@ -2081,9 +2081,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       boolean resCode = false;
       SQLiteDatabase db = getWritableDatabase();
 
-      for (int index : itemIndices) {
-         resCode |= db.delete(TODO_CATEGORY, COLUMN_ID + " = " + index, null) != -1;
-      }
+      for (int index : itemIndices) resCode |= db.delete(TODO_CATEGORY, COLUMN_ID + " = " + index, null) != -1;
 
       return resCode;
    }
@@ -2112,8 +2110,16 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
       String DB_filter = " = '" + filter + "'";
       String getTodos_stmt = "SELECT * FROM " + todoCategory + " WHERE " + COLUMN_TODO_IS_COMPLETED + DB_filter;
+      String getTodos_stmt2 = "SELECT * FROM " + todoCategory + " WHERE " + COLUMN_TODO_IS_COMPLETED + DB_filter +
+              " ORDER BY " + COLUMN_TODO_CATEGORY;
 
-      Cursor todoCursor = db.rawQuery(getTodos_stmt, null);
+      Cursor todoCursor;
+
+      // Order by category for only General _todo
+      if (todoCategory.equals(Constants.TODO_GENERAL))
+         todoCursor = db.rawQuery(getTodos_stmt2, null);
+      else todoCursor = db.rawQuery(getTodos_stmt, null);
+
       while (todoCursor.moveToNext()) {
          int id = todoCursor.getInt(0);
          String category = todoCursor.getString(1);
@@ -2143,7 +2149,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       final Map<String, Integer> todoMap = new HashMap<>();
       SQLiteDatabase db = getReadableDatabase();
       //noinspection StatementWithEmptyBody
-      while (!db.isOpen()) ;
+      while (!db.isOpen()) ;      // delay program, wait here until the database is opened
       String[] todoGroups = TodoModel.CATEGORIES;
       int index = 1;
       int generalGroupSize = 0;
@@ -2173,10 +2179,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    }
 
    /**
-    * Adds a todoTask to the database
+    * Adds a _todo to the database
     *
-    * @param todoModel the todoTask to be added
-    * @param category  the category in which this todoTask exists
+    * @param todoModel the _todo to be added
+    * @param category  the category in which this _todo exists
     */
    public boolean addTodo(TodoModel todoModel, String category) {
       SQLiteDatabase db = getWritableDatabase();
@@ -2206,27 +2212,40 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    }
 
    /**
-    * updated a todoTask state
+    * updates a _todo's state
     *
-    * @param id        the unique ID of the todoTask
-    * @param isChecked the state of the todoTask
+    * @param id        the unique ID of the _todo
+    * @param isChecked the state of the _todo
+    * @return true if both the General _todo and <strong>specified _todo</strong> where deleted
     */
-   public void updateTodoState(TodoModel todo, boolean isCompleted) {
+   public boolean updateTodoState(TodoModel todo, boolean isCompleted) {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues values = new ContentValues();
       values.put(COLUMN_TODO_IS_COMPLETED, String.valueOf(isCompleted));
       long resultCode = db.update(todo.getDBcategory(), values, COLUMN_ID + " = " + todo.getId(), null);
+      // Query the database, searching for entries with a specific ID and title, because those two
+      // parameters obviously would be unique, together, for a particular _todo
+      String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
+      String[] whereArgs = {String.valueOf(todo.getId()), todo.getTaskTitle()};
+      long resultCode2 = db.update(TodoModel.CATEGORIES[0], values, whereClause, whereArgs);
+
+      return resultCode != -1 && resultCode2 != -1;
    }
 
    /**
-    * Deletes a todoTask
+    * Deletes a _todo
     *
-    * @param model the todoTask to be deleted
+    * @param todoModel the _todo to be deleted
     * @return true if successful
     */
-   public boolean deleteTodo(TodoModel model) {
+   public boolean deleteTodo(TodoModel todoModel) {
       SQLiteDatabase db = getWritableDatabase();
-      long resultCode = db.delete(model.getDBcategory(), COLUMN_ID + " = " + model.getId(), null);
+      long resultCode = db.delete(todoModel.getDBcategory(), COLUMN_ID + " = " + todoModel.getId(), null);
+      // Query the database, searching for entries with a specific ID and title, because those two
+      // parameters obviously would be unique, together, for a particular _todo
+      String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
+      String[] whereArgs = {String.valueOf(todoModel.getId()), todoModel.getTaskTitle()};
+      long resultCode2 = db.delete(TodoModel.CATEGORIES[0], whereClause, whereArgs);
       return resultCode != -1;
    }
 }

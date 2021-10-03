@@ -34,7 +34,6 @@ import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Constants;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -180,17 +179,16 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
    @Subscribe(threadMode = ThreadMode.MAIN)
    public void doTodoUpdate(TDUpdateMessage update) {
-      LogUtils.debug(this, "Received update: " + update.getType());
       TodoModel data = update.getData();
-      // data position is not the same as the absolute adapter position in list so, use the change ID that was
-      // gotten from the absolute adapter position to make changes to the list.
+      // Don't update list if the data received is not a part of the currently displayed _todo category
+      // If the currently dislayed _todo is the General _todo category, update it.
+      if(!data.getDBcategory().equals(this.category) && !data.getDBcategory().equals(Constants.TODO_GENERAL)) return;
+      // perform update at particular poitiion
       int changePos = update.getChangePosition();
       boolean listEmpty = tdList.isEmpty();
       switch (update.getType()) {
          case NEW:
-            LogUtils.debug(this, "Updating tab: " + tabPosition);
             if (tabPosition == 0) {
-               LogUtils.debug(this, "Updated tab: " + tabPosition);
                tdList.add(data);
                itemCount.setText(String.valueOf(tdList.size()));
 

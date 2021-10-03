@@ -24,6 +24,7 @@ import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.todo.TodoListFragment.TodoListAdapter;
 import com.noah.timely.util.Converter;
+import com.noah.timely.util.MiscUtil;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -96,7 +97,10 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
          expl_detailLayout.toggle();
       });
 
-      cbx_state.setOnCheckedChangeListener((v, isActive) -> db.updateTodoState(todo, !isActive));
+      cbx_state.setOnCheckedChangeListener((v, isCompleted) -> {
+         boolean updated = db.updateTodoState(todo, isCompleted);
+         if (updated) MiscUtil.playAlertTone(activity, MiscUtil.Alert.TODO);
+      });
 
       // Multi - Select actions
       itemView.setOnLongClickListener(l -> {
@@ -169,6 +173,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       tv_title.setText(todo.getTaskTitle());
       tv_description.setText(todo.getTaskDescription());
       tv_category.setText(todo.getCategory());
+      cbx_state.setChecked(todo.isTaskCompleted());
 
       if (TextUtils.isEmpty(todo.getCompletionDate())) {
          tv_date.setVisibility(View.GONE);

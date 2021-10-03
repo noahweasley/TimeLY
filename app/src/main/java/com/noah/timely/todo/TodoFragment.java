@@ -31,7 +31,7 @@ import java.util.Map;
  * Use the {@link TodoFragment#newInstance} factory method to create an instance of this fragment.
  */
 public class TodoFragment extends Fragment {
-   /*      Current todoTask sizes    */
+   /*      Current _todo sizes    */
    @SuppressWarnings("MismatchedReadAndWriteOfArray")
    private final int[] sizes = new int[10];
    private Map<String, Integer> todoGroupSizes = new HashMap<>();

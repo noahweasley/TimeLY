@@ -29,7 +29,6 @@ import com.noah.timely.R;
 import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Converter;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.MiscUtil;
 import com.noah.timely.util.SimpleOnItemSelectedListener;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -127,7 +126,7 @@ public class AddTodoActivity extends AppCompatActivity {
 
       setupSpinner();
 
-      // editing current todoTask
+      // editing current _todo
       isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
       if (isEditable) {
          Intent intent = getIntent();
