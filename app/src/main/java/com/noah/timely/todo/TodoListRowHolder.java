@@ -97,9 +97,10 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
          expl_detailLayout.toggle();
       });
 
-      cbx_state.setOnCheckedChangeListener((v, isCompleted) -> {
-         boolean updated = db.updateTodoState(todo, isCompleted);
-         if (updated) MiscUtil.playAlertTone(activity, MiscUtil.Alert.TODO);
+      cbx_state.setOnClickListener(c -> {
+         boolean checked = cbx_state.isChecked();
+         boolean isUpdated = db.updateTodoState(todo, checked);
+         if (checked && isUpdated) MiscUtil.playAlertTone(activity, MiscUtil.Alert.TODO);
       });
 
       // Multi - Select actions
@@ -126,7 +127,8 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       RequestRunner.Builder builder = new RequestRunner.Builder();
       builder.setOwnerContext(activity)
              .setAdapterPosition(getAbsoluteAdapterPosition())
-             .setModelList(tdList);
+             .setModelList(tdList)
+             .setTodoCategory(todo.getDBcategory());
 
       runner.setRequestParams(builder.getParams())
             .runRequest(DELETE_REQUEST);
@@ -164,11 +166,10 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
    }
 
    public void bindView() {
+      this.todo = (TodoModel) tdList.get(getAbsoluteAdapterPosition());
       // random row decoration
       int rowDrawable = DRAWABLE[getAbsoluteAdapterPosition() % DRAWABLE.length];
       header.setBackground(ContextCompat.getDrawable(activity, rowDrawable));
-
-      this.todo = (TodoModel) tdList.get(getAbsoluteAdapterPosition());
 
       tv_title.setText(todo.getTaskTitle());
       tv_description.setText(todo.getTaskDescription());

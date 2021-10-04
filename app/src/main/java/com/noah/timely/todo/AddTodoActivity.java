@@ -92,7 +92,6 @@ public class AddTodoActivity extends AppCompatActivity {
       tv_endTime = findViewById(R.id.end_time);
       vg_timeContainer = findViewById(R.id.time_container);
 
-      btn_addTask.setOnClickListener(v -> addTask());
 
       ImageButton btn_remove = (ImageButton) vg_timeContainer.getChildAt(0);
       Button btn_addTimeFrame = findViewById(R.id.add_timeframe);
@@ -128,6 +127,7 @@ public class AddTodoActivity extends AppCompatActivity {
 
       // editing current _todo
       isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
+      btn_addTask.setOnClickListener(v -> addOrUppdateTask(isEditable));
       if (isEditable) {
          Intent intent = getIntent();
          edt_taskTitle.setText(intent.getStringExtra(EXTRA_TODO_TITLE));
@@ -192,7 +192,7 @@ public class AddTodoActivity extends AppCompatActivity {
       dpd.show(manager, "TimePickerDialog");
    }
 
-   private void addTask() {
+   private void addOrUppdateTask(boolean toEdit) {
       TodoModel todoModel = new TodoModel();
 
       int tc_VisibilityFlag = vg_timeContainer.getVisibility();
@@ -210,22 +210,40 @@ public class AddTodoActivity extends AppCompatActivity {
       todoModel.setStartTime(Converter.convertTime(startTime, Converter.UNIT_24));
       todoModel.setEndTime(Converter.convertTime(endTime, Converter.UNIT_24));
 
-      boolean added = database.addTodo(todoModel, category);
+      boolean isSuccessful;
 
-      if (added) {
-         Toast toast = Toast.makeText(this, isEditable ? "Todo updated" : "Todo added", Toast.LENGTH_LONG);
-         toast.setGravity(Gravity.BOTTOM, 0, 100);
-         toast.show();
+      // update or add new _todo
+      if (toEdit) {
+         isSuccessful = database.updateTodo(todoModel, category);
+         if (isSuccessful) {
+            Toast toast = Toast.makeText(this, "Todo updated", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.BOTTOM, 0, 100);
+            toast.show();
 
-         // Refresh the _todo list size
-         if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
-            EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.NEW));
-         // Refresh the _todo group size
-         if (EventBus.getDefault().hasSubscriberForEvent(LayoutRefreshEvent.class))
-            EventBus.getDefault().post(new TodoRefreshEvent(todoModel));
+            // Refresh the _todo list size
+            if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
+               EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.UPDATE_CURRENT));
 
-         playAlertTone(this, MiscUtil.Alert.TODO);
+            playAlertTone(this, MiscUtil.Alert.TODO);
+         }
+      } else {
+         isSuccessful = database.addTodo(todoModel, category);
+         if (isSuccessful) {
+            Toast toast = Toast.makeText(this, "Todo added", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.BOTTOM, 0, 100);
+            toast.show();
+
+            // Refresh the _todo list size
+            if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
+               EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.NEW));
+            // Refresh the _todo group size
+            if (EventBus.getDefault().hasSubscriberForEvent(LayoutRefreshEvent.class))
+               EventBus.getDefault().post(new TodoRefreshEvent(todoModel));
+
+            playAlertTone(this, MiscUtil.Alert.TODO);
+         }
       }
+
 
       onBackPressed(); // simulate when the user taps the back button
    }

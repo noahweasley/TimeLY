@@ -29,7 +29,6 @@ public class SplashScreen extends AppCompatActivity {
       setContentView(R.layout.splash_screen);
 
       gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
-
          @Override
          public boolean onDown(MotionEvent e) {
             return true;

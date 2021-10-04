@@ -2212,6 +2212,17 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    }
 
    /**
+    * Updates a particular _todo
+    *
+    * @param todoModel the _todo to be edited or updated
+    * @param category  the category  of the _todo
+    * @return true if the _todo was updated
+    */
+   public boolean updateTodo(TodoModel todoModel, String category) {
+      return false;
+   }
+
+   /**
     * updates a _todo's state
     *
     * @param id        the unique ID of the _todo

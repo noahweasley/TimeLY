@@ -137,6 +137,9 @@ public class TodoFragment extends Fragment {
    public void onDestroyView() {
       super.onDestroyView();
       database.close();
+      // prevent memory leaks, clear out the garbage
+      if (vg_container != null)
+         vg_container = null;
    }
 
    @Override

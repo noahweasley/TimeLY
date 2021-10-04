@@ -222,7 +222,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
             tm.setCompletionTime(data.getCompletionTime());
             tm.setCompletionDate(data.getCompletionDate());
             tm.setTaskDescription(data.getTaskDescription());
-            tdList.add(tm);
+            tdList.add(changePos, tm);
             adapter.notifyItemChanged(changePos);
             break;
       }

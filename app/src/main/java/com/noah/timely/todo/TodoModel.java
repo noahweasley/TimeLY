@@ -1,6 +1,8 @@
 package com.noah.timely.todo;
 
 
+import androidx.annotation.NonNull;
+
 import com.noah.timely.core.DataModel;
 
 public class TodoModel extends DataModel {
@@ -115,5 +117,22 @@ public class TodoModel extends DataModel {
 
    public void setEndTime(String endTime) {
       this.endTime = endTime;
+   }
+
+   @NonNull
+   @Override
+   public String toString() {
+      return "TodoModel {" +
+              "id = " + id +
+              ", position = " + position +
+              ", isTaskCompleted = " + isTaskCompleted +
+              ", taskTitle = '" + taskTitle + '\'' +
+              ", taskDescription = '" + taskDescription + '\'' +
+              ", DBcategory = '" + DBcategory + '\'' +
+              ", completionDate = '" + completionDate + '\'' +
+              ", completionTime = '" + completionTime + '\'' +
+              ", startTime = '" + startTime + '\'' +
+              ", endTime = '" + endTime + '\'' +
+              '}';
    }
 }

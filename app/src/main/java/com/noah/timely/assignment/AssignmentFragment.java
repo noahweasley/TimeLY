@@ -109,7 +109,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
       FloatingActionButton fab_add = view.findViewById(R.id.fab_add);
       fab_add.setOnClickListener(v -> startActivity(new Intent(getActivity(),
-              AddAssignmentActivity.class).setAction("Create")));
+                                                               AddAssignmentActivity.class).setAction("Create")));
 
       assignmentAdapter.setHasStableIds(true);
       rV_assignmentList.setHasFixedSize(true);
@@ -135,18 +135,18 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             // post a delete request to the assignment database
             RequestRunner runner = RequestRunner.createInstance();
             Snackbar snackbar = Snackbar.make(coordinator, "Assignment Deleted", Snackbar.LENGTH_LONG)
-                    .setAction("undo", (view) -> runner.undoRequest())
-                    .setActionTextColor(Color.YELLOW);
+                                        .setAction("undo", (view) -> runner.undoRequest())
+                                        .setActionTextColor(Color.YELLOW);
             snackbar.show();
 
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
-                    .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
-                    .setModelList(aList)
-                    .setAssignmentData((AssignmentModel) aList.get(viewHolder.getAbsoluteAdapterPosition()));
+                   .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                   .setModelList(aList)
+                   .setAssignmentData((AssignmentModel) aList.get(viewHolder.getAbsoluteAdapterPosition()));
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(DELETE_REQUEST);
+                  .runRequest(DELETE_REQUEST);
          }
       });
 
@@ -430,20 +430,20 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
          RequestRunner runner = RequestRunner.createInstance();
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(getActivity())
-                 .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                 .setModelList(aList)
-                 .setMetadataType(RequestParams.MetaDataType.NO_DATA)
-                 .setItemIndices(getCheckedAssignmentsIndices())
-                 .setPositionIndices(getCheckedAssignmentPositions())
-                 .setDataProvider(AssignmentModel.class);
+                .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                .setModelList(aList)
+                .setMetadataType(RequestParams.MetaDataType.NO_DATA)
+                .setItemIndices(getCheckedAssignmentsIndices())
+                .setPositionIndices(getCheckedAssignmentPositions())
+                .setDataProvider(AssignmentModel.class);
 
          runner.setRequestParams(builder.getParams())
-                 .runRequest(MULTIPLE_DELETE_REQUEST);
+               .runRequest(MULTIPLE_DELETE_REQUEST);
 
          final int count = getCheckedAssignmentsCount();
          Snackbar snackbar = Snackbar.make(coordinator,
-                 count + " Assignment" + (count > 1 ? "s" : "") + " Deleted",
-                 Snackbar.LENGTH_LONG);
+                                           count + " Assignment" + (count > 1 ? "s" : "") + " Deleted",
+                                           Snackbar.LENGTH_LONG);
 
          snackbar.setActionTextColor(Color.YELLOW);
          snackbar.setAction("UNDO", v -> runner.undoRequest());
