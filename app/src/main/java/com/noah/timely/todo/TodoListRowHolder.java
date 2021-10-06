@@ -33,7 +33,6 @@ import java.util.List;
 @SuppressWarnings("FieldCanBeLocal")
 public class TodoListRowHolder extends RecyclerView.ViewHolder {
 
-   public static final String DELETE_REQUEST = "Delete Todo";
    private static final int[] DRAWABLE = {
            R.drawable.rounded_ct_bb,
            R.drawable.rounded_ct_ol,
@@ -45,6 +44,18 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
            R.drawable.rounded_ct_od,
            R.drawable.rounded_ct_rl
    };
+
+   private static final int[][] COLOR2D = {
+           { android.R.color.holo_orange_dark, R.color.holo_orange_dark_5 },
+           { android.R.color.holo_red_light, R.color.holo_red_light_5 },
+           { android.R.color.holo_green_dark }, { R.color.holo_green_dark_5 },
+           { android.R.color.holo_purple, R.color.holo_purple_5 },
+           { android.R.color.holo_red_light, R.color.holo_red_light_5 },
+           { android.R.color.holo_blue_dark, R.color.holo_blue_dark_5 },
+           { R.color.teal_700, R.color.teal_700_5 },
+           { R.color.tomato_red, R.color.tomato_red_5 }
+   };
+
    /*      views       */
    private final View header;
    private final CheckBox cbx_state;
@@ -57,6 +68,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
    private FragmentActivity activity;
    private CoordinatorLayout coordinator;
    /*      others      */
+   public static final String DELETE_REQUEST = "Delete Todo";
    private int position;
    private boolean isChecked;
    private List<DataModel> tdList;
@@ -95,6 +107,15 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
             return;
          }
          expl_detailLayout.toggle();
+      });
+
+      expl_detailLayout.setOnExpansionUpdateListener((expFraction, state) -> {
+         if (state == ExpandableLayout.State.COLLAPSED) {
+            bottomDivider.setVisibility(View.GONE);
+         } else if (state == ExpandableLayout.State.EXPANDING || state == ExpandableLayout.State.EXPANDED) {
+            if (bottomDivider.getVisibility() == View.GONE)
+               bottomDivider.setVisibility(View.VISIBLE);
+         }
       });
 
       cbx_state.setOnClickListener(c -> {
@@ -144,6 +165,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       btn_edit.setFocusable(!disable);
       cbx_state.setEnabled(!disable);
       cbx_state.setFocusable(!disable);
+      cbx_state.setClickable(!disable);
       btn_delete.setEnabled(!disable);
       btn_delete.setFocusable(!disable);
    }
@@ -173,12 +195,20 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
 
       tv_title.setText(todo.getTaskTitle());
       tv_description.setText(todo.getTaskDescription());
-      tv_category.setText(todo.getCategory());
       cbx_state.setChecked(todo.isTaskCompleted());
+
+      int categoryOrder = todo.getCategoryOrder();
+      int[] color2d = COLOR2D[categoryOrder];
+
+      tv_category.setTextColor(ContextCompat.getColor(activity, color2d[0]));
+      tv_category.setBackgroundColor(ContextCompat.getColor(activity, color2d[1]));
+      tv_category.setText(todo.getCategory());
 
       if (TextUtils.isEmpty(todo.getCompletionDate())) {
          tv_date.setVisibility(View.GONE);
+         bottomDivider.setVisibility(View.GONE);
       } else {
+         bottomDivider.setVisibility(View.VISIBLE);
          tv_date.setText(todo.getCompletionDate());
       }
 

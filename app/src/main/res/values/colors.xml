@@ -39,5 +39,12 @@
    <color name="color_td_8">#8C8F96</color>
    <color name="colorPrimary_5">#0D19629C</color>
    <color name="colorPrimary_5_darker">#40164D79</color>
+   <color name="holo_orange_dark_5">#0DFF8800</color>
+   <color name="holo_red_light_5">#0DFF4444</color>
+   <color name="holo_green_dark_5">#0D669900</color>
+   <color name="holo_purple_5">#0DAA66CC</color>
+   <color name="holo_blue_dark_5">#0D0099CC</color>
+   <color name="teal_700_5">#0D018786</color>
+   <color name="tomato_red_5">#0DFF6347</color>
    <!--  Spotify Dark Theme  -->
 </resources>

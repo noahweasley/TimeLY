@@ -4,6 +4,7 @@
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
    android:layout_height="wrap_content"
+   android:layout_margin="@dimen/layout_gap"
    android:layout_marginBottom="@dimen/secondary_card_margin_bottom"
    external:cardCornerRadius="@dimen/corner_radius"
    external:cardElevation="@dimen/normal_elevation"
@@ -71,13 +72,15 @@
 
             <TextView
                android:id="@+id/category"
-               android:layout_width="0dp"
+               android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_marginTop="8dp"
+               android:paddingHorizontal="@dimen/layout_gap"
+               android:paddingVertical="2dp"
                android:text="@string/default_category"
-               android:textColor="@color/high_constrast_grey"
+               android:background="@color/holo_orange_dark_5"
+               android:textColor="@android:color/holo_orange_dark"
                external:layout_constraintBottom_toBottomOf="parent"
-               external:layout_constraintEnd_toEndOf="@+id/title"
                external:layout_constraintStart_toStartOf="@+id/title"
                external:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -107,9 +110,10 @@
                   android:layout_height="wrap_content"
                   android:layout_marginHorizontal="@dimen/layout_gap"
                   android:layout_marginVertical="@dimen/layout_gap"
+                  android:gravity="center"
                   android:ellipsize="end"
                   android:maxLines="3"
-                  android:text="@string/long_text"
+                  android:text="@string/lorem_longer"
                   android:textColor="@color/high_constrast_grey"
                   android:textSize="14sp" />
 
