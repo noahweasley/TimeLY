@@ -35,7 +35,9 @@
    <string name="default_course_name">Android first generation  programming II</string>
    <string name="lecturer_hint">Lecturer Name</string>
    <string name="start_time_hint">Start Time</string>
+   <string name="start_time_hint_optional">Start Time (optional)</string>
    <string name="end_time_hint">End Time</string>
+   <string name="end_time_hint_optional">End Time (optional)</string>
    <string name="no_timetable">No Timetable yet</string>
    <string name="alarms">Study Alarms</string>
    <string name="not_important">NOT IMPORTANT</string>

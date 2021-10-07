@@ -5,6 +5,7 @@ import static com.noah.timely.util.MiscUtil.DAYS_3;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
 import static com.noah.timely.util.MiscUtil.playAlertTone;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -28,6 +29,7 @@ import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Converter;
 import com.noah.timely.util.MiscUtil;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -95,17 +97,12 @@ public class AddExamActivity extends AppCompatActivity {
 
       dayAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_days.setAdapter(dayAdapter);
-      spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+      spin_days.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
          @Override
-         public void onItemSelected(AdapterView<?> parent, View view, int pos,
-                                    long id) {
+         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             examDay = DAYS_3[pos];
          }
 
-         @Override
-         public void onNothingSelected(AdapterView<?> parent) {
-         }
       });
 
    }
@@ -129,8 +126,14 @@ public class AddExamActivity extends AppCompatActivity {
       final int DRAWABLE_RIGHT = 2;
 
       if (event.getAction() == MotionEvent.ACTION_UP) {
+         int padding;
          int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-         if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            padding = editText.getPaddingEnd();
+         else padding = editText.getPaddingRight();
+
+         if (event.getX() >= (editText.getWidth() - drawableWidth - padding)) {
             Calendar calendar = Calendar.getInstance();
 
             FragmentManager manager = getSupportFragmentManager();
@@ -170,8 +173,7 @@ public class AddExamActivity extends AppCompatActivity {
 
    private boolean registerAndClose() {
       boolean registered = registerExam();
-      if (registered)
-         onBackPressed();
+      if (registered) onBackPressed();
       return registered;
    }
 
@@ -243,6 +245,5 @@ public class AddExamActivity extends AppCompatActivity {
       }
       return true;
    }
-
 
 }

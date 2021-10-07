@@ -1,4 +1,4 @@
-package com.noah.timely.util;
+package com.noah.timely.util.adapters;
 
 import android.animation.Animator;
 

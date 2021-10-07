@@ -3,5 +3,5 @@
    <integer name="toast_y_offset">500</integer>
    <integer name="name_limit">14</integer>
    <integer name="editor_large_input_size">3</integer>
-   <integer name="task_editor_row_size">10</integer>
+   <integer name="task_editor_row_size">8</integer>
 </resources>

@@ -30,10 +30,10 @@ import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.MiscUtil.Alert;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
 
 import org.greenrobot.eventbus.EventBus;
 
-@SuppressWarnings("ConstantConditions")
 public class AddCourseDialog extends DialogFragment implements View.OnClickListener {
    private EditText edt_courseName, edt_courseCode;
    private RadioGroup grp_semesterGroup;
@@ -69,8 +69,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
 
    private boolean registerAndClose() {
       boolean registered = registerCourse();
-      if (registered)
-         dismiss();
+      if (registered) dismiss();
       return registered;
    }
 
@@ -125,8 +124,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
                model.setId(addPos);
                model.setChronologicalOrder(data[0]);
                playAlertTone(context.getApplicationContext(), Alert.COURSE);
-               EventBus.getDefault().post(new CUpdateMessage(model, CUpdateMessage.EventType.NEW,
-                       pagePosition1));
+               EventBus.getDefault().post(new CUpdateMessage(model, CUpdateMessage.EventType.NEW, pagePosition1));
             } else {
                Toast.makeText(context, "An Error occurred", Toast.LENGTH_LONG).show();
             }
@@ -134,7 +132,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
       } else {
          ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
          errorBuilder.setDialogMessage("Duplicate course found")
-                 .setShowSuggestions(false);
+                     .setShowSuggestions(false);
          new ErrorDialog().showErrorMessage(context, errorBuilder.build());
       }
       return true;
@@ -145,7 +143,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
               0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
               11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
               21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-              31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
+              31, 32, 33, 34, 35, 36, 37, 38, 39, 40 };
 
       public ACDialog(@NonNull Context context) {
          super(context, R.style.Dialog);
@@ -172,11 +170,9 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
          } else rd_secondSemester.setChecked(true);
 
          findViewById(R.id.register).setOnClickListener(v -> {
-            boolean success = cbx_multiple.isChecked() ? registerAndClear()
-                                                       : registerAndClose();
+            boolean success = cbx_multiple.isChecked() ? registerAndClear() : registerAndClose();
             if (success) {
-               Toast message = Toast.makeText(getContext(), R.string.registration_pending,
-                       Toast.LENGTH_SHORT);
+               Toast message = Toast.makeText(getContext(), R.string.registration_pending, Toast.LENGTH_SHORT);
                if (!cbx_multiple.isChecked())
                   message.setGravity(Gravity.CENTER, 0, 0);
                message.show();
@@ -186,21 +182,16 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
          });
 
          Spinner spin_credits = findViewById(R.id.credits);
-         ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(getContext(),
-                 R.layout.simple_spinner_item,
-                 credits);
+         ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, credits);
          creditAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          spin_credits.setAdapter(creditAdapter);
-         spin_credits.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+         spin_credits.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position,
                                        long id) {
                mCredits = credits[position];
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
          });
       }
    }

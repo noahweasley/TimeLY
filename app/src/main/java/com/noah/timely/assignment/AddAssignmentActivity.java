@@ -188,8 +188,14 @@ public class AddAssignmentActivity extends AppCompatActivity {
          final int DRAWABLE_RIGHT = 2;
 
          if (event.getAction() == MotionEvent.ACTION_UP) {
+            int padding;
             int drawableWidth = edt_date.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-            if (event.getX() >= (edt_date.getWidth() - drawableWidth)) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+               padding = edt_date.getPaddingEnd();
+            else padding = edt_date.getPaddingRight();
+
+            if (event.getX() >= (edt_date.getWidth() - drawableWidth - padding)) {
                Calendar calendar = Calendar.getInstance();
                DatePickerDialog dpd = DatePickerDialog.newInstance(odsl,
                                                                    calendar.get(Calendar.YEAR),
@@ -380,8 +386,8 @@ public class AddAssignmentActivity extends AppCompatActivity {
    private String truncateLecturerName(String fullName) {
       String[] nameTokens = fullName.split(" ");
 
-      String[] titles = {"Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr", "Mr",
-                         "Mister", "Mrs", "Ms", "Prof", "Professor"};
+      String[] titles = { "Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr", "Mr",
+                          "Mister", "Mrs", "Ms", "Prof", "Professor" };
 
       StringBuilder nameBuilder = new StringBuilder();
       String shortenedName = "";

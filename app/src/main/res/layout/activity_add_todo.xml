@@ -49,11 +49,11 @@
                android:layout_height="wrap_content"
                android:layout_marginTop="8dp"
                android:background="@android:color/transparent"
-               android:gravity="top|start"
+               android:gravity="start|center_vertical"
                android:hint="@string/plan"
                android:imeOptions="actionDone"
                android:inputType="textMultiLine"
-               android:maxLines="2"
+               android:maxLines="1"
                android:minHeight="48dp"
                android:minLines="2"
                android:textColor="@android:color/black"
@@ -98,7 +98,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/layout_gap"
-            android:background="@drawable/bg_color_primary_5"
             android:visibility="gone"
             external:layout_constraintBottom_toTopOf="@+id/tag"
             external:layout_constraintEnd_toEndOf="@id/task_description_box"
@@ -108,61 +107,132 @@
             external:layout_goneMarginTop="8dp"
             tools:visibility="visible">
 
-            <ImageButton
-               android:id="@+id/remove"
-               android:layout_width="wrap_content"
+            <LinearLayout
+               android:id="@+id/top"
+               android:layout_width="0dp"
                android:layout_height="wrap_content"
-               android:background="@null"
-               android:minWidth="30dp"
-               android:minHeight="30dp"
+               android:background="@drawable/bg_dialog_form"
+               android:orientation="horizontal"
                external:layout_constraintEnd_toEndOf="parent"
-               external:layout_constraintHorizontal_bias="0.7"
-               external:layout_constraintTop_toTopOf="parent"
-               external:srcCompat="@drawable/ic_clear" />
+               external:layout_constraintStart_toStartOf="parent"
+               external:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-               android:id="@+id/start_time"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="8dp"
-               android:layout_weight="1"
-               android:drawablePadding="8dp"
-               android:text="@string/default_start_time"
-               android:textColor="@color/black"
-               android:textSize="@dimen/timeframe_text_size"
-               external:drawableLeftCompat="@drawable/ic_notification"
-               external:drawableStartCompat="@drawable/ic_notification"
-               external:layout_constraintTop_toTopOf="parent"
-               tools:layout_editor_absoluteX="10dp" />
+               <com.google.android.material.textfield.TextInputLayout
+                  android:id="@+id/start_box"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginEnd="@dimen/default_gap"
+                  android:layout_marginRight="@dimen/default_gap"
+                  android:layout_weight="6"
+                  external:errorEnabled="true"
+                  external:layout_constraintEnd_toEndOf="parent"
+                  external:layout_constraintStart_toStartOf="parent"
+                  external:layout_constraintTop_toBottomOf="@+id/remove">
 
-            <TextView
-               android:id="@+id/to"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="16dp"
-               android:text="@string/to"
-               android:textColor="@color/black"
-               android:textSize="@dimen/timeframe_text_size"
-               android:textStyle="bold"
-               external:layout_constraintEnd_toEndOf="@+id/start_time"
-               external:layout_constraintStart_toStartOf="@+id/start_time"
-               external:layout_constraintTop_toBottomOf="@id/start_time" />
+                  <com.google.android.material.textfield.TextInputEditText
+                     android:id="@+id/start_date_time"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="8dp"
+                     android:background="@android:color/transparent"
+                     android:gravity="start|center_vertical"
+                     android:hint="@string/start_time_hint_optional"
+                     android:imeOptions="actionNext"
+                     android:inputType="textMultiLine"
+                     android:maxLines="1"
+                     android:minHeight="48dp"
+                     android:minLines="1"
+                     android:textColor="@android:color/black"
+                     android:textCursorDrawable="@drawable/colored_cursor"
+                     tools:ignore="Autofill" />
 
-            <TextView
-               android:id="@+id/end_time"
-               android:layout_width="wrap_content"
+               </com.google.android.material.textfield.TextInputLayout>
+
+               <ImageButton
+                  android:id="@+id/start_time_picker"
+                  style="@android:style/Widget.Holo.Button.Borderless"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:layout_marginEnd="@dimen/default_gap"
+                  android:layout_marginRight="@dimen/default_gap"
+                  android:layout_weight="1"
+                  external:srcCompat="@drawable/ic_access_time_large" />
+
+               <ImageButton
+                  android:id="@+id/start_date_picker"
+                  style="@android:style/Widget.Holo.Button.Borderless"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:layout_weight="1"
+                  external:srcCompat="@drawable/ic_date_large" />
+
+            </LinearLayout>
+
+            <LinearLayout
+               android:id="@+id/bottom"
+               android:layout_width="0dp"
                android:layout_height="wrap_content"
-               android:layout_marginTop="16dp"
-               android:layout_marginBottom="8dp"
-               android:drawablePadding="8dp"
-               android:text="@string/default_end_time"
-               android:textColor="@color/black"
-               android:textSize="@dimen/timeframe_text_size"
-               external:drawableLeftCompat="@drawable/ic_notification"
-               external:drawableStartCompat="@drawable/ic_notification"
-               external:layout_constraintBottom_toBottomOf="parent"
-               external:layout_constraintStart_toStartOf="@+id/start_time"
-               external:layout_constraintTop_toBottomOf="@id/to" />
+               android:layout_marginTop="@dimen/layout_gap"
+               android:background="@drawable/bg_dialog_form"
+               android:orientation="horizontal"
+               external:layout_constraintEnd_toEndOf="parent"
+               external:layout_constraintStart_toStartOf="parent"
+               external:layout_constraintTop_toBottomOf="@+id/top">
+
+               <com.google.android.material.textfield.TextInputLayout
+                  android:id="@+id/end_box"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginEnd="@dimen/default_gap"
+                  android:layout_marginRight="@dimen/default_gap"
+                  android:layout_weight="6"
+                  external:errorEnabled="true"
+                  external:layout_constraintEnd_toEndOf="parent"
+                  external:layout_constraintStart_toStartOf="parent"
+                  external:layout_constraintTop_toBottomOf="@+id/remove">
+
+                  <com.google.android.material.textfield.TextInputEditText
+                     android:id="@+id/end_date_time"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="8dp"
+                     android:background="@android:color/transparent"
+                     android:gravity="start|center_vertical"
+                     android:hint="@string/end_time_hint_optional"
+                     android:imeOptions="actionNext"
+                     android:inputType="textMultiLine"
+                     android:maxLines="1"
+                     android:minHeight="48dp"
+                     android:minLines="1"
+                     android:textColor="@android:color/black"
+                     android:textCursorDrawable="@drawable/colored_cursor"
+                     tools:ignore="Autofill" />
+
+               </com.google.android.material.textfield.TextInputLayout>
+
+               <ImageButton
+                  android:id="@+id/end_time_picker"
+                  style="@android:style/Widget.Holo.Button.Borderless"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:layout_marginEnd="@dimen/default_gap"
+                  android:layout_marginRight="@dimen/default_gap"
+                  android:layout_weight="1"
+                  external:srcCompat="@drawable/ic_access_time_large" />
+
+               <ImageButton
+                  android:id="@+id/end_date_picker"
+                  style="@android:style/Widget.Holo.Button.Borderless"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:layout_weight="1"
+                  external:srcCompat="@drawable/ic_date_large" />
+
+            </LinearLayout>
 
          </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -185,22 +255,6 @@
             external:layout_constraintBottom_toBottomOf="@id/tag"
             external:layout_constraintStart_toEndOf="@id/tag"
             external:layout_constraintTop_toTopOf="@id/tag" />
-
-         <Button
-            android:id="@+id/add_timeframe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="16dp"
-            android:background="@drawable/bg_rounded_outlined"
-            android:minHeight="@dimen/button_min_height"
-            android:text="@string/add_timeframe"
-            android:textSize="@dimen/button_text_size"
-            external:layout_constraintBottom_toBottomOf="parent"
-            external:layout_constraintEnd_toEndOf="@+id/task_box"
-            external:layout_constraintHorizontal_bias="0.85"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@id/category"
-            tools:visibility="visible" />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
 

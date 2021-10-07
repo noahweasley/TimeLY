@@ -8,6 +8,7 @@ import static com.noah.timely.timetable.DaysFragment.ARG_PAGE_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_TIME;
 import static com.noah.timely.timetable.DaysFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.MiscUtil.Alert.COURSE;
 import static com.noah.timely.util.MiscUtil.DAYS;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
@@ -39,15 +40,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.util.Converter;
 import com.noah.timely.util.ThreadUtils;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -55,8 +55,6 @@ import java.util.concurrent.TimeUnit;
  * A clone of {@link AddTimetableDialog} that would be used as an alternate to adding timetables
  */
 public class AddTimetableActivity extends AppCompatActivity {
-   private static final int UNIT_12 = 12;
-   private static final int UNIT_24 = 24;
    private static String selectedDay;
    private AutoCompleteTextView atv_courseName;
    private EditText edt_startTime, edt_endTime;
@@ -85,16 +83,16 @@ public class AddTimetableActivity extends AppCompatActivity {
       edt_startTime.setOnTouchListener(this::onTouch);
 
       ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
-              R.layout.simple_dropdown_item_1line,
-              database.getAllRegisteredCourses());
+                                                              R.layout.simple_dropdown_item_1line,
+                                                              database.getAllRegisteredCourses());
       courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       atv_courseName.setAdapter(courseAdapter);
 
       Spinner spin_days = findViewById(R.id.day_spin);
 
       ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(this,
-              R.layout.simple_spinner_item,
-              DAYS);
+                                                            R.layout.simple_spinner_item,
+                                                            DAYS);
 
       daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_days.setAdapter(daysAdapter);
@@ -118,8 +116,8 @@ public class AddTimetableActivity extends AppCompatActivity {
          getIntent().putExtra(ARG_CHRONOLOGY, data.getChronologicalOrder());
 
          if (!isUserPreferred24Hours(this)) {
-            data.setStartTime(convert(data.getStartTime(), UNIT_12));
-            data.setEndTime(convert(data.getEndTime(), UNIT_12));
+            data.setStartTime(convertTime(data.getStartTime(), Converter.UNIT_12));
+            data.setEndTime(convertTime(data.getEndTime(), Converter.UNIT_12));
          }
 
          edt_endTime.setText(data.getEndTime());
@@ -170,14 +168,20 @@ public class AddTimetableActivity extends AppCompatActivity {
       final int DRAWABLE_RIGHT = 2;
 
       if (event.getAction() == MotionEvent.ACTION_UP) {
+         int padding;
          int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-         if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            padding = editText.getPaddingEnd();
+         else padding = editText.getPaddingRight();
+
+         if (event.getX() >= (editText.getWidth() - drawableWidth - padding)) {
             Calendar calendar = Calendar.getInstance();
 
             TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    isUserPreferred24Hours(this));
+                                                                calendar.get(Calendar.HOUR_OF_DAY),
+                                                                calendar.get(Calendar.MINUTE),
+                                                                isUserPreferred24Hours(this));
             dpd.setVersion(TimePickerDialog.Version.VERSION_2);
             dpd.show(getSupportFragmentManager(), "TimePickerDialog");
             return true;
@@ -284,8 +288,8 @@ public class AddTimetableActivity extends AppCompatActivity {
          return false;
       }
 
-      start = use24 ? start : convert(start, UNIT_24);
-      end = use24 ? end : convert(end, UNIT_24);
+      start = use24 ? start : convertTime(start, Converter.UNIT_24);
+      end = use24 ? end : convertTime(end, Converter.UNIT_24);
 
       int pagePosition = getPagePosition();
       TimetableModel formerTimetable = (TimetableModel) getIntent().getSerializableExtra(ARG_DATA);
@@ -320,7 +324,7 @@ public class AddTimetableActivity extends AppCompatActivity {
                   timetable.setId(insertData[1]);
                   // after adding to database, update the UI and schedule notification
                   EventBus.getDefault().post(new TUpdateMessage(timetable, pagePosition,
-                          TUpdateMessage.EventType.NEW));
+                                                                TUpdateMessage.EventType.NEW));
 
                   scheduleTimetableAlarm(this, timetable, pagePosition);
 
@@ -333,7 +337,7 @@ public class AddTimetableActivity extends AppCompatActivity {
             // Error message
             ErrorDialog.Builder builder = new ErrorDialog.Builder();
             builder.setDialogMessage("Duplicate start time present")
-                    .setShowSuggestions(false);
+                   .setShowSuggestions(false);
             new ErrorDialog().showErrorMessage(this, builder.build());
          }
       }
@@ -359,12 +363,11 @@ public class AddTimetableActivity extends AppCompatActivity {
       AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       Intent timetableIntent = new Intent(context, TimetableNotifier.class);
       timetableIntent.addCategory("com.noah.timely.timetable")
-              .setAction("com.noah.timely.timetable.addAction")
-              .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
-                      "com.noah.timely.dataType");
+                     .setAction("com.noah.timely.timetable.addAction")
+                     .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
+                                     "com.noah.timely.dataType");
 
-      PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+      PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent, PendingIntent.FLAG_CANCEL_CURRENT);
       pi.cancel();
       manager.cancel(pi);
    }
@@ -392,17 +395,17 @@ public class AddTimetableActivity extends AppCompatActivity {
 
       Intent timetableIntent = new Intent(context, TimetableNotifier.class);
       timetableIntent.putExtra(ARG_TIME, time)
-              .putExtra(ARG_CLASS, course)
-              .putExtra(ARG_DAY, timetable.getCalendarDay())
-              .putExtra(ARG_POSITION, position)
-              .putExtra(ARG_PAGE_POSITION, pagePosition)
-              .addCategory("com.noah.timely.timetable")
-              .setAction("com.noah.timely.timetable.addAction")
-              .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
-                      "com.noah.timely.dataType");
+                     .putExtra(ARG_CLASS, course)
+                     .putExtra(ARG_DAY, timetable.getCalendarDay())
+                     .putExtra(ARG_POSITION, position)
+                     .putExtra(ARG_PAGE_POSITION, pagePosition)
+                     .addCategory("com.noah.timely.timetable")
+                     .setAction("com.noah.timely.timetable.addAction")
+                     .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
+                                     "com.noah.timely.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                    PendingIntent.FLAG_UPDATE_CURRENT);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
@@ -415,19 +418,6 @@ public class AddTimetableActivity extends AppCompatActivity {
       } else manager.set(AlarmManager.RTC, timeInMillis, pi);
       // notify user
       playAlertTone(context, COURSE);
-   }
-
-   private String convert(String time, int unit) {
-      SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
-      SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
-
-      Date date;
-      try {
-         date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
-      } catch (ParseException e) {
-         return null;
-      }
-      return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
    }
 
 }

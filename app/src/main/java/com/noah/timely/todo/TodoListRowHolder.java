@@ -96,16 +96,17 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       btn_delete.setOnClickListener(c -> doTodoDelete());
 
       img_overflow.setOnClickListener(v -> {
-         boolean isExpanded = expl_detailLayout.isExpanded();
-         img_overflow.animate()
-                     .rotation(isExpanded ? 180 : 0)
-                     .setDuration(expl_detailLayout.getDuration());
          // no-op
          // don't toggle description layout visibility if description is available
          if (TextUtils.isEmpty(todo.getTaskDescription())) {
             Toast.makeText(img_overflow.getContext(), "Description not available", Toast.LENGTH_LONG).show();
             return;
          }
+
+         boolean isExpanded = expl_detailLayout.isExpanded();
+         img_overflow.animate()
+                     .rotation(isExpanded ? 180 : 0)
+                     .setDuration(expl_detailLayout.getDuration());
          expl_detailLayout.toggle();
       });
 
@@ -113,8 +114,9 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
          if (state == ExpandableLayout.State.COLLAPSED) {
             bottomDivider.setVisibility(View.GONE);
          } else if (state == ExpandableLayout.State.EXPANDING || state == ExpandableLayout.State.EXPANDED) {
-            if (bottomDivider.getVisibility() == View.GONE)
+            if (bottomDivider.getVisibility() == View.GONE) {
                bottomDivider.setVisibility(View.VISIBLE);
+            }
          }
       });
 

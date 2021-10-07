@@ -8,6 +8,7 @@ import static com.noah.timely.util.MiscUtil.playAlertTone;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -33,6 +34,7 @@ import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Converter;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -223,18 +225,15 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
                                                               DAYS_3);
          dayAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          spin_days.setAdapter(dayAdapter);
-         spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+         spin_days.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos,
                                        long id) {
                examDay = DAYS_3[pos];
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
          });
+
          database.close();
       }
 
@@ -258,8 +257,14 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
          final int DRAWABLE_RIGHT = 2;
 
          if (event.getAction() == MotionEvent.ACTION_UP) {
+            int padding;
             int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-            if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+               padding = editText.getPaddingEnd();
+            else padding = editText.getPaddingRight();
+
+            if (event.getX() >= (editText.getWidth() - drawableWidth - padding)) {
                Calendar calendar = Calendar.getInstance();
 
                TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,

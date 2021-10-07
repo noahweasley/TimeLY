@@ -3,6 +3,8 @@ package com.noah.timely.scheduled;
 import static android.content.Context.ALARM_SERVICE;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
 import static com.noah.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Converter.UNIT_12;
+import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.MiscUtil.Alert.SCHEDULED_TIMETABLE;
 import static com.noah.timely.util.MiscUtil.DAYS;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
@@ -41,15 +43,15 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.timetable.TimetableModel;
+import com.noah.timely.util.Converter;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -57,8 +59,6 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
    public static final String ARG_TIME = "Scheduled time";
    public static final String ARG_COURSE = "Course code";
    public static final String ARG_DAY = "Schedule Repeat day";
-   public static final int UNIT_12 = 12;
-   public static final int UNIT_24 = 24;
    private static String selectedDay = DAYS[0];
    private AutoCompleteTextView atv_courseName;
    private EditText edt_startTime, edt_endTime, edt_lecturerName;
@@ -154,8 +154,8 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
          return false;
       }
 
-      start = use24 ? start : convert(start, UNIT_24);
-      end = use24 ? end : convert(end, UNIT_24);
+      start = use24 ? start : convertTime(start, Converter.UNIT_24);
+      end = use24 ? end : convertTime(end, Converter.UNIT_24);
 
       TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance, selectedDay);
 
@@ -195,25 +195,12 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
             // Error message
             ErrorDialog.Builder builder = new ErrorDialog.Builder();
             builder.setDialogMessage("Duplicate start time present")
-                    .setShowSuggestions(false);
+                   .setShowSuggestions(false);
             new ErrorDialog().showErrorMessage(context, builder.build());
          }
       }
       database.close();
       return true;
-   }
-
-   private String convert(String time, int unit) {
-      SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
-      SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
-
-      Date date;
-      try {
-         date = unit == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
-      } catch (ParseException e) {
-         return null;
-      }
-      return unit == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
    }
 
    private boolean registerAndClear() {
@@ -245,12 +232,12 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
       AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
       timetableIntent.addCategory("com.noah.timely.scheduled")
-              .setAction("com.noah.timely.scheduled.addAction")
-              .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
-                      "com.noah.timely.scheduled.dataType");
+                     .setAction("com.noah.timely.scheduled.addAction")
+                     .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
+                                     "com.noah.timely.scheduled.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                    PendingIntent.FLAG_CANCEL_CURRENT);
       pi.cancel();
       manager.cancel(pi);
    }
@@ -281,7 +268,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
               .addCategory("com.noah.timely.scheduled")
               .setAction("com.noah.timely.scheduled.addAction")
               .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
-                      "com.noah.timely.scheduled.dataType");
+                              "com.noah.timely.scheduled.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
 
@@ -341,37 +328,32 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
 
          SchoolDatabase database = new SchoolDatabase(getContext());
          ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(getContext(),
-                 R.layout.simple_dropdown_item_1line,
-                 database.getAllRegisteredCourses());
+                                                                 R.layout.simple_dropdown_item_1line,
+                                                                 database.getAllRegisteredCourses());
 
          courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          atv_courseName.setAdapter(courseAdapter);
 
          Spinner spin_days = findViewById(R.id.day_spin);
          ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(getContext(),
-                 R.layout.simple_spinner_item,
-                 DAYS);
+                                                               R.layout.simple_spinner_item,
+                                                               DAYS);
          daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          spin_days.setAdapter(daysAdapter);
-         spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+         spin_days.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                selectedDay = DAYS[pos];
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-               // unused, but had to implement.
-            }
          });
 
          if (getArguments() != null && getArguments().getBoolean(ARG_TO_EDIT)) {
             TimetableModel data = (TimetableModel) getArguments().getSerializable(ARG_DATA);
 
             if (!isUserPreferred24Hours(getContext())) {
-               data.setStartTime(convert(data.getStartTime(), UNIT_12));
-               data.setEndTime(convert(data.getEndTime(), UNIT_12));
+               data.setStartTime(convertTime(data.getStartTime(), UNIT_12));
+               data.setEndTime(convertTime(data.getEndTime(), UNIT_12));
             }
 
             edt_endTime.setText(data.getEndTime());
@@ -414,14 +396,20 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
          final int DRAWABLE_RIGHT = 2;
 
          if (event.getAction() == MotionEvent.ACTION_UP) {
+            int padding;
             int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-            if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+               padding = editText.getPaddingEnd();
+            else padding = editText.getPaddingRight();
+
+            if (event.getX() >= (editText.getWidth() - drawableWidth - padding)) {
                Calendar calendar = Calendar.getInstance();
 
                TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
-                       calendar.get(Calendar.HOUR_OF_DAY),
-                       calendar.get(Calendar.MINUTE),
-                       isUserPreferred24Hours(getContext()));
+                                                                   calendar.get(Calendar.HOUR_OF_DAY),
+                                                                   calendar.get(Calendar.MINUTE),
+                                                                   isUserPreferred24Hours(getContext()));
                dpd.setVersion(TimePickerDialog.Version.VERSION_2);
                dpd.show(manager, "TimePickerDialog");
                return true;

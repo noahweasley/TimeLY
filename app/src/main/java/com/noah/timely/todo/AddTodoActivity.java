@@ -16,9 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -30,27 +28,28 @@ import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Converter;
 import com.noah.timely.util.MiscUtil;
-import com.noah.timely.util.SimpleOnItemSelectedListener;
+import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class AddTodoActivity extends AppCompatActivity {
    public static final String EXTRA_IS_EDITABLE = "com.noah.timely.todo.edit";
    public static final String EXTRA_DEFAULT_CATEGORY = "com.noah.timely.todo.category.default";
-   public static final String[] CATEGORIES = {"Miscelaneous", "Work", "Music", "Creativity", "Travel", "Study"
-           , "Leisure and Fun", "Home", "Shopping"};
+   public static final String[] CATEGORIES = { "Miscelaneous", "Work", "Music", "Creativity", "Travel", "Study"
+           , "Leisure and Fun", "Home", "Shopping" };
    private static final String EXTRA_TODO_TITLE = "Todo title";
    private static final String EXTRA_TODO_DESCRIPTION = "Todo description";
    private static final String EXTRA_START_TIME = "Todo start time";
    private static final String EXTRA_END_TIME = "Todo end time";
    private static final String EXTRA_DATE = "Todo date";
    private ViewGroup vg_timeContainer;
-   private TextView tv_startTime, tv_endTime;
+   private EditText edt_startTime, edt_endTime;
    private EditText edt_taskTitle, edt_taskDescription;
    private SchoolDatabase database;
    private boolean isEditable;
@@ -88,40 +87,27 @@ public class AddTodoActivity extends AppCompatActivity {
       Button btn_addTask = findViewById(R.id.add_task);
       edt_taskTitle = findViewById(R.id.task_editor);
       edt_taskDescription = findViewById(R.id.task_description);
-      tv_startTime = findViewById(R.id.start_time);
-      tv_endTime = findViewById(R.id.end_time);
       vg_timeContainer = findViewById(R.id.time_container);
 
+      edt_startTime = findViewById(R.id.start_date_time);
+      edt_endTime = findViewById(R.id.end_date_time);
 
-      ImageButton btn_remove = (ImageButton) vg_timeContainer.getChildAt(0);
-      Button btn_addTimeFrame = findViewById(R.id.add_timeframe);
+      findViewById(R.id.start_time_picker).setOnClickListener(this::onTimeRangeClick);
+      findViewById(R.id.end_time_picker).setOnClickListener(this::onTimeRangeClick);
+      findViewById(R.id.start_date_picker).setOnClickListener(this::onTimeRangeClick);
+      findViewById(R.id.end_date_picker).setOnClickListener(this::onTimeRangeClick);
 
-      btn_addTimeFrame.setOnClickListener(v -> {
-         int visibilityFlag = btn_addTimeFrame.getVisibility();
-         if (visibilityFlag == View.VISIBLE) {
-            btn_addTimeFrame.setVisibility(View.GONE);
-            vg_timeContainer.setVisibility(View.VISIBLE);
-         }
-      });
-
-      btn_remove.setOnClickListener(v -> {
-         int visibilityFlag = vg_timeContainer.getVisibility();
-         if (visibilityFlag == View.VISIBLE) {
-            vg_timeContainer.setVisibility(View.GONE);
-            btn_addTimeFrame.setVisibility(View.VISIBLE);
-         }
-      });
-
-      TextView tv_startTime = findViewById(R.id.start_time);
-      TextView tv_endTime = findViewById(R.id.end_time);
+      Calendar calendar = Calendar.getInstance();
 
       if (isUserPreferred24Hours(this)) {
-         tv_startTime.setText(R.string.default_start_time_24);
-         tv_endTime.setText(R.string.default_end_time_24);
+         SimpleDateFormat formatter = new SimpleDateFormat("mm dd, HH:MM");
+         edt_startTime.setText(formatter.format(calendar.getTime()));
+         edt_endTime.setText(formatter.format(calendar.getTime()));
+      } else {
+         SimpleDateFormat formatter = new SimpleDateFormat("mm dd, hh:MM a");
+         edt_startTime.setText(formatter.format(calendar.getTime()));
+         edt_endTime.setText(formatter.format(calendar.getTime()));
       }
-
-      tv_startTime.setOnClickListener(this::onTimeRangeClick);
-      tv_endTime.setOnClickListener(this::onTimeRangeClick);
 
       setupSpinner();
 
@@ -137,15 +123,12 @@ public class AddTodoActivity extends AppCompatActivity {
          String endTime = intent.getStringExtra(EXTRA_END_TIME);
 
          if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)) {
-            int visibilityFlag = btn_addTimeFrame.getVisibility();
-            if (visibilityFlag == View.VISIBLE) {
-               btn_addTimeFrame.setVisibility(View.GONE);
-               vg_timeContainer.setVisibility(View.VISIBLE);
-            }
-            tv_startTime.setText(startTime);
-            tv_endTime.setText(endTime);
+            edt_startTime.setText(startTime);
+            edt_endTime.setText(endTime);
             btn_addTask.setText(R.string.update_task);
          }
+
+         edt_taskTitle.requestFocus();
       }
    }
 
@@ -165,39 +148,75 @@ public class AddTodoActivity extends AppCompatActivity {
    }
 
    private void onTimeRangeClick(View view) {
-      TextView text = (TextView) view;
       boolean is24HourMode = isUserPreferred24Hours(this);
-      TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute, int second) -> {
+      EditText text = (EditText) view;
+      int viewId = text.getId();
+
+      // Time picker dialog listener, when time icon is clicked
+      TimePickerDialog.OnTimeSetListener tsl = (timePicker, hourOfDay, minute, second) -> {
          Calendar calendar = Calendar.getInstance();
          calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
          calendar.set(Calendar.MINUTE, minute);
 
-         SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
-         SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
+         SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
+         SimpleDateFormat formatter12 = new SimpleDateFormat("hh:mm aaa");
 
-         String parsedTime = is24HourMode ? timeFormat24.format(calendar.getTime())
-                                          : timeFormat12.format(calendar.getTime());
+         String parsedTime = is24HourMode ? formatter24.format(calendar.getTime())
+                                          : formatter12.format(calendar.getTime());
 
-         text.setText(parsedTime);
+         String prevTime = text.getText().toString();
+         String newTime = prevTime.replaceFirst("[0-9]{2}:[0-9]{2}(?i: am|pm)*", parsedTime);
+
+         text.setText(newTime);
+      };
+
+      // Date picker dialog listene, wwhen date icon is clicked
+      DatePickerDialog.OnDateSetListener dsl = (datePicker, year, month, day) -> {
+         Calendar calendar = Calendar.getInstance();
+         calendar.set(Calendar.YEAR, year);
+         calendar.set(Calendar.MONTH, month);
+         calendar.set(Calendar.DAY_OF_MONTH, day);
+
+         SimpleDateFormat formatter24 = new SimpleDateFormat("MM dd");
+         SimpleDateFormat formatter12 = new SimpleDateFormat("MM dd");
+
+         String parsedTime = is24HourMode ? formatter24.format(calendar.getTime())
+                                          : formatter12.format(calendar.getTime());
+
+         String prevTime = text.getText().toString();
+         String newTime = prevTime.replaceFirst("[A-z] [0-9]{2}", parsedTime);
+
+         text.setText(newTime);
       };
 
       Calendar calendar = Calendar.getInstance();
 
       FragmentManager manager = getSupportFragmentManager();
-      TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
+      TimePickerDialog tpd = TimePickerDialog.newInstance(tsl,
                                                           calendar.get(Calendar.HOUR_OF_DAY),
                                                           calendar.get(Calendar.MINUTE),
                                                           is24HourMode);
-      dpd.setVersion(TimePickerDialog.Version.VERSION_2);
-      dpd.show(manager, "TimePickerDialog");
+
+      DatePickerDialog dpd = DatePickerDialog.newInstance(dsl,
+                                                          calendar.get(Calendar.YEAR),
+                                                          calendar.get(Calendar.MONTH),
+                                                          calendar.get(Calendar.DAY_OF_MONTH));
+
+      if (viewId == R.id.start_time_picker || viewId == R.id.end_time_picker) {
+         tpd.setVersion(TimePickerDialog.Version.VERSION_2);
+         tpd.show(manager, "TimePickerDialog");
+      } else {
+         dpd.setVersion(DatePickerDialog.Version.VERSION_2);
+         dpd.show(manager, "DatePickerDialog");
+      }
    }
 
    private void addOrUppdateTask(boolean toEdit) {
       TodoModel todoModel = new TodoModel();
 
       int tc_VisibilityFlag = vg_timeContainer.getVisibility();
-      String startTime = tv_startTime.getText().toString();
-      String endTime = tv_endTime.getText().toString();
+      String startTime = edt_startTime.getText().toString();
+      String endTime = edt_endTime.getText().toString();
       String taskTitle = edt_taskTitle.getText().toString();
       String taskDescription = edt_taskDescription.getText().toString();
       String completionTime = startTime + " - " + endTime;

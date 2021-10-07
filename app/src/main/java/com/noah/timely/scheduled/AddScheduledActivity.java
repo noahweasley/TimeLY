@@ -78,8 +78,7 @@ public class AddScheduledActivity extends AppCompatActivity {
       CheckBox cbx_multiple = findViewById(R.id.multiple);
 
       findViewById(R.id.register).setOnClickListener(v -> {
-         boolean success = cbx_multiple.isChecked() ? registerAndClear()
-                                                    : registerAndClose();
+         boolean success = cbx_multiple.isChecked() ? registerAndClear() : registerAndClose();
          int m;
          if (getIntent().getBooleanExtra(ARG_TO_EDIT, false))
             m = R.string.update_pending;
@@ -104,16 +103,16 @@ public class AddScheduledActivity extends AppCompatActivity {
       edt_startTime.setOnTouchListener(this::onTouch);
 
       ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
-              R.layout.simple_dropdown_item_1line,
-              database.getAllRegisteredCourses());
+                                                              R.layout.simple_dropdown_item_1line,
+                                                              database.getAllRegisteredCourses());
 
       courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       atv_courseName.setAdapter(courseAdapter);
 
       Spinner spin_days = findViewById(R.id.day_spin);
       ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(this,
-              R.layout.simple_spinner_item,
-              DAYS);
+                                                            R.layout.simple_spinner_item,
+                                                            DAYS);
 
       daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_days.setAdapter(daysAdapter);
@@ -198,14 +197,20 @@ public class AddScheduledActivity extends AppCompatActivity {
       final int DRAWABLE_RIGHT = 2;
 
       if (event.getAction() == MotionEvent.ACTION_UP) {
+         int padding;
          int drawableWidth = editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-         if (event.getX() >= (editText.getWidth() - drawableWidth)) {
+
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            padding = editText.getPaddingEnd();
+         else padding = editText.getPaddingRight();
+
+         if (event.getX() >= (editText.getWidth() - drawableWidth - padding)) {
             Calendar calendar = Calendar.getInstance();
 
             TimePickerDialog dpd = TimePickerDialog.newInstance(tsl,
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    isUserPreferred24Hours(this));
+                                                                calendar.get(Calendar.HOUR_OF_DAY),
+                                                                calendar.get(Calendar.MINUTE),
+                                                                isUserPreferred24Hours(this));
             dpd.setVersion(TimePickerDialog.Version.VERSION_2);
             dpd.show(getSupportFragmentManager(), "TimePickerDialog");
             return true;
@@ -273,8 +278,7 @@ public class AddScheduledActivity extends AppCompatActivity {
       start = use24 ? start : convertTime(start, Converter.UNIT_24);
       end = use24 ? end : convertTime(end, Converter.UNIT_24);
 
-      TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance,
-              selectedDay);
+      TimetableModel newTimetable = new TimetableModel(lecturerName, course, start, end, code, importance, selectedDay);
 
       if (getIntent().getBooleanExtra(ARG_TO_EDIT, false)) {
 
@@ -319,7 +323,7 @@ public class AddScheduledActivity extends AppCompatActivity {
             // Error message
             ErrorDialog.Builder builder = new ErrorDialog.Builder();
             builder.setDialogMessage("Duplicate start time present")
-                    .setShowSuggestions(false);
+                   .setShowSuggestions(false);
             new ErrorDialog().showErrorMessage(this, builder.build());
          }
       }
@@ -356,12 +360,12 @@ public class AddScheduledActivity extends AppCompatActivity {
       AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       Intent timetableIntent = new Intent(context, ScheduledTaskNotifier.class);
       timetableIntent.addCategory("com.noah.timely.scheduled")
-              .setAction("com.noah.timely.scheduled.addAction")
-              .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
-                      "com.noah.timely.scheduled.dataType");
+                     .setAction("com.noah.timely.scheduled.addAction")
+                     .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
+                                     "com.noah.timely.scheduled.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                    PendingIntent.FLAG_CANCEL_CURRENT);
       pi.cancel();
       manager.cancel(pi);
    }
@@ -392,7 +396,7 @@ public class AddScheduledActivity extends AppCompatActivity {
               .addCategory("com.noah.timely.scheduled")
               .setAction("com.noah.timely.scheduled.addAction")
               .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
-                      "com.noah.timely.scheduled.dataType");
+                              "com.noah.timely.scheduled.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
 
