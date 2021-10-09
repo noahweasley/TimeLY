@@ -98,7 +98,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/layout_gap"
-            android:visibility="gone"
             external:layout_constraintBottom_toTopOf="@+id/tag"
             external:layout_constraintEnd_toEndOf="@id/task_description_box"
             external:layout_constraintStart_toStartOf="@id/task_description_box"

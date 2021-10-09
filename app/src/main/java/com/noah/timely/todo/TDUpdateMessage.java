@@ -4,20 +4,32 @@ public class TDUpdateMessage {
    private final EventType type;
    private TodoModel data;
    private int changePosition;
+   private int pagePosition;
 
-   public TDUpdateMessage(TodoModel data, EventType type) {
+   public TDUpdateMessage(TodoModel data, int pagePosition, EventType type) {
       this.data = data;
       this.type = type;
+      this.pagePosition = pagePosition;
    }
 
-   public TDUpdateMessage(int position, EventType type) {
+   public TDUpdateMessage(int position, int pagePosition, EventType type) {
       this.changePosition = position;
+      this.pagePosition = pagePosition;
       this.type = type;
    }
 
-   public TDUpdateMessage(TodoModel model, int changePosition, EventType eventType) {
-      this(model, eventType);
+   public TDUpdateMessage(TodoModel model, int changePosition, int pagePosition, EventType eventType) {
+      this(model, pagePosition, eventType);
       this.changePosition = changePosition;
+      this.pagePosition = pagePosition;
+   }
+
+   public int getPagePosition() {
+      return pagePosition;
+   }
+
+   public void setPagePosition(int pagePositionn) {
+      this.pagePosition = pagePositionn;
    }
 
    public int getChangePosition() {

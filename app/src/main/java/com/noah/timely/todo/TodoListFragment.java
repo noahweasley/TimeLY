@@ -182,49 +182,52 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
       TodoModel data = update.getData();
       // Don't update list if the data received is not a part of the currently displayed _todo category
       // If the currently dislayed _todo is the General _todo category, update it.
-      if(!data.getDBcategory().equals(this.category) && !data.getDBcategory().equals(Constants.TODO_GENERAL)) return;
+      if (!data.getDBcategory().equals(this.category) && !data.getDBcategory().equals(Constants.TODO_GENERAL)) return;
       // perform update at particular poitiion
       int changePos = update.getChangePosition();
       boolean listEmpty = tdList.isEmpty();
-      switch (update.getType()) {
-         case NEW:
-            if (tabPosition == 0) {
-               tdList.add(data);
+
+      if (tabPosition == update.getPagePosition()) {
+         switch (update.getType()) {
+            case NEW:
+               if (tabPosition == 0) {
+                  tdList.add(data);
+                  itemCount.setText(String.valueOf(tdList.size()));
+
+                  doEmptyListUpdate(null);
+
+                  adapter.notifyItemInserted(changePos);
+                  break;
+               }
+            case REMOVE:
+               tdList.remove(changePos);
                itemCount.setText(String.valueOf(tdList.size()));
+               adapter.notifyItemRemoved(changePos);
+               adapter.notifyDataSetChanged();
 
-               doEmptyListUpdate(null);
+               if (listEmpty) doEmptyListUpdate(null);
 
-               adapter.notifyItemInserted(changePos);
                break;
-            }
-         case REMOVE:
-            tdList.remove(changePos);
-            itemCount.setText(String.valueOf(tdList.size()));
-            adapter.notifyItemRemoved(changePos);
-            adapter.notifyDataSetChanged();
-
-            if (listEmpty) doEmptyListUpdate(null);
-
-            break;
-         case INSERT:
-            tdList.add(changePos, data);
-            itemCount.setText(String.valueOf(tdList.size()));
-            adapter.notifyItemInserted(changePos);
-            adapter.notifyDataSetChanged();
-            doEmptyListUpdate(null);
-            break;
-         default:
-            TodoModel tm = (TodoModel) tdList.remove(changePos);
-            tm.setTaskCompleted(data.isTaskCompleted());
-            tm.setTaskTitle(data.getTaskTitle());
-            tm.setStartTime(data.getStartTime());
-            tm.setEndTime(data.getEndTime());
-            tm.setCompletionTime(data.getCompletionTime());
-            tm.setCompletionDate(data.getCompletionDate());
-            tm.setTaskDescription(data.getTaskDescription());
-            tdList.add(changePos, tm);
-            adapter.notifyItemChanged(changePos);
-            break;
+            case INSERT:
+               tdList.add(changePos, data);
+               itemCount.setText(String.valueOf(tdList.size()));
+               adapter.notifyItemInserted(changePos);
+               adapter.notifyDataSetChanged();
+               doEmptyListUpdate(null);
+               break;
+            default:
+               TodoModel tm = (TodoModel) tdList.remove(changePos);
+               tm.setTaskCompleted(data.isTaskCompleted());
+               tm.setTaskTitle(data.getTaskTitle());
+               tm.setStartTime(data.getStartTime());
+               tm.setEndTime(data.getEndTime());
+               tm.setCompletionTime(data.getCompletionTime());
+               tm.setCompletionDate(data.getCompletionDate());
+               tm.setTaskDescription(data.getTaskDescription());
+               tdList.add(changePos, tm);
+               adapter.notifyItemChanged(changePos);
+               break;
+         }
       }
    }
 

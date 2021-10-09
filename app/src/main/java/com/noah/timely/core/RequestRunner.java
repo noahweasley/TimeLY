@@ -168,20 +168,20 @@ public class RequestRunner extends Thread {
          // metadata: ALL_NULL = Assignment; [0] = semester; [1] = exam; [2] = timetable; [3] = _todo;
          switch (params.getMetadataType()) {
             case NO_DATA:
-               metadata = new String[]{null, null, null, null};
+               metadata = new String[]{ null, null, null, null };
                break;
             case COURSE:
-               metadata = new String[]{params.getSemester(), null, null, null};
+               metadata = new String[]{ params.getSemester(), null, null, null };
                break;
             case EXAM:
                ExamModel exam = (ExamModel) params.getModelList();
-               metadata = new String[]{null, exam.getWeek(), null, null};
+               metadata = new String[]{ null, exam.getWeek(), null, null };
                break;
             case TIMETABLE:
-               metadata = new String[]{null, null, params.getTimetable(), null};
+               metadata = new String[]{ null, null, params.getTimetable(), null };
                break;
             case TODO:
-               metadata = new String[]{null, null, null, params.getTodoCategory()};
+               metadata = new String[]{ null, null, null, params.getTodoCategory() };
                break;
             default:
                throw new IllegalArgumentException("Specified metadata is invalid");
@@ -203,9 +203,10 @@ public class RequestRunner extends Thread {
       DataModel model = params.getModelList().get(params.getAdapterPosition());
       params.getModelList().remove(params.getAdapterPosition());
       int changePosition = params.getAdapterPosition();
+      int pagePosition = params.getPagePosition();
 
       LogUtils.debug(this, "Todo Delete with: " + (TodoModel) model + "\n C.P: " + changePosition);
-      EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, changePosition,
+      EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, changePosition, pagePosition,
                                                      TDUpdateMessage.EventType.REMOVE));
             /*
             wait 3 seconds to perform actual delete request, because an undo request might also be issued, which
@@ -220,7 +221,7 @@ public class RequestRunner extends Thread {
             meaning an undo request
             */
          params.getModelList().add(changePosition, model);
-         EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model,changePosition,
+         EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, changePosition, pagePosition,
                                                         TDUpdateMessage.EventType.INSERT));
       }
       if (!deleteRequestDiscarded) {

@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
@@ -48,6 +49,7 @@ public class AddTodoActivity extends AppCompatActivity {
    private static final String EXTRA_START_TIME = "Todo start time";
    private static final String EXTRA_END_TIME = "Todo end time";
    private static final String EXTRA_DATE = "Todo date";
+   private static final String EXTRA_TAB_POSITION = "Todo tab position";
    private ViewGroup vg_timeContainer;
    private EditText edt_startTime, edt_endTime;
    private EditText edt_taskTitle, edt_taskDescription;
@@ -71,6 +73,7 @@ public class AddTodoActivity extends AppCompatActivity {
       starter.putExtra(EXTRA_DATE, todoToEdit.getCompletionDate());
       starter.putExtra(EXTRA_IS_EDITABLE, toEdit);
       starter.putExtra(EXTRA_DEFAULT_CATEGORY, todoToEdit.getDBcategory());
+      starter.putExtra(EXTRA_TAB_POSITION, todoToEdit.isTaskCompleted() ? 0 : 1);
       context.startActivity(starter);
    }
 
@@ -92,22 +95,10 @@ public class AddTodoActivity extends AppCompatActivity {
       edt_startTime = findViewById(R.id.start_date_time);
       edt_endTime = findViewById(R.id.end_date_time);
 
-      findViewById(R.id.start_time_picker).setOnClickListener(this::onTimeRangeClick);
-      findViewById(R.id.end_time_picker).setOnClickListener(this::onTimeRangeClick);
-      findViewById(R.id.start_date_picker).setOnClickListener(this::onTimeRangeClick);
-      findViewById(R.id.end_date_picker).setOnClickListener(this::onTimeRangeClick);
-
-      Calendar calendar = Calendar.getInstance();
-
-      if (isUserPreferred24Hours(this)) {
-         SimpleDateFormat formatter = new SimpleDateFormat("mm dd, HH:MM");
-         edt_startTime.setText(formatter.format(calendar.getTime()));
-         edt_endTime.setText(formatter.format(calendar.getTime()));
-      } else {
-         SimpleDateFormat formatter = new SimpleDateFormat("mm dd, hh:MM a");
-         edt_startTime.setText(formatter.format(calendar.getTime()));
-         edt_endTime.setText(formatter.format(calendar.getTime()));
-      }
+      findViewById(R.id.start_time_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_startTime));
+      findViewById(R.id.end_time_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_endTime));
+      findViewById(R.id.start_date_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_startTime));
+      findViewById(R.id.end_date_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_endTime));
 
       setupSpinner();
 
@@ -132,6 +123,10 @@ public class AddTodoActivity extends AppCompatActivity {
       }
    }
 
+   private boolean validateFormDate(EditText form) {
+      return !TextUtils.isEmpty(form.getText());
+   }
+
    private void setupSpinner() {
       Spinner spin_category = findViewById(R.id.category);
       ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CATEGORIES);
@@ -147,10 +142,11 @@ public class AddTodoActivity extends AppCompatActivity {
       });
    }
 
-   private void onTimeRangeClick(View view) {
+   private void onTimeRangeClick(View caller, View target) {
       boolean is24HourMode = isUserPreferred24Hours(this);
-      EditText text = (EditText) view;
-      int viewId = text.getId();
+      EditText text = (EditText) target;
+      int targetId = text.getId();
+      int callerId = caller.getId();
 
       // Time picker dialog listener, when time icon is clicked
       TimePickerDialog.OnTimeSetListener tsl = (timePicker, hourOfDay, minute, second) -> {
@@ -159,7 +155,7 @@ public class AddTodoActivity extends AppCompatActivity {
          calendar.set(Calendar.MINUTE, minute);
 
          SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
-         SimpleDateFormat formatter12 = new SimpleDateFormat("hh:mm aaa");
+         SimpleDateFormat formatter12 = new SimpleDateFormat("hh:mm aa");
 
          String parsedTime = is24HourMode ? formatter24.format(calendar.getTime())
                                           : formatter12.format(calendar.getTime());
@@ -177,11 +173,8 @@ public class AddTodoActivity extends AppCompatActivity {
          calendar.set(Calendar.MONTH, month);
          calendar.set(Calendar.DAY_OF_MONTH, day);
 
-         SimpleDateFormat formatter24 = new SimpleDateFormat("MM dd");
-         SimpleDateFormat formatter12 = new SimpleDateFormat("MM dd");
-
-         String parsedTime = is24HourMode ? formatter24.format(calendar.getTime())
-                                          : formatter12.format(calendar.getTime());
+         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
+         String parsedTime = formatter.format(calendar.getTime());
 
          String prevTime = text.getText().toString();
          String newTime = prevTime.replaceFirst("[A-z] [0-9]{2}", parsedTime);
@@ -190,28 +183,31 @@ public class AddTodoActivity extends AppCompatActivity {
       };
 
       Calendar calendar = Calendar.getInstance();
-
       FragmentManager manager = getSupportFragmentManager();
-      TimePickerDialog tpd = TimePickerDialog.newInstance(tsl,
-                                                          calendar.get(Calendar.HOUR_OF_DAY),
-                                                          calendar.get(Calendar.MINUTE),
-                                                          is24HourMode);
 
-      DatePickerDialog dpd = DatePickerDialog.newInstance(dsl,
-                                                          calendar.get(Calendar.YEAR),
-                                                          calendar.get(Calendar.MONTH),
-                                                          calendar.get(Calendar.DAY_OF_MONTH));
-
-      if (viewId == R.id.start_time_picker || viewId == R.id.end_time_picker) {
+      if (callerId == R.id.start_time_picker || callerId == R.id.end_time_picker) {
+         TimePickerDialog tpd = TimePickerDialog.newInstance(tsl,
+                                                             calendar.get(Calendar.HOUR_OF_DAY),
+                                                             calendar.get(Calendar.MINUTE),
+                                                             is24HourMode);
          tpd.setVersion(TimePickerDialog.Version.VERSION_2);
          tpd.show(manager, "TimePickerDialog");
       } else {
+         DatePickerDialog dpd = DatePickerDialog.newInstance(dsl,
+                                                             calendar.get(Calendar.YEAR),
+                                                             calendar.get(Calendar.MONTH),
+                                                             calendar.get(Calendar.DAY_OF_MONTH));
          dpd.setVersion(DatePickerDialog.Version.VERSION_2);
          dpd.show(manager, "DatePickerDialog");
       }
    }
 
    private void addOrUppdateTask(boolean toEdit) {
+      if (!validateFormDate(edt_taskTitle)) {
+         TextInputLayout titleBox = (TextInputLayout) edt_taskTitle.getParent().getParent();
+         titleBox.setError("Field Required !");
+      }
+
       TodoModel todoModel = new TodoModel();
 
       int tc_VisibilityFlag = vg_timeContainer.getVisibility();
@@ -230,9 +226,9 @@ public class AddTodoActivity extends AppCompatActivity {
       todoModel.setEndTime(Converter.convertTime(endTime, Converter.UNIT_24));
 
       boolean isSuccessful;
-
       // update or add new _todo
       if (toEdit) {
+         int pos = getIntent().getIntExtra(EXTRA_TAB_POSITION, 0);
          isSuccessful = database.updateTodo(todoModel, category);
          if (isSuccessful) {
             Toast toast = Toast.makeText(this, "Todo updated", Toast.LENGTH_LONG);
@@ -241,7 +237,7 @@ public class AddTodoActivity extends AppCompatActivity {
 
             // Refresh the _todo list size
             if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
-               EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.UPDATE_CURRENT));
+               EventBus.getDefault().post(new TDUpdateMessage(todoModel, pos, TDUpdateMessage.EventType.UPDATE_CURRENT));
 
             playAlertTone(this, MiscUtil.Alert.TODO);
          }
@@ -254,7 +250,7 @@ public class AddTodoActivity extends AppCompatActivity {
 
             // Refresh the _todo list size
             if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
-               EventBus.getDefault().post(new TDUpdateMessage(todoModel, TDUpdateMessage.EventType.NEW));
+               EventBus.getDefault().post(new TDUpdateMessage(todoModel, 0, TDUpdateMessage.EventType.NEW));
             // Refresh the _todo group size
             if (EventBus.getDefault().hasSubscriberForEvent(LayoutRefreshEvent.class))
                EventBus.getDefault().post(new TodoRefreshEvent(todoModel));
@@ -262,7 +258,6 @@ public class AddTodoActivity extends AppCompatActivity {
             playAlertTone(this, MiscUtil.Alert.TODO);
          }
       }
-
 
       onBackPressed(); // simulate when the user taps the back button
    }
