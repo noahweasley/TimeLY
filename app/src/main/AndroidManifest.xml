@@ -1,225 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.noah.timely">
+   xmlns:tools="http://schemas.android.com/tools"
+   package="com.noah.timely">
 
-    <supports-screens
-        android:anyDensity="true"
-        android:smallScreens="false"
-        android:normalScreens="true"
-        android:largeScreens="true"
-        android:xlargeScreens="true" />
+   <supports-screens
+      android:anyDensity="true"
+      android:largeScreens="true"
+      android:normalScreens="true"
+      android:smallScreens="false"
+      android:xlargeScreens="true" />
 
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <!--        Permisions      -->
 
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="29"
-        tools:ignore="ScopedStorage" />
+   <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+   <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
+   <uses-permission
+      android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+      android:maxSdkVersion="29"
+      tools:ignore="ScopedStorage" />
 
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+   <uses-permission
+      android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+      tools:ignore="ScopedStorage" />
 
-    <!--    Android 11 and above   -->
-    <queries>
-        <package android:name="com.whatsapp" />
-        <package android:name="com.whatsapp.w4b" />
-        <package android:name="com.gbwhatsapp" />
-    </queries>
+   <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+   <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+   <uses-permission android:name="android.permission.VIBRATE" />
 
-    <application
-        android:allowBackup="true"
-        android:fullBackupContent="true"
-        android:icon="@mipmap/timely_app_icon"
-        android:label="@string/app_name"
-        android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/timely_app_icon_round"
-        android:theme="@style/AppTheme">
+   <!--  Queries:  Android 11 and above   -->
 
-        <service
-            android:name=".alarms.AlarmNotificationService"
-            android:enabled="true"
-            android:exported="false" />
+   <queries>
+      <package android:name="com.whatsapp" />
+      <package android:name="com.whatsapp.w4b" />
+      <package android:name="com.gbwhatsapp" />
+   </queries>
 
-        <service
-            android:name=".alarms.AlarmReSchedulerService"
-            android:enabled="true"
-            android:exported="false" />
+   <application
+      android:allowBackup="true"
+      android:fullBackupContent="true"
+      android:icon="@mipmap/timely_app_icon"
+      android:label="@string/app_name"
+      android:requestLegacyExternalStorage="true"
+      android:roundIcon="@mipmap/timely_app_icon_round"
+      android:theme="@style/AppTheme">
 
-        <service
-            android:name=".assignment.AssignmentCheckerService"
-            android:enabled="true"
-            android:exported="false" />
+      <!--        Services        -->
 
-        <activity
-            android:name=".main.SplashScreen"
-            android:configChanges="orientation|keyboardHidden"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+      <service
+         android:name=".alarms.AlarmNotificationService"
+         android:enabled="true"
+         android:exported="false" />
 
-        <activity
-            android:name=".main.MainActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SlideVertical_caller"
-            android:windowSoftInputMode="adjustPan" />
+      <service
+         android:name=".alarms.AlarmReSchedulerService"
+         android:enabled="true"
+         android:exported="false" />
 
-        <activity
-            android:name=".settings.SettingsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+      <service
+         android:name=".assignment.AssignmentCheckerService"
+         android:enabled="true"
+         android:exported="false" />
 
-        <activity
-            android:name=".gallery.ImageGallery"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+      <!--    Activities      -->
 
-        <activity
-            android:name=".alarms.AlarmActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+      <activity
+         android:name=".main.SplashScreen"
+         android:configChanges="orientation|keyboardHidden"
+         android:exported="true"
+         android:screenOrientation="portrait"
+         android:theme="@style/FullscreenTheme"
+         android:windowSoftInputMode="adjustPan">
+         <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+         </intent-filter>
+      </activity>
 
-        <activity
-            android:name=".gallery.ImageDirectory"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+      <activity
+         android:name=".main.MainActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:exported="true"
+         android:launchMode="singleTask"
+         android:screenOrientation="portrait"
+         android:theme="@style/AppTheme.SlideVertical_caller"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".assignment.AddAssignmentActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SlideVertical_recipient"
-            android:windowSoftInputMode="adjustResize" />
+      <activity
+         android:name=".settings.SettingsActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:screenOrientation="portrait"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".assignment.ImageViewerActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+      <activity
+         android:name=".gallery.ImageGallery"
+         android:configChanges="orientation|keyboardHidden"
+         android:screenOrientation="portrait"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".gallery.ImageSlideActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/ImageViewerTheme"
-            android:windowSoftInputMode="adjustPan" />
+      <activity
+         android:name=".alarms.AlarmActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:excludeFromRecents="true"
+         android:screenOrientation="portrait"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".gallery.StorageViewer"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+      <activity
+         android:name=".gallery.ImageDirectory"
+         android:configChanges="orientation|keyboardHidden"
+         android:screenOrientation="portrait"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".main.IntroPageActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+      <activity
+         android:name=".assignment.AddAssignmentActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:launchMode="singleTask"
+         android:screenOrientation="portrait"
+         android:theme="@style/AppTheme.SlideVertical_recipient"
+         android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".courses.AddCourseActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SlideVertical_recipient"
-            android:windowSoftInputMode="adjustResize" />
+      <activity
+         android:name=".assignment.ImageViewerActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:launchMode="singleTask"
+         android:screenOrientation="portrait"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".exam.AddExamActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SlideVertical_recipient"
-            android:windowSoftInputMode="adjustResize" />
+      <activity
+         android:name=".gallery.ImageSlideActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:screenOrientation="portrait"
+         android:theme="@style/ImageViewerTheme"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".timetable.AddTimetableActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SlideVertical_recipient"
-            android:windowSoftInputMode="adjustResize" />
+      <activity
+         android:name=".gallery.StorageViewer"
+         android:configChanges="orientation|keyboardHidden"
+         android:screenOrientation="portrait"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".scheduled.AddScheduledActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SlideVertical_recipient"
-            android:windowSoftInputMode="adjustResize" />
+      <activity
+         android:name=".main.IntroPageActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:screenOrientation="portrait"
+         android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".todo.AddTodoActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.SlideVertical_recipient"/>
+      <activity
+         android:name=".courses.AddCourseActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:launchMode="singleTask"
+         android:screenOrientation="portrait"
+         android:theme="@style/AppTheme.SlideVertical_recipient"
+         android:windowSoftInputMode="adjustResize" />
 
-        <receiver
-            android:name=".alarms.AlarmReScheduler"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <!--For HTC devices-->
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
-            </intent-filter>
-        </receiver>
+      <activity
+         android:name=".exam.AddExamActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:launchMode="singleTask"
+         android:screenOrientation="portrait"
+         android:theme="@style/AppTheme.SlideVertical_recipient"
+         android:windowSoftInputMode="adjustResize" />
 
-        <receiver
-            android:name=".assignment.AssignmentSchedulerChecker"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <!--For HTC devices-->
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
-            </intent-filter>
-        </receiver>
+      <activity
+         android:name=".timetable.AddTimetableActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:launchMode="singleTask"
+         android:screenOrientation="portrait"
+         android:theme="@style/AppTheme.SlideVertical_recipient"
+         android:windowSoftInputMode="adjustResize" />
 
-        <receiver android:name=".timetable.TimetableNotifier" />
-        <receiver android:name=".alarms.AlarmReceiver" />
-        <receiver android:name=".alarms.NotificationActionReceiver" />
-        <receiver android:name=".assignment.Reminder" />
-        <receiver android:name=".assignment.SubmissionNotifier" />
-        <receiver android:name=".scheduled.ScheduledTaskNotifier" />
+      <activity
+         android:name=".scheduled.AddScheduledActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:launchMode="singleTask"
+         android:screenOrientation="portrait"
+         android:theme="@style/AppTheme.SlideVertical_recipient"
+         android:windowSoftInputMode="adjustResize" />
 
-        <receiver
-            android:name="com.noah.timely.alarms.TimeChangeReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.TIME_SET" />
-                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
-                <action android:name="android.intent.action.DATE_CHANGED" />
-            </intent-filter>
-        </receiver>
+      <activity
+         android:name=".todo.AddTodoActivity"
+         android:configChanges="orientation|keyboardHidden"
+         android:screenOrientation="portrait"
+         android:theme="@style/AppTheme.SlideVertical_recipient"
+         android:windowSoftInputMode="adjustResize" />
 
-    </application>
+      <!--        Receivers       -->
+
+      <receiver
+         android:name=".alarms.AlarmReScheduler"
+         android:exported="true">
+         <intent-filter>
+            <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            <action android:name="android.intent.action.PACKAGE_REPLACED" />
+            <!--For HTC devices-->
+            <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+         </intent-filter>
+      </receiver>
+
+      <receiver
+         android:name=".assignment.AssignmentSchedulerChecker"
+         android:exported="true">
+         <intent-filter>
+            <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            <!--For HTC devices-->
+            <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+         </intent-filter>
+      </receiver>
+
+      <receiver
+         android:name="com.noah.timely.alarms.TimeChangeReceiver"
+         android:exported="true">
+         <intent-filter>
+            <action android:name="android.intent.action.TIME_SET" />
+            <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            <action android:name="android.intent.action.DATE_CHANGED" />
+         </intent-filter>
+      </receiver>
+
+       <receiver
+         android:name="com.noah.timely.alarms.AlarmStateChangeReceiver"
+         android:exported="true">
+         <intent-filter>
+            <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+         </intent-filter>
+      </receiver>
+
+      <receiver android:name=".timetable.TimetableNotifier" />
+      <receiver android:name=".alarms.AlarmReceiver" />
+      <receiver android:name=".alarms.NotificationActionReceiver" />
+      <receiver android:name=".assignment.Reminder" />
+      <receiver android:name=".assignment.SubmissionNotifier" />
+      <receiver android:name=".scheduled.ScheduledTaskNotifier" />
+
+   </application>
 
 </manifest>
