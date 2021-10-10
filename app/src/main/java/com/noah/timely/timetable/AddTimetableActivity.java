@@ -41,6 +41,7 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Converter;
+import com.noah.timely.util.PatternUtils;
 import com.noah.timely.util.ThreadUtils;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -254,8 +255,9 @@ public class AddTimetableActivity extends AppCompatActivity {
       String end = edt_endTime.getText().toString();
       String start = edt_startTime.getText().toString();
       String code = database.getCourseCodeFromName(course);
-      String timeRegex24 = "^(?:(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]))$";
-      String timeRegex12 = "^((1[012]|0[1-9]):[0-5][0-9](\\\\s)?(?i) (am|pm))$";
+
+      String timeRegex24 = PatternUtils._24_HoursClock;
+      String timeRegex12 = PatternUtils._12_HoursClock;
 
       boolean errorOccurred = false, use24 = isUserPreferred24Hours(this);
 

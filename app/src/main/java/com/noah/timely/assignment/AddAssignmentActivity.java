@@ -39,6 +39,7 @@ import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.gallery.ImageDirectory;
 import com.noah.timely.gallery.ImageGallery;
+import com.noah.timely.util.PatternUtils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -236,7 +237,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
    private void saveOrUpdateAssignment() {
       String emptyErrorMessage = "Field can't be empty";
-      String datePattern = "^(?:(3[01]|[12][0-9]|0[1-9])[/._-](1[0-2]|0[1-9]))[/._-][0-9]{4}$";
+      String datePattern = PatternUtils.DATE_ALL;
       String date = edt_date.getText().toString();
 
       boolean errorOccurred = false;
