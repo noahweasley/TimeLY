@@ -55,6 +55,8 @@ public class MiscUtil {
          alertPlayer = MediaPlayer.create(context, R.raw.piece_of_cake1);
       else if (type == Alert.NOTIFICATION)
          alertPlayer = MediaPlayer.create(context, R.raw.echoed_ding1);
+      else if (type == Alert.TODO)
+         alertPlayer = MediaPlayer.create(context, R.raw.pristine);
       else
          alertPlayer = MediaPlayer.create(context, R.raw.accomplished1);
 
