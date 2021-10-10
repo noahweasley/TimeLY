@@ -192,28 +192,22 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
             case NEW:
                if (tabPosition == 0) {
                   tdList.add(data);
-                  itemCount.setText(String.valueOf(tdList.size()));
-
                   doEmptyListUpdate(null);
-
                   adapter.notifyItemInserted(changePos);
+
                   break;
                }
             case REMOVE:
-               tdList.remove(changePos);
-               itemCount.setText(String.valueOf(tdList.size()));
                adapter.notifyItemRemoved(changePos);
                adapter.notifyDataSetChanged();
-
                if (listEmpty) doEmptyListUpdate(null);
 
                break;
             case INSERT:
-               tdList.add(changePos, data);
-               itemCount.setText(String.valueOf(tdList.size()));
                adapter.notifyItemInserted(changePos);
                adapter.notifyDataSetChanged();
                doEmptyListUpdate(null);
+
                break;
             default:
                TodoModel tm = (TodoModel) tdList.remove(changePos);
@@ -228,6 +222,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
                adapter.notifyItemChanged(changePos);
                break;
          }
+         itemCount.setText(String.valueOf(tdList.size()));
       }
    }
 

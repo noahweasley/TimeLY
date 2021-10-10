@@ -7,6 +7,7 @@ import static com.noah.timely.util.MiscUtil.playAlertTone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -16,11 +17,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -95,12 +98,14 @@ public class AddTodoActivity extends AppCompatActivity {
       edt_startTime = findViewById(R.id.start_date_time);
       edt_endTime = findViewById(R.id.end_date_time);
 
+      setupOnFocusChangedListeners();
+      setupSpinner();
+
       findViewById(R.id.start_time_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_startTime));
       findViewById(R.id.end_time_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_endTime));
       findViewById(R.id.start_date_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_startTime));
       findViewById(R.id.end_date_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_endTime));
 
-      setupSpinner();
 
       // editing current _todo
       isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
@@ -123,8 +128,25 @@ public class AddTodoActivity extends AppCompatActivity {
       }
    }
 
-   private boolean validateFormDate(EditText form) {
+   private boolean validateFormData(EditText form) {
       return !TextUtils.isEmpty(form.getText());
+   }
+
+   private void setupOnFocusChangedListeners() {
+      Drawable formLight = ContextCompat.getDrawable(this, R.drawable.form_light);
+      Drawable formDark = ContextCompat.getDrawable(this, R.drawable.form_dark);
+
+      View.OnFocusChangeListener focusChangeListener = (view, hasFocus) -> {
+         // FrameLayout is the immediate parent of a TextInputEditText, so it's grand-parent view, which is
+         // the required TextInputLayout
+         TextInputLayout timeBox = (TextInputLayout) view.getParent().getParent();
+         LinearLayout container = (LinearLayout) timeBox.getParent();
+         container.setBackground(hasFocus ? formLight : formDark);
+      };
+
+      edt_startTime.setOnFocusChangeListener(focusChangeListener);
+      edt_endTime.setOnFocusChangeListener(focusChangeListener);
+
    }
 
    private void setupSpinner() {
@@ -161,6 +183,15 @@ public class AddTodoActivity extends AppCompatActivity {
                                           : formatter12.format(calendar.getTime());
 
          String prevTime = text.getText().toString();
+
+         if (TextUtils.isEmpty(prevTime)) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
+            String parsedDate = formatter.format(calendar.getTime());
+            prevTime = parsedDate + ", 00:00";
+         }
+
          String newTime = prevTime.replaceFirst("[0-9]{2}:[0-9]{2}(?i: am|pm)*", parsedTime);
 
          text.setText(newTime);
@@ -173,10 +204,19 @@ public class AddTodoActivity extends AppCompatActivity {
          calendar.set(Calendar.MONTH, month);
          calendar.set(Calendar.DAY_OF_MONTH, day);
 
-         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
-         String parsedTime = formatter.format(calendar.getTime());
+         SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd");
+         String parsedTime = dateFormatter.format(calendar.getTime());
 
          String prevTime = text.getText().toString();
+
+         if (TextUtils.isEmpty(prevTime)) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
+            String parsedDate = formatter.format(calendar.getTime());
+            prevTime = parsedDate + ", 00:00";
+         }
+
          String newTime = prevTime.replaceFirst("[A-z] [0-9]{2}", parsedTime);
 
          text.setText(newTime);
@@ -203,7 +243,7 @@ public class AddTodoActivity extends AppCompatActivity {
    }
 
    private void addOrUppdateTask(boolean toEdit) {
-      if (!validateFormDate(edt_taskTitle)) {
+      if (!validateFormData(edt_taskTitle)) {
          TextInputLayout titleBox = (TextInputLayout) edt_taskTitle.getParent().getParent();
          titleBox.setError("Field Required !");
       }
@@ -221,7 +261,7 @@ public class AddTodoActivity extends AppCompatActivity {
       todoModel.setTaskTitle(taskTitle);
       todoModel.setTaskDescription(taskDescription);
       todoModel.setTaskCompleted(false);
-      todoModel.setCompletionTime(tc_VisibilityFlag == View.VISIBLE ? completionTime : "");
+      todoModel.setCompletionTime(completionTime);
       todoModel.setStartTime(Converter.convertTime(startTime, Converter.UNIT_24));
       todoModel.setEndTime(Converter.convertTime(endTime, Converter.UNIT_24));
 
