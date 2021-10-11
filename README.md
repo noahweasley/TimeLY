@@ -2,8 +2,6 @@
 
 ## An Android app that manages University students activities
 
-### App presentation
-
 ![Presentation 1](/presentation/1.jpg?raw=true)
 
 ![Presentation 2](/presentation/2.jpg?raw=true)
