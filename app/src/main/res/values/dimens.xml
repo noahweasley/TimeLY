@@ -82,4 +82,5 @@
    <dimen name="timeframe_text_size">18sp</dimen>
    <dimen name="todo_row_height">180dp</dimen>
    <dimen name="task_text_size_small">12sp</dimen>
+   <dimen name="view_touch_area">48dp</dimen>
 </resources>

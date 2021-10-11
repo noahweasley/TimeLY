@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/layout_gap"
             android:layout_marginTop="@dimen/layout_gap"
-            android:background="@drawable/bg_dialog_form"
+            android:background="@drawable/bg_form"
             external:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/layout_gap"
             android:layout_marginTop="@dimen/layout_gap"
-            android:background="@drawable/bg_dialog_form"
+            android:background="@drawable/bg_form"
             external:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/layout_gap"
             android:layout_marginTop="@dimen/layout_gap"
-            android:background="@drawable/bg_dialog_form"
+            android:background="@drawable/bg_form"
             external:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/layout_gap"
             android:layout_marginTop="@dimen/layout_gap"
-            android:background="@drawable/bg_dialog_form"
+            android:background="@drawable/bg_form"
             external:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
