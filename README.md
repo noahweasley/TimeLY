@@ -16,7 +16,7 @@
 
 ### Application package usages
 
-*N.B*: _All packages listed here are located [here](https://github.com/noahweasley/TimeLY/tree/master/app/src/main/java/com/noah/timely)
+**N.B** : _All packages listed here are located [here](https://github.com/noahweasley/TimeLY/tree/master/app/src/main/java/com/noah/timely)_
 
 * **about**: Package housing everything related to description of both the contributors to this project
           and what TimeLY is all about.
