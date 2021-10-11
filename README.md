@@ -49,6 +49,7 @@
 
 * **util**: Package that contains all utility classes, methods, enums...
 
+
 ### Contributing
 
 There are many ways in which you can participate in this project, for example:
@@ -57,4 +58,5 @@ There are many ways in which you can participate in this project, for example:
 * Review [source code changes](https://github.com/noahweasley/TimeLY/pulls)
 * Review the project and make pull requests for anything from typos to additional and new content
 
-If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute` 
+
+If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute`, stating what would be your contributions.
