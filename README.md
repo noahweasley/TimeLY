@@ -48,3 +48,10 @@ There are many ways in which you can participate in this project, for example:
 
 
 If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute`, stating what would be your contributions.
+
+
+ ###  TimeLY  Copyright (C) 2021  NoahWeasley
+
+This program is under the G.P.L 3.0 license and comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions that,
+anyone is permitted to copy and distribute verbatim copies of its license document, but changing it is not allowed.
