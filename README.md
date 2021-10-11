@@ -49,4 +49,12 @@
 
 * **util**: Package that contains all utility classes, methods, enums...
 
-*_Feel free to contribute to this project. Review the projects issues and try to fix any of the issues. I'll really love if could do that for me. Thank you for your collaboration_*.
+### Contributing
+
+There are many ways in which you can participate in this project, for example:
+
+* [Submit bugs and feature requests](https://github.com/noahweasley/TimeLY/issues), and help us verify as they are checked in
+* Review [source code changes](https://github.com/noahweasley/TimeLY/pulls)
+* Review the project and make pull requests for anything from typos to additional and new content
+
+If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute` 
