@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/layout_gap"
             android:layout_marginTop="@dimen/layout_gap"
-            android:background="@drawable/bg_dialog_form"
+            android:background="@drawable/bg_form"
             external:errorEnabled="true"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/layout_gap"
             android:layout_marginTop="@dimen/layout_gap"
-            android:background="@drawable/bg_dialog_form"
+            android:background="@drawable/bg_form"
             external:errorEnabled="true"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
@@ -110,7 +110,7 @@
                android:id="@+id/top"
                android:layout_width="0dp"
                android:layout_height="wrap_content"
-               android:background="@drawable/bg_dialog_form"
+               android:background="@drawable/bg_form"
                android:orientation="horizontal"
                external:layout_constraintEnd_toEndOf="parent"
                external:layout_constraintStart_toStartOf="parent"
@@ -149,7 +149,9 @@
 
                <ImageButton
                   android:id="@+id/start_time_picker"
-                  style="@android:style/Widget.Holo.Button.Borderless"
+                  android:background="@null"
+                  android:minWidth="@dimen/view_touch_area"
+                  android:minHeight="@dimen/view_touch_area"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center"
@@ -160,7 +162,9 @@
 
                <ImageButton
                   android:id="@+id/start_date_picker"
-                  style="@android:style/Widget.Holo.Button.Borderless"
+                  android:background="@null"
+                  android:minWidth="@dimen/view_touch_area"
+                  android:minHeight="@dimen/view_touch_area"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center"
@@ -174,7 +178,7 @@
                android:layout_width="0dp"
                android:layout_height="wrap_content"
                android:layout_marginTop="@dimen/layout_gap"
-               android:background="@drawable/bg_dialog_form"
+               android:background="@drawable/bg_form"
                android:orientation="horizontal"
                external:layout_constraintEnd_toEndOf="parent"
                external:layout_constraintStart_toStartOf="parent"
@@ -213,9 +217,11 @@
 
                <ImageButton
                   android:id="@+id/end_time_picker"
-                  style="@android:style/Widget.Holo.Button.Borderless"
+                  android:background="@null"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
+                  android:minWidth="@dimen/view_touch_area"
+                  android:minHeight="@dimen/view_touch_area"
                   android:layout_gravity="center"
                   android:layout_marginEnd="@dimen/default_gap"
                   android:layout_marginRight="@dimen/default_gap"
@@ -224,9 +230,11 @@
 
                <ImageButton
                   android:id="@+id/end_date_picker"
-                  style="@android:style/Widget.Holo.Button.Borderless"
+                  android:background="@null"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
+                  android:minWidth="@dimen/view_touch_area"
+                  android:minHeight="@dimen/view_touch_area"
                   android:layout_gravity="center"
                   android:layout_weight="1"
                   external:srcCompat="@drawable/ic_date_large" />
