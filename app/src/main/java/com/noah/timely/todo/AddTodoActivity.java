@@ -2,6 +2,7 @@ package com.noah.timely.todo;
 
 import static com.noah.timely.todo.TodoModel.CATEGORIES_2;
 import static com.noah.timely.util.CollectionUtils.linearSearch;
+import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
 import static com.noah.timely.util.MiscUtil.playAlertTone;
 
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -31,7 +33,9 @@ import com.noah.timely.R;
 import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Converter;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.MiscUtil;
+import com.noah.timely.util.PatternUtils;
 import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -40,6 +44,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class AddTodoActivity extends AppCompatActivity {
@@ -94,7 +99,6 @@ public class AddTodoActivity extends AppCompatActivity {
       edt_taskTitle = findViewById(R.id.task_editor);
       edt_taskDescription = findViewById(R.id.task_description);
       vg_timeContainer = findViewById(R.id.time_container);
-
       edt_startTime = findViewById(R.id.start_date_time);
       edt_endTime = findViewById(R.id.end_date_time);
 
@@ -105,7 +109,6 @@ public class AddTodoActivity extends AppCompatActivity {
       findViewById(R.id.end_time_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_endTime));
       findViewById(R.id.start_date_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_startTime));
       findViewById(R.id.end_date_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_endTime));
-
 
       // editing current _todo
       isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
@@ -126,10 +129,6 @@ public class AddTodoActivity extends AppCompatActivity {
 
          edt_taskTitle.requestFocus();
       }
-   }
-
-   private boolean validateFormData(EditText form) {
-      return !TextUtils.isEmpty(form.getText());
    }
 
    private void setupOnFocusChangedListeners() {
@@ -165,9 +164,10 @@ public class AddTodoActivity extends AppCompatActivity {
    }
 
    private void onTimeRangeClick(View caller, View target) {
-      boolean is24HourMode = isUserPreferred24Hours(this);
-      EditText text = (EditText) target;
-      int targetId = text.getId();
+      final boolean is24HourMode = isUserPreferred24Hours(this);
+
+      EditText edt_time = (EditText) target;
+      int targetId = edt_time.getId();
       int callerId = caller.getId();
 
       // Time picker dialog listener, when time icon is clicked
@@ -176,25 +176,24 @@ public class AddTodoActivity extends AppCompatActivity {
          calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
          calendar.set(Calendar.MINUTE, minute);
 
-         SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
-         SimpleDateFormat formatter12 = new SimpleDateFormat("hh:mm aa");
+         SimpleDateFormat format12 = new SimpleDateFormat("hh:mm aa");
+         SimpleDateFormat format24 = new SimpleDateFormat("HH:mm");
+         SimpleDateFormat format_currentDate = new SimpleDateFormat("MMM dd");
 
-         String parsedTime = is24HourMode ? formatter24.format(calendar.getTime())
-                                          : formatter12.format(calendar.getTime());
+         Date date = calendar.getTime();
+         String parsedTime = is24HourMode ? format24.format(date) : format12.format(date);
+         String parsedDate = format_currentDate.format(date);
 
-         String prevTime = text.getText().toString();
+         String timeRange = null;
+         String timeRangeInputText = String.valueOf(edt_time.getText());
 
-         if (TextUtils.isEmpty(prevTime)) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
-            String parsedDate = formatter.format(calendar.getTime());
-            prevTime = parsedDate + ", 00:00";
+         if (TextUtils.isEmpty(timeRangeInputText)) {
+            timeRange = String.format("%s, %s", parsedDate, parsedTime);
+         } else {
+            timeRange = timeRangeInputText.replaceFirst(PatternUtils.TIME_ALL, parsedTime);
          }
 
-         String newTime = prevTime.replaceFirst("[0-9]{2}:[0-9]{2}(?i: am|pm)*", parsedTime);
-
-         text.setText(newTime);
+         edt_time.setText(timeRange);
       };
 
       // Date picker dialog listene, wwhen date icon is clicked
@@ -204,22 +203,24 @@ public class AddTodoActivity extends AppCompatActivity {
          calendar.set(Calendar.MONTH, month);
          calendar.set(Calendar.DAY_OF_MONTH, day);
 
-         SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd");
-         String parsedTime = dateFormatter.format(calendar.getTime());
+         SimpleDateFormat format12_current = new SimpleDateFormat("hh:mm aa");
+         SimpleDateFormat format24_current = new SimpleDateFormat("HH:mm");
+         SimpleDateFormat formatDate = new SimpleDateFormat("MMM dd");
 
-         String prevTime = text.getText().toString();
+         Date date = calendar.getTime();
+         String parsedTime = is24HourMode ? format24_current.format(date) : format12_current.format(date);
+         String parsedDate = formatDate.format(date);
 
-         if (TextUtils.isEmpty(prevTime)) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+         String timeRange = null;
+         String timeRangeInputText = String.valueOf(edt_time.getText());
 
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
-            String parsedDate = formatter.format(calendar.getTime());
-            prevTime = parsedDate + ", 00:00";
+         if (TextUtils.isEmpty(timeRangeInputText)) {
+            timeRange = String.format("%s, %s", parsedDate, parsedTime);
+         } else {
+            timeRange = timeRangeInputText.replaceFirst(PatternUtils.DATE_SHORT, parsedDate);
          }
 
-         String newTime = prevTime.replaceFirst("[A-z] [0-9]{2}", parsedTime);
-
-         text.setText(newTime);
+         edt_time.setText(timeRange);
       };
 
       Calendar calendar = Calendar.getInstance();
@@ -242,15 +243,53 @@ public class AddTodoActivity extends AppCompatActivity {
       }
    }
 
+   // action performed while task is being added
    private void addOrUppdateTask(boolean toEdit) {
-      if (!validateFormData(edt_taskTitle)) {
-         TextInputLayout titleBox = (TextInputLayout) edt_taskTitle.getParent().getParent();
-         titleBox.setError("Field Required !");
+
+      boolean errorOccurred = false, use24 = isUserPreferred24Hours(this);
+
+      String startTimeInput = edt_startTime.getText().toString();
+      String endTimeInput = edt_startTime.getText().toString();
+
+      String timeRegex24 = PatternUtils.DATE_SHORT_24_HoursClock;
+      String timeRegex12 = PatternUtils.DATE_SHORT_12_HoursClock;
+
+      if (use24 && !startTimeInput.matches(timeRegex24)) {
+         edt_startTime.setError("Format: MMM dd, HH:SS");
+         errorOccurred = true;
+      } else {
+         if (!use24 && !startTimeInput.matches(timeRegex12)) {
+            edt_startTime.setError("12 hours mode with date");
+            errorOccurred = true;
+         }
       }
+
+      if (use24 && !endTimeInput.matches(timeRegex24)) {
+         edt_endTime.setError("Format: MMM dd, HH:SS");
+         errorOccurred = true;
+      } else {
+         if (!use24 && !endTimeInput.matches(timeRegex12)) {
+            edt_endTime.setError("12 hours mode with date");
+            errorOccurred = true;
+         }
+      }
+
+      if (errorOccurred) return;
+
+      // convert time to 24 hours because TimeLY saves time in 24 hours clock.
+      // Algorithm: convert the first time match in the input string to 24 hours clock
+      long s = SystemClock.elapsedRealtime();
+      startTimeInput = use24 ? startTimeInput
+                             : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, startTimeInput),
+                                           Converter.UNIT_24);
+      endTimeInput = use24 ? endTimeInput
+                           : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, endTimeInput),
+                                         Converter.UNIT_24);
+      long e = SystemClock.elapsedRealtime();
+      LogUtils.debug(this, "Convertion lasted for: " + (e - s));
 
       TodoModel todoModel = new TodoModel();
 
-      int tc_VisibilityFlag = vg_timeContainer.getVisibility();
       String startTime = edt_startTime.getText().toString();
       String endTime = edt_endTime.getText().toString();
       String taskTitle = edt_taskTitle.getText().toString();
@@ -262,8 +301,8 @@ public class AddTodoActivity extends AppCompatActivity {
       todoModel.setTaskDescription(taskDescription);
       todoModel.setTaskCompleted(false);
       todoModel.setCompletionTime(completionTime);
-      todoModel.setStartTime(Converter.convertTime(startTime, Converter.UNIT_24));
-      todoModel.setEndTime(Converter.convertTime(endTime, Converter.UNIT_24));
+      todoModel.setStartTime(startTime);
+      todoModel.setEndTime(endTime);
 
       boolean isSuccessful;
       // update or add new _todo
