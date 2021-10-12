@@ -34,6 +34,7 @@ import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Constants;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -185,6 +186,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
       if (!data.getDBcategory().equals(this.category) && !data.getDBcategory().equals(Constants.TODO_GENERAL)) return;
       // perform update at particular poitiion
       int changePos = update.getChangePosition();
+      LogUtils.debug(this, "Todo of size: " + tdList.size() + ", update at: " + changePos);
       boolean listEmpty = tdList.isEmpty();
 
       if (tabPosition == update.getPagePosition()) {
@@ -194,9 +196,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
                   tdList.add(data);
                   doEmptyListUpdate(null);
                   adapter.notifyItemInserted(changePos);
-
-                  break;
                }
+               break;
             case REMOVE:
                adapter.notifyItemRemoved(changePos);
                adapter.notifyDataSetChanged();

@@ -25,6 +25,7 @@ import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.todo.TodoListFragment.TodoListAdapter;
 import com.noah.timely.util.Converter;
 import com.noah.timely.util.MiscUtil;
+import com.noah.timely.util.PatternUtils;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -59,7 +60,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
    /*      views       */
    private final View header;
    private final CheckBox cbx_state;
-   private final TextView tv_title, tv_category, tv_description, tv_time, tv_date;
+   private final TextView tv_title, tv_category, tv_description, tv_time;
    private final ImageView img_overflow;
    private final ExpandableLayout expl_detailLayout;
    private final View bottomDivider, v_selectionOverlay;
@@ -86,7 +87,6 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       tv_description = itemView.findViewById(R.id.description);
       bottomDivider = itemView.findViewById(R.id.bottom_divider);
       tv_time = itemView.findViewById(R.id.time);
-      tv_date = itemView.findViewById(R.id.date);
       btn_delete = itemView.findViewById(R.id.delete);
       btn_edit = itemView.findViewById(R.id.edit);
       v_selectionOverlay = itemView.findViewById(R.id.checked_overlay);
@@ -206,20 +206,24 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       tv_category.setBackgroundColor(ContextCompat.getColor(activity, color2d[1]));
       tv_category.setText(todo.getCategory());
 
-      if (TextUtils.isEmpty(todo.getCompletionDate())) {
-         tv_date.setVisibility(View.GONE);
-         bottomDivider.setVisibility(View.GONE);
-      } else {
-         bottomDivider.setVisibility(View.VISIBLE);
-         tv_date.setText(todo.getCompletionDate());
-      }
+      bottomDivider.setVisibility(TextUtils.isEmpty(todo.getTaskDescription()) ? View.GONE : View.VISIBLE);
 
       if (TextUtils.isEmpty(todo.getCompletionTime())) {
-         tv_time.setVisibility(View.GONE);
+         tv_time.setText(R.string.empty_time_range);
       } else {
-         String start = convertTime(todo.getStartTime(), Converter.UNIT_12);
-         String end = convertTime(todo.getEndTime(), Converter.UNIT_12);
-         tv_time.setText(start + " - " + end);
+         String startTime = todo.getStartTime(), endTime = todo.getEndTime();
+
+         boolean use24 = MiscUtil.isUserPreferred24Hours(activity);
+         // convert time to 24 hours because TimeLY saves time in 24 hours clock.
+         // Algorithm: convert the first time match in the input string to 24 hours clock
+         startTime = use24 ? startTime
+                           : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, startTime),
+                                         Converter.UNIT_24);
+         endTime = use24 ? endTime
+                         : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, endTime),
+                                       Converter.UNIT_24);
+
+         tv_time.setText(startTime + " - " + endTime);
       }
    }
 

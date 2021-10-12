@@ -29,7 +29,7 @@ public class Converter {
       try {
          date = to_unitTime == UNIT_24 ? timeFormat12.parse(time) : timeFormat24.parse(time);
       } catch (ParseException e) {
-         return time;
+         throw new IllegalArgumentException(time + " is not parsable");
       }
       return to_unitTime == UNIT_24 ? timeFormat24.format(date.getTime()) : timeFormat12.format(date.getTime());
    }

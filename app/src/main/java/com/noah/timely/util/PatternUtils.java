@@ -54,9 +54,22 @@ public class PatternUtils {
     * @return true if the input matches the pattern
     */
    public static boolean test(String regex, CharSequence input) {
+      return Pattern.matches(regex, input);
+   }
+
+   /**
+    * Finds the nearest match in the input string and then returns it
+    *
+    * @param regex the pattern to use to validate the input against
+    * @param input the input to be validated
+    * @return the match or an empty string if no match was foudn
+    */
+   public static String findMatch(String regex, CharSequence input) {
       Pattern pattern = Pattern.compile(regex);
       Matcher matcher = pattern.matcher(input);
-      return matcher.matches();
+      String match = "";
+      if (matcher.find()) match = matcher.group();
+      return match;
    }
 
 }

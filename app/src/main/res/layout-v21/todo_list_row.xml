@@ -97,7 +97,8 @@
             android:layout_height="wrap_content"
             external:el_duration="250"
             external:el_expanded="false"
-            external:el_parallax="0.5">
+            external:el_parallax="0.5"
+            tools:el_expanded="true">
 
             <LinearLayout
                android:layout_width="match_parent"
@@ -140,26 +141,11 @@
                android:background="@drawable/bg_rounded_stroked"
                android:ellipsize="end"
                android:maxLines="3"
-               android:text="@string/default_time_2"
+               android:text="@string/default_time_5"
                android:textColor="@color/black"
                android:textSize="@dimen/task_text_size_small"
                external:layout_constraintBottom_toBottomOf="parent"
                external:layout_constraintStart_toStartOf="parent"
-               external:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-               android:id="@+id/date"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginHorizontal="@dimen/layout_gap"
-               android:background="@drawable/bg_rounded_stroked"
-               android:ellipsize="end"
-               android:maxLines="3"
-               android:text="@string/default_date_2"
-               android:textColor="@color/black"
-               android:textSize="@dimen/task_text_size_small"
-               external:layout_constraintBottom_toBottomOf="parent"
-               external:layout_constraintStart_toEndOf="@+id/time"
                external:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
