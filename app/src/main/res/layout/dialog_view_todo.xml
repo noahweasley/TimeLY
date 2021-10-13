@@ -6,13 +6,27 @@
    android:layout_height="@dimen/normal_dialog_height"
    android:background="@drawable/bg_day_and_night">
 
+   <TextView
+      android:id="@+id/view_header"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@drawable/register_button"
+      android:gravity="center"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/task_viewer_header"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent" />
+
    <ScrollView
       android:layout_width="0dp"
       android:layout_height="0dp"
-      external:layout_constraintBottom_toTopOf="@id/view_images"
+      external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toTopOf="parent">
+      external:layout_constraintTop_toBottomOf="@id/view_header">
 
       <LinearLayout
          android:layout_width="match_parent"
@@ -43,7 +57,7 @@
             android:textSize="@dimen/assignment_dialog_text_size_medium" />
 
          <TextView
-            android:id="@+id/lecturer"
+            android:id="@+id/completioon_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -52,7 +66,7 @@
             android:textColor="@android:color/black"
             android:textSize="@dimen/assignment_dialog_text_size_medium"
             android:textStyle="bold"
-            tools:text="@string/default_lecturer_name" />
+            tools:text="@string/default_time_5" />
 
          <View
             android:layout_width="match_parent"
@@ -73,18 +87,5 @@
       </LinearLayout>
 
    </ScrollView>
-
-   <Button
-      android:id="@+id/view_images"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:background="@drawable/register_button"
-      android:minHeight="@dimen/button_min_height"
-      android:text="@string/view"
-      android:textColor="@android:color/white"
-      android:textSize="@dimen/button_text_size"
-      external:layout_constraintBottom_toBottomOf="parent"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

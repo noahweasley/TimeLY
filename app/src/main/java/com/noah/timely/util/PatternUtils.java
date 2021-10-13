@@ -11,17 +11,17 @@ public class PatternUtils {
    /**
     * Pattern to match 12 hours clock
     */
-   public static final String _24_HoursClock = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
+   public static final String _24_HoursClock = "(?:[01][0-9]|2[0-3]):[0-5][0-9]";
 
    /**
     * Pattern to match 24 hours clock
     */
-   public static final String _12_HoursClock = "^(?:0?[0-9]|1[0-2]):[0-5][0-9] (?i)[ap]m$";
+   public static final String _12_HoursClock = "(?:0?[0-9]|1[0-2]):[0-5][0-9] (?i)[ap]m";
 
    /**
     * Pattern to match both 12 and 24 hours clock
     */
-   public static final String TIME_ALL = "^(?:(?:0?[0-9]|1[0-2]):[0-5][0-9] (?i:[ap]m)|(?:[01][0-9]|2[0-3]):[0-5][0-9])$";
+   public static final String TIME_ALL = "(?:(?:0?[0-9]|1[0-2]):[0-5][0-9] (?i:[ap]m)|(?:[01][0-9]|2[0-3]):[0-5][0-9])";
 
    /**
     * Pattern to match 24 hours clock
@@ -44,7 +44,7 @@ public class PatternUtils {
    /**
     * Pattern to match short dates in format, <code>MMM dd</code> for example, May 16
     */
-   public static final String DATE_SHORT = "^[A-z]{3} \\d{2}$";
+   public static final String DATE_SHORT = "[A-z]{3} \\d{2}";
 
    /**
     * Validates a regex pattern against an input

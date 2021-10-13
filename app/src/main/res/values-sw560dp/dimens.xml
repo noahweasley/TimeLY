@@ -56,7 +56,7 @@
    <dimen name="wave_decoration_height">100dp</dimen>
    <dimen name="rocket_width">150dp</dimen>
    <dimen name="rocket_height">100dp</dimen>
-   <dimen name="update_text_size">24sp</dimen>
+   <dimen name="update_text_size">20sp</dimen>
    <dimen name="info_version_text_size">24sp</dimen>
    <dimen name="app_desc_text_size">18sp</dimen>
    <dimen name="course_course_name_text_size">16sp</dimen>

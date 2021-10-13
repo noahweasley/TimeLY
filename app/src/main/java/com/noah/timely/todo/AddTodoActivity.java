@@ -254,23 +254,41 @@ public class AddTodoActivity extends AppCompatActivity {
       String timeRegex24 = PatternUtils.DATE_SHORT_24_HoursClock;
       String timeRegex12 = PatternUtils.DATE_SHORT_12_HoursClock;
 
-      if (use24 && !startTimeInput.matches(timeRegex24)) {
-         edt_startTime.setError("Format: MMM dd, HH:SS");
+      boolean timeRangeInputEmpty = TextUtils.isEmpty(startTimeInput) && TextUtils.isEmpty(endTimeInput);
+      boolean eitherInputEmpty = (!TextUtils.isEmpty(startTimeInput) && TextUtils.isEmpty(endTimeInput))
+              || (TextUtils.isEmpty(startTimeInput) && !TextUtils.isEmpty(endTimeInput));
+
+      if (TextUtils.isEmpty(edt_taskTitle.getText())) {
+         TextInputLayout titleBox = (TextInputLayout) edt_taskTitle.getParent().getParent();
+         titleBox.setError("Field required!");
          errorOccurred = true;
-      } else {
-         if (!use24 && !startTimeInput.matches(timeRegex12)) {
-            edt_startTime.setError("12 hours mode with date");
+      }
+
+      if (!timeRangeInputEmpty && eitherInputEmpty) {
+         TextInputLayout startBox = (TextInputLayout) edt_startTime.getParent().getParent();
+
+         if (use24 && !startTimeInput.matches(timeRegex24)) {
+            startBox.setError("Format: MMM dd, HH:SS");
             errorOccurred = true;
+         } else {
+            if (!use24 && !startTimeInput.matches(timeRegex12)) {
+               startBox.setError("12 hours mode with date");
+               errorOccurred = true;
+            }
          }
       }
 
-      if (use24 && !endTimeInput.matches(timeRegex24)) {
-         edt_endTime.setError("Format: MMM dd, HH:SS");
-         errorOccurred = true;
-      } else {
-         if (!use24 && !endTimeInput.matches(timeRegex12)) {
-            edt_endTime.setError("12 hours mode with date");
+      if (!timeRangeInputEmpty && eitherInputEmpty) {
+         TextInputLayout endBox = (TextInputLayout) edt_endTime.getParent().getParent();
+
+         if (use24 && !endTimeInput.matches(timeRegex24)) {
+            endBox.setError("Format: MMM dd, HH:SS");
             errorOccurred = true;
+         } else {
+            if (!use24 && !endTimeInput.matches(timeRegex12)) {
+               endBox.setError("12 hours mode with date");
+               errorOccurred = true;
+            }
          }
       }
 
@@ -279,12 +297,14 @@ public class AddTodoActivity extends AppCompatActivity {
       // convert time to 24 hours because TimeLY saves time in 24 hours clock.
       // Algorithm: convert the first time match in the input string to 24 hours clock
       long s = SystemClock.elapsedRealtime();
-      startTimeInput = use24 ? startTimeInput
-                             : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, startTimeInput),
-                                           Converter.UNIT_24);
-      endTimeInput = use24 ? endTimeInput
-                           : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, endTimeInput),
-                                         Converter.UNIT_24);
+      if (!TextUtils.isEmpty(startTimeInput) && !TextUtils.isEmpty(endTimeInput)) {
+         startTimeInput = use24 ? startTimeInput
+                                : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, startTimeInput),
+                                              Converter.UNIT_24);
+         endTimeInput = use24 ? endTimeInput
+                              : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, endTimeInput),
+                                            Converter.UNIT_24);
+      }
       long e = SystemClock.elapsedRealtime();
       LogUtils.debug(this, "Convertion lasted for: " + (e - s));
 

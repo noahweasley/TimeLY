@@ -46,7 +46,7 @@
       android:id="@+id/version"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:fontFamily="sans-serif-medium"
+      android:fontFamily="@font/wendy_one"
       android:text="@string/version"
       android:textColor="@color/colorPrimaryDark"
       android:textSize="@dimen/update_text_size"
@@ -65,6 +65,7 @@
       android:layout_marginVertical="@dimen/layout_gap"
       android:gravity="center|top"
       android:text="@string/app_description"
+      android:textColor="@color/high_constrast_grey"
       android:textSize="@dimen/app_desc_text_size"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
@@ -75,11 +76,11 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginVertical="@dimen/layout_gap"
+      android:fontFamily="@font/wendy_one"
       android:gravity="center|top"
       android:text="@string/header"
       android:textColor="@color/colorPrimaryDark"
       android:textSize="@dimen/update_text_size"
-      android:textStyle="bold"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -105,6 +106,7 @@
             android:drawablePadding="@dimen/layout_gap"
             android:gravity="start"
             android:text="@string/dev_name"
+            android:textColor="@color/high_constrast_grey"
             external:drawableLeftCompat="@drawable/ic_facebook"
             external:drawableStartCompat="@drawable/ic_facebook" />
 
@@ -117,6 +119,7 @@
             android:drawablePadding="@dimen/layout_gap"
             android:gravity="start"
             android:text="@string/dev_gmail"
+            android:textColor="@color/high_constrast_grey"
             external:drawableLeftCompat="@drawable/ic_gmail"
             external:drawableStartCompat="@drawable/ic_gmail" />
 
@@ -129,6 +132,7 @@
             android:drawablePadding="@dimen/layout_gap"
             android:gravity="start"
             android:text="@string/dev_github_username"
+            android:textColor="@color/high_constrast_grey"
             external:drawableLeftCompat="@drawable/ic_github_logo"
             external:drawableStartCompat="@drawable/ic_github_logo" />
 
