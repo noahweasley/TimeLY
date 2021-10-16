@@ -1,5 +1,6 @@
 package com.tools.lib;
 
+@SuppressWarnings("all")
 public class FunctionalityTest {
 
    private static boolean isEmpty(CharSequence se) {

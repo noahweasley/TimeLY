@@ -14,7 +14,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.noah.timely.R;
-import com.noah.timely.util.LogUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,7 +61,7 @@ public class TodoContainerFragment extends Fragment {
 
       ViewPager2 pager = view.findViewById(R.id.pager);
       pager.setOffscreenPageLimit(2);
-      pager.setAdapter(new TodoSubListAdapter(this));
+      pager.setAdapter(new TodoContainerAdapter(this));
       TabLayout tabs = view.findViewById(R.id.tabs);
       tabs.setTabMode(TabLayout.MODE_FIXED);
       tabs.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -71,16 +70,15 @@ public class TodoContainerFragment extends Fragment {
                             (tab, position) -> tab.setText(position == 0 ? "ACTIVE" : "FINISHED")).attach();
    }
 
-   private class TodoSubListAdapter extends FragmentStateAdapter {
+   private class TodoContainerAdapter extends FragmentStateAdapter {
 
-      public TodoSubListAdapter(@NonNull Fragment fragment) {
+      public TodoContainerAdapter(@NonNull Fragment fragment) {
          super(fragment);
       }
 
       @NonNull
       @Override
       public Fragment createFragment(int position) {
-         LogUtils.debug(this, "sending position: " + position);
          return TodoListFragment.newInstance(position, category);
       }
 

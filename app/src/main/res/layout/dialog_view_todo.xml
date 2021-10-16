@@ -80,7 +80,7 @@
             android:layout_margin="8dp"
             android:fontFamily="serif"
             android:gravity="center"
-            android:text="@string/lorem_longest"
+            tools:text="@string/lorem_longest"
             android:textSize="@dimen/assignment_dialog_text_size_medium"
             android:textStyle="bold" />
 
