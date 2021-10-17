@@ -31,9 +31,6 @@ import java.util.Map;
  * Use the {@link TodoFragment#newInstance} factory method to create an instance of this fragment.
  */
 public class TodoFragment extends Fragment {
-   /*      Current _todo sizes    */
-   @SuppressWarnings("MismatchedReadAndWriteOfArray")
-   private final int[] sizes = new int[10];
    private Map<String, Integer> todoGroupSizes = new HashMap<>();
    private SchoolDatabase database;
    /*      Views       */
@@ -101,7 +98,7 @@ public class TodoFragment extends Fragment {
       tv_catHome = (TextView) vg_home.getChildAt(2);
       tv_catShop = (TextView) vg_shopping.getChildAt(2);
       tv_catFun = (TextView) vg_fun.getChildAt(2);
-      tv_catMisc = (TextView) vg_music.getChildAt(2);
+      tv_catMisc = (TextView) vg_misc.getChildAt(2);
 
       Runnable uiTask = () -> {
          refreshTodoCountStates(todoGroupSizes);
@@ -137,9 +134,6 @@ public class TodoFragment extends Fragment {
    public void onDestroyView() {
       super.onDestroyView();
       database.close();
-      // prevent memory leaks, clear out the garbage
-      if (vg_container != null)
-         vg_container = null;
    }
 
    @Override
@@ -155,17 +149,16 @@ public class TodoFragment extends Fragment {
    }
 
    private void refreshTodoCountStates(Map<String, Integer> todoGroupSizes) {
-
-      int generalSize = sizes[0] = todoGroupSizes.get(TodoModel.CATEGORIES[0]);
-      int musicSize = sizes[1] = todoGroupSizes.get(TodoModel.CATEGORIES[2]);
-      int workSize = sizes[2] = todoGroupSizes.get(TodoModel.CATEGORIES[1]);
-      int travelSize = sizes[3] = todoGroupSizes.get(TodoModel.CATEGORIES[3]);
-      int studySize = sizes[4] = todoGroupSizes.get(TodoModel.CATEGORIES[4]);
-      int creativitySize = sizes[5] = todoGroupSizes.get(TodoModel.CATEGORIES[5]);
-      int homeSize = sizes[6] = todoGroupSizes.get(TodoModel.CATEGORIES[6]);
-      int shopSize = sizes[7] = todoGroupSizes.get(TodoModel.CATEGORIES[7]);
-      int funSize = sizes[8] = todoGroupSizes.get(TodoModel.CATEGORIES[8]);
-      int miscSize = sizes[9] = todoGroupSizes.get(TodoModel.CATEGORIES[9]);
+      int generalSize = todoGroupSizes.get(TodoModel.CATEGORIES[0]);
+      int workSize = todoGroupSizes.get(TodoModel.CATEGORIES[1]);
+      int musicSize = todoGroupSizes.get(TodoModel.CATEGORIES[2]);
+      int travelSize = todoGroupSizes.get(TodoModel.CATEGORIES[3]);
+      int studySize = todoGroupSizes.get(TodoModel.CATEGORIES[4]);
+      int creativitySize = todoGroupSizes.get(TodoModel.CATEGORIES[5]);
+      int homeSize = todoGroupSizes.get(TodoModel.CATEGORIES[6]);
+      int shopSize = todoGroupSizes.get(TodoModel.CATEGORIES[7]);
+      int funSize = todoGroupSizes.get(TodoModel.CATEGORIES[8]);
+      int miscSize = todoGroupSizes.get(TodoModel.CATEGORIES[9]);
 
       tv_catGen.setText(String.format(Locale.US, "%d %s", generalSize, "task(s)"));
       tv_catWork.setText(String.format(Locale.US, "%d %s", workSize, "task(s)"));
@@ -181,10 +174,11 @@ public class TodoFragment extends Fragment {
    }
 
    private void findRefreshTodoCountState(TodoModel dataModel) {
-      int searchIndex = CollectionUtils.linearSearch(TodoModel.CATEGORIES, dataModel.getDBcategory());
+      int searchIndex = CollectionUtils.linearSearch(TodoModel.OREDERED_CATEGORY, dataModel.getDBcategory());
       ViewGroup child = (ViewGroup) vg_container.getChildAt(searchIndex);
       TextView grandChildTextView = (TextView) child.getChildAt(2);
-      String groupSize = String.format(Locale.US, "%d %s", sizes[searchIndex] = ++sizes[searchIndex], "task(s)");
+      int prevSize = Integer.valueOf(grandChildTextView.getText().toString().substring(0, 1));
+      String groupSize = String.format(Locale.US, "%d %s", ++prevSize, "task(s)");
       grandChildTextView.setText(groupSize);
    }
 
@@ -214,7 +208,11 @@ public class TodoFragment extends Fragment {
          category = Constants.TODO_TRAVEL;
       }
 
-      // Navigate to contents of clicked todo
+      navigateToCategory(category);
+   }
+
+   private void navigateToCategory(String category) {
+      // Navigate to contents of clicked _todo
       getActivity().getSupportFragmentManager().beginTransaction()
                    .replace(R.id.frame, TodoContainerFragment.newInstance(category), "Todo")
                    .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)

@@ -49,10 +49,11 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
    private static final int[][] COLOR2D = {
            { android.R.color.holo_orange_dark, R.color.holo_orange_dark_5 },
            { android.R.color.holo_red_light, R.color.holo_red_light_5 },
-           { android.R.color.holo_green_dark }, { R.color.holo_green_dark_5 },
+           { android.R.color.holo_green_dark, R.color.holo_green_dark_5 },
            { android.R.color.holo_purple, R.color.holo_purple_5 },
            { android.R.color.holo_red_light, R.color.holo_red_light_5 },
            { android.R.color.holo_blue_dark, R.color.holo_blue_dark_5 },
+           { android.R.color.holo_green_dark, R.color.holo_green_dark_5 },
            { R.color.teal_700, R.color.teal_700_5 },
            { R.color.tomato_red, R.color.tomato_red_5 }
    };
@@ -140,6 +141,9 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
             if (todoRowAdapter.getCheckedTodosCount() == 0) {
                todoRowAdapter.setMultiSelectionEnabled(false);
             }
+         } else {
+            // Just show full details of _todo
+            new TodoViewDialog().show(activity, todo);
          }
       });
 
@@ -209,7 +213,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       bottomDivider.setVisibility(TextUtils.isEmpty(todo.getTaskDescription()) ? View.GONE : View.VISIBLE);
 
       if (TextUtils.isEmpty(todo.getCompletionTime())) {
-         tv_time.setText(R.string.empty_time_range);
+         tv_time.setVisibility(View.GONE);
       } else {
          String startTime = todo.getStartTime(), endTime = todo.getEndTime();
 

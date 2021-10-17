@@ -3,7 +3,10 @@ package com.noah.timely.todo;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,7 +47,25 @@ public class TodoViewDialog extends DialogFragment {
          setContentView(R.layout.dialog_view_todo);
 
          Gson gson = new Gson();
-         TodoModel assignment = (TodoModel) gson.fromJson(getArguments().getString(ARG_DATA), TodoModel.class);
+         TodoModel todoModel = (TodoModel) gson.fromJson(getArguments().getString(ARG_DATA), TodoModel.class);
+
+         TextView tv_title, tv_completionTime, tv_description, tv_from;
+
+         tv_title = findViewById(R.id.title);
+         tv_completionTime = findViewById(R.id.completioon_time);
+         tv_description = findViewById(R.id.description);
+         tv_from = findViewById(R.id.from);
+
+         tv_title.setText(todoModel.getTaskTitle());
+
+         if (TextUtils.isEmpty(todoModel.getStartTime()) && TextUtils.isEmpty(todoModel.getEndTime())) {
+            tv_from.setVisibility(View.GONE);
+            tv_completionTime.setVisibility(View.GONE);
+         } else {
+            tv_completionTime.setText(todoModel.getCompletionTime());
+         }
+
+         tv_description.setText(todoModel.getTaskDescription());
       }
    }
 }

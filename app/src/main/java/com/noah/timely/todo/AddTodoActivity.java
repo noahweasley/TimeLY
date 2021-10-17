@@ -1,6 +1,6 @@
 package com.noah.timely.todo;
 
-import static com.noah.timely.todo.TodoModel.CATEGORIES_2;
+import static com.noah.timely.todo.TodoModel.SPINNER_CATEGORIES;
 import static com.noah.timely.util.CollectionUtils.linearSearch;
 import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -30,7 +31,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
-import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Converter;
 import com.noah.timely.util.LogUtils;
@@ -63,7 +63,7 @@ public class AddTodoActivity extends AppCompatActivity {
    private EditText edt_taskTitle, edt_taskDescription;
    private SchoolDatabase database;
    private boolean isEditable;
-   private String category = TodoModel.CATEGORIES[0];
+   private String category;
 
    public static void start(Context context, boolean toEdit, String defCategory) {
       Intent starter = new Intent(context, AddTodoActivity.class);
@@ -92,6 +92,7 @@ public class AddTodoActivity extends AppCompatActivity {
       database = new SchoolDatabase(this);
       setSupportActionBar(findViewById(R.id.toolbar));
 
+      isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
       getSupportActionBar().setTitle(isEditable ? "Update Task" : "New Task");
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -103,15 +104,19 @@ public class AddTodoActivity extends AppCompatActivity {
       edt_endTime = findViewById(R.id.end_date_time);
 
       setupOnFocusChangedListeners();
-      setupSpinner();
+      setupSpinner(isEditable);
 
       findViewById(R.id.start_time_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_startTime));
       findViewById(R.id.end_time_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_endTime));
       findViewById(R.id.start_date_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_startTime));
       findViewById(R.id.end_date_picker).setOnClickListener(v -> onTimeRangeClick(v, edt_endTime));
 
+      // set the default selected category; if action to start the activity was an 'Edit Action', then the
+      // defCategory would be the same as the category of that clicked _todo, but if it was a 'New Task' action, then
+      // the defCateory would just be placed on Miscellaneous _todo, because user hasn't specified which ones yet :)
+      String defCategory = getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY);
+      category = TextUtils.isEmpty(defCategory) ? TodoModel.SPINNER_CATEGORIES[0] : defCategory;
       // editing current _todo
-      isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
       btn_addTask.setOnClickListener(v -> addOrUppdateTask(isEditable));
       if (isEditable) {
          Intent intent = getIntent();
@@ -148,19 +153,29 @@ public class AddTodoActivity extends AppCompatActivity {
 
    }
 
-   private void setupSpinner() {
+   private void setupSpinner(boolean isEditable) {
       Spinner spin_category = findViewById(R.id.category);
-      ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CATEGORIES);
-      courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
-      spin_category.setAdapter(courseAdapter);
-      int selectionIndex = linearSearch(CATEGORIES_2, getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
-      spin_category.setSelection(selectionIndex);
-      spin_category.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
-         @Override
-         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            category = CATEGORIES_2[position];
-         }
-      });
+      ImageView img_tag = findViewById(R.id.tag);
+      if (isEditable) {
+         // prevent user from editing the category of the current _todo. If user can then that would be
+         // a flaw in the UX design
+         spin_category.setVisibility(View.GONE);
+         img_tag.setVisibility(View.GONE);
+      } else {
+         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CATEGORIES);
+         courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
+         spin_category.setAdapter(courseAdapter);
+         int selectionIndex = linearSearch(SPINNER_CATEGORIES, getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
+         spin_category.setSelection(selectionIndex);
+         spin_category.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               category = SPINNER_CATEGORIES[position];
+               LogUtils.debug(this, "Selected: " + category);
+            }
+         });
+      }
+
    }
 
    private void onTimeRangeClick(View caller, View target) {
@@ -264,7 +279,7 @@ public class AddTodoActivity extends AppCompatActivity {
          errorOccurred = true;
       }
 
-      if (!timeRangeInputEmpty && eitherInputEmpty) {
+      if (!timeRangeInputEmpty || eitherInputEmpty) {
          TextInputLayout startBox = (TextInputLayout) edt_startTime.getParent().getParent();
 
          if (use24 && !startTimeInput.matches(timeRegex24)) {
@@ -278,7 +293,7 @@ public class AddTodoActivity extends AppCompatActivity {
          }
       }
 
-      if (!timeRangeInputEmpty && eitherInputEmpty) {
+      if (!timeRangeInputEmpty || eitherInputEmpty) {
          TextInputLayout endBox = (TextInputLayout) edt_endTime.getParent().getParent();
 
          if (use24 && !endTimeInput.matches(timeRegex24)) {
@@ -314,7 +329,14 @@ public class AddTodoActivity extends AppCompatActivity {
       String endTime = edt_endTime.getText().toString();
       String taskTitle = edt_taskTitle.getText().toString();
       String taskDescription = edt_taskDescription.getText().toString();
-      String completionTime = startTime + " - " + endTime;
+      String completionTime;
+
+      if (TextUtils.isEmpty(todoModel.getStartTime())
+              && TextUtils.isEmpty(todoModel.getEndTime())) {
+         completionTime = null;
+      } else {
+         completionTime = startTime + " - " + endTime;
+      }
 
       todoModel.setDBcategory(category);
       todoModel.setTaskTitle(taskTitle);
@@ -349,9 +371,9 @@ public class AddTodoActivity extends AppCompatActivity {
 
             // Refresh the _todo list size
             if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
-               EventBus.getDefault().post(new TDUpdateMessage(todoModel, 0, TDUpdateMessage.EventType.NEW));
+               EventBus.getDefault().post(new TDUpdateMessage(todoModel, 0 /* 1st tab */, TDUpdateMessage.EventType.NEW));
             // Refresh the _todo group size
-            if (EventBus.getDefault().hasSubscriberForEvent(LayoutRefreshEvent.class))
+            if (EventBus.getDefault().hasSubscriberForEvent(TodoRefreshEvent.class))
                EventBus.getDefault().post(new TodoRefreshEvent(todoModel));
 
             playAlertTone(this, MiscUtil.Alert.TODO);

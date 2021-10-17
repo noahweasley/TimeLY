@@ -203,9 +203,9 @@ public class RequestRunner extends Thread {
       DataModel model = params.getModelList().get(params.getAdapterPosition());
       params.getModelList().remove(params.getAdapterPosition());
       int changePosition = params.getAdapterPosition();
+      LogUtils.debug(this, "Delete at: " + changePosition);
       int pagePosition = params.getPagePosition();
 
-      LogUtils.debug(this, "Todo Delete with: " + (TodoModel) model + "\n C.P: " + changePosition);
       EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, changePosition, pagePosition,
                                                      TDUpdateMessage.EventType.REMOVE));
             /*

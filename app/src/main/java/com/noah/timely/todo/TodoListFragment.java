@@ -181,36 +181,43 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
    @Subscribe(threadMode = ThreadMode.MAIN)
    public void doTodoUpdate(TDUpdateMessage update) {
       TodoModel data = update.getData();
-      // Don't update list if the data received is not a part of the currently displayed _todo category
-      // If the currently dislayed _todo is the General _todo category, update it.
-      if (!data.getDBcategory().equals(this.category) && !data.getDBcategory().equals(Constants.TODO_GENERAL)) return;
       // perform update at particular poitiion
       int changePos = update.getChangePosition();
-      LogUtils.debug(this, "Todo of size: " + tdList.size() + ", update at: " + changePos);
       boolean listEmpty = tdList.isEmpty();
 
       if (tabPosition == update.getPagePosition()) {
          switch (update.getType()) {
             case NEW:
                if (tabPosition == 0) {
+                  // Don't update list if the data received is not a part of the currently displayed _todo category
+                  // If the currently dislayed _todo is the General _todo category, update it.
+                  if (!data.getDBcategory().equals(this.category)) {
+                     // the DBcategory field can never be set to Constants.TODO_GENERAL but the category field would
+                     // hold the category being displayed to the user. Return if it still isn't Constants.TODO_GENERAL.
+                     if (!this.category.equals(Constants.TODO_GENERAL)) return;
+                  }
+                  // main operations
                   tdList.add(data);
                   doEmptyListUpdate(null);
                   adapter.notifyItemInserted(changePos);
                }
                break;
             case REMOVE:
+               LogUtils.debug(this, "Deleted at: " + changePos);
                adapter.notifyItemRemoved(changePos);
                adapter.notifyDataSetChanged();
                if (listEmpty) doEmptyListUpdate(null);
 
                break;
             case INSERT:
+               LogUtils.debug(this, "Inserted at: " + changePos);
                adapter.notifyItemInserted(changePos);
                adapter.notifyDataSetChanged();
                doEmptyListUpdate(null);
 
                break;
             default:
+               LogUtils.debug(this, "Updated at: " + changePos);
                TodoModel tm = (TodoModel) tdList.remove(changePos);
                tm.setTaskCompleted(data.isTaskCompleted());
                tm.setTaskTitle(data.getTaskTitle());

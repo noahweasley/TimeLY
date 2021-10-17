@@ -2207,7 +2207,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       todoValues.put(COLUMN_TODO_IS_COMPLETED, todoModel.isTaskCompleted() ? "true" : "false");
 
       long resultCode1 = db.insertOrThrow(category, null, todoValues);
-      long resultCode2 = db.insertOrThrow(TodoModel.CATEGORIES[0], null, todoValues);
+      long resultCode2 = db.insertOrThrow(Constants.TODO_GENERAL, null, todoValues);
       return resultCode1 != -1 && resultCode2 != -1;
    }
 
@@ -2219,7 +2219,24 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     * @return true if the _todo was updated
     */
    public boolean updateTodo(TodoModel todoModel, String category) {
-      return false;
+      SQLiteDatabase db = getWritableDatabase();
+      ContentValues todoValues = new ContentValues();
+
+      todoValues.put(COLUMN_TODO_DATE, todoModel.getCompletionDate());
+      todoValues.put(COLUMN_TODO_TIME, todoModel.getCompletionTime());
+      todoValues.put(COLUMN_TODO_TITLE, sanitizeEntry(todoModel.getTaskTitle()));
+      todoValues.put(COLUMN_DESCRIPTION, sanitizeEntry(todoModel.getTaskDescription()));
+      todoValues.put(COLUMN_END_TIME, todoModel.getEndTime());
+      todoValues.put(COLUMN_START_TIME, todoModel.getStartTime());
+
+      long resultCode = db.update(todoModel.getDBcategory(), todoValues, COLUMN_ID + " = " + todoModel.getId(), null);
+      // Query the database, searching for entries with a specific ID and title, because those two
+      // parameters obviously would be unique, together, for a particular _todo
+      String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
+      String[] whereArgs = {String.valueOf(todoModel.getId()), todoModel.getTaskTitle()};
+      long resultCode2 = db.update(Constants.TODO_GENERAL, todoValues, whereClause, whereArgs);
+
+      return resultCode != -1 && resultCode2 != -1;
    }
 
    /**
@@ -2238,7 +2255,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       // parameters obviously would be unique, together, for a particular _todo
       String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
       String[] whereArgs = {String.valueOf(todo.getId()), todo.getTaskTitle()};
-      long resultCode2 = db.update(TodoModel.CATEGORIES[0], values, whereClause, whereArgs);
+      long resultCode2 = db.update(Constants.TODO_GENERAL, values, whereClause, whereArgs);
 
       return resultCode != -1 && resultCode2 != -1;
    }

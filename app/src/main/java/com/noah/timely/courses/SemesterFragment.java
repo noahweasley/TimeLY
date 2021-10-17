@@ -95,8 +95,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
       boolean isPage1 = getArguments().getInt(ARG_POSITION) == 0;
       ThreadUtils.runBackgroundTask(() -> {
          Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-         cList = database.getCoursesData((isPage1 ? SchoolDatabase.FIRST_SEMESTER
-                                                  : SchoolDatabase.SECOND_SEMESTER));
+         cList = database.getCoursesData((isPage1 ? SchoolDatabase.FIRST_SEMESTER : SchoolDatabase.SECOND_SEMESTER));
          // post a message to the message queue to update the table's ui
          getActivity().runOnUiThread(() -> {
             boolean isEmpty = cList.isEmpty();
@@ -129,7 +128,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                new AddCourseDialog().show(context, getPagePosition());
             } else {
                startActivity(new Intent(context, AddCourseActivity.class)
-                       .putExtra(ARG_POSITION, getPagePosition()));
+                                     .putExtra(ARG_POSITION, getPagePosition()));
             }
          }
       });
@@ -303,7 +302,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
       @Override
       public void onBindViewHolder(@NonNull CourseRowHolder viewHolder, int position) {
          viewHolder.with(SemesterFragment.this, courseAdapter, cList, getPagePosition(), coordinator)
-                 .bindView();
+                   .bindView();
       }
 
       @Override
@@ -407,21 +406,21 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
          RequestRunner runner = RequestRunner.createInstance();
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(getActivity())
-                 .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                 .setPagePosition(getPagePosition())
-                 .setModelList(cList)
-                 .setCourseSemester(SemesterFragment.this.getSemester())
-                 .setMetadataType(RequestParams.MetaDataType.COURSE)
-                 .setItemIndices(getCheckedCoursesIndices())
-                 .setPositionIndices(getCheckedCoursesPositions())
-                 .setDataProvider(CourseModel.class);
+                .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                .setPagePosition(getPagePosition())
+                .setModelList(cList)
+                .setCourseSemester(SemesterFragment.this.getSemester())
+                .setMetadataType(RequestParams.MetaDataType.COURSE)
+                .setItemIndices(getCheckedCoursesIndices())
+                .setPositionIndices(getCheckedCoursesPositions())
+                .setDataProvider(CourseModel.class);
 
          runner.setRequestParams(builder.getParams())
-                 .runRequest(MULTIPLE_DELETE_REQUEST);
+               .runRequest(MULTIPLE_DELETE_REQUEST);
 
          final int count = getCheckedCoursesCount();
          Snackbar snackbar = Snackbar.make(coordinator, count + " Course" + (count > 1 ? "s" : "") + " Deleted",
-                 Snackbar.LENGTH_LONG);
+                                           Snackbar.LENGTH_LONG);
 
          snackbar.setActionTextColor(Color.YELLOW);
          snackbar.setAction("UNDO", v -> runner.undoRequest());
