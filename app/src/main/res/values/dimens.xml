@@ -71,7 +71,7 @@
    <dimen name="scheduled_list_row_height">165dp</dimen>
    <dimen name="image_row_size_2B">280dp</dimen>
    <dimen name="todo_group_margin_1">8dp</dimen>
-   <dimen name="todo_group_height">150dp</dimen>
+   <dimen name="todo_group_height">160dp</dimen>
    <dimen name="todo_group_margin_2">4dp</dimen>
    <dimen name="todo_category_textsize">18sp</dimen>
    <dimen name="task_count_textsize">18sp</dimen>
