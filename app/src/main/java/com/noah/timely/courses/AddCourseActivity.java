@@ -32,7 +32,7 @@ import org.greenrobot.eventbus.EventBus;
  * A clone of {@link AddCourseDialog} that would be used as an alternate to adding courses
  */
 public class AddCourseActivity extends AppCompatActivity {
-   private final Integer[] credits = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+   private final Integer[] CREDITS = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                                        21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40 };
    private SchoolDatabase database;
    private EditText edt_courseName, edt_courseCode;
@@ -75,14 +75,14 @@ public class AddCourseActivity extends AppCompatActivity {
       });
 
       Spinner spin_credits = findViewById(R.id.credits);
-      ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, credits);
+      ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CREDITS);
       creditAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_credits.setAdapter(creditAdapter);
 
       spin_credits.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
          @Override
          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            mCredits = credits[position];
+            mCredits = CREDITS[position];
          }
 
       });

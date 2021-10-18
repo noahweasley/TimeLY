@@ -41,6 +41,7 @@
             android:background="@drawable/bg_form"
             android:hint="@string/name_hint"
             android:maxLines="2"
+            android:minHeight="@dimen/view_touch_area"
             android:minLines="2"
             android:paddingHorizontal="@dimen/data_list_padding"
             android:paddingTop="@dimen/data_list_padding"
@@ -55,15 +56,13 @@
             android:background="@drawable/bg_form"
             android:hint="@string/lecturer_hint"
             android:maxLines="1"
+            android:minHeight="@dimen/view_touch_area"
             tools:ignore="Autofill,TextFields" />
 
          <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginHorizontal="@dimen/layout_gap"
             android:orientation="horizontal">
 
             <EditText
@@ -80,6 +79,7 @@
                android:inputType="textNoSuggestions"
                android:maxLength="8"
                android:maxLines="1"
+               android:minHeight="@dimen/view_touch_area"
                external:drawableEndCompat="@drawable/ic_access_time"
                external:drawableRightCompat="@drawable/ic_access_time"
                tools:ignore="Autofill,TextFields" />
@@ -98,6 +98,7 @@
                android:inputType="textNoSuggestions"
                android:maxLength="8"
                android:maxLines="1"
+               android:minHeight="@dimen/view_touch_area"
                external:drawableEndCompat="@drawable/ic_access_time"
                external:drawableRightCompat="@drawable/ic_access_time"
                tools:ignore="Autofill,TextFields" />

@@ -43,6 +43,7 @@ import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Converter;
 import com.noah.timely.util.PatternUtils;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -97,17 +98,12 @@ public class AddTimetableActivity extends AppCompatActivity {
 
       daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_days.setAdapter(daysAdapter);
-      spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+      spin_days.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
          @Override
          public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             selectedDay = DAYS[pos];
          }
 
-         @Override
-         public void onNothingSelected(AdapterView<?> parent) {
-            // unused, but had to implement.
-         }
       });
 
       Intent intent = getIntent();

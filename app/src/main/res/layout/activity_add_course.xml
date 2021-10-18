@@ -34,6 +34,7 @@
          <EditText
             android:id="@+id/course_name"
             android:layout_width="0dp"
+            android:minHeight="@dimen/view_touch_area"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/layout_gap"
             android:layout_marginLeft="@dimen/layout_gap"
@@ -56,6 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/layout_gap"
+            android:minHeight="@dimen/view_touch_area"
             android:background="@drawable/bg_form"
             android:hint="@string/code_hint"
             android:maxLength="20"

@@ -54,8 +54,8 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
            { android.R.color.holo_red_light, R.color.holo_red_light_5 },
            { android.R.color.holo_blue_dark, R.color.holo_blue_dark_5 },
            { android.R.color.holo_green_dark, R.color.holo_green_dark_5 },
-           { R.color.teal_700, R.color.teal_700_5 },
-           { R.color.tomato_red, R.color.tomato_red_5 }
+           { R.color.tomato_red, R.color.tomato_red_5 },
+           { R.color.teal_700, R.color.teal_700_5 }
    };
 
    /*      views       */
