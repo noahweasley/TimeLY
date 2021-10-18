@@ -1,6 +1,7 @@
 package com.noah.timely.todo;
 
 import static com.noah.timely.todo.TodoModel.SPINNER_CATEGORIES;
+import static com.noah.timely.todo.TodoModel.SPINNER_CATEGORIES_ALT;
 import static com.noah.timely.util.CollectionUtils.linearSearch;
 import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
@@ -162,7 +163,8 @@ public class AddTodoActivity extends AppCompatActivity {
          spin_category.setVisibility(View.GONE);
          img_tag.setVisibility(View.GONE);
       } else {
-         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CATEGORIES);
+         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item,
+                                                                 SPINNER_CATEGORIES_ALT);
          courseAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          spin_category.setAdapter(courseAdapter);
          int selectionIndex = linearSearch(SPINNER_CATEGORIES, getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
@@ -325,17 +327,15 @@ public class AddTodoActivity extends AppCompatActivity {
 
       TodoModel todoModel = new TodoModel();
 
-      String startTime = edt_startTime.getText().toString();
-      String endTime = edt_endTime.getText().toString();
       String taskTitle = edt_taskTitle.getText().toString();
       String taskDescription = edt_taskDescription.getText().toString();
       String completionTime;
 
-      if (TextUtils.isEmpty(todoModel.getStartTime())
-              && TextUtils.isEmpty(todoModel.getEndTime())) {
+      if (TextUtils.isEmpty(startTimeInput)
+              && TextUtils.isEmpty(endTimeInput)) {
          completionTime = null;
       } else {
-         completionTime = startTime + " - " + endTime;
+         completionTime = startTimeInput + " - " + endTimeInput;
       }
 
       todoModel.setDBcategory(category);
@@ -343,8 +343,8 @@ public class AddTodoActivity extends AppCompatActivity {
       todoModel.setTaskDescription(taskDescription);
       todoModel.setTaskCompleted(false);
       todoModel.setCompletionTime(completionTime);
-      todoModel.setStartTime(startTime);
-      todoModel.setEndTime(endTime);
+      todoModel.setStartTime(startTimeInput);
+      todoModel.setEndTime(endTimeInput);
 
       boolean isSuccessful;
       // update or add new _todo

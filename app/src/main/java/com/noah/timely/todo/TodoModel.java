@@ -1,6 +1,5 @@
 package com.noah.timely.todo;
 
-
 import androidx.annotation.NonNull;
 
 import com.noah.timely.core.DataModel;
@@ -10,6 +9,9 @@ public class TodoModel extends DataModel {
    public static final String[] SPINNER_CATEGORIES = { "Miscellaneous_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
                                                        "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
                                                        "Fun_Todo" };
+   public static final String[] SPINNER_CATEGORIES_ALT = { "Miscellaneous", "Work", "Music", "Travel",
+                                                       "Study", "Home", "Creativity", "Shopping",
+                                                       "Leisure & Fun" };
    public static final String[] CATEGORIES = { "General_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
                                                "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
                                                "Fun_Todo", "Miscellaneous_Todo" };

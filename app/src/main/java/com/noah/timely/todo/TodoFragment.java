@@ -176,10 +176,15 @@ public class TodoFragment extends Fragment {
    private void findRefreshTodoCountState(TodoModel dataModel) {
       int searchIndex = CollectionUtils.linearSearch(TodoModel.OREDERED_CATEGORY, dataModel.getDBcategory());
       ViewGroup child = (ViewGroup) vg_container.getChildAt(searchIndex);
+      ViewGroup childGen = (ViewGroup) vg_container.getChildAt(0);
+
       TextView grandChildTextView = (TextView) child.getChildAt(2);
+
       int prevSize = Integer.valueOf(grandChildTextView.getText().toString().substring(0, 1));
-      String groupSize = String.format(Locale.US, "%d %s", ++prevSize, "task(s)");
-      grandChildTextView.setText(groupSize);
+      int genPrevSize = Integer.valueOf(tv_catGen.getText().toString().substring(0, 1));
+
+      grandChildTextView.setText(String.format(Locale.US, "%d %s", ++prevSize, "task(s)"));
+      tv_catGen.setText(String.format(Locale.US, "%d %s", ++genPrevSize, "task(s)"));
    }
 
    public void onClick(View view) {
@@ -208,11 +213,11 @@ public class TodoFragment extends Fragment {
          category = Constants.TODO_TRAVEL;
       }
 
+      // Navigate to contents of clicked _todo
       navigateToCategory(category);
    }
 
    private void navigateToCategory(String category) {
-      // Navigate to contents of clicked _todo
       getActivity().getSupportFragmentManager().beginTransaction()
                    .replace(R.id.frame, TodoContainerFragment.newInstance(category), "Todo")
                    .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)
