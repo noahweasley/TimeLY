@@ -124,7 +124,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       cbx_state.setOnClickListener(c -> {
          boolean checked = cbx_state.isChecked();
          boolean isUpdated = db.updateTodoState(todo, checked);
-         if (checked && isUpdated) MiscUtil.playAlertTone(activity, MiscUtil.Alert.TODO);
+         if (checked && isUpdated) MiscUtil.playAlertTone(activity, MiscUtil.Alert.TODO_UPDATE);
       });
 
       // Multi - Select actions
@@ -179,7 +179,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
    private void trySelectTodo() {
       isChecked = !isChecked;
       v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-      todoRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, todo.getPosition());
+      todoRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, todo.getId());
    }
 
    public TodoListRowHolder with(TodoListAdapter todoRowAdapter, int position, List<DataModel> tdList,
@@ -194,6 +194,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
    }
 
    public void bindView() {
+      tryDisableViews(todoRowAdapter.isMultiSelectionEnabled());
       this.todo = (TodoModel) tdList.get(getAbsoluteAdapterPosition());
       // random row decoration
       int rowDrawable = DRAWABLE[getAbsoluteAdapterPosition() % DRAWABLE.length];

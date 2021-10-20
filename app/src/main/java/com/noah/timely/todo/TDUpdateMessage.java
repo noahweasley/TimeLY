@@ -21,7 +21,6 @@ public class TDUpdateMessage {
    public TDUpdateMessage(TodoModel model, int changePosition, int pagePosition, EventType eventType) {
       this(model, pagePosition, eventType);
       this.changePosition = changePosition;
-      this.pagePosition = pagePosition;
    }
 
    public int getPagePosition() {

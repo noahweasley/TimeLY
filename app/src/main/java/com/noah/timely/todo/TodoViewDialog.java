@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -65,7 +66,13 @@ public class TodoViewDialog extends DialogFragment {
             tv_completionTime.setText(todoModel.getCompletionTime());
          }
 
-         tv_description.setText(todoModel.getTaskDescription());
+         String description = todoModel.getTaskDescription();
+         if (TextUtils.isEmpty(description)) {
+            tv_description.setText("Description not available");
+            tv_description.setTextColor(ContextCompat.getColor(getContext(), R.color.light_grey));
+         } else {
+            tv_description.setText(description);
+         }
       }
    }
 }

@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
 import com.noah.timely.core.ChoiceMode;
+import com.noah.timely.core.CountEvent;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.DataMultiChoiceMode;
 import com.noah.timely.core.EmptyListEvent;
@@ -195,6 +196,11 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
    private void dismissProgressbar(ProgressBar progressBar) {
       progressBar.setVisibility(View.GONE);
+   }
+
+   @Subscribe(threadMode = ThreadMode.MAIN)
+   public void doCountUpdate(CountEvent countEvent) {
+      itemCount.setText(String.valueOf(countEvent.getSize()));
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

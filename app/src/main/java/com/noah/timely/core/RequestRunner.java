@@ -224,12 +224,10 @@ public class RequestRunner extends Thread {
          EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, changePosition, pagePosition,
                                                         TDUpdateMessage.EventType.INSERT));
       }
+
       if (!deleteRequestDiscarded) {
          TodoModel examModel = (TodoModel) model;
-         if (database.deleteTodo((TodoModel) model)) {
-            playAlertTone(appContext, Alert.DELETE);
-            if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
-         }
+         if (database.deleteTodo((TodoModel) model)) playAlertTone(appContext, Alert.DELETE);
       }
    }
 

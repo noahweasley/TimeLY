@@ -24,10 +24,14 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="b683ad31-968a-436c-967d-18b7a5ee5bb7">
+        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39">
+    <connection id="b683ad31-968a-436c-967d-18b7a5ee5bb7">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
@@ -35,12 +39,10 @@
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" />
+    <connection id="b683ad31-968a-436c-967d-18b7a5ee5bb7" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" dataset="main.Music_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" dataset="main.Miscellaneous_Todo" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" dataset="main.General_Todo" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b683ad31-968a-436c-967d-18b7a5ee5bb7" dataset="main.General_Todo" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -68,7 +70,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="ce825c6c-56ad-4cb4-ba31-26eb546f5f39" active="true">
+      <connection id="b683ad31-968a-436c-967d-18b7a5ee5bb7" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -83,7 +85,7 @@
           <port value="" />
           <database value="" />
           <files>
-            <file path="C:\Users\Noah\Desktop\presentation\SchoolDatabase.db" schema="main" />
+            <file path="C:\Users\Noah\Desktop\SchoolDatabase.db" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

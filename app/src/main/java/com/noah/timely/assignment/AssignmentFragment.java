@@ -28,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
 import com.noah.timely.core.ChoiceMode;
+import com.noah.timely.core.CountEvent;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.DataMultiChoiceMode;
 import com.noah.timely.core.EmptyListEvent;
@@ -199,6 +200,11 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
    @Subscribe(threadMode = ThreadMode.MAIN)
    public void doUriListUpdate(UriUpdateEvent event) {
       ((AssignmentModel) aList.get(event.getPosition())).setAttachedImage(event.getUris());
+   }
+
+   @Subscribe(threadMode = ThreadMode.MAIN)
+   public void doCountUpdate(CountEvent countEvent) {
+      itemCount.setText(String.valueOf(countEvent.getSize()));
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

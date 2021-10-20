@@ -411,8 +411,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          Comparator<? super TimetableModel> idComparator = (t1, t2) -> Integer.compare(t1.getId(), t2.getId());
          // impossible to sort timetable entries, linear-search instead
          int searchIndex = linearSearch(timetables, timetable, idComparator);
-         return resCode != -1 ? new int[]{searchIndex, timetable.getId()}
-                              : new int[]{-1, -1};
+         return resCode != -1 ? new int[]{ searchIndex, timetable.getId() }
+                              : new int[]{ -1, -1 };
       } else {
          List<String> sList = new ArrayList<>();
          Cursor chronologyCursor = db.rawQuery("SELECT " + COLUMN_START_TIME + " FROM " + timetableName, null);
@@ -428,8 +428,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
          chronologyCursor.close();
          int searchIndex = Collections.binarySearch(sIList, timetable.getStartTimeAsInt());
-         return (resCode != -1) ? new int[]{searchIndex, timetable.getId()}
-                                : new int[]{-1, -1};
+         return (resCode != -1) ? new int[]{ searchIndex, timetable.getId() }
+                                : new int[]{ -1, -1 };
       }
    }
 
@@ -679,7 +679,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    boolean deleteAssignmentEntry(AssignmentModel entry) {
       SQLiteDatabase db = getWritableDatabase();
       String whereClause = COLUMN_ID + "= ?";
-      String[] whereArg = {String.valueOf(entry.getPosition())};
+      String[] whereArg = { String.valueOf(entry.getPosition()) };
 
       int resultCode = db.delete(ASSIGNMENT_TABLE, whereClause, whereArg);
       return resultCode != -1;
@@ -696,7 +696,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    boolean deleteTimetableEntry(TimetableModel entry, String tableName) {
       SQLiteDatabase db = getWritableDatabase();
       String whereClause = COLUMN_ID + "= ?";
-      String[] whereArg = {String.valueOf(entry.getId())};
+      String[] whereArg = { String.valueOf(entry.getId()) };
 
       int resultCode = db.delete(tableName, whereClause, whereArg);
       return resultCode != -1;
@@ -795,7 +795,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       }
 
       stateCursor.close();
-      return new String[]{snoozedState, snoozedTime};
+      return new String[]{ snoozedState, snoozedTime };
    }
 
    /**
@@ -841,7 +841,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       mDeleting = true;
       SQLiteDatabase db = getWritableDatabase();
       String whereClause = COLUMN_POS + "= ?";
-      String[] whereArg = {String.valueOf(entry.getPosition())};
+      String[] whereArg = { String.valueOf(entry.getPosition()) };
 
       int resultCode = db.delete(ALARMS_TABLE, whereClause, whereArg);
       // after delete, re-arrange alarm position. This is a background task
@@ -1004,7 +1004,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       boolean _5 = Boolean.parseBoolean(repeatDays[4]);
       boolean _6 = Boolean.parseBoolean(repeatDays[5]);
       boolean _7 = Boolean.parseBoolean(repeatDays[6]);
-      return new Boolean[]{_1, _2, _3, _4, _5, _6, _7};
+      return new Boolean[]{ _1, _2, _3, _4, _5, _6, _7 };
    }
 
    /**
@@ -1195,7 +1195,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       }
       getCursor.close();
 
-      return new String[]{label, time};
+      return new String[]{ label, time };
    }
 
    /**
@@ -1479,8 +1479,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       db.insert(REGISTERED_COURSES, null, courseValues);
       idCursor.close();
       c.close();
-      return resCode != -1 ? new int[]{Collections.binarySearch(names, courseModel.getCourseName()), insertPos}
-                           : new int[]{-1, -1};
+      return resCode != -1 ? new int[]{ Collections.binarySearch(names, courseModel.getCourseName()), insertPos }
+                           : new int[]{ -1, -1 };
    }
 
    /**
@@ -1771,8 +1771,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       // Compare all the former exams in database with this exam
       Comparator<? super ExamModel> idComparator = (e1, e2) -> Integer.compare(e1.getId(), e2.getId());
       // impossible to sort exams, linear-search instead
-      return resultCode != -1 ? new int[]{linearSearch(exams, exam, idComparator), exam.getId()}
-                              : new int[]{-1, -1};
+      return resultCode != -1 ? new int[]{ linearSearch(exams, exam, idComparator), exam.getId() }
+                              : new int[]{ -1, -1 };
    }
 
    /**
@@ -1865,7 +1865,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          }
       }
 
-      return new List[]{uris, images};
+      return new List[]{ uris, images };
    }
 
    /**
@@ -2007,7 +2007,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             resultCode = deleteMultipleTimetables(metadata[2], itemIndices);
             break;
          case Constants.TODO_MODEL:
-            resultCode = deleteMultipleTodos(itemIndices, metadata[3]);
+            resultCode = deleteMultipleTodos(itemIndices,data);
+            break;
          default:
             throw new IllegalArgumentException(clazz.getName() + " is not supported");
       }
@@ -2076,12 +2077,18 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    }
 
    // Delete todos at specified indices
-   private boolean deleteMultipleTodos(Integer[] itemIndices, final String TODO_CATEGORY) {
-      // Delete assignments with  the whereArgs specified
+   private boolean deleteMultipleTodos(Integer[] itemIndices, List<DataModel> data) {
       boolean resCode = false;
       SQLiteDatabase db = getWritableDatabase();
 
-      for (int index : itemIndices) resCode |= db.delete(TODO_CATEGORY, COLUMN_ID + " = " + index, null) != -1;
+      for (int x = 0; x < itemIndices.length; x++) {
+         TodoModel model = (TodoModel) data.get(x);
+         resCode |=
+                 db.delete(model.getDBcategory(), COLUMN_ID + " = " + itemIndices[x], null) != -1
+                         & /* delete general _todo entry */
+                         db.delete(Constants.TODO_GENERAL, COLUMN_TODO_TITLE + " = '"
+                                 + sanitizeEntry(model.getTaskTitle()) + "'", null) != -1;
+      }
 
       return resCode;
    }
@@ -2154,11 +2161,11 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       int index = 1;
       int generalGroupSize = 0;
 
-      String[] stmts = {"SELECT COUNT (*) FROM " + todoGroups[1], "SELECT COUNT (*) FROM " + todoGroups[2],
-                        "SELECT COUNT (*) FROM " + todoGroups[3], "SELECT COUNT (*) FROM " + todoGroups[4],
-                        "SELECT COUNT (*) FROM " + todoGroups[4], "SELECT COUNT (*) FROM " + todoGroups[5],
-                        "SELECT COUNT (*) FROM " + todoGroups[7], "SELECT COUNT (*) FROM " + todoGroups[8],
-                        "SELECT COUNT (*) FROM " + todoGroups[9]};
+      String[] stmts = { "SELECT COUNT (*) FROM " + todoGroups[1], "SELECT COUNT (*) FROM " + todoGroups[2],
+                         "SELECT COUNT (*) FROM " + todoGroups[3], "SELECT COUNT (*) FROM " + todoGroups[4],
+                         "SELECT COUNT (*) FROM " + todoGroups[4], "SELECT COUNT (*) FROM " + todoGroups[5],
+                         "SELECT COUNT (*) FROM " + todoGroups[7], "SELECT COUNT (*) FROM " + todoGroups[8],
+                         "SELECT COUNT (*) FROM " + todoGroups[9] };
 
       for (int j = 0; j < stmts.length; j++) {
          Cursor groupSizeCursor = db.rawQuery(stmts[j], null);
@@ -2184,7 +2191,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     * @param todoModel the _todo to be added
     * @param category  the category in which this _todo exists
     */
-   public boolean addTodo(TodoModel todoModel, String category) {
+   public int addTodo(TodoModel todoModel, String category) {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues todoValues = new ContentValues();
 
@@ -2208,7 +2215,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
       long resultCode1 = db.insertOrThrow(category, null, todoValues);
       long resultCode2 = db.insertOrThrow(Constants.TODO_GENERAL, null, todoValues);
-      return resultCode1 != -1 && resultCode2 != -1;
+      return resultCode1 != -1 && resultCode2 != -1 ? lastID : -1;
    }
 
    /**
@@ -2233,7 +2240,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       // Query the database, searching for entries with a specific ID and title, because those two
       // parameters obviously would be unique, together, for a particular _todo
       String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
-      String[] whereArgs = {String.valueOf(todoModel.getId()), todoModel.getTaskTitle()};
+      String[] whereArgs = { String.valueOf(todoModel.getId()), todoModel.getTaskTitle() };
       long resultCode2 = db.update(Constants.TODO_GENERAL, todoValues, whereClause, whereArgs);
 
       return resultCode != -1 && resultCode2 != -1;
@@ -2254,7 +2261,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       // Query the database, searching for entries with a specific ID and title, because those two
       // parameters obviously would be unique, together, for a particular _todo
       String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
-      String[] whereArgs = {String.valueOf(todo.getId()), todo.getTaskTitle()};
+      String[] whereArgs = { String.valueOf(todo.getId()), todo.getTaskTitle() };
       long resultCode2 = db.update(Constants.TODO_GENERAL, values, whereClause, whereArgs);
 
       return resultCode != -1 && resultCode2 != -1;
@@ -2272,8 +2279,30 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       // Query the database, searching for entries with a specific ID and title, because those two
       // parameters obviously would be unique, together, for a particular _todo
       String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
-      String[] whereArgs = {String.valueOf(todoModel.getId()), todoModel.getTaskTitle()};
+      String[] whereArgs = { String.valueOf(todoModel.getId()), todoModel.getTaskTitle() };
       long resultCode2 = db.delete(TodoModel.CATEGORIES[0], whereClause, whereArgs);
       return resultCode != -1;
    }
+
+   /**
+    * Checks if a particular _todo exists in app's database
+    *
+    * @param todoModel the _todo to check it's existence
+    * @return true if _todo does not exist
+    */
+   public boolean isTodoAbsent(TodoModel todoModel) {
+      SQLiteDatabase db = getReadableDatabase();
+
+      String search_stmt =
+              "SELECT * FROM " + Constants.TODO_GENERAL
+                      + " WHERE " + COLUMN_TODO_TITLE + " = '" + sanitizeEntry(todoModel.getTaskTitle()) + "'";
+
+      Cursor searchCursor = db.rawQuery(search_stmt, null);
+
+      boolean isAbsent = searchCursor.getCount() == 0;
+      searchCursor.close();
+      return isAbsent;
+   }
+
+
 }

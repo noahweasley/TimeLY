@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Converter;
 import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.MiscUtil;
@@ -361,23 +362,42 @@ public class AddTodoActivity extends AppCompatActivity {
                EventBus.getDefault().post(new TDUpdateMessage(todoModel, pos, TDUpdateMessage.EventType.UPDATE_CURRENT));
 
             playAlertTone(this, MiscUtil.Alert.TODO);
-         }
+
+         } else Toast.makeText(this, "An Error Occurred", Toast.LENGTH_SHORT).show();
       } else {
-         isSuccessful = database.addTodo(todoModel, category);
-         if (isSuccessful) {
-            Toast toast = Toast.makeText(this, "Todo added", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.BOTTOM, 0, 100);
-            toast.show();
 
-            // Refresh the _todo list size
-            if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
-               EventBus.getDefault().post(new TDUpdateMessage(todoModel, 0 /* 1st tab */, TDUpdateMessage.EventType.NEW));
-            // Refresh the _todo group size
-            if (EventBus.getDefault().hasSubscriberForEvent(TodoRefreshEvent.class))
-               EventBus.getDefault().post(new TodoRefreshEvent(todoModel));
+         if (database.isTodoAbsent(todoModel)) {
+            int insertId = database.addTodo(todoModel, category);
+            if (insertId != -1) {
+               todoModel.setId(insertId);  // required to be used in list's getItemId()
+               Toast toast = Toast.makeText(this, "Todo added", Toast.LENGTH_LONG);
+               toast.setGravity(Gravity.BOTTOM, 0, 100);
+               toast.show();
 
-            playAlertTone(this, MiscUtil.Alert.TODO);
+               // Refresh the _todo list size
+               if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
+                  EventBus.getDefault()
+                          .post(new TDUpdateMessage(todoModel, 0 /* 1st tab */, TDUpdateMessage.EventType.NEW));
+               // Refresh the _todo group size
+               if (EventBus.getDefault().hasSubscriberForEvent(TodoRefreshEvent.class))
+                  EventBus.getDefault().post(new TodoRefreshEvent(todoModel));
+
+               playAlertTone(this, MiscUtil.Alert.TODO);
+
+            } else Toast.makeText(this, "An Error occurred", Toast.LENGTH_SHORT).show();
+
+         } else {
+            // Error message when duplicates are found
+            ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
+            errorBuilder.setDialogMessage("Duplicate todo found");
+            errorBuilder.setShowSuggestions(true);
+            errorBuilder.setSuggestionCount(1);
+            errorBuilder.setSuggestion1("Check for duplicate todo titles");
+            new ErrorDialog().showErrorMessage(this, errorBuilder.build());
+            Toast.makeText(this, "An Error occurred", Toast.LENGTH_SHORT).show();
+            return;
          }
+
       }
 
       onBackPressed(); // simulate when the user taps the back button

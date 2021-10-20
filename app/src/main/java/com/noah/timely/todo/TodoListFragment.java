@@ -114,8 +114,13 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
       fab_add.setOnClickListener(v -> AddTodoActivity.start(getContext(), false, category));
 
       rv_todoList = view.findViewById(R.id.todo_list);
+      // set  list to have a fixed size to increase performance and set stable id, to use same
+      // view holder on adapter change
+      rv_todoList.setHasFixedSize(true);
+      adapter = new TodoListAdapter(choiceMode);
+      adapter.setHasStableIds(true);
+      rv_todoList.setAdapter(adapter);
       rv_todoList.setLayoutManager(new LinearLayoutManager(getContext()));
-      rv_todoList.setAdapter(adapter = new TodoListAdapter(choiceMode));
 
       ThreadUtils.runBackgroundTask(() -> {
          Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
@@ -199,7 +204,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
                   // main operations
                   tdList.add(data);
                   doEmptyListUpdate(null);
-                  adapter.notifyItemInserted(changePos);
+                  adapter.notifyItemInserted(tdList.size() - 1 /* Append last for now */);
                }
                break;
             case REMOVE:
@@ -323,7 +328,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
       @Override
       public long getItemId(int position) {
-         return tdList.get(position).getPosition();
+         LogUtils.debug(this, "Id at: " + tdList.get(position).getId());
+         return tdList.get(position).getId();
       }
 
       @Override

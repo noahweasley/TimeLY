@@ -55,7 +55,7 @@ public class MiscUtil {
          alertPlayer = MediaPlayer.create(context, R.raw.piece_of_cake1);
       else if (type == Alert.NOTIFICATION)
          alertPlayer = MediaPlayer.create(context, R.raw.echoed_ding1);
-      else if (type == Alert.TODO)
+      else if (type == Alert.TODO_UPDATE)
          alertPlayer = MediaPlayer.create(context, R.raw.pristine);
       else
          alertPlayer = MediaPlayer.create(context, R.raw.accomplished1);
@@ -64,7 +64,7 @@ public class MiscUtil {
    }
 
    public enum Alert {
-      TIMETABLE, SCHEDULED_TIMETABLE, ALARM, NOTIFICATION, ASSIGNMENT, DELETE, COURSE, UNDO, EXAM, TODO;
+      TIMETABLE, SCHEDULED_TIMETABLE, ALARM, NOTIFICATION, ASSIGNMENT, DELETE, COURSE, UNDO, EXAM, TODO, TODO_UPDATE;
    }
 
 }
