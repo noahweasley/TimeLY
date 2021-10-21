@@ -40,7 +40,7 @@
 
 ### Contributing
 
-<hr style="border:1px thin gray; height: 1px"> </hr>
+<hr style="height: 1px; background-color: gray"> </hr>
 
 There are many ways in which you can participate in this project, for example:
 
