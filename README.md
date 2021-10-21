@@ -38,9 +38,7 @@
 | util       | Package that contains all utility classes, methods, enums...                                    |
 
 
-### Contributing
-
-<hr style="height: 1px; background-color: gray"> </hr>
+## Contributing
 
 There are many ways in which you can participate in this project, for example:
 
@@ -51,9 +49,7 @@ There are many ways in which you can participate in this project, for example:
 
 If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute`, stating what would be your contributions.
 
-### License
-
-<hr style="border: 1px thin gray; height: 1px"> </hr>
+## License
 
 TimeLY :copyright: is under the GPL 3.0 licence
 
