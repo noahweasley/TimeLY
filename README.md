@@ -49,3 +49,8 @@ There are many ways in which you can participate in this project, for example:
 
 If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute`, stating what would be your contributions.
 
+### License
+
+TimeLY :copyright: is under the GPL 3.0 licence
+
+Please review [license](https://github.com/noahweasley/TimeLY/blob/master/LICENSE) to get full details.
