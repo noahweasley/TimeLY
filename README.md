@@ -40,7 +40,7 @@
 
 ### Contributing
 
-<hr style="border:2px solid gray"> </hr>
+<hr style="border:1px solid gray"> </hr>
 
 There are many ways in which you can participate in this project, for example:
 
@@ -53,7 +53,7 @@ If you are interested in fixing issues and contributing directly to the code bas
 
 ### License
 
-<hr style="border:2px solid gray"> </hr>
+<hr style="border:1px solid gray"> </hr>
 
 TimeLY :copyright: is under the GPL 3.0 licence
 
