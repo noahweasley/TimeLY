@@ -40,6 +40,8 @@
 
 ### Contributing
 
+<hr style="border:2px solid gray"> </hr>
+
 There are many ways in which you can participate in this project, for example:
 
 * [Submit bugs and feature requests](https://github.com/noahweasley/TimeLY/issues), and help us verify as they are checked in
@@ -50,6 +52,8 @@ There are many ways in which you can participate in this project, for example:
 If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute`, stating what would be your contributions.
 
 ### License
+
+<hr style="border:2px solid gray"> </hr>
 
 TimeLY :copyright: is under the GPL 3.0 licence
 
