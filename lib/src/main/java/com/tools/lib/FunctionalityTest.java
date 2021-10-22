@@ -3,8 +3,8 @@ package com.tools.lib;
 @SuppressWarnings("all")
 public class FunctionalityTest {
 
-   private static boolean isEmpty(CharSequence se) {
-      return se.equals("") || se == null;
+   private static void setError(String error) {
+      System.out.println("Error: " + error);
    }
 
    public static void main(String... args) {

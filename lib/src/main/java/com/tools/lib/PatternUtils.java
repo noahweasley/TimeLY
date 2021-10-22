@@ -26,12 +26,12 @@ public class PatternUtils {
    /**
     * Pattern to match 24 hours clock
     */
-   public static final String DATE_SHORT_24_HoursClock = "^[A-z]{3} \\d{2}, (?:[01][0-9]|2[0-3]):[0-5][0-9]$";
+   public static final String DATE_SHORT_24_HoursClock = "[A-z]{3} \\d{2}, (?:[01][0-9]|2[0-3]):[0-5][0-9]";
 
    /**
     * Pattern to match 24 hours clock
     */
-   public static final String DATE_SHORT_12_HoursClock = "^[A-z]{3} \\d{2}, (?:0?[0-9]|1[0-2]):[0-5][0-9] (?i)[ap]m$";
+   public static final String DATE_SHORT_12_HoursClock = "[A-z]{3} \\d{2}, (?:0?[0-9]|1[0-2]):[0-5][0-9] (?i)[ap]m";
 
    /**
     * Pattern to match all reasonable dates in format (dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy or dd_mm_yyyy)

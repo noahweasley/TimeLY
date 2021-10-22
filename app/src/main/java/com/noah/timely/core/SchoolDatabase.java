@@ -64,6 +64,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private static final String COLUMN_ATTACHED_PDF = "PDF";
    private static final String COLUMN_ATTACHED_IMAGE = "IMAGE";
    private static final String COLUMN_ID = "ID";
+   private static final String COLUMN_UID = "UID";
 
    private static final String COLUMN_DAY = "DAY";
    private static final String COLUMN_IMPORTANCE = "IMPORTANCE";
@@ -158,6 +159,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
       // add or drop tables here
       if (oldVersion == 1 && newVersion == 2) {
+         // bunmp version from v1.0 to v2.0. In v2.0, _Todo Tables does not exist, so upgrade former version's
+         // database, adding the _Todo tables to begin data insertion.
          createTodoListTables(db);
       }
 
@@ -216,6 +219,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private void createTodoListTable(SQLiteDatabase db, String tableName) {
 
       String createTodoTables_stmt = "CREATE TABLE " + tableName + " (" +
+              COLUMN_UID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
               COLUMN_ID + " INTEGER, " +
               COLUMN_TODO_CATEGORY + " TEXT," +
               COLUMN_TODO_TITLE + " TEXT," +
@@ -2007,7 +2011,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             resultCode = deleteMultipleTimetables(metadata[2], itemIndices);
             break;
          case Constants.TODO_MODEL:
-            resultCode = deleteMultipleTodos(itemIndices,data);
+            resultCode = deleteMultipleTodos(itemIndices, data);
             break;
          default:
             throw new IllegalArgumentException(clazz.getName() + " is not supported");
@@ -2128,17 +2132,18 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       else todoCursor = db.rawQuery(getTodos_stmt, null);
 
       while (todoCursor.moveToNext()) {
-         int id = todoCursor.getInt(0);
-         String category = todoCursor.getString(1);
-         String title = retrieveEntry(todoCursor.getString(2));
-         String desc = retrieveEntry(todoCursor.getString(3));
-         boolean isTaskCompleted = Boolean.parseBoolean(todoCursor.getString(4));
-         String startTime = todoCursor.getString(5);
-         String endTime = todoCursor.getString(6);
-         String todoTime = todoCursor.getString(7);
-         String date = todoCursor.getString(8);
+         int uid = todoCursor.getInt(0);
+         int id = todoCursor.getInt(1);
+         String category = todoCursor.getString(2);
+         String title = retrieveEntry(todoCursor.getString(3));
+         String desc = retrieveEntry(todoCursor.getString(4));
+         boolean isTaskCompleted = Boolean.parseBoolean(todoCursor.getString(5));
+         String startTime = todoCursor.getString(6);
+         String endTime = todoCursor.getString(7);
+         String todoTime = todoCursor.getString(8);
+         String date = todoCursor.getString(9);
 
-         TodoModel model = new TodoModel(id, title, desc, isTaskCompleted, category,
+         TodoModel model = new TodoModel(uid, id, title, desc, isTaskCompleted, category,
                                          date, startTime, endTime, todoTime);
 
          todoModels.add(model);
@@ -2191,7 +2196,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     * @param todoModel the _todo to be added
     * @param category  the category in which this _todo exists
     */
-   public int addTodo(TodoModel todoModel, String category) {
+   public long[] addTodo(TodoModel todoModel, String category) {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues todoValues = new ContentValues();
 
@@ -2215,7 +2220,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
       long resultCode1 = db.insertOrThrow(category, null, todoValues);
       long resultCode2 = db.insertOrThrow(Constants.TODO_GENERAL, null, todoValues);
-      return resultCode1 != -1 && resultCode2 != -1 ? lastID : -1;
+
+      return resultCode1 != -1 && resultCode2 != -1 ? new long[]{ resultCode2 /* UID of all */, lastID }
+                                                    : new long[]{ resultCode1, resultCode2 };
    }
 
    /**
@@ -2303,6 +2310,5 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       searchCursor.close();
       return isAbsent;
    }
-
 
 }

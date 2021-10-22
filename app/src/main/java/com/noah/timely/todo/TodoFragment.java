@@ -174,15 +174,14 @@ public class TodoFragment extends Fragment {
    }
 
    private void findRefreshTodoCountState(TodoModel dataModel) {
+      // searchIndex at 0 would starts at child (1) which is work category. Child (0) would be skipped
       int searchIndex = CollectionUtils.linearSearch(TodoModel.OREDERED_CATEGORY, dataModel.getDBcategory());
-      ViewGroup child = (ViewGroup) vg_container.getChildAt(searchIndex);
-      ViewGroup childGen = (ViewGroup) vg_container.getChildAt(0);
-
+      ViewGroup child = (ViewGroup) vg_container.getChildAt(searchIndex + 1 /* skipping the first child */);
       TextView grandChildTextView = (TextView) child.getChildAt(2);
-
+      // retrieving the previous sizes of the updated category
       int prevSize = Integer.valueOf(grandChildTextView.getText().toString().substring(0, 1));
       int genPrevSize = Integer.valueOf(tv_catGen.getText().toString().substring(0, 1));
-
+      // display the increment in the category size
       grandChildTextView.setText(String.format(Locale.US, "%d %s", ++prevSize, "task(s)"));
       tv_catGen.setText(String.format(Locale.US, "%d %s", ++genPrevSize, "task(s)"));
    }

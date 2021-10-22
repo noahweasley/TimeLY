@@ -46,7 +46,6 @@ import com.noah.timely.todo.TDUpdateMessage;
 import com.noah.timely.todo.TodoListFragment;
 import com.noah.timely.todo.TodoListRowHolder;
 import com.noah.timely.todo.TodoModel;
-import com.noah.timely.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -203,7 +202,6 @@ public class RequestRunner extends Thread {
       DataModel model = params.getModelList().get(params.getAdapterPosition());
       params.getModelList().remove(params.getAdapterPosition());
       int changePosition = params.getAdapterPosition();
-      LogUtils.debug(this, "Delete at: " + changePosition);
       int pagePosition = params.getPagePosition();
 
       EventBus.getDefault().post(new TDUpdateMessage((TodoModel) model, changePosition, pagePosition,

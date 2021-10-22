@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -35,7 +34,6 @@ import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Converter;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.MiscUtil;
 import com.noah.timely.util.PatternUtils;
 import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
@@ -174,7 +172,6 @@ public class AddTodoActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                category = SPINNER_CATEGORIES[position];
-               LogUtils.debug(this, "Selected: " + category);
             }
          });
       }
@@ -208,6 +205,11 @@ public class AddTodoActivity extends AppCompatActivity {
          if (TextUtils.isEmpty(timeRangeInputText)) {
             timeRange = String.format("%s, %s", parsedDate, parsedTime);
          } else {
+            // if user enters wrong matching text and still clicks on the time and date selector buttons...
+            if (!PatternUtils.test(PatternUtils.DATE_SHORT_12_24_HoursClock, edt_time.getText())) {
+               timeRangeInputText = String.format("%s, %s", parsedDate, parsedTime);;
+            }
+
             timeRange = timeRangeInputText.replaceFirst(PatternUtils.TIME_ALL, parsedTime);
          }
 
@@ -235,6 +237,11 @@ public class AddTodoActivity extends AppCompatActivity {
          if (TextUtils.isEmpty(timeRangeInputText)) {
             timeRange = String.format("%s, %s", parsedDate, parsedTime);
          } else {
+            // if user enters wrong matching text and still clicks on the time and date selector buttons...
+            if (!PatternUtils.test(PatternUtils.DATE_SHORT_12_24_HoursClock, edt_time.getText())) {
+               timeRangeInputText = String.format("%s, %s", parsedDate, parsedTime);;
+            }
+
             timeRange = timeRangeInputText.replaceFirst(PatternUtils.DATE_SHORT, parsedDate);
          }
 
@@ -267,14 +274,14 @@ public class AddTodoActivity extends AppCompatActivity {
       boolean errorOccurred = false, use24 = isUserPreferred24Hours(this);
 
       String startTimeInput = edt_startTime.getText().toString();
-      String endTimeInput = edt_startTime.getText().toString();
+      String endTimeInput = edt_endTime.getText().toString();
 
       String timeRegex24 = PatternUtils.DATE_SHORT_24_HoursClock;
       String timeRegex12 = PatternUtils.DATE_SHORT_12_HoursClock;
 
-      boolean timeRangeInputEmpty = TextUtils.isEmpty(startTimeInput) && TextUtils.isEmpty(endTimeInput);
-      boolean eitherInputEmpty = (!TextUtils.isEmpty(startTimeInput) && TextUtils.isEmpty(endTimeInput))
-              || (TextUtils.isEmpty(startTimeInput) && !TextUtils.isEmpty(endTimeInput));
+      boolean x = !TextUtils.isEmpty(startTimeInput);
+      boolean y = !TextUtils.isEmpty(endTimeInput);
+      boolean atLeastOneFilled = (x ^ y) | (x & y);   // First logic looks like an uwu:  \\ ( ^ w ^ ) //
 
       if (TextUtils.isEmpty(edt_taskTitle.getText())) {
          TextInputLayout titleBox = (TextInputLayout) edt_taskTitle.getParent().getParent();
@@ -282,7 +289,7 @@ public class AddTodoActivity extends AppCompatActivity {
          errorOccurred = true;
       }
 
-      if (!timeRangeInputEmpty || eitherInputEmpty) {
+      if (atLeastOneFilled) {
          TextInputLayout startBox = (TextInputLayout) edt_startTime.getParent().getParent();
 
          if (use24 && !startTimeInput.matches(timeRegex24)) {
@@ -294,9 +301,7 @@ public class AddTodoActivity extends AppCompatActivity {
                errorOccurred = true;
             }
          }
-      }
 
-      if (!timeRangeInputEmpty || eitherInputEmpty) {
          TextInputLayout endBox = (TextInputLayout) edt_endTime.getParent().getParent();
 
          if (use24 && !endTimeInput.matches(timeRegex24)) {
@@ -314,7 +319,6 @@ public class AddTodoActivity extends AppCompatActivity {
 
       // convert time to 24 hours because TimeLY saves time in 24 hours clock.
       // Algorithm: convert the first time match in the input string to 24 hours clock
-      long s = SystemClock.elapsedRealtime();
       if (!TextUtils.isEmpty(startTimeInput) && !TextUtils.isEmpty(endTimeInput)) {
          startTimeInput = use24 ? startTimeInput
                                 : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, startTimeInput),
@@ -323,8 +327,6 @@ public class AddTodoActivity extends AppCompatActivity {
                               : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, endTimeInput),
                                             Converter.UNIT_24);
       }
-      long e = SystemClock.elapsedRealtime();
-      LogUtils.debug(this, "Convertion lasted for: " + (e - s));
 
       TodoModel todoModel = new TodoModel();
 
@@ -367,9 +369,10 @@ public class AddTodoActivity extends AppCompatActivity {
       } else {
 
          if (database.isTodoAbsent(todoModel)) {
-            int insertId = database.addTodo(todoModel, category);
-            if (insertId != -1) {
-               todoModel.setId(insertId);  // required to be used in list's getItemId()
+            long[] insertId = database.addTodo(todoModel, category);
+            if (insertId[0] != -1) {
+               todoModel.setUID((int) insertId[0]); // required to be used in list's getItemId()
+               todoModel.setId((int) insertId[1]);
                Toast toast = Toast.makeText(this, "Todo added", Toast.LENGTH_LONG);
                toast.setGravity(Gravity.BOTTOM, 0, 100);
                toast.show();
