@@ -10,8 +10,8 @@ public class TodoModel extends DataModel {
                                                        "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
                                                        "Fun_Todo" };
    public static final String[] SPINNER_CATEGORIES_ALT = { "Miscellaneous", "Work", "Music", "Travel",
-                                                       "Study", "Home", "Creativity", "Shopping",
-                                                       "Leisure & Fun" };
+                                                           "Study", "Home", "Creativity", "Shopping",
+                                                           "Leisure & Fun" };
    public static final String[] CATEGORIES = { "General_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",
                                                "Study_Todo", "Home_Todo", "Creativity_Todo", "Shopping_Todo",
                                                "Fun_Todo", "Miscellaneous_Todo" };
@@ -26,6 +26,7 @@ public class TodoModel extends DataModel {
    private String completionTime;
    private String startTime;
    private String endTime;
+   private int uid;
 
    public TodoModel() {
       // required default constructor
@@ -50,6 +51,32 @@ public class TodoModel extends DataModel {
       this(taskTitle, taskDescription, isTaskCompleted, DBcategory,
            completionDate, startTime, endTime, completionTime);
 
+      this.id = id;
+   }
+
+
+   public TodoModel(int uid, int id, String taskTitle, String taskDescription, boolean isTaskCompleted, String DBcategory,
+                    String completionDate, String startTime, String endTime, String completionTime) {
+
+      this(id, taskTitle, taskDescription, isTaskCompleted, DBcategory,
+           completionDate, startTime, endTime, completionTime);
+
+      this.uid = uid;
+   }
+
+   public int getUID() {
+      return uid;
+   }
+
+   public void setUID(int uid) {
+      this.uid = uid;
+   }
+
+   public int getId() {
+      return id;
+   }
+
+   public void setId(int id) {
       this.id = id;
    }
 

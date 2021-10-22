@@ -71,7 +71,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
    private CoordinatorLayout coordinator;
    /*      others      */
    public static final String DELETE_REQUEST = "Delete Todo";
-   private int position;
+   private int position, pagePosition;
    private boolean isChecked;
    private List<DataModel> tdList;
    private TodoModel todo;
@@ -154,6 +154,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       RequestRunner.Builder builder = new RequestRunner.Builder();
       builder.setOwnerContext(activity)
              .setAdapterPosition(getAbsoluteAdapterPosition())
+             .setPagePosition(pagePosition)
              .setModelList(tdList)
              .setTodoCategory(todo.getDBcategory());
 
@@ -182,10 +183,11 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       todoRowAdapter.onChecked(getAbsoluteAdapterPosition(), isChecked, todo.getId());
    }
 
-   public TodoListRowHolder with(TodoListAdapter todoRowAdapter, int position, List<DataModel> tdList,
+   public TodoListRowHolder with(TodoListAdapter todoRowAdapter, int position, int pagePosition, List<DataModel> tdList,
                                  SchoolDatabase db, CoordinatorLayout coordinator, FragmentActivity activity) {
       this.todoRowAdapter = todoRowAdapter;
       this.position = position;
+      this.pagePosition = pagePosition;
       this.tdList = tdList;
       this.db = db;
       this.coordinator = coordinator;

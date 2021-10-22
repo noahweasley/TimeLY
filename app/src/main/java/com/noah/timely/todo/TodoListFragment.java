@@ -26,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
 import com.noah.timely.core.ChoiceMode;
+import com.noah.timely.core.CountEvent;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.DataMultiChoiceMode;
 import com.noah.timely.core.EmptyListEvent;
@@ -240,6 +241,11 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
+   public void doCountUpdate(CountEvent countEvent) {
+      itemCount.setText(String.valueOf(countEvent.getSize()));
+   }
+
+   @Subscribe(threadMode = ThreadMode.MAIN)
    public void doEmptyListUpdate(EmptyListEvent e) {
       notodoView.setVisibility(tdList.isEmpty() ? View.VISIBLE : View.GONE);
       rv_todoList.setVisibility(tdList.isEmpty() ? View.GONE : View.VISIBLE);
@@ -323,13 +329,12 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
       @Override
       public void onBindViewHolder(@NonNull TodoListRowHolder holder, int position) {
-         holder.with(this, position, tdList, database, coordinator, getActivity()).bindView();
+         holder.with(this, position, tabPosition, tdList, database, coordinator, getActivity()).bindView();
       }
 
       @Override
       public long getItemId(int position) {
-         LogUtils.debug(this, "Id at: " + tdList.get(position).getId());
-         return tdList.get(position).getId();
+         return ((TodoModel) tdList.get(position)).getUID();
       }
 
       @Override
@@ -392,7 +397,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
       /**
        * @param position     the position where the change occurred
        * @param state        the new state of the change
-       * @param todoPosition the position of the assignment in database.
+       * @param todoPosition the id of the _todo in database.
        */
       public void onChecked(int position, boolean state, int todoPosition) {
          boolean isFinished = false;
