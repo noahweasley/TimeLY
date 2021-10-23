@@ -50,14 +50,14 @@
                android:layout_marginHorizontal="8dp"
                android:ellipsize="end"
                android:maxLines="1"
-               android:text="@string/long_text"
                android:textColor="@color/black"
                android:textStyle="bold"
                external:layout_constraintBottom_toTopOf="@id/category"
                external:layout_constraintEnd_toStartOf="@+id/overflow"
                external:layout_constraintStart_toEndOf="@+id/state"
                external:layout_constraintTop_toTopOf="parent"
-               external:layout_constraintVertical_chainStyle="packed" />
+               external:layout_constraintVertical_chainStyle="packed"
+               tools:text="@string/long_text" />
 
             <ImageView
                android:id="@+id/overflow"
@@ -77,11 +77,11 @@
                android:background="@color/holo_orange_dark_5"
                android:paddingHorizontal="@dimen/layout_gap"
                android:paddingVertical="2dp"
-               android:text="@string/default_category"
                android:textColor="@android:color/holo_orange_dark"
                external:layout_constraintBottom_toBottomOf="parent"
                external:layout_constraintStart_toStartOf="@+id/title"
-               external:layout_constraintTop_toBottomOf="@+id/title" />
+               external:layout_constraintTop_toBottomOf="@+id/title"
+               tools:text="@string/default_category" />
 
          </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -113,9 +113,9 @@
                   android:ellipsize="end"
                   android:gravity="center"
                   android:maxLines="3"
-                  android:text="@string/long_text"
                   android:textColor="@color/high_constrast_grey"
-                  android:textSize="14sp" />
+                  android:textSize="14sp"
+                  tools:text="@string/long_text" />
 
             </LinearLayout>
 
@@ -141,12 +141,12 @@
                android:background="@drawable/bg_rounded_stroked"
                android:ellipsize="end"
                android:maxLines="3"
-               android:text="@string/default_time_5"
                android:textColor="@color/black"
                android:textSize="@dimen/task_text_size_small"
                external:layout_constraintBottom_toBottomOf="parent"
                external:layout_constraintStart_toStartOf="parent"
-               external:layout_constraintTop_toTopOf="parent" />
+               external:layout_constraintTop_toTopOf="parent"
+               tools:text="@string/default_time_5" />
 
             <ImageButton
                android:id="@+id/delete"
