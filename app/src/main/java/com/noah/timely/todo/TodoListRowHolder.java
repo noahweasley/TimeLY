@@ -92,7 +92,8 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       btn_edit = itemView.findViewById(R.id.edit);
       v_selectionOverlay = itemView.findViewById(R.id.checked_overlay);
 
-      btn_edit.setOnClickListener(c -> AddTodoActivity.start(btn_edit.getContext(), true, todo));
+      btn_edit.setOnClickListener(c -> AddTodoActivity.start(btn_edit.getContext(), true,
+                                                             getAbsoluteAdapterPosition(), todo));
 
       btn_delete.setOnClickListener(c -> doTodoDelete());
 
@@ -221,14 +222,19 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
          String startTime = todo.getStartTime(), endTime = todo.getEndTime();
 
          boolean use24 = MiscUtil.isUserPreferred24Hours(activity);
-         // convert time to 24 hours because TimeLY saves time in 24 hours clock.
-         // Algorithm: convert the first time match in the input string to 24 hours clock
-         startTime = use24 ? startTime
-                           : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, startTime),
-                                         Converter.UNIT_24);
-         endTime = use24 ? endTime
-                         : convertTime(PatternUtils.findMatch(PatternUtils._12_HoursClock, endTime),
-                                       Converter.UNIT_24);
+         // convert time to 12 hours if user uses 12 hours mode, because TimeLY saves time in 24 hours clock.
+         // Algorithm: convert the first time match in the input string to 12 hours clock
+         String match = PatternUtils.findMatch(PatternUtils._24_HoursClock, startTime);
+         String match1 = PatternUtils.findMatch(PatternUtils._24_HoursClock, endTime);
+
+         String convertTime = convertTime(match, Converter.UNIT_12);
+         String convertTime1 = convertTime(match1, Converter.UNIT_12);
+
+         String convertedStart = startTime.substring(0, startTime.indexOf(match)) + convertTime;
+         String convertedEnd = endTime.substring(0, endTime.indexOf(match1)) + convertTime;
+
+         startTime = use24 ? startTime : convertedStart;
+         endTime = use24 ? endTime : convertedEnd;
 
          tv_time.setText(startTime + " - " + endTime);
       }
