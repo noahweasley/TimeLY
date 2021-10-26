@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.noah.timely.R;
+import com.noah.timely.assignment.LayoutRefreshEvent;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.core.CountEvent;
 import com.noah.timely.core.DataModel;
@@ -35,7 +36,6 @@ import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.util.Constants;
-import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -209,21 +209,18 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
                }
                break;
             case REMOVE:
-               LogUtils.debug(this, "Deleted at: " + changePos);
                adapter.notifyItemRemoved(changePos);
                adapter.notifyDataSetChanged();
                if (listEmpty) doEmptyListUpdate(null);
 
                break;
             case INSERT:
-               LogUtils.debug(this, "Inserted at: " + changePos);
                adapter.notifyItemInserted(changePos);
                adapter.notifyDataSetChanged();
                doEmptyListUpdate(null);
 
                break;
             default:
-               LogUtils.debug(this, "Updated at: " + changePos);
                TodoModel tm = (TodoModel) tdList.remove(changePos);
                tm.setTaskCompleted(data.isTaskCompleted());
                tm.setTaskTitle(data.getTaskTitle());
@@ -238,6 +235,11 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
          }
          itemCount.setText(String.valueOf(tdList.size()));
       }
+   }
+
+   @Subscribe(threadMode = ThreadMode.MAIN)
+   public void doLayoutRefresh(LayoutRefreshEvent event) {
+      adapter.notifyDataSetChanged();
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

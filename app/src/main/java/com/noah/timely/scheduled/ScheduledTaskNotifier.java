@@ -1,14 +1,11 @@
 package com.noah.timely.scheduled;
 
 import static android.content.Context.ALARM_SERVICE;
-import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.noah.timely.scheduled.AddScheduledDialog.ARG_COURSE;
 import static com.noah.timely.scheduled.AddScheduledDialog.ARG_DAY;
 import static com.noah.timely.scheduled.AddScheduledDialog.ARG_TIME;
 
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -19,17 +16,18 @@ import android.net.Uri;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
 
 import com.noah.timely.R;
+import com.noah.timely.main.App;
 import com.noah.timely.main.MainActivity;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("ConstantConditions")
 public class ScheduledTaskNotifier extends BroadcastReceiver {
 
    @Override
@@ -37,15 +35,6 @@ public class ScheduledTaskNotifier extends BroadcastReceiver {
       String course = intent.getStringExtra(ARG_COURSE);
       String time = intent.getStringExtra(ARG_TIME);
       int calendarDay = intent.getIntExtra(ARG_DAY, -1);
-
-      NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-      String CHANNEL = "TimeLY's Scheduled Classes";
-      String ID = "com.noah.timely.scheduled";
-
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL) == null) {
-         manager.createNotificationChannel(new NotificationChannel(ID, CHANNEL,
-                 NotificationManager.IMPORTANCE_DEFAULT));
-      }
 
       Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
       Uri APP_DEFAULT = new Uri.Builder()
@@ -55,7 +44,7 @@ public class ScheduledTaskNotifier extends BroadcastReceiver {
               .build();
 
       String type = PreferenceManager.getDefaultSharedPreferences(context)
-              .getString("Uri Type", "TimeLY's Default");
+                                     .getString("Uri Type", "TimeLY's Default");
 
       final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                         : SYSTEM_DEFAULT;
@@ -66,15 +55,19 @@ public class ScheduledTaskNotifier extends BroadcastReceiver {
       String message = "You have a scheduled class, <b>" + course + "</b> in <b>10 minutes</b>";
       CharSequence spannedMessage = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY);
 
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
+      NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.SCHEDULED_TIMETABLE_CHANNEL_ID);
       builder.setStyle(new NotificationCompat.BigTextStyle().bigText(spannedMessage))
-              .setContentTitle("Scheduled class reminder")
-              .setContentText(spannedMessage)
-              .setAutoCancel(true)
-              .setSmallIcon(R.drawable.ic_n_schedule)
-              .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
-              .setSound(DEFAULT_URI)
-              .setContentIntent(pi);
+             .setContentTitle("Scheduled class reminder")
+             .setContentText(spannedMessage)
+             .setAutoCancel(true)
+             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+             .setSmallIcon(R.drawable.ic_n_schedule)
+             .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+             .setSound(DEFAULT_URI)
+             .setContentIntent(pi);
+
       manager.notify(-299, builder.build());
 
       scheduleFuture(context, time, course, calendarDay);     // schedule next alarm
@@ -104,12 +97,16 @@ public class ScheduledTaskNotifier extends BroadcastReceiver {
               .addCategory("com.noah.timely.scheduled")
               .setAction("com.noah.timely.scheduled.addAction")
               .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
-                      "com.noah.timely.scheduled.dataType");
+                              "com.noah.timely.scheduled.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 1156, taskIntent, 0);
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+         manager.setExactAndAllowWhileIdle(AlarmManager.RTC, triggerTime, pi);
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
          manager.setExact(AlarmManager.RTC, triggerTime, pi);
-      manager.set(AlarmManager.RTC, triggerTime, pi);
+      else {
+         manager.set(AlarmManager.RTC, triggerTime, pi);
+      }
    }
 }

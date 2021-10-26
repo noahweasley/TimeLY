@@ -2,22 +2,21 @@ package com.noah.timely.alarms;
 
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.ConfigurationCompat;
 
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.main.App;
 
 import java.util.Locale;
 
@@ -55,17 +54,6 @@ public class AlarmReceiver extends BroadcastReceiver {
       String _12H = isAM ? formattedHrAM + ":" + formattedMinAM
                          : formattedHrPM + ":" + formattedMinPM;
 
-      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-      final String CHANNEL = "TimeLY's alarm";
-      final String UNIQUE_ID = "TimeLY's alarm";
-
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL) == null) {
-         // Create a notification channel if it doesn't exist yet, so as to abide to the new
-         // rule of android api level 26: "All notifications must have a channel"
-         manager.createNotificationChannel(new NotificationChannel(UNIQUE_ID, CHANNEL,
-                                                                   NotificationManager.IMPORTANCE_HIGH));
-      }
 
       String alarmLabel = database.getInitialAlarmLabelAt(dataPos);
       boolean isSnoozeAction = false;
@@ -92,17 +80,21 @@ public class AlarmReceiver extends BroadcastReceiver {
                      .putExtra(ID, NOTIFICATION_ID)
                      .putExtra(ALARM_POS, dataPos);
 
-      PendingIntent actionDismiss = PendingIntent.getBroadcast(context, 113, receiverDismiss,
-                                                               PendingIntent.FLAG_ONE_SHOT);
-      PendingIntent actionSnooze = PendingIntent.getBroadcast(context, 114, receiverSnooze,
-                                                              PendingIntent.FLAG_ONE_SHOT);
+      PendingIntent actionDismiss =
+              PendingIntent.getBroadcast(context, 113, receiverDismiss, PendingIntent.FLAG_ONE_SHOT);
 
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
+      PendingIntent actionSnooze =
+              PendingIntent.getBroadcast(context, 114, receiverSnooze, PendingIntent.FLAG_ONE_SHOT);
+
+      NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.ALARMS_CHANNEL_ID);
       builder.setContentTitle("Alarm for: " + (is24 ? _24H : _12H) + (isSnoozeAction ? " (Snoozed)" : ""))
              .setContentText(alarmLabel)
              .setSmallIcon(R.drawable.ic_n_alarm)
              .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
              .setContentIntent(pi)
+             .setPriority(NotificationCompat.PRIORITY_HIGH)
              .setSilent(true)
              .setFullScreenIntent(pi, true)
              .addAction(new NotificationCompat.Action(R.drawable.ic_n_snooze, "Snooze", actionSnooze))

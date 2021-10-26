@@ -117,7 +117,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
             getActivity().runOnUiThread(() -> {
                boolean isEmpty = tList.isEmpty();
                doEmptyTimetableUpdate(null);
-               dismissProgressbar(indeterminateProgress);
+               indeterminateProgress.setVisibility(View.GONE);
                tableRowAdapter.notifyDataSetChanged();
                if (itemCount != null) itemCount.setText(String.valueOf(tList.size()));
             });
@@ -167,7 +167,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
       if (isInLandscape) {
          rV_timetable.setLayoutManager(new GridLayoutManager(getActivity(), 2));
       } else {
-         rV_timetable.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+         rV_timetable.setLayoutManager(new LinearLayoutManager(getActivity()));
       }
 
       view.findViewById(R.id.fab_add_new).setOnClickListener(v -> {
@@ -279,10 +279,6 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
       }
       // reflect data count
       itemCount.setText(String.valueOf(tList.size()));
-   }
-
-   private void dismissProgressbar(ProgressBar progressBar) {
-      progressBar.setVisibility(View.GONE);
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

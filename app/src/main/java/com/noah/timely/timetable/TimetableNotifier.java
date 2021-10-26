@@ -7,8 +7,6 @@ import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_TIME;
 
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -19,11 +17,13 @@ import android.net.Uri;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
 
 import com.noah.timely.R;
+import com.noah.timely.main.App;
 import com.noah.timely.main.MainActivity;
 
 import java.util.Calendar;
@@ -44,15 +44,6 @@ public class TimetableNotifier extends BroadcastReceiver {
       String message = "<b>" + course + "</b> starts in <b>10 minutes</b>";
       CharSequence spannedMessage = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY);
 
-      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-      String CHANNEL = "TimeLY's Timetable";
-      String ID = "com.noah.timely.timetable";
-
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL) == null) {
-         manager.createNotificationChannel(new NotificationChannel(ID, CHANNEL,
-                 NotificationManager.IMPORTANCE_DEFAULT));
-      }
-
       Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
       Uri APP_DEFAULT = new Uri.Builder()
               .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
@@ -61,7 +52,7 @@ public class TimetableNotifier extends BroadcastReceiver {
               .build();
 
       String type = PreferenceManager.getDefaultSharedPreferences(context)
-              .getString("Uri Type", "TimeLY's Default");
+                                     .getString("Uri Type", "TimeLY's Default");
 
       final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                         : SYSTEM_DEFAULT;
@@ -70,15 +61,18 @@ public class TimetableNotifier extends BroadcastReceiver {
 
       PendingIntent contentPI = PendingIntent.getActivity(context, 200, contentIntent, 0);
 
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
+      NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.TIMETABLE_CHANNEL_ID);
       builder.setStyle(new NotificationCompat.BigTextStyle().bigText(spannedMessage))
-              .setSmallIcon(R.drawable.ic_n_table)
-              .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
-              .setContentTitle("Timetable")
-              .setContentText(spannedMessage)
-              .setSound(DEFAULT_URI)
-              .setAutoCancel(true)
-              .setContentIntent(contentPI);
+             .setSmallIcon(R.drawable.ic_n_table)
+             .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+             .setContentTitle("Timetable")
+             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+             .setContentText(spannedMessage)
+             .setSound(DEFAULT_URI)
+             .setAutoCancel(true)
+             .setContentIntent(contentPI);
 
       manager.notify(-20, builder.build());
       scheduleFuture(context, time, course, day, position, tabPosition);
@@ -94,8 +88,7 @@ public class TimetableNotifier extends BroadcastReceiver {
       calendar.set(Calendar.MINUTE, Integer.parseInt(sTime[1]));
       calendar.set(Calendar.SECOND, 0);
       calendar.set(Calendar.MILLISECOND, 0);
-      calendar.setTimeInMillis(calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(7)
-              - TimeUnit.MINUTES.toMillis(10));
+      calendar.setTimeInMillis(calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(7) - TimeUnit.MINUTES.toMillis(10));
 
       AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -109,12 +102,16 @@ public class TimetableNotifier extends BroadcastReceiver {
                       .addCategory("com.noah.timely.timetable")
                       .setAction("com.noah.timely.timetable.addAction")
                       .setDataAndType(Uri.parse("content://com.noah.timely.add." + calendar.getTimeInMillis()),
-                              "com.noah.timely.dataType");
+                                      "com.noah.timely.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent, 0);
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+         manager.setExactAndAllowWhileIdle(AlarmManager.RTC, calendar.getTimeInMillis(), pi);
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
          manager.setExact(AlarmManager.RTC, calendar.getTimeInMillis(), pi);
-      else manager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pi);
+      } else {
+         manager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pi);
+      }
    }
 }

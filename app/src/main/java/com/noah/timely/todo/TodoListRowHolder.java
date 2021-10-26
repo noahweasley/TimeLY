@@ -236,7 +236,9 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
          startTime = use24 ? startTime : convertedStart;
          endTime = use24 ? endTime : convertedEnd;
 
-         tv_time.setText(startTime + " - " + endTime);
+         String completionTime = startTime + " - " + endTime;
+
+         tv_time.setText(completionTime);
       }
    }
 

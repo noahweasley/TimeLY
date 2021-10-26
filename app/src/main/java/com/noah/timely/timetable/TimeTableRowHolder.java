@@ -2,13 +2,12 @@ package com.noah.timely.timetable;
 
 import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_TO_EDIT;
+import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,10 +32,10 @@ import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.scheduled.AddScheduledActivity;
 import com.noah.timely.scheduled.AddScheduledDialog;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
+import com.noah.timely.util.Converter;
 import com.noah.timely.util.DeviceInfoUtil;
 
 import java.util.List;
-import java.util.Locale;
 
 public class TimeTableRowHolder extends RecyclerView.ViewHolder {
 
@@ -315,8 +313,8 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
          start = tModel.getStartTime();
          end = tModel.getEndTime();
       } else {
-         start = convertTime(tModel.getStartTime(), context);
-         end = convertTime(tModel.getEndTime(), context);
+         start = convertTime(tModel.getStartTime(), Converter.UNIT_12);
+         end = convertTime(tModel.getEndTime(),Converter.UNIT_12);
       }
 
       tv_time.setText(String.format("%s - %s", start, end));
@@ -333,31 +331,6 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
          isChecked = rowAdapter.isChecked(getAbsoluteAdapterPosition());
          v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
          tryDisableViews(rowAdapter.isMultiSelectionEnabled());
-      }
-   }
-
-   // Convert to 12 hours clock format
-   private String convertTime(String time, Context context) {
-      try {
-         String[] st = time.split(":");
-         int hh = Integer.parseInt(st[0]);
-         int mm = Integer.parseInt(st[1]);
-
-         Resources aResources = context.getResources();
-         Configuration config = aResources.getConfiguration();
-         Locale locale = ConfigurationCompat.getLocales(config).get(0);
-
-         String formattedHrAM = String.format(locale, "%02d", (hh == 0 ? 12 : hh));
-         String formattedHrPM = String.format(locale, "%02d", (hh % 12 == 0 ? 12 : hh % 12));
-         String formattedMinAM = String.format(locale, "%02d", mm) + " AM";
-         String formattedMinPM = String.format(locale, "%02d", mm) + " PM";
-
-         boolean isAM = hh >= 0 && hh < 12;
-
-         return isAM ? formattedHrAM + ":" + formattedMinAM
-                     : formattedHrPM + ":" + formattedMinPM;
-      } catch (NumberFormatException exc) {
-         return null;
       }
    }
 

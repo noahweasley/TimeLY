@@ -138,9 +138,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
       if (isInLandscape) {
          rV_timetable.setLayoutManager(new GridLayoutManager(getActivity(), 2));
       } else {
-         rV_timetable.setLayoutManager(new LinearLayoutManager(getActivity(),
-                 LinearLayoutManager.VERTICAL,
-                 false));
+         rV_timetable.setLayoutManager(new LinearLayoutManager(getActivity()));
       }
 
       int pagePos = getArguments().getInt(ARG_POSITION);

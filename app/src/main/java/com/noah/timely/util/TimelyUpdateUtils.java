@@ -1,6 +1,5 @@
 package com.noah.timely.util;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
@@ -10,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -21,6 +19,7 @@ import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.noah.timely.R;
+import com.noah.timely.main.App;
 
 import java.util.Locale;
 
@@ -52,19 +51,10 @@ public class TimelyUpdateUtils {
 
    private static void postNotification(Context context, String updateTitle, Update update) {
       nPosted = true;
-      final String CHANNEL = "TimeLY's update";
-      final String UNIQUE_ID = "TimeLY's update";
 
       NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL) == null) {
-         // Create a notification channel if it doesn't exist yet, so as to abide to the new
-         // rule of android api level 26: "All notifications must have a channel"
-         manager.createNotificationChannel(new NotificationChannel(UNIQUE_ID, CHANNEL,
-                                                                   NotificationManager.IMPORTANCE_DEFAULT));
-      }
-
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.GENERAL_CHANNEL_ID);
 
       Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon);
 
@@ -96,6 +86,7 @@ public class TimelyUpdateUtils {
                 .setAutoCancel(true)
                 .setContentTitle(updateTitle)
                 .setContentText(contentText)
+                .setChannelId(App.GENERAL_CHANNEL_ID)
                 .setSound(DEFAULT_URI)
                 .setSmallIcon(R.drawable.ic_n_upgrade)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
@@ -105,6 +96,7 @@ public class TimelyUpdateUtils {
          builder.setContentTitle(updateTitle)
                 .setOngoing(true)
                 .setSilent(true)
+                .setChannelId(App.GENERAL_CHANNEL_ID)
                 .setAutoCancel(false)
                 .setSmallIcon(R.drawable.ic_n_upgrade)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))

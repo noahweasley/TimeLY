@@ -58,6 +58,8 @@ public class AddTodoActivity extends AppCompatActivity {
    private static final String EXTRA_END_TIME = "Todo end time";
    private static final String EXTRA_DATE = "Todo date";
    private static final String EXTRA_TAB_POSITION = "Todo tab position";
+   private static final String EXTRA_TASK_COMPLETED = "Todo task completed";
+   private static final String EXTRA_CHANGE_POS = "Todo row position";
    private ViewGroup vg_timeContainer;
    private EditText edt_startTime, edt_endTime;
    private EditText edt_taskTitle, edt_taskDescription;
@@ -72,7 +74,7 @@ public class AddTodoActivity extends AppCompatActivity {
       context.startActivity(starter);
    }
 
-   public static void start(Context context, boolean toEdit, TodoModel todoToEdit) {
+   public static void start(Context context, boolean toEdit, int adapterPosition, TodoModel todoToEdit) {
       Intent starter = new Intent(context, AddTodoActivity.class);
       starter.putExtra(EXTRA_TODO_TITLE, todoToEdit.getTaskTitle());
       starter.putExtra(EXTRA_TODO_DESCRIPTION, todoToEdit.getTaskDescription());
@@ -81,7 +83,8 @@ public class AddTodoActivity extends AppCompatActivity {
       starter.putExtra(EXTRA_DATE, todoToEdit.getCompletionDate());
       starter.putExtra(EXTRA_IS_EDITABLE, toEdit);
       starter.putExtra(EXTRA_DEFAULT_CATEGORY, todoToEdit.getDBcategory());
-      starter.putExtra(EXTRA_TAB_POSITION, todoToEdit.isTaskCompleted() ? 0 : 1);
+      starter.putExtra(EXTRA_TAB_POSITION, todoToEdit.isTaskCompleted() ? 1 : 0);
+      starter.putExtra(EXTRA_CHANGE_POS, adapterPosition);
       context.startActivity(starter);
    }
 
@@ -207,7 +210,7 @@ public class AddTodoActivity extends AppCompatActivity {
          } else {
             // if user enters wrong matching text and still clicks on the time and date selector buttons...
             if (!PatternUtils.test(PatternUtils.DATE_SHORT_12_24_HoursClock, edt_time.getText())) {
-               timeRangeInputText = String.format("%s, %s", parsedDate, parsedTime);;
+               timeRangeInputText = String.format("%s, %s", parsedDate, parsedTime);
             }
 
             timeRange = timeRangeInputText.replaceFirst(PatternUtils.TIME_ALL, parsedTime);
@@ -239,7 +242,7 @@ public class AddTodoActivity extends AppCompatActivity {
          } else {
             // if user enters wrong matching text and still clicks on the time and date selector buttons...
             if (!PatternUtils.test(PatternUtils.DATE_SHORT_12_24_HoursClock, edt_time.getText())) {
-               timeRangeInputText = String.format("%s, %s", parsedDate, parsedTime);;
+               timeRangeInputText = String.format("%s, %s", parsedDate, parsedTime);
             }
 
             timeRange = timeRangeInputText.replaceFirst(PatternUtils.DATE_SHORT, parsedDate);
@@ -332,19 +335,15 @@ public class AddTodoActivity extends AppCompatActivity {
 
       String taskTitle = edt_taskTitle.getText().toString();
       String taskDescription = edt_taskDescription.getText().toString();
-      String completionTime;
 
-      if (TextUtils.isEmpty(startTimeInput)
-              && TextUtils.isEmpty(endTimeInput)) {
-         completionTime = null;
-      } else {
-         completionTime = startTimeInput + " - " + endTimeInput;
-      }
+      String completionTime = TextUtils.isEmpty(startTimeInput)
+                                      && TextUtils.isEmpty(endTimeInput) ? null : startTimeInput + " - " + endTimeInput;
 
       todoModel.setDBcategory(category);
       todoModel.setTaskTitle(taskTitle);
+      todoModel.setDBcategory(getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
       todoModel.setTaskDescription(taskDescription);
-      todoModel.setTaskCompleted(false);
+      todoModel.setTaskCompleted(getIntent().getBooleanExtra(EXTRA_TASK_COMPLETED, false));
       todoModel.setCompletionTime(completionTime);
       todoModel.setStartTime(startTimeInput);
       todoModel.setEndTime(endTimeInput);
@@ -352,8 +351,10 @@ public class AddTodoActivity extends AppCompatActivity {
       boolean isSuccessful;
       // update or add new _todo
       if (toEdit) {
-         int pos = getIntent().getIntExtra(EXTRA_TAB_POSITION, 0);
-         isSuccessful = database.updateTodo(todoModel, category);
+         int pagePosition = getIntent().getIntExtra(EXTRA_TAB_POSITION, 0);
+         int changePosition = getIntent().getIntExtra(EXTRA_CHANGE_POS, 0);
+
+         isSuccessful = database.updateTodo(todoModel);
          if (isSuccessful) {
             Toast toast = Toast.makeText(this, "Todo updated", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM, 0, 100);
@@ -361,11 +362,13 @@ public class AddTodoActivity extends AppCompatActivity {
 
             // Refresh the _todo list size
             if (EventBus.getDefault().hasSubscriberForEvent(TDUpdateMessage.class))
-               EventBus.getDefault().post(new TDUpdateMessage(todoModel, pos, TDUpdateMessage.EventType.UPDATE_CURRENT));
+               EventBus.getDefault().post(new TDUpdateMessage(todoModel, changePosition, pagePosition,
+                                                              TDUpdateMessage.EventType.UPDATE_CURRENT));
 
             playAlertTone(this, MiscUtil.Alert.TODO);
 
          } else Toast.makeText(this, "An Error Occurred", Toast.LENGTH_SHORT).show();
+
       } else {
 
          if (database.isTodoAbsent(todoModel)) {

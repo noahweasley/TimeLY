@@ -3,8 +3,6 @@ package com.noah.timely.assignment;
 import static com.noah.timely.assignment.AssignmentFragment.LECTURER_NAME;
 import static com.noah.timely.assignment.AssignmentFragment.TITLE;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -12,14 +10,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
 
 import com.noah.timely.R;
+import com.noah.timely.main.App;
 import com.noah.timely.main.MainActivity;
 
 abstract class AssignmentNotifier extends BroadcastReceiver {
@@ -28,16 +27,6 @@ abstract class AssignmentNotifier extends BroadcastReceiver {
    public void onReceive(Context context, Intent intent) {
       String lecturer = intent.getStringExtra(LECTURER_NAME);
       String title = intent.getStringExtra(TITLE);
-
-      // send a notification as a reminder
-      NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-      final String CHANNEL = "TimeLY's assignments";
-      final String ID = "com.noah.timely.assignments";
-
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mgr.getNotificationChannel(CHANNEL) == null) {
-         mgr.createNotificationChannel(new NotificationChannel(ID, CHANNEL,
-                 NotificationManager.IMPORTANCE_DEFAULT));
-      }
 
       Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
       Uri APP_DEFAULT = new Uri.Builder()
@@ -58,8 +47,10 @@ abstract class AssignmentNotifier extends BroadcastReceiver {
       Intent viewIntent = new Intent(context, MainActivity.class).setAction("com.noah.timely.assignments");
 
       PendingIntent viewPI = PendingIntent.getActivity(context, 111, viewIntent, 0);
+      // send a notification as a reminder
+      NotificationManagerCompat mgr = NotificationManagerCompat.from(context);
 
-      NotificationCompat.Builder notifier = new NotificationCompat.Builder(context, CHANNEL);
+      NotificationCompat.Builder notifier = new NotificationCompat.Builder(context, App.ASIGNMENT_CHANNEL_ID);
 
       String message
               = "<b>" + lecturer + "'s</b> assignment on " + "<b>" + title + "</b>" + "," +
@@ -72,6 +63,7 @@ abstract class AssignmentNotifier extends BroadcastReceiver {
               .setContentText(spannedMessage)
               .setSound(DEFAULT_URI)
               .setAutoCancel(true)
+              .setPriority(NotificationCompat.PRIORITY_DEFAULT)
               .setSmallIcon(R.drawable.ic_n_assignment)
               .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
               .setContentIntent(viewPI);

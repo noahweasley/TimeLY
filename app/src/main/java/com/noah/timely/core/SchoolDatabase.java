@@ -159,8 +159,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
       // add or drop tables here
       if (oldVersion == 1 && newVersion == 2) {
-         // bunmp version from v1.0 to v2.0. In v2.0, _Todo Tables does not exist, so upgrade former version's
-         // database, adding the _Todo tables to begin data insertion.
+         // bunmp version from v1.0 to v2.0. In v1.0, _Todo Table does not exist, so upgrade former version's
+         // database, adding the _Todo table to begin data insertion.
          createTodoListTables(db);
       }
 
@@ -1314,10 +1314,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       assignmentData.put(COLUMN_ATTACHED_IMAGE, model.getAttachedImages());
       assignmentData.put(COLUMN_ATTACHED_PDF, model.getAttachedPDF());
 
-      long isUpdated = db.update(ASSIGNMENT_TABLE,
-                                 assignmentData,
-                                 COLUMN_ID + " = " + model.getPosition(),
-                                 null);
+      long isUpdated = db.update(ASSIGNMENT_TABLE, assignmentData, COLUMN_ID + " = " + model.getPosition(), null);
 
       return isUpdated != -1;
    }
@@ -2232,7 +2229,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     * @param category  the category  of the _todo
     * @return true if the _todo was updated
     */
-   public boolean updateTodo(TodoModel todoModel, String category) {
+   public boolean updateTodo(TodoModel todoModel) {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues todoValues = new ContentValues();
 
@@ -2243,11 +2240,12 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       todoValues.put(COLUMN_END_TIME, todoModel.getEndTime());
       todoValues.put(COLUMN_START_TIME, todoModel.getStartTime());
 
-      long resultCode = db.update(todoModel.getDBcategory(), todoValues, COLUMN_ID + " = " + todoModel.getId(), null);
       // Query the database, searching for entries with a specific ID and title, because those two
       // parameters obviously would be unique, together, for a particular _todo
       String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
       String[] whereArgs = { String.valueOf(todoModel.getId()), todoModel.getTaskTitle() };
+
+      long resultCode = db.update(todoModel.getDBcategory(), todoValues, COLUMN_ID + " = " + todoModel.getId(), null);
       long resultCode2 = db.update(Constants.TODO_GENERAL, todoValues, whereClause, whereArgs);
 
       return resultCode != -1 && resultCode2 != -1;
