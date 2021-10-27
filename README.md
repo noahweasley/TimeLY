@@ -28,6 +28,7 @@
 | custom     | Package containing all custom views used in TimeLY                                              |
 | error      | Package housing everything related to TimeLY's error display                                    |
 | exam       | Package housing everything related to TimeLY's exam management system                           |
+| exports    | Package housing everything related to TimeLY's data export mechanisms                           |
 | gallery    | Package housing everything related to TimeLY's image management system                          |
 | main       | The main parts of the app. This package contains mostly the app start-up code                   |
 | report     | Package that houses TimeLY's bug report management systems                                      |
