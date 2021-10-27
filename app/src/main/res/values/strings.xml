@@ -112,7 +112,7 @@
    <string name="noticeTitle">Notice</string>
    <string name="noticeMessage">Some features require that battery optimization constraint be removed, Continue?</string>
    <string name="go">GO</string>
-   <string name="report_message">You will be re-directed to Whatsapp to report this bug,Continue?</string>
+   <string name="report_message">You will be re-directed to Whatsapp to report this bug, Continue?</string>
    <string name="report_title">Report Bug</string>
    <string name="yes">Yes</string>
    <string name="version">v1.0.0</string>

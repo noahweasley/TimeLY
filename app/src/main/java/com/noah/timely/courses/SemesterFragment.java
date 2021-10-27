@@ -259,9 +259,10 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
                courseAdapter.notifyItemChanged(changePos);
                break;
          }
+         // reflect data count
+         if (itemCount != null)
+            itemCount.setText(String.valueOf(cList.size()));
       }
-      // reflect data count
-      itemCount.setText(String.valueOf(cList.size()));
    }
 
    @Override

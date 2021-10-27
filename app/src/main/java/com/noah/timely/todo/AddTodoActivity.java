@@ -346,6 +346,7 @@ public class AddTodoActivity extends AppCompatActivity {
       todoModel.setTaskCompleted(getIntent().getBooleanExtra(EXTRA_TASK_COMPLETED, false));
       todoModel.setCompletionTime(completionTime);
       todoModel.setStartTime(startTimeInput);
+      todoModel.setOnEditTaskTitle(getIntent().getStringExtra(EXTRA_TODO_TITLE));
       todoModel.setEndTime(endTimeInput);
 
       boolean isSuccessful;

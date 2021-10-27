@@ -2242,8 +2242,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
       // Query the database, searching for entries with a specific ID and title, because those two
       // parameters obviously would be unique, together, for a particular _todo
-      String whereClause = COLUMN_ID + " = ? " + " AND " + COLUMN_TODO_TITLE + " = ?";
-      String[] whereArgs = { String.valueOf(todoModel.getId()), todoModel.getTaskTitle() };
+      String whereClause = COLUMN_TODO_TITLE + " = ?";
+      // had to replace task title to on-edit task title, because user could have edit the task title
+      // so it would never correspond with the one in the database
+      String[] whereArgs = { todoModel.getOnEditTaskTitle() };
 
       long resultCode = db.update(todoModel.getDBcategory(), todoValues, COLUMN_ID + " = " + todoModel.getId(), null);
       long resultCode2 = db.update(Constants.TODO_GENERAL, todoValues, whereClause, whereArgs);

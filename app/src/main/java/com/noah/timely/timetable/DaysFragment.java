@@ -122,7 +122,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
             getActivity().runOnUiThread(() -> {
                boolean isEmpty = tList.isEmpty();
                doEmptyTimetableUpdate(null);
-               dismissProgressbar(indeterminateProgress);
+               indeterminateProgress.setVisibility(View.GONE);
                rowAdapter.notifyDataSetChanged();
                if (itemCount != null) itemCount.setText(String.valueOf(tList.size()));
             });
@@ -157,13 +157,13 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
          // choose what kind of task-add method to use base on device width and user pref
          if (resolution[0] < requiredWidthDP || resolution[1] < requiredHeightDP) {
             startActivity(new Intent(context, AddTimetableActivity.class)
-                    .putExtra(ARG_PAGE_POSITION, pagePos));
+                                  .putExtra(ARG_PAGE_POSITION, pagePos));
          } else {
             if (useDialog) {
                new AddTimetableDialog().show(getContext(), pagePos);
             } else {
                startActivity(new Intent(context, AddTimetableActivity.class)
-                       .putExtra(ARG_PAGE_POSITION, pagePos));
+                                     .putExtra(ARG_PAGE_POSITION, pagePos));
             }
          }
 
@@ -283,7 +283,8 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
                break;
          }
          // reflect change count of data
-         itemCount.setText(String.valueOf(tList.size()));
+         if (itemCount != null)
+            itemCount.setText(String.valueOf(tList.size()));
       }
 
    }
@@ -291,10 +292,6 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
    // Get current timetable from the current selected tab
    private String getCurrentTableDay() {
       return DAYS[getArguments().getInt(ARG_POSITION)];
-   }
-
-   private void dismissProgressbar(ProgressBar progressBar) {
-      progressBar.setVisibility(View.GONE);
    }
 
    @Override
@@ -342,8 +339,8 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
       @Override
       public void onBindViewHolder(@NonNull TimeTableRowHolder timeTableRowHolder, int position) {
          timeTableRowHolder.with(DaysFragment.this, rowAdapter, tList, coordinator, position)
-                 .setTimetableDay(getCurrentTableDay())
-                 .bindView();
+                           .setTimetableDay(getCurrentTableDay())
+                           .bindView();
       }
 
       @Override
@@ -446,21 +443,21 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
          RequestRunner runner = RequestRunner.createInstance();
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(getActivity())
-                 .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                 .setModelList(tList)
-                 .setTimetable(getCurrentTableDay())
-                 .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
-                 .setItemIndices(getCheckedTimetableIndices())
-                 .setPositionIndices(getCheckedTimetablesPositions())
-                 .setDataProvider(TimetableModel.class);
+                .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                .setModelList(tList)
+                .setTimetable(getCurrentTableDay())
+                .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
+                .setItemIndices(getCheckedTimetableIndices())
+                .setPositionIndices(getCheckedTimetablesPositions())
+                .setDataProvider(TimetableModel.class);
 
          runner.setRequestParams(builder.getParams())
-                 .runRequest(MULTIPLE_DELETE_REQUEST);
+               .runRequest(MULTIPLE_DELETE_REQUEST);
 
          final int count = getCheckedTimetablesCount();
          Snackbar snackbar = Snackbar.make(coordinator,
-                 count + " Course" + (count > 1 ? "s" : "") + " Deleted",
-                 Snackbar.LENGTH_LONG);
+                                           count + " Course" + (count > 1 ? "s" : "") + " Deleted",
+                                           Snackbar.LENGTH_LONG);
 
          snackbar.setActionTextColor(Color.YELLOW);
          snackbar.setAction("UNDO", v -> runner.undoRequest());

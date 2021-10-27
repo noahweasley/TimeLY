@@ -111,7 +111,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
             getActivity().runOnUiThread(() -> {
                boolean isEmpty = eList.isEmpty();
                doEmptyExamsUpdate(null);
-               dismissProgressbar(indeterminateProgress);
+               indeterminateProgress.setVisibility(View.GONE);
                examRowAdapter.notifyDataSetChanged();
                if (itemCount != null) itemCount.setText(String.valueOf(eList.size()));
             });
@@ -274,15 +274,13 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                   examRowAdapter.notifyItemChanged(changePos);
                   break;
             }
-            itemCount.setText(String.valueOf(eList.size()));
+            // reflect data count
+            if (itemCount != null)
+               itemCount.setText(String.valueOf(eList.size()));
          } else {
             Log.w(getClass().getSimpleName(), "Couldn't update list for position: " + changePos);
          }
       }
-   }
-
-   private void dismissProgressbar(ProgressBar progressBar) {
-      progressBar.setVisibility(View.GONE);
    }
 
    class ExamRowAdapter extends RecyclerView.Adapter<ExamRowHolder> {

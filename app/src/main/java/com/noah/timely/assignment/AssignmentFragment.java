@@ -240,7 +240,6 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
       switch (update.getType()) {
          case NEW:
             aList.add(data);
-            itemCount.setText(String.valueOf(aList.size()));
 
             if (aList.isEmpty()) {
                noAssignmentView.setVisibility(View.VISIBLE);
@@ -253,7 +252,6 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             break;
          case REMOVE:
             aList.remove(changePos);
-            itemCount.setText(String.valueOf(aList.size()));
             assignmentAdapter.notifyItemRemoved(changePos);
             assignmentAdapter.notifyDataSetChanged();
 
@@ -262,7 +260,6 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             break;
          case INSERT:
             aList.add(changePos, data);
-            itemCount.setText(String.valueOf(aList.size()));
             assignmentAdapter.notifyItemInserted(changePos);
             assignmentAdapter.notifyDataSetChanged();
             doEmptyListUpdate(null);
@@ -284,7 +281,11 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
             assignmentAdapter.notifyItemChanged(changePos);
 
             break;
+
       }
+
+      if (itemCount != null)
+         itemCount.setText(String.valueOf(aList.size()));
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

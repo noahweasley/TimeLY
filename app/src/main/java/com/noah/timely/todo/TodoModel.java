@@ -27,6 +27,7 @@ public class TodoModel extends DataModel {
    private String startTime;
    private String endTime;
    private int uid;
+   private String onEditTaskTitle;
 
    public TodoModel() {
       // required default constructor
@@ -78,6 +79,14 @@ public class TodoModel extends DataModel {
 
    public void setId(int id) {
       this.id = id;
+   }
+
+   public void setOnEditTaskTitle(String onEditTaskTitle) {
+      this.onEditTaskTitle = onEditTaskTitle;
+   }
+
+   public String getOnEditTaskTitle() {
+      return onEditTaskTitle;
    }
 
    public String getTaskTitle() {
@@ -174,4 +183,5 @@ public class TodoModel extends DataModel {
               ", endTime = '" + endTime + '\'' +
               '}';
    }
+
 }

@@ -151,11 +151,11 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
 
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(getActivity())
-                    .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
-                    .setModelList(tList);
+                   .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                   .setModelList(tList);
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(DELETE_REQUEST);
+                  .runRequest(DELETE_REQUEST);
          }
       });
 
@@ -278,7 +278,8 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
             break;
       }
       // reflect data count
-      itemCount.setText(String.valueOf(tList.size()));
+      if (itemCount != null)
+         itemCount.setText(String.valueOf(tList.size()));
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -336,7 +337,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
       @Override
       public void onBindViewHolder(@NonNull TimeTableRowHolder timeTableRowHolder, int position) {
          timeTableRowHolder.with(ScheduledTimetableFragment.this, tableRowAdapter, tList, coordinator, position)
-                 .bindView();
+                           .bindView();
       }
 
       @Override
@@ -439,21 +440,21 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
          RequestRunner runner = RequestRunner.createInstance();
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(getActivity())
-                 .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                 .setModelList(tList)
-                 .setTimetable(SchoolDatabase.SCHEDULED_TIMETABLE)
-                 .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
-                 .setItemIndices(getCheckedTimetablesIndices())
-                 .setPositionIndices(getCheckedTimetablesPositions())
-                 .setDataProvider(TimetableModel.class);
+                .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                .setModelList(tList)
+                .setTimetable(SchoolDatabase.SCHEDULED_TIMETABLE)
+                .setMetadataType(RequestParams.MetaDataType.TIMETABLE)
+                .setItemIndices(getCheckedTimetablesIndices())
+                .setPositionIndices(getCheckedTimetablesPositions())
+                .setDataProvider(TimetableModel.class);
 
          runner.setRequestParams(builder.getParams())
-                 .runRequest(MULTIPLE_DELETE_REQUEST);
+               .runRequest(MULTIPLE_DELETE_REQUEST);
 
          final int count = getCheckedTimetablesCount();
          Snackbar snackbar = Snackbar.make(coordinator,
-                 count + " Course" + (count > 1 ? "s" : "") + " Deleted",
-                 Snackbar.LENGTH_LONG);
+                                           count + " Course" + (count > 1 ? "s" : "") + " Deleted",
+                                           Snackbar.LENGTH_LONG);
 
          snackbar.setActionTextColor(Color.YELLOW);
          snackbar.setAction("UNDO", v -> runner.undoRequest());
