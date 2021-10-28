@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.noah.timely.R;
@@ -26,6 +27,7 @@ public class IntroPageActivity extends AppCompatActivity {
       setContentView(R.layout.intro);
 
       Button start = findViewById(R.id.start);
+      FloatingActionButton skip = findViewById(R.id.skip);
       ViewPager2 pager_intro = findViewById(R.id.intro_pager);
       pager_intro.setAdapter(new IntroPagerAdapter(this));
       // set up page position indicator to react to page scroll
@@ -44,16 +46,20 @@ public class IntroPageActivity extends AppCompatActivity {
                s_RecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             // hide or show corresponding views according to page position
             start.setVisibility(position == 3 ? View.VISIBLE : View.GONE);
+            skip.setVisibility(position == 3 ? View.GONE : View.VISIBLE);
 
          }
 
       });
       // navigate to landing page
-      start.setOnClickListener(v -> {
-         Intent nav_main = new Intent(this, MainActivity.class);
-         nav_main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-         startActivity(nav_main);
-      });
+      start.setOnClickListener(this::navigateToLandingPage);
+      skip.setOnClickListener(this::navigateToLandingPage);
+   }
+
+   private void navigateToLandingPage(View view) {
+      Intent nav_main = new Intent(this, MainActivity.class);
+      nav_main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+      startActivity(nav_main);
    }
 
    @Override

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
    android:layout_height="match_parent"
    android:background="@drawable/bg_day_and_night">
@@ -99,6 +100,20 @@
       android:text="@string/start"
       android:textColor="@android:color/white"
       android:textSize="@dimen/button_text_size"
+      tools:visibility="gone"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
+
+   <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/skip"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/fab_margin"
+      android:contentDescription="@string/skip"
+      external:fabCustomSize="@dimen/fab_size"
+      external:maxImageSize="@dimen/fab_icon_size"
+      external:srcCompat="@drawable/ic_arrow_forward"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent" />
