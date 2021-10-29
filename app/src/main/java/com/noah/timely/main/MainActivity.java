@@ -287,7 +287,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       dialog.cancel();
    }
 
-
    // Get intent actions and update UI
    private void doUpdateFragment(Intent intent) {
       final String reqAction = intent.getAction();

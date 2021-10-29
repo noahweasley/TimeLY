@@ -29,6 +29,24 @@ public class CollectionUtils {
    }
 
    /**
+    * Maps a function to be applied to a target list
+    *
+    * @param target   the list to be used
+    * @param function the function to used in the mapper
+    * @param <T>      the type of data applied to thee mapper
+    * @param <R>      the return type of the mapper
+    * @return a list of specified results by the mapper
+    */
+   public static <T, R> List<R> map(List<T> target, IFunction<T, R> function) {
+      List<R> result = new ArrayList<>();
+      for (T element : target) {
+         result.add(function.apply(element));
+      }
+
+      return result;
+   }
+
+   /**
     * Searches for an item in a list
     *
     * @param target the list to perform the search on

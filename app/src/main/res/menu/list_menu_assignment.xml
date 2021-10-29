@@ -7,6 +7,12 @@
       android:id="@+id/list_item_count"
       android:title=""
       external:actionLayout="@layout/assignment_count"
-      external:showAsAction="always" />
+      external:showAsAction="always"
+      tools:ignore="AlwaysShowAction" />
+
+   <item
+      android:id="@+id/select_all"
+      android:title="@string/selct_all"
+      external:showAsAction="never" />
 
 </menu>

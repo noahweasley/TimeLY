@@ -37,6 +37,7 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
@@ -101,11 +102,12 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
          getActivity().runOnUiThread(() -> {
             boolean isEmpty = cList.isEmpty();
             doEmptyCourseUpdate(null);
-            // animate progress bar dismissal
-            dismissProgressbar(indeterminateProgress);
+            indeterminateProgress.setVisibility(View.GONE);
             courseAdapter.notifyDataSetChanged();
 
             if (itemCount != null) itemCount.setText(String.valueOf(cList.size()));
+            // invalidate options menu if list is empty
+            if (isEmpty) getActivity().invalidateOptionsMenu();
          });
       });
 
@@ -179,10 +181,23 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(cList.size()));
-
+      menu.findItem(R.id.select_all).setVisible(cList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, "Courses Count");
 
       super.onCreateOptionsMenu(menu, inflater);
+   }
+
+   @Override
+   public void onPrepareOptionsMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(cList.isEmpty() ? false : true);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+      if (item.getItemId() == R.id.select_all) {
+         courseAdapter.selectAllItems();
+      }
+      return super.onOptionsItemSelected(item);
    }
 
    private int getPagePosition() {
@@ -192,10 +207,6 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
    public String getSemester() {
       if (getPagePosition() == 0) return SchoolDatabase.FIRST_SEMESTER;
       else return SchoolDatabase.SECOND_SEMESTER;
-   }
-
-   private void dismissProgressbar(ProgressBar progressBar) {
-      progressBar.setVisibility(View.GONE);
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -262,6 +273,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
          // reflect data count
          if (itemCount != null)
             itemCount.setText(String.valueOf(cList.size()));
+         // hide or reveal select-all menu itemn
+         getActivity().invalidateOptionsMenu();
       }
    }
 
@@ -278,7 +291,12 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
    @Override
    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-      courseAdapter.deleteMultiple();
+      if (item.getItemId() == R.id.delete_multiple_action) {
+         courseAdapter.deleteMultiple();
+      } else {
+         courseAdapter.selectAllItems();
+      }
+
       return true;
    }
 
@@ -404,6 +422,25 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
          if (!isFinished && actionMode != null)
             actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+      }
+
+      /**
+       * Selects all items on the list
+       */
+      public void selectAllItems() {
+         DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+         dmcm.selectAll(cList.size(), CollectionUtils.map(cList, DataModel::getPosition));
+         notifyDataSetChanged();
+         setMultiSelectionEnabled(true);
+         // also start action mode
+         if (isAdded() && actionMode == null) {
+            // select all action peformed, create ation mode, because it wasn't already created
+            actionMode = context.startSupportActionMode(SemesterFragment.this);
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         } else if (isAdded() && actionMode != null) {
+            // select all action performed, but action mode is activated, only set title to length of list
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         }
       }
 
       /**

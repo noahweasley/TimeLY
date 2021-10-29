@@ -35,6 +35,7 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
@@ -137,6 +138,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
             adapter.notifyDataSetChanged();
 
             if (itemCount != null) itemCount.setText(String.valueOf(tdList.size()));
+            // invalidate options menu if list is empty
+            if (empty) getActivity().invalidateOptionsMenu();
          });
       });
    }
@@ -179,9 +182,23 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(tdList.size()));
-
+      menu.findItem(R.id.select_all).setVisible(tdList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, "Todo Count");
+
       super.onCreateOptionsMenu(menu, inflater);
+   }
+
+   @Override
+   public void onPrepareOptionsMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(tdList.isEmpty() ? false : true);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+      if (item.getItemId() == R.id.select_all) {
+         adapter.selectAllItems();
+      }
+      return super.onOptionsItemSelected(item);
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -234,6 +251,8 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
                break;
          }
          itemCount.setText(String.valueOf(tdList.size()));
+         // hide or reveal select-all menu itemn
+         getActivity().invalidateOptionsMenu();
       }
    }
 
@@ -275,7 +294,12 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
    @Override
    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-      adapter.deleteMultiple();
+      if (item.getItemId() == R.id.delete_multiple_action) {
+         adapter.deleteMultiple();
+      } else {
+         adapter.selectAllItems();
+      }
+
       return true;
    }
 
@@ -421,6 +445,25 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
          if (!isFinished && actionMode != null)
             actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+      }
+
+      /**
+       * Selects all items on the list
+       */
+      public void selectAllItems() {
+         DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+         dmcm.selectAll(tdList.size(), CollectionUtils.map(tdList, DataModel::getPosition));
+         notifyDataSetChanged();
+         setMultiSelectionEnabled(true);
+         // also start action mode
+         if (isAdded() && actionMode == null) {
+            // select all action peformed, create ation mode, because it wasn't already created
+            actionMode = context.startSupportActionMode(TodoListFragment.this);
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         } else if (isAdded() && actionMode != null) {
+            // select all action performed, but action mode is activated, only set title to length of list
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         }
       }
 
       /**

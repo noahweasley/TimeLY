@@ -185,4 +185,5 @@
    <string name="empty_time_range">Time range not set</string>
    <string name="task_viewer_header">Task viewer</string>
    <string name="miscellaneous_channel_desc">Other kinds of notifications</string>
+   <string name="selct_all">Selct all</string>
 </resources>

@@ -38,6 +38,7 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
@@ -114,6 +115,8 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
                indeterminateProgress.setVisibility(View.GONE);
                examRowAdapter.notifyDataSetChanged();
                if (itemCount != null) itemCount.setText(String.valueOf(eList.size()));
+               // hide or reveal select-all menu itemn
+               getActivity().invalidateOptionsMenu();
             });
          }
       });
@@ -190,10 +193,23 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(eList.size()));
-
+      menu.findItem(R.id.select_all).setVisible(eList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, "Exams Count");
 
       super.onCreateOptionsMenu(menu, inflater);
+   }
+
+   @Override
+   public void onPrepareOptionsMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(eList.isEmpty() ? false : true);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+      if (item.getItemId() == R.id.select_all) {
+         examRowAdapter.selectAllItems();
+      }
+      return super.onOptionsItemSelected(item);
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -229,7 +245,12 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
 
    @Override
    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-      examRowAdapter.deleteMultiple();
+      if (item.getItemId() == R.id.delete_multiple_action) {
+         examRowAdapter.deleteMultiple();
+      } else {
+         examRowAdapter.selectAllItems();
+      }
+
       return true;
    }
 
@@ -398,6 +419,25 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
 
          if (!isFinished && actionMode != null)
             actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+      }
+
+      /**
+       * Selects all items on the list
+       */
+      public void selectAllItems() {
+         DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+         dmcm.selectAll(eList.size(), CollectionUtils.map(eList, DataModel::getPosition));
+         notifyDataSetChanged();
+         setMultiSelectionEnabled(true);
+         // also start action mode
+         if (isAdded() && actionMode == null) {
+            // select all action peformed, create ation mode, because it wasn't already created
+            actionMode = context.startSupportActionMode(ExamTimetableFragment.this);
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         } else if (isAdded() && actionMode != null) {
+            // select all action performed, but action mode is activated, only set title to length of list
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         }
       }
 
       /**

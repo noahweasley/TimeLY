@@ -43,6 +43,7 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
@@ -75,6 +76,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
    private RecyclerView rV_timetable;
    private SchoolDatabase database;
    private CoordinatorLayout coordinator;
+   private AppCompatActivity context;
 
    public static DaysFragment newInstance(int position) {
       Bundle args = new Bundle();
@@ -104,6 +106,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
    @Override
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
       coordinator = view.findViewById(R.id.coordinator);
+      context = (AppCompatActivity) getActivity();
       Resources resources = getResources();
       boolean isInLandscape = resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
@@ -125,6 +128,8 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
                indeterminateProgress.setVisibility(View.GONE);
                rowAdapter.notifyDataSetChanged();
                if (itemCount != null) itemCount.setText(String.valueOf(tList.size()));
+               // invalidate options menu if list is empty
+               if (isEmpty) getActivity().invalidateOptionsMenu();
             });
          }
       });
@@ -206,10 +211,23 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(tList.size()));
-
+      menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, "Timetable Count");
 
       super.onCreateOptionsMenu(menu, inflater);
+   }
+
+   @Override
+   public void onPrepareOptionsMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+      if (item.getItemId() == R.id.select_all) {
+         rowAdapter.selectAllItems();
+      }
+      return super.onOptionsItemSelected(item);
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -285,6 +303,8 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
          // reflect change count of data
          if (itemCount != null)
             itemCount.setText(String.valueOf(tList.size()));
+         // hide or reveal select-all menu itemn
+         getActivity().invalidateOptionsMenu();
       }
 
    }
@@ -308,7 +328,12 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
 
    @Override
    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-      rowAdapter.deleteMultiple();
+      if (item.getItemId() == R.id.delete_multiple_action) {
+         rowAdapter.deleteMultiple();
+      } else {
+         rowAdapter.selectAllItems();
+      }
+
       return true;
    }
 
@@ -434,6 +459,25 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
 
          if (!isFinished && actionMode != null)
             actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+      }
+
+      /**
+       * Selects all items on the list
+       */
+      public void selectAllItems() {
+         DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+         dmcm.selectAll(tList.size(), CollectionUtils.map(tList, DataModel::getPosition));
+         notifyDataSetChanged();
+         setMultiSelectionEnabled(true);
+         // also start action mode
+         if (isAdded() && actionMode == null) {
+            // select all action peformed, create ation mode, because it wasn't already created
+            actionMode = context.startSupportActionMode(DaysFragment.this);
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         } else if (isAdded() && actionMode != null) {
+            // select all action performed, but action mode is activated, only set title to length of list
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         }
       }
 
       /**

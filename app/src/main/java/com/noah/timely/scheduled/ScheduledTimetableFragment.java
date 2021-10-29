@@ -45,6 +45,7 @@ import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.main.MainActivity;
 import com.noah.timely.timetable.TimeTableRowHolder;
 import com.noah.timely.timetable.TimetableModel;
+import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
@@ -71,6 +72,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
    private TextView itemCount;
    private RecyclerView rV_timetable;
    private CoordinatorLayout coordinator;
+   private AppCompatActivity context;
 
    public static ScheduledTimetableFragment newInstance() {
       return new ScheduledTimetableFragment();
@@ -96,6 +98,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
    @Override
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
       setHasOptionsMenu(true);
+      context = (AppCompatActivity) getActivity();
       Resources resources = getResources();
       coordinator = view.findViewById(R.id.coordinator);
       boolean isInLandscape = resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
@@ -120,6 +123,8 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
                indeterminateProgress.setVisibility(View.GONE);
                tableRowAdapter.notifyDataSetChanged();
                if (itemCount != null) itemCount.setText(String.valueOf(tList.size()));
+               // invalidate options menu if list is empty
+               if (isEmpty) getActivity().invalidateOptionsMenu();
             });
       });
 
@@ -158,11 +163,12 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
                   .runRequest(DELETE_REQUEST);
          }
       });
+      swiper.attachToRecyclerView(rV_timetable);
 
       tableRowAdapter.setHasStableIds(true);
       rV_timetable.setHasFixedSize(true);
       rV_timetable.setAdapter(tableRowAdapter);
-      swiper.attachToRecyclerView(rV_timetable);
+      setUpSwipeHelper(rV_timetable);
 
       if (isInLandscape) {
          rV_timetable.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -189,6 +195,43 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
             }
          }
       });
+   }
+
+   private void setUpSwipeHelper(RecyclerView recyclerView) {
+      ItemTouchHelper swiper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+         @Override
+         public int getMovementFlags(@NonNull RecyclerView recyclerView,
+                                     @NonNull RecyclerView.ViewHolder viewHolder) {
+            return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+         }
+
+         @Override
+         public boolean onMove(@NonNull RecyclerView recyclerView,
+                               @NonNull RecyclerView.ViewHolder viewHolder,
+                               @NonNull RecyclerView.ViewHolder viewHolder1) {
+            return false;
+         }
+
+         @Override
+         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+            // post a delete request on the assignment database
+            RequestRunner runner = RequestRunner.createInstance();
+            Snackbar.make(coordinator, "Timetable Deleted", Snackbar.LENGTH_LONG)
+                    .setAction("undo", (view) -> runner.undoRequest())
+                    .setActionTextColor(Color.YELLOW)
+                    .show();
+
+            RequestRunner.Builder builder = new RequestRunner.Builder();
+            builder.setOwnerContext(getActivity())
+                   .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition())
+                   .setModelList(tList);
+
+            runner.setRequestParams(builder.getParams())
+                  .runRequest(DELETE_REQUEST);
+         }
+      });
+
+      swiper.attachToRecyclerView(recyclerView);
    }
 
    @Override
@@ -223,10 +266,23 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(tList.size()));
-
+      menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, "Classes Count");
 
       super.onCreateOptionsMenu(menu, inflater);
+   }
+
+   @Override
+   public void onPrepareOptionsMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+      if (item.getItemId() == R.id.select_all) {
+         tableRowAdapter.selectAllItems();
+      }
+      return super.onOptionsItemSelected(item);
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -280,6 +336,8 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
       // reflect data count
       if (itemCount != null)
          itemCount.setText(String.valueOf(tList.size()));
+      // hide or reveal select-all menu itemn
+      getActivity().invalidateOptionsMenu();
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -305,7 +363,12 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
 
    @Override
    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-      tableRowAdapter.deleteMultiple();
+      if (item.getItemId() == R.id.delete_multiple_action) {
+         tableRowAdapter.deleteMultiple();
+      } else {
+         tableRowAdapter.selectAllItems();
+      }
+
       return true;
    }
 
@@ -431,6 +494,25 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
 
          if (!isFinished && actionMode != null)
             actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+      }
+
+      /**
+       * Selects all items on the list
+       */
+      public void selectAllItems() {
+         DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+         dmcm.selectAll(tList.size(), CollectionUtils.map(tList, DataModel::getPosition));
+         notifyDataSetChanged();
+         setMultiSelectionEnabled(true);
+         // also start action mode
+         if (isAdded() && actionMode == null) {
+            // select all action peformed, create ation mode, because it wasn't already created
+            actionMode = context.startSupportActionMode(ScheduledTimetableFragment.this);
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         } else if (isAdded() && actionMode != null) {
+            // select all action performed, but action mode is activated, only set title to length of list
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         }
       }
 
       /**

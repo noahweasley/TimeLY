@@ -17,9 +17,6 @@ public class ImageMultiChoiceMode extends MultiChoiceMode {
     * @return the uris of the items that was previously selected
     */
    public String[] getUriList() {
-
-      // FIXME: 2/23/2021 remove next line when additional images bug has been resolved
-
       String[] uris = uriList.toArray(new String[0]);
       uriList.clear();
       return uris;
@@ -49,4 +46,35 @@ public class ImageMultiChoiceMode extends MultiChoiceMode {
       uriList.clear();
    }
 
+   /**
+    * used this to persist the state of the checked items. If <code>checked</code> is false, then
+    * any previous entry (when <code>checked</code> was true) in the choice mode, would be erased,
+    * as it is not useful.
+    *
+    * @param position the position in which the its checked value is to be inserted
+    * @param check    the status of the checked item
+    */
+   public void setChecked(int position, boolean checked) {
+      if (!checked) {
+         sbarr.delete(position);
+         indices.remove(Integer.valueOf(position));
+      } else {
+         sbarr.put(position, true);
+         indices.add(position);
+      }
+   }
+
+   /**
+    * selects all items
+    *
+    * @param itemSize the size of the list
+    */
+   public void selectAll(int itemSize) {
+      clearChoices();
+      // reverse entry, start from back
+      for (int position = itemSize - 1; position >= 0; position--) {
+         setChecked(position, true);
+      }
+
+   }
 }

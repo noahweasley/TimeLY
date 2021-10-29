@@ -37,6 +37,7 @@ import com.noah.timely.core.PositionMessageEvent;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -99,12 +100,14 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
          if (isAdded())
             getActivity().runOnUiThread(() -> {
                boolean empty = aList.isEmpty();
-               dismissProgressbar(indeterminateProgress);
+               indeterminateProgress.setVisibility(View.GONE);
                noAssignmentView.setVisibility(empty ? View.VISIBLE : View.GONE);
                rV_assignmentList.setVisibility(empty ? View.GONE : View.VISIBLE);
                assignmentAdapter.notifyDataSetChanged();
 
                if (itemCount != null) itemCount.setText(String.valueOf(aList.size()));
+               // invalidate options menu if list is empty
+               if (empty) getActivity().invalidateOptionsMenu();
             });
       });
 
@@ -116,7 +119,10 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
       rV_assignmentList.setHasFixedSize(true);
       rV_assignmentList.setLayoutManager(new LinearLayoutManager(getActivity()));
       rV_assignmentList.setAdapter(assignmentAdapter);
+      setUpSwipeHelper(rV_assignmentList);
+   }
 
+   private void setUpSwipeHelper(RecyclerView recyclerView) {
       ItemTouchHelper swiper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
          @Override
          public int getMovementFlags(@NonNull RecyclerView recyclerView,
@@ -151,7 +157,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
          }
       });
 
-      swiper.attachToRecyclerView(rV_assignmentList);
+      swiper.attachToRecyclerView(recyclerView);
    }
 
    @Override
@@ -186,15 +192,23 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(aList.size()));
-
+      menu.findItem(R.id.select_all).setVisible(aList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, "Assignment Count");
 
       super.onCreateOptionsMenu(menu, inflater);
    }
 
-   // dismiss the content-loading progress bar
-   private void dismissProgressbar(ProgressBar bar) {
-      bar.setVisibility(View.GONE);
+   @Override
+   public void onPrepareOptionsMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(aList.isEmpty() ? false : true);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+      if (item.getItemId() == R.id.select_all) {
+         assignmentAdapter.selectAllItems();
+      }
+      return super.onOptionsItemSelected(item);
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -286,6 +300,8 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
       if (itemCount != null)
          itemCount.setText(String.valueOf(aList.size()));
+      // hide or reveal select-all menu itemn
+      getActivity().invalidateOptionsMenu();
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -307,7 +323,12 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
    @Override
    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-      assignmentAdapter.deleteMultiple();
+      if (item.getItemId() == R.id.delete_multiple_action) {
+         assignmentAdapter.deleteMultiple();
+      } else {
+         assignmentAdapter.selectAllItems();
+      }
+
       return true;
    }
 
@@ -428,6 +449,25 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
          if (!isFinished && actionMode != null)
             actionMode.setTitle(String.format(Locale.US, "%d %s", choiceCount, "selected"));
+      }
+
+      /**
+       * Selects all items on the list
+       */
+      public void selectAllItems() {
+         DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
+         dmcm.selectAll(aList.size(), CollectionUtils.map(aList, DataModel::getPosition));
+         notifyDataSetChanged();
+         setMultiSelectionEnabled(true);
+         // also start action mode
+         if (isAdded() && actionMode == null) {
+            // select all action peformed, create ation mode, because it wasn't already created
+            actionMode = context.startSupportActionMode(AssignmentFragment.this);
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         } else if (isAdded() && actionMode != null) {
+            // select all action performed, but action mode is activated, only set title to length of list
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         }
       }
 
       /**

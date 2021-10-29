@@ -21,16 +21,6 @@ public interface ChoiceMode {
    ChoiceMode DATA_MULTI_SELECT = new DataMultiChoiceMode();
 
    /**
-    * used this to persist the state of the checked items. If <code>checked</code> is false, then
-    * any previous entry (when <code>checked</code> was true) in the choice mode, would be erased,
-    * as it is not useful.
-    *
-    * @param position the position in which the its checked value is to be inserted
-    * @param check    the status of the checked item
-    */
-   void setChecked(int position, boolean check);
-
-   /**
     * @param position the position of the item
     * @return the checked status of an item in the list
     */
