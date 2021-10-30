@@ -452,7 +452,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
        */
       public void selectAllItems() {
          DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
-         dmcm.selectAll(tdList.size(), CollectionUtils.map(tdList, DataModel::getPosition));
+         dmcm.selectAll(tdList.size(), CollectionUtils.map(tdList, DataModel::getId));
          notifyDataSetChanged();
          setMultiSelectionEnabled(true);
          // also start action mode

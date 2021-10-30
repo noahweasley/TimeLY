@@ -466,7 +466,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
        */
       public void selectAllItems() {
          DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
-         dmcm.selectAll(tList.size(), CollectionUtils.map(tList, DataModel::getPosition));
+         dmcm.selectAll(tList.size(), CollectionUtils.map(tList, DataModel::getId));
          notifyDataSetChanged();
          setMultiSelectionEnabled(true);
          // also start action mode

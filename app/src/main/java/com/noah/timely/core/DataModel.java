@@ -9,6 +9,7 @@ package com.noah.timely.core;
 public class DataModel {
    protected int id;
    protected int position;
+   protected int uid;
 
    public int getId() {
       return id;
@@ -24,5 +25,13 @@ public class DataModel {
 
    public void setPosition(int position) {
       this.position = position;
+   }
+
+   public int getUID() {
+      return uid;
+   }
+
+   public void setUID(int uid) {
+      this.uid = uid;
    }
 }

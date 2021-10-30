@@ -426,7 +426,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
        */
       public void selectAllItems() {
          DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
-         dmcm.selectAll(eList.size(), CollectionUtils.map(eList, DataModel::getPosition));
+         dmcm.selectAll(eList.size(), CollectionUtils.map(eList, DataModel::getId));
          notifyDataSetChanged();
          setMultiSelectionEnabled(true);
          // also start action mode

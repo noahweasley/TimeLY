@@ -26,7 +26,6 @@ public class TodoModel extends DataModel {
    private String completionTime;
    private String startTime;
    private String endTime;
-   private int uid;
    private String onEditTaskTitle;
 
    public TodoModel() {
@@ -63,22 +62,6 @@ public class TodoModel extends DataModel {
            completionDate, startTime, endTime, completionTime);
 
       this.uid = uid;
-   }
-
-   public int getUID() {
-      return uid;
-   }
-
-   public void setUID(int uid) {
-      this.uid = uid;
-   }
-
-   public int getId() {
-      return id;
-   }
-
-   public void setId(int id) {
-      this.id = id;
    }
 
    public void setOnEditTaskTitle(String onEditTaskTitle) {

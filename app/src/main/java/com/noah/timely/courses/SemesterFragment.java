@@ -429,7 +429,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
        */
       public void selectAllItems() {
          DataMultiChoiceMode dmcm = (DataMultiChoiceMode) choiceMode;
-         dmcm.selectAll(cList.size(), CollectionUtils.map(cList, DataModel::getPosition));
+         dmcm.selectAll(cList.size(), CollectionUtils.map(cList, DataModel::getId));
          notifyDataSetChanged();
          setMultiSelectionEnabled(true);
          // also start action mode
