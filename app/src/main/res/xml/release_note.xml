@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ReleaseNote>
    <Release>
-      Added Todo list.
+      Fixed bugs in Todo list.
    </Release>
    <Release>
-      Bug fixes on all Android devices.
-   </Release>
-   <Release>
-      Fixed 'Notification not showing' bug on Android Oreo and higher.
-   </Release>
-   <Release>
-      Implemented full and partial support for Android 11 and 12 respectively.
-   </Release>
-   <Release>
-      Improved User Interface and User Experience.
-   </Release>
-   <Release>
-      Added some feature requests.
+      Added select-all feature
    </Release>
 </ReleaseNote>
