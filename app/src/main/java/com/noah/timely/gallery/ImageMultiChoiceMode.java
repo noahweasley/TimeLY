@@ -32,6 +32,15 @@ public class ImageMultiChoiceMode extends MultiChoiceMode {
    }
 
    /**
+    * Add list of uris as currently selected items
+    *
+    * @param uris the uri list of items to be added
+    */
+   public void addAllImageUri(List<Uri> uris) {
+      for (Uri uri : uris) addImageUri(uri);
+   }
+
+   /**
     * Removes an item from the list of selected items
     *
     * @param uri the uri to be removed or deleted

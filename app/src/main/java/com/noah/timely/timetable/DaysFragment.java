@@ -340,8 +340,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
    @Override
    public void onDestroyActionMode(ActionMode mode) {
       actionMode = null;
-      rowAdapter.getChoiceMode().clearChoices();
-      rowAdapter.notifyDataSetChanged();
+      rowAdapter.reset();
    }
 
    public class TimeTableRowAdapter extends RecyclerView.Adapter<TimeTableRowHolder> {
@@ -399,6 +398,15 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
        */
       public void setMultiSelectionEnabled(boolean status) {
          this.multiSelectionEnabled = status;
+      }
+
+      /**
+       * Reset this adapter to initial state
+       */
+      public void reset() {
+         choiceMode.clearChoices();
+         setMultiSelectionEnabled(false);
+         notifyDataSetChanged();
       }
 
       /**

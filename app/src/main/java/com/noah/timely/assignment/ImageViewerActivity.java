@@ -114,9 +114,25 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
 
       findViewById(R.id.add_new).setOnClickListener(
               v -> startActivity(new Intent(this, ImageDirectory.class)
-                      .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
-                      .setAction(ADD_NEW)));
+                                         .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
+                                         .setAction(ADD_NEW)));
 
+      setupSwipeHelper(rv_imageList);
+
+      ThreadUtils.runBackgroundTask(() -> {
+         List<?>[] genericList = database.getAttachedImagesAsUriList(position);
+         mediaUris = (List<Uri>) genericList[0];
+         imageList = (List<Image>) genericList[1];
+         runOnUiThread(() -> {
+            imageAdapter.notifyDataSetChanged();
+            doViewUpdate(null);
+            // invalidate options menu if list is empty
+            if (mediaUris.isEmpty()) invalidateOptionsMenu();
+         });
+      });
+   }
+
+   private void setupSwipeHelper(RecyclerView recyclerView) {
       ItemTouchHelper swipeHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
          @Override
          public int getMovementFlags(@NonNull RecyclerView recyclerView,
@@ -136,13 +152,13 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
             RequestRunner runner = RequestRunner.createInstance();
             RequestRunner.Builder builder = new RequestRunner.Builder();
             builder.setOwnerContext(ImageViewerActivity.this)
-                    .setMediaUris(mediaUris)
-                    .setImageList(imageList)
-                    .setAssignmentPosition(position)
-                    .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition());
+                   .setMediaUris(mediaUris)
+                   .setImageList(imageList)
+                   .setAssignmentPosition(position)
+                   .setAdapterPosition(viewHolder.getAbsoluteAdapterPosition());
 
             runner.setRequestParams(builder.getParams())
-                    .runRequest(DELETE_REQUEST);
+                  .runRequest(DELETE_REQUEST);
 
             Snackbar snackbar = Snackbar.make(coordinator, "Image Deleted", Snackbar.LENGTH_LONG);
             snackbar.setActionTextColor(Color.YELLOW);
@@ -151,17 +167,29 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
          }
       });
 
-      swipeHelper.attachToRecyclerView(rv_imageList);
+      swipeHelper.attachToRecyclerView(recyclerView);
+   }
 
-      ThreadUtils.runBackgroundTask(() -> {
-         List<?>[] genericList = database.getAttachedImagesAsUriList(position);
-         mediaUris = (List<Uri>) genericList[0];
-         imageList = (List<Image>) genericList[1];
-         runOnUiThread(() -> {
-            imageAdapter.notifyDataSetChanged();
-            doViewUpdate(null);
-         });
-      });
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      getMenuInflater().inflate(R.menu.list_menu_image, menu);
+      menu.findItem(R.id.select_all).setEnabled(mediaUris.isEmpty() ? false : true);
+
+      return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setEnabled(mediaUris.isEmpty() ? false : true);
+      return super.onPrepareOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+      if (item.getItemId() == R.id.select_all) {
+         imageAdapter.selectAllItems();
+      }
+      return super.onOptionsItemSelected(item);
    }
 
    @Override
@@ -233,6 +261,8 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
             imageAdapter.notifyDataSetChanged();
             break;
       }
+      // hide or reveal select-all menu itemn
+      invalidateOptionsMenu();
    }
 
    @Override
@@ -248,7 +278,12 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
 
    @Override
    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-      imageAdapter.deleteMultiple();
+      if (item.getItemId() == R.id.delete_multiple_action) {
+         imageAdapter.deleteMultiple();
+      } else {
+         imageAdapter.selectAllItems();
+      }
+
       return true;
    }
 
@@ -367,25 +402,45 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
       }
 
       /**
+       * Selects all items on the list
+       */
+      public void selectAllItems() {
+         ImageMultiChoiceMode imcm = (ImageMultiChoiceMode) choiceMode;
+         imcm.selectAll(mediaUris.size());
+         imcm.addAllImageUri(mediaUris);
+         notifyDataSetChanged();
+         setMultiSelectionEnabled(true);
+         // also start action mode
+         if (actionMode == null) {
+            // select all action peformed, create ation mode, because it wasn't already created
+            actionMode = startSupportActionMode(ImageViewerActivity.this);
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         } else if (actionMode != null) {
+            // select all action performed, but action mode is activated, only set title to length of list
+            actionMode.setTitle(String.format(Locale.US, "%d %s", choiceMode.getCheckedChoiceCount(), "selected"));
+         }
+      }
+
+      /**
        * Deletes multiple images from the list of selected items
        */
       public void deleteMultiple() {
          RequestRunner runner = RequestRunner.createInstance();
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(ImageViewerActivity.this)
-                 .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
-                 .setAssignmentPosition(position)
-                 .setMediaUris(mediaUris)
-                 .setImageList(imageList)
-                 .setItemIndices(getCheckedImagesIndices());
+                .setAdapterPosition(rowHolder.getAbsoluteAdapterPosition())
+                .setAssignmentPosition(position)
+                .setMediaUris(mediaUris)
+                .setImageList(imageList)
+                .setItemIndices(getCheckedImagesIndices());
 
          runner.setRequestParams(builder.getParams())
-                 .runRequest(MULTIPLE_DELETE_REQUEST);
+               .runRequest(MULTIPLE_DELETE_REQUEST);
 
          final int count = getCheckedImageCount();
          Snackbar snackbar = Snackbar.make(coordinator,
-                 count + " Image" + (count > 1 ? "s" : "") + " Deleted",
-                 Snackbar.LENGTH_LONG);
+                                           count + " Image" + (count > 1 ? "s" : "") + " Deleted",
+                                           Snackbar.LENGTH_LONG);
 
          snackbar.setActionTextColor(Color.YELLOW);
          snackbar.setAction("UNDO", v -> runner.undoRequest());

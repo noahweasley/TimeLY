@@ -257,8 +257,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
    @Override
    public void onDestroyActionMode(ActionMode mode) {
       actionMode = null;
-      examRowAdapter.getChoiceMode().clearChoices();
-      examRowAdapter.notifyDataSetChanged();
+      examRowAdapter.reset();
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -361,6 +360,15 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
        */
       public void setMultiSelectionEnabled(boolean status) {
          this.multiSelectionEnabled = status;
+      }
+
+      /**
+       * Reset this adapter to initial state
+       */
+      public void reset() {
+         choiceMode.clearChoices();
+         setMultiSelectionEnabled(false);
+         notifyDataSetChanged();
       }
 
       /**

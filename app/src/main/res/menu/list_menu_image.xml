@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   tools:context="com.noah.timely.main.MainActivity">
+
+   <item
+      android:id="@+id/select_all"
+      android:title="@string/selct_all"
+      external:showAsAction="never" />
+
+</menu>

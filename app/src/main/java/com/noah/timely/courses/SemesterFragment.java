@@ -303,8 +303,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
    @Override
    public void onDestroyActionMode(ActionMode mode) {
       actionMode = null;
-      courseAdapter.getChoiceMode().clearChoices();
-      courseAdapter.notifyDataSetChanged();
+      courseAdapter.reset();
    }
 
    public class CourseAdapter extends RecyclerView.Adapter<CourseRowHolder> {
@@ -364,6 +363,15 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
        */
       public void setMultiSelectionEnabled(boolean status) {
          this.multiSelectionEnabled = status;
+      }
+
+      /**
+       * Reset this adapter to initial state
+       */
+      public void reset() {
+         choiceMode.clearChoices();
+         setMultiSelectionEnabled(false);
+         notifyDataSetChanged();
       }
 
       /**

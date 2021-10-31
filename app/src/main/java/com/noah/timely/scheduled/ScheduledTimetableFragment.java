@@ -375,8 +375,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
    @Override
    public void onDestroyActionMode(ActionMode mode) {
       actionMode = null;
-      tableRowAdapter.getChoiceMode().clearChoices();
-      tableRowAdapter.notifyDataSetChanged();
+      tableRowAdapter.reset();
    }
 
    // For the vertical scrolling list (timetable)
@@ -434,6 +433,15 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
        */
       public void setMultiSelectionEnabled(boolean status) {
          this.multiSelectionEnabled = status;
+      }
+
+      /**
+       * Reset this adapter to initial state
+       */
+      public void reset() {
+         choiceMode.clearChoices();
+         setMultiSelectionEnabled(false);
+         notifyDataSetChanged();
       }
 
       /**

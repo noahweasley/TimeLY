@@ -306,8 +306,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
    @Override
    public void onDestroyActionMode(ActionMode mode) {
       actionMode = null;
-      adapter.getChoiceMode().clearChoices();
-      adapter.notifyDataSetChanged();
+      adapter.reset();
    }
 
    private String retrieveToolbarTitle(String category) {
@@ -389,6 +388,15 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
        */
       public void setMultiSelectionEnabled(boolean status) {
          this.multiSelectionEnabled = status;
+      }
+
+      /**
+       * Reset this adapter to initial state
+       */
+      public void reset() {
+         choiceMode.clearChoices();
+         setMultiSelectionEnabled(false);
+         notifyDataSetChanged();
       }
 
       /**

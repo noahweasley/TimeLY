@@ -335,8 +335,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
    @Override
    public void onDestroyActionMode(ActionMode mode) {
       actionMode = null;
-      assignmentAdapter.getChoiceMode().clearChoices();
-      assignmentAdapter.notifyDataSetChanged();
+      assignmentAdapter.reset();
    }
 
    class AssignmentRowAdapter extends RecyclerView.Adapter<AssignmentRowHolder> {
@@ -392,6 +391,15 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
        */
       public void setMultiSelectionEnabled(boolean status) {
          this.multiSelectionEnabled = status;
+      }
+
+      /**
+       * Reset this adapter to initial state
+       */
+      public void reset() {
+         choiceMode.clearChoices();
+         setMultiSelectionEnabled(false);
+         notifyDataSetChanged();
       }
 
       /**
