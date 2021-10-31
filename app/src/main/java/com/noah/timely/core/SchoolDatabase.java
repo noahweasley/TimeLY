@@ -25,6 +25,7 @@ import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.todo.TodoModel;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
+import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
@@ -2143,6 +2144,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          TodoModel model = new TodoModel(uid, id, title, desc, isTaskCompleted, category,
                                          date, startTime, endTime, todoTime);
 
+         LogUtils.debug(this, "Retrieving: " + model);
          todoModels.add(model);
       }
 
@@ -2233,6 +2235,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues todoValues = new ContentValues();
 
+      LogUtils.debug(this, "Updating todo: " + todoModel);
       todoValues.put(COLUMN_TODO_DATE, todoModel.getCompletionDate());
       todoValues.put(COLUMN_TODO_TIME, todoModel.getCompletionTime());
       todoValues.put(COLUMN_TODO_TITLE, sanitizeEntry(todoModel.getTaskTitle()));
@@ -2245,9 +2248,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       String whereClause = COLUMN_TODO_TITLE + " = ?";
       // had to replace task title to on-edit task title, because user could have edit the task title
       // so it would never correspond with the one in the database
-      String[] whereArgs = { todoModel.getOnEditTaskTitle() };
+      String[] whereArgs = { sanitizeEntry(todoModel.getOnEditTaskTitle()) };
 
-      long resultCode = db.update(todoModel.getDBcategory(), todoValues, COLUMN_ID + " = " + todoModel.getId(), null);
+      long resultCode = db.update(todoModel.getDBcategory(), todoValues, whereClause, whereArgs);
       long resultCode2 = db.update(Constants.TODO_GENERAL, todoValues, whereClause, whereArgs);
 
       return resultCode != -1 && resultCode2 != -1;

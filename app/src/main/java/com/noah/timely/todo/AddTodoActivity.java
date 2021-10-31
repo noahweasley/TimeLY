@@ -33,6 +33,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.Converter;
 import com.noah.timely.util.MiscUtil;
 import com.noah.timely.util.PatternUtils;
@@ -118,9 +119,11 @@ public class AddTodoActivity extends AppCompatActivity {
       // defCategory would be the same as the category of that clicked _todo, but if it was a 'New Task' action, then
       // the defCateory would just be placed on Miscellaneous _todo, because user hasn't specified which ones yet :)
       String defCategory = getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY);
-      category = TextUtils.isEmpty(defCategory) ? TodoModel.SPINNER_CATEGORIES[0] : defCategory;
+      category = TextUtils.isEmpty(defCategory) || defCategory.equals(Constants.TODO_GENERAL) ?
+                 TodoModel.SPINNER_CATEGORIES[0] : defCategory;
       // editing current _todo
       btn_addTask.setOnClickListener(v -> addOrUppdateTask(isEditable));
+      btn_addTask.setText(isEditable ? R.string.update_task : R.string.add_task);
       if (isEditable) {
          Intent intent = getIntent();
          edt_taskTitle.setText(intent.getStringExtra(EXTRA_TODO_TITLE));
@@ -132,7 +135,6 @@ public class AddTodoActivity extends AppCompatActivity {
          if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)) {
             edt_startTime.setText(startTime);
             edt_endTime.setText(endTime);
-            btn_addTask.setText(R.string.update_task);
          }
 
          edt_taskTitle.requestFocus();
@@ -339,9 +341,8 @@ public class AddTodoActivity extends AppCompatActivity {
       String completionTime = TextUtils.isEmpty(startTimeInput)
                                       && TextUtils.isEmpty(endTimeInput) ? null : startTimeInput + " - " + endTimeInput;
 
-      todoModel.setDBcategory(category);
       todoModel.setTaskTitle(taskTitle);
-      todoModel.setDBcategory(getIntent().getStringExtra(EXTRA_DEFAULT_CATEGORY));
+      todoModel.setDBcategory(category);
       todoModel.setTaskDescription(taskDescription);
       todoModel.setTaskCompleted(getIntent().getBooleanExtra(EXTRA_TASK_COMPLETED, false));
       todoModel.setCompletionTime(completionTime);

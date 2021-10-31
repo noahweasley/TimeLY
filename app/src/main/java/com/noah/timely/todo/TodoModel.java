@@ -154,7 +154,8 @@ public class TodoModel extends DataModel {
    @Override
    public String toString() {
       return "TodoModel {" +
-              "id = " + id +
+              " id = " + id +
+              ", uid = " + uid +
               ", position = " + position +
               ", isTaskCompleted = " + isTaskCompleted +
               ", taskTitle = '" + taskTitle + '\'' +

@@ -101,7 +101,7 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
          // no-op
          // don't toggle description layout visibility if description is available
          if (TextUtils.isEmpty(todo.getTaskDescription())) {
-            Toast.makeText(img_overflow.getContext(), "Description not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(img_overflow.getContext(), "Description not available", Toast.LENGTH_SHORT).show();
             return;
          }
 
@@ -197,6 +197,8 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
    }
 
    public void bindView() {
+      isChecked = todoRowAdapter.isChecked(getAbsoluteAdapterPosition());
+      v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
       tryDisableViews(todoRowAdapter.isMultiSelectionEnabled());
       this.todo = (TodoModel) tdList.get(getAbsoluteAdapterPosition());
       // random row decoration
