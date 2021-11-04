@@ -2,6 +2,9 @@
 
 ## An Android app that manages University students activities
 
+<a href="https://www.buymeacoffee.com/noahweasley" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 207px !important;" ></a>
+
+
 ![Presentation 1](/presentation/1.jpg?raw=true)
 
 ![Presentation 2](/presentation/2.jpg?raw=true)
