@@ -82,4 +82,5 @@
    <dimen name="timeframe_text_size">18sp</dimen>
    <dimen name="todo_row_height">140dp</dimen>
    <dimen name="task_text_size_small">12sp</dimen>
+   <dimen name="secondary_dialog_height">320dp</dimen>
 </resources>

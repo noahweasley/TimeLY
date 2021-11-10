@@ -83,4 +83,5 @@
    <dimen name="todo_row_height">180dp</dimen>
    <dimen name="task_text_size_small">12sp</dimen>
    <dimen name="view_touch_area">48dp</dimen>
+   <dimen name="secondary_dialog_height">320dp</dimen>
 </resources>

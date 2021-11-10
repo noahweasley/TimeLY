@@ -9,6 +9,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -23,7 +24,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.noah.timely.R;
 import com.noah.timely.about.TimelyBasicInfoDialog;
@@ -34,6 +34,7 @@ import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
 import com.noah.timely.exam.ExamFragment;
+import com.noah.timely.exports.TimeLYDataGeneratorDialog;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TimetableFragment;
@@ -231,11 +232,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
          new TimelyUpdateInfoDialog().show(this);
 
-      } else if (menuItemId == R.id.generate) {
+      } else if (menuItemId == R.id.__export) {
 
-         displaySelectionBottomSheet();
+         new TimeLYDataGeneratorDialog().show(this);
 
-        } else if (menuItemId == R.id.report) {
+      } else if (menuItemId == R.id.__import) {
+
+         Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+
+      } else if (menuItemId == R.id.report) {
 
          new AlertDialog.Builder(this)
                  .setTitle(R.string.report_title)
@@ -253,12 +258,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
 
       return true;
-   }
-
-   private void displaySelectionBottomSheet(){
-      BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-      bottomSheetDialog.setContentView(R.layout.bottomsheet_chooser);
-      bottomSheetDialog.show();
    }
 
    private void reportAction(DialogInterface dialog, int which) {
@@ -295,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    }
 
    // Get intent actions and update UI
-  private void doUpdateFragment(Intent intent) {
+   private void doUpdateFragment(Intent intent) {
       final String reqAction = intent.getAction();
       if (reqAction != null) {
          switch (reqAction) {

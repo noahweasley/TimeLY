@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:external="http://schemas.android.com/apk/res-auto"
-   xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="@dimen/normal_dialog_width"
-   android:layout_height="@dimen/normal_dialog_height"
+   android:layout_height="@dimen/secondary_dialog_height"
    android:background="@drawable/bg_day_and_night"
    android:padding="@dimen/layout_gap">
 
@@ -89,8 +88,8 @@
       android:id="@+id/scrollView"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      external:layout_constraintTop_toBottomOf="@+id/textView4"
-      tools:layout_editor_absoluteX="16dp">
+      external:layout_constraintBottom_toTopOf="@+id/bmc"
+      external:layout_constraintTop_toBottomOf="@+id/textView4">
 
       <LinearLayout
          android:layout_width="match_parent"
@@ -139,5 +138,23 @@
       </LinearLayout>
 
    </ScrollView>
+
+   <TextView
+      android:id="@+id/bmc"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:background="@drawable/bg_buy_me_coffee"
+      android:drawablePadding="@dimen/layout_gap"
+      android:fontFamily="@font/cookie"
+      android:gravity="start|center"
+      android:text="@string/buy_me_a_coffee"
+      android:textColor="@android:color/white"
+      android:textSize="18sp"
+      external:drawableLeftCompat="@drawable/ic_bmc_logo"
+      external:drawableStartCompat="@drawable/ic_bmc_logo"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
