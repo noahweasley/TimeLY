@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    }
 
    // Get intent actions and update UI
-   private void doUpdateFragment(Intent intent) {
+  private void doUpdateFragment(Intent intent) {
       final String reqAction = intent.getAction();
       if (reqAction != null) {
          switch (reqAction) {
