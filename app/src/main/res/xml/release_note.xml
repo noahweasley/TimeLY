@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ReleaseNote>
    <Release>
-      Fixed bugs in Todo list.
+      Added export/import data feature.
    </Release>
    <Release>
-      Added select-all feature
+      Improved introduction page; added skip and improved naviagation
+   </Release>
+   <Release>
+      Working on full support for Android 12 (S)
    </Release>
 </ReleaseNote>

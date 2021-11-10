@@ -92,7 +92,7 @@
    <string name="no_media">No Images Attached</string>
    <string name="image">Image</string>
    <string name="add_course">add course</string>
-   <string name="generate">Generate and Share</string>
+   <string name="generate">Export | Import</string>
    <string name="check_update">Check for updates</string>
    <string name="morning">Good Morning</string>
    <string name="afternoon">Good Afternoon</string>
@@ -117,6 +117,7 @@
    <string name="yes">Yes</string>
    <string name="version">v1.0.0</string>
    <string name="dialog_pref">Use dialogs to add new task and reminders. This won\'t work for smaller screen sizes</string>
+   <string name="ei_dialog_pref">Use dialogs to show data to be exported/imported. This won\'t work for smaller screen sizes</string>
    <string name="add_timetable">Add timetable</string>
    <string name="add_exam">add exams</string>
    <string name="night">Good Night</string>
