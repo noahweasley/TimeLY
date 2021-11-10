@@ -20,6 +20,7 @@ import android.os.IBinder;
 import android.os.Process;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.os.VibratorManager;
 import android.text.TextUtils;
 
 import androidx.preference.PreferenceManager;
@@ -73,7 +74,7 @@ public class AlarmNotificationService extends Service implements Runnable {
                  .build();
 
          String type = PreferenceManager.getDefaultSharedPreferences(aCtxt)
-                 .getString("Alarm Ringtone", "TimeLY's Default");
+                                        .getString("Alarm Ringtone", "TimeLY's Default");
 
          final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                            : SYSTEM_DEFAULT;
@@ -93,11 +94,18 @@ public class AlarmNotificationService extends Service implements Runnable {
 
       }
 
-      vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+         // retrive the default vibrator
+         VibratorManager vManager = (VibratorManager) getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+         vibrator = vManager.getDefaultVibrator();
+      } else {
+         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+      }
+
       if (isAlarmVibrate) {
 
          final int DELAY = 0, VIBRATE = 1000, SLEEP = 1000, START = 0;
-         long[] vibratePattern = {DELAY, VIBRATE, SLEEP};
+         long[] vibratePattern = { DELAY, VIBRATE, SLEEP };
 
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, START));
@@ -157,14 +165,14 @@ public class AlarmNotificationService extends Service implements Runnable {
       String ss = preferences.getString("snoozeOnStop", "Snooze");
 
       if (ss.equals("Snooze")) sendBroadcast(new Intent(this, NotificationActionReceiver.class)
-              .putExtra("action", "Snooze")
-              .putExtra(ID, NOTIFICATION_ID)
-              .putExtra(ALARM_POS, alarmPos));
+                                                     .putExtra("action", "Snooze")
+                                                     .putExtra(ID, NOTIFICATION_ID)
+                                                     .putExtra(ALARM_POS, alarmPos));
 
       else sendBroadcast(new Intent(this, NotificationActionReceiver.class)
-              .putExtra("action", "Dismiss")
-              .putExtra(ID, NOTIFICATION_ID)
-              .putExtra(ALARM_POS, alarmPos));
+                                 .putExtra("action", "Dismiss")
+                                 .putExtra(ID, NOTIFICATION_ID)
+                                 .putExtra(ALARM_POS, alarmPos));
       stopSelf();
    }
 
