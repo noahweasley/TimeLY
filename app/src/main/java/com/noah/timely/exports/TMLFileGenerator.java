@@ -1,5 +1,7 @@
 package com.noah.timely.exports;
 
+import android.content.Context;
+
 import com.noah.timely.core.DataModel;
 
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.List;
  */
 public class TMLFileGenerator {
 
-   public static boolean generate(List<DataModel> dataModelList) {
+   public static boolean generate(Context context, List<Class<? extends DataModel>> dataModelList) {
       return false;
    }
 }

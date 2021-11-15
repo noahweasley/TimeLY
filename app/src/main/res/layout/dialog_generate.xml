@@ -1,29 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="@dimen/normal_dialog_width"
-   android:layout_height="@dimen/normal_dialog_height"
+   android:layout_height="@dimen/secondary_dialog_height"
    android:background="@drawable/bg_day_and_night">
+
+   <ImageButton
+      android:id="@+id/cancel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@null"
+      android:contentDescription="@string/delete"
+      android:fontFamily="sans-serif"
+      android:gravity="center_horizontal"
+      android:minWidth="32dp"
+      android:minHeight="32dp"
+      android:textColor="@android:color/black"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:srcCompat="@drawable/ic_clear"
+      tools:ignore="RtlSymmetry" />
 
    <TextView
       android:id="@+id/title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/layout_gap"
+      android:layout_marginHorizontal="@dimen/layout_gap"
       android:fontFamily="sans-serif"
       android:text="@string/choose_data"
       android:textColor="@android:color/black"
-      android:textSize="24sp"
+      android:textSize="22sp"
       android:textStyle="bold"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toTopOf="parent" />
+      external:layout_constraintTop_toBottomOf="@+id/cancel" />
+
+   <View
+      android:id="@+id/divider2"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/colorPrimary"
+      external:layout_constraintBottom_toTopOf="@+id/update_detail_list"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
 
    <ScrollView
       android:id="@+id/update_detail_list"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_margin="@dimen/layout_gap"
+      android:layout_marginVertical="@dimen/layout_gap"
       external:layout_constraintBottom_toTopOf="@+id/register"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
@@ -32,52 +60,58 @@
       <LinearLayout
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
+         android:layout_marginHorizontal="@dimen/layout_gap"
          android:orientation="vertical">
 
          <CheckBox
             android:id="@+id/courses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
             android:checked="true"
+            android:fontFamily="sans-serif"
             android:text="@string/registered_course"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
          <CheckBox
             android:id="@+id/assignments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
             android:checked="true"
+            android:fontFamily="sans-serif"
             android:text="@string/assignment"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
          <CheckBox
             android:id="@+id/timetable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
             android:checked="true"
+            android:fontFamily="sans-serif"
             android:text="@string/timetable"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
          <CheckBox
             android:id="@+id/scheduled_classes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
             android:checked="true"
+            android:fontFamily="sans-serif"
             android:text="@string/classes"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
          <CheckBox
             android:id="@+id/exam_timetable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
             android:checked="true"
-            android:text="@string/classes"
-            android:textSize="24sp" />
+            android:fontFamily="sans-serif"
+            android:text="@string/exam_timetable"
+            android:textSize="20sp" />
 
       </LinearLayout>
 
@@ -88,7 +122,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:background="@drawable/register_button"
-      android:text="@string/register"
+      android:text="@string/generate_export"
       android:textColor="@android:color/white"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"

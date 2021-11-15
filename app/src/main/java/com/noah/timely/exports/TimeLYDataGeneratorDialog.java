@@ -23,7 +23,8 @@ public class TimeLYDataGeneratorDialog extends DialogFragment implements View.On
    @SuppressWarnings("FieldCanBeLocal")
    public static final String TAG = "com.noah.timely.exports.TimeLYDataGeneratorDialog";
    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")  // fixme: remove this
-   private final List<DataModel> dataModelList = new ArrayList<>();
+   // use classes to simplify the process
+   private final List<Class<? extends DataModel>> dataModelList = new ArrayList<>();
 
    public void show(Context context) {
       FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
@@ -32,7 +33,7 @@ public class TimeLYDataGeneratorDialog extends DialogFragment implements View.On
 
    @Override
    public void onClick(View v) {
-      boolean isGenerated = TMLFileGenerator.generate(dataModelList);
+      boolean isGenerated = TMLFileGenerator.generate(getContext(), dataModelList);
       if (isGenerated) Toast.makeText(getContext(), "Error occurred", Toast.LENGTH_SHORT).show();
    }
 
