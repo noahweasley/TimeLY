@@ -272,7 +272,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/layout_gap"
-      android:background="@drawable/bg_submit"
+      android:background="@drawable/bg_cta"
       android:minHeight="@dimen/button_min_height"
       android:text="@string/add_task"
       android:textColor="@android:color/white"

@@ -34,7 +34,7 @@
       android:textColor="@android:color/black"
       android:textSize="22sp"
       android:textStyle="bold"
-      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintEnd_toStartOf="@+id/cancel"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@+id/cancel" />
 
@@ -52,12 +52,13 @@
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:layout_marginVertical="@dimen/layout_gap"
-      external:layout_constraintBottom_toTopOf="@+id/register"
+      external:layout_constraintBottom_toTopOf="@+id/export"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@id/title">
 
       <LinearLayout
+         android:id="@+id/data_parent"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:layout_marginHorizontal="@dimen/layout_gap"
@@ -118,7 +119,7 @@
    </ScrollView>
 
    <Button
-      android:id="@+id/register"
+      android:id="@+id/export"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:background="@drawable/register_button"
@@ -127,5 +128,22 @@
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent" />
+
+   <com.noah.timely.custom.MaterialProgressbar
+      android:id="@+id/progress"
+      style="@style/Widget.MaterialProgressBar.ProgressBar"
+      android:layout_width="25dp"
+      android:layout_height="25dp"
+      android:indeterminate="true"
+      android:maxWidth="20dp"
+      android:maxHeight="20dp"
+      android:theme="@style/LightTheme"
+      android:visibility="gone"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="@id/export"
+      external:mpb_progressStyle="circular"
+      tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

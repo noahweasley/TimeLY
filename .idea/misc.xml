@@ -5,6 +5,9 @@
       <map>
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable-v21/ic_date.xml" value="0.27167630057803466" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/bg_color_primary_5.xml" value="0.146875" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/bg_cta.xml" value="0.165234375" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/bg_cta_positive_rounded.xml" value="0.165234375" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/bg_cta_warning_rounded.xml" value="0.165234375" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/bg_dialog_form.xml" value="0.264375" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/bg_holo_blue_dark_5.xml" value="0.146875" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/bg_holo_green_dark_5.xml" value="0.146875" />
@@ -66,7 +69,8 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_course.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_exam.xml" value="0.16196013289036545" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_scheduled.xml" value="0.1361111111111111" />
-        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_generate.xml" value="0.33" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_export_success.xml" value="0.153125" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_generate.xml" value="0.2" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_update_info.xml" value="0.25671250818598557" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_view_assignment.xml" value="0.2" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_view_todo.xml" value="0.22" />
