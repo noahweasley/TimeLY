@@ -9,7 +9,6 @@ import android.os.Build;
 import androidx.core.content.ContextCompat;
 
 import com.noah.timely.R;
-import com.noah.timely.util.LogUtils;
 
 public class App extends Application {
    public static final String ASSIGNMENT_CHANNEL = "TimeLY's assignments";
@@ -30,8 +29,6 @@ public class App extends Application {
    }
 
    private void createNotificationChannels() {
-      LogUtils.debug(this, "Creating notification channels");
-
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
          NotificationManager mgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

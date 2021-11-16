@@ -102,10 +102,19 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private final String TAG = "SchoolDatabase";
 
    private final Context context;
+   private final int version;
 
    public SchoolDatabase(@Nullable Context context) {
       super(context, "SchoolDatabase.db", null, 2);
+      version = 2;
       this.context = context;
+   }
+
+   /**
+    * @return the database version
+    */
+   public int getDatabaseVersion() {
+      return version;
    }
 
    /**

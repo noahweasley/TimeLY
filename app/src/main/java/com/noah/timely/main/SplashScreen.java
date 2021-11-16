@@ -1,8 +1,8 @@
 package com.noah.timely.main;
 
+import static com.noah.timely.util.AppInfoUtils.getAppVesionName;
+
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.noah.timely.BuildConfig;
 import com.noah.timely.R;
 import com.noah.timely.util.PreferenceUtils;
 
@@ -52,14 +51,7 @@ public class SplashScreen extends AppCompatActivity {
 //
 //        tv_appName.setText(wordSpan);
 
-      String version = BuildConfig.VERSION_NAME;
-      try {
-         PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-         version = packageInfo.versionName;
-      } catch (PackageManager.NameNotFoundException ignored) {
-      }
-
-      tv_version.setText(String.format("v%s", version));
+      tv_version.setText(String.format("v%s", getAppVesionName(this)));
       // Load all animations
       tv_appName.startAnimation(AnimationUtils.loadAnimation(this, R.anim.an_anim));
       // Display main screen after the splash screen
