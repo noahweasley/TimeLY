@@ -1646,7 +1646,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     * @return empty data if table doesn't exists yet and then create it or returns the current
     * exam timetable data in database
     */
-   public List<DataModel> getExamTimetableDataFor(int index) {
+   public List<DataModel> getExamTimetableDataForWeek(int index) {
       String examTable = "WEEK_" + (index + 1);
       SQLiteDatabase db = getReadableDatabase();
       // Create this table if it doesn't exist

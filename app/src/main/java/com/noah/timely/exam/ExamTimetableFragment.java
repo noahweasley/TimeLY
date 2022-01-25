@@ -98,7 +98,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
 
       ThreadUtils.runBackgroundTask(() -> {
          Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-         eList = database.getExamTimetableDataFor(position);
+         eList = database.getExamTimetableDataForWeek(position);
          // Sort by start time
          Collections.sort(eList, (e1, e2) -> {
             ExamModel em1 = (ExamModel) e1;

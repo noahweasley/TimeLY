@@ -29,6 +29,14 @@ public class AppInfoUtils {
 
    /**
     * @param context the context to access app resources
+    * @return the app's current name
+    */
+   public static String getAppName(Context context) {
+      return "TimeLY";
+   }
+
+   /**
+    * @param context the context to access app resources
     * @return the version of the database
     */
    public static int getDatabaseVerion(Context context) {
