@@ -9,6 +9,8 @@ import com.noah.timely.util.AppInfoUtils;
 import com.noah.timely.util.Constants;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,9 +40,13 @@ public class TMLFileGenerator {
    }
 
    private static boolean writeTransformedDatabaseToFile(Context context, Map<String, String> transformed) {
-      long time = System.currentTimeMillis(); // Set unique id for each file generated
+      SimpleDateFormat dateFormat = new SimpleDateFormat("HHMMddmmyyyy");
+      Date date = new Date(System.currentTimeMillis()); // Set unique id for each file generated
+      String time = dateFormat.format(date);
+
       String appName = AppInfoUtils.getAppName(context);
-      String output = String.format(Locale.US, "%s%s-Data%d.tmly", context.getExternalFilesDir(null), appName, time);
+      String ext = Zipper.FILE_EXTENSION;
+      String output = String.format(Locale.US, "%s%s-Data%s%s", context.getExternalFilesDir(null), appName, time, ext);
 
       Map<String, String> metadata = createMetadataFiles(context);
       for (Map.Entry<String, String> entry : metadata.entrySet()) {
@@ -54,6 +60,10 @@ public class TMLFileGenerator {
          return false;
       }
       return isCompressed;
+   }
+
+   private static void getXml() {
+
    }
 
    private static Map<String, String> createMetadataFiles(Context context) {

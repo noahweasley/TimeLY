@@ -7,11 +7,12 @@ import android.content.Context;
 
 import com.noah.timely.util.Constants;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -24,6 +25,11 @@ import java.util.zip.ZipOutputStream;
 public class Zipper {
 
    /**
+    * TimeLY's native export file extension
+    */
+   public static final String FILE_EXTENSION = ".tmly";
+
+   /**
     * Un-zips a .tmly file into one single folder
     *
     * @param context the context used in accessing application resources
@@ -32,24 +38,24 @@ public class Zipper {
     * @return true if file was zipped successfully
     * @throws FileNotFoundException if file location specified was incorrect
     */
-   public static boolean unzipToXMLArray(Context context, String input, String output) throws IOException {
-      File finput = new File(input);
-      File foutput = new File(output);
+   public static Map<String, String> unzipToXMLArray(Context context, String finput) throws IOException {
+      ZipInputStream zin = new ZipInputStream(new FileInputStream(finput));
+      Map<String, String> xmlmap = new HashMap<>();
 
-      FileOutputStream fout = new FileOutputStream(foutput);
-      FileInputStream fin = new FileInputStream(finput);
-      ZipInputStream zin = new ZipInputStream(fin);
+      ZipEntry zipEntry = null;
 
-      while ((zin.getNextEntry()) != null) {
-         byte[] data = new byte[zin.available()];
+      while ((zipEntry = zin.getNextEntry()) != null) {
+         byte[] data = new byte[Integer.MAX_VALUE];
          if (zin.read(data) != -1) {
-            fout.write(data);
+            String entryName = zipEntry.getName();
+            String ssEntryName = entryName.substring(0, entryName.indexOf(FILE_EXTENSION));
+            xmlmap.put(ssEntryName, new String(data, Charset.forName("UTF-8")));
          }
 
       }
 
       zin.close();
-      return false;
+      return xmlmap;
    }
 
    /**
@@ -67,18 +73,21 @@ public class Zipper {
 
       Set<Map.Entry<String, String>> entries = transf.entrySet();
 
+      int zippedCount = 0;
+
       for (Map.Entry<String, String> entry : entries) {
          String filename = getProperFilename(entry.getKey());
          ZipEntry zipEntry = new ZipEntry(filename);
          zout.putNextEntry(zipEntry);
 
-         zout.write(entry.getValue().getBytes());
+         zout.write(entry.getValue().getBytes(Charset.forName("UTF-8")));
          zout.closeEntry();
+         zippedCount++;
       }
 
       zout.finish();
       zout.close();
-      return false;
+      return entries.size() == zippedCount;
    }
 
    private static String getProperFilename(String dataModelIdentifier) {
