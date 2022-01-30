@@ -23,12 +23,20 @@ import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TimeLYDataGeneratorDialog extends DialogFragment {
    @SuppressWarnings("FieldCanBeLocal")
    public static final String TAG = "com.noah.timely.exports.TimeLYDataGeneratorDialog";
    private final List<String> dataModelList = new ArrayList<>();
+
+   {
+      // intially all checkboxes are checked
+      String[] datamodels = new String[]{ Constants.COURSE, Constants.ASSIGNMENT, Constants.TIMETABLE,
+                                          Constants.SCHEDULED_TIMETABLE, Constants.EXAM };
+      dataModelList.addAll(Arrays.asList(datamodels));
+   }
 
    public void show(Context context) {
       FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
@@ -46,7 +54,7 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
       private ProgressBar progress;
 
       public DataGeneratorDialog(@NonNull Context context) {
-         super(context);
+         super(context, R.style.Dialog);
       }
 
       @Override
@@ -68,7 +76,7 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
                                    (CheckBox) vg_dataParent.getChildAt(2), (CheckBox) vg_dataParent.getChildAt(3),
                                    (CheckBox) vg_dataParent.getChildAt(4) };
          // This is much more cleaner, than copy and pasting the same thing over again :)
-         for (int i = 0; i <= checkBoxes.length; i++) checkBoxes[i].setOnCheckedChangeListener(this);
+         for (int i = 0; i < checkBoxes.length; i++) checkBoxes[i].setOnCheckedChangeListener(this);
 
       }
 
@@ -114,28 +122,30 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
             // run parallel in background
             boolean isGenerated = TMLFileGenerator.generate(getContext(), dataModelList);
             // run in ui thread - required
-            getActivity().runOnUiThread(() -> {
-               // reset to defaults
-               btn_export.setText(R.string.generate_export);
-               btn_export.setEnabled(true);
-               progress.setVisibility(View.GONE);
+            if (isAdded()) {
+               getActivity().runOnUiThread(() -> {
+                  // reset to defaults
+                  btn_export.setText(R.string.generate_export);
+                  btn_export.setEnabled(true);
+                  progress.setVisibility(View.GONE);
 
-               if (isGenerated) {
-                  // Export successful, show result dialog
-                  new ExportSuccessDialog().show(getContext(), R.string.export_success_message);
+                  if (isGenerated) {
+                     // Export successful, show result dialog
+                     new ExportSuccessDialog().show(getContext(), R.string.export_success_message);
 
-               } else {
-                  // Export unsuccessful. Error occurred
-                  ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
-                  errorBuilder.setShowSuggestions(true)
-                              .setDialogMessage("An Error occurred while generating your file")
-                              .setSuggestionCount(1)
-                              .setSuggestion1("Check that you have enough memory");
+                  } else {
+                     // Export unsuccessful. Error occurred
+                     ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
+                     errorBuilder.setShowSuggestions(true)
+                                 .setDialogMessage("An Error occurred while generating your file")
+                                 .setSuggestionCount(1)
+                                 .setSuggestion1("Check that you have enough memory");
 
-                  new ErrorDialog().showErrorMessage(getContext(), errorBuilder.build());
-               }
+                     new ErrorDialog().showErrorMessage(getContext(), errorBuilder.build());
+                  }
 
-            });
+               });
+            }
 
          });
 

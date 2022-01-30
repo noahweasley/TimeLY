@@ -1,5 +1,9 @@
 package com.noah.timely.exports;
 
+import static com.noah.timely.util.AppInfoUtils.getAppName;
+import static com.noah.timely.util.AppInfoUtils.getAppVesionName;
+import static com.noah.timely.util.AppInfoUtils.getDatabaseVerion;
+
 import android.content.Context;
 
 import com.noah.timely.core.DataModel;
@@ -8,6 +12,7 @@ import com.noah.timely.io.Zipper;
 import com.noah.timely.util.AppInfoUtils;
 import com.noah.timely.util.Constants;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +35,7 @@ public class TMLFileGenerator {
     */
    public static boolean generate(Context context, List<String> dataModelIdentifierList) {
       Map<String, String> transformed = new HashMap<>();
+      transformed.put("Metadata", Transformer.getXML(Transformer.Type.METADATA, createMetadataMap(context)));
 
       for (int i = 0; i <= dataModelIdentifierList.size(); i++) {
          String hashKey = dataModelIdentifierList.get(i);
@@ -46,12 +52,11 @@ public class TMLFileGenerator {
 
       String appName = AppInfoUtils.getAppName(context);
       String ext = Zipper.FILE_EXTENSION;
-      String output = String.format(Locale.US, "%s%s-Data%s%s", context.getExternalFilesDir(null), appName, time, ext);
+      final String folderName = "exported";
 
-      Map<String, String> metadata = createMetadataFiles(context);
-      for (Map.Entry<String, String> entry : metadata.entrySet()) {
-         transformed.put(entry.getKey(), entry.getValue());
-      }
+      String output = String.format(Locale.US,
+                                    "%1$s%2$s%3$s%2$s%4$s-Data%5$s%6$s", context.getExternalFilesDir(null),
+                                    File.separator, folderName, appName, time, ext);
 
       boolean isCompressed = false;
       try {
@@ -62,17 +67,18 @@ public class TMLFileGenerator {
       return isCompressed;
    }
 
-   private static void getXml() {
-
-   }
-
-   private static Map<String, String> createMetadataFiles(Context context) {
-      return null;
+   private static Map<String, String> createMetadataMap(Context context) {
+      Map<String, String> metadataMap = new HashMap<>();
+      metadataMap.put("app_name", getAppName(context));
+      metadataMap.put("app_version", getAppVesionName(context));
+      metadataMap.put("database_version", String.valueOf(getDatabaseVerion(context)));
+      return metadataMap;
    }
 
    private static String transformDatabaseToXML(Context context, String dataModelIdentifier) {
       List<DataModel> dataModelList;
       SchoolDatabase database = new SchoolDatabase(context);
+      Map<String, String> dataModelListMap = new HashMap<>();
 
       switch (dataModelIdentifier) {
          case Constants.ASSIGNMENT:
@@ -94,6 +100,11 @@ public class TMLFileGenerator {
             throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
       }
 
+      dataModelListMap = getDataModelListMap(dataModelIdentifier, dataModelList);
+      return Transformer.getXML(Transformer.Type.DATAMODEL, dataModelListMap);
+   }
+
+   private static Map<String, String> getDataModelListMap(String identifier, List<? extends DataModel> list) {
 
       return null;
    }

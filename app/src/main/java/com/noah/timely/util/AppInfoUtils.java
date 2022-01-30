@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.noah.timely.BuildConfig;
+import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 
 /**
@@ -29,10 +30,10 @@ public class AppInfoUtils {
 
    /**
     * @param context the context to access app resources
-    * @return the app's current name
+    * @return the app's current launcher label
     */
    public static String getAppName(Context context) {
-      return "TimeLY";
+      return context.getString(R.string.app_name);
    }
 
    /**

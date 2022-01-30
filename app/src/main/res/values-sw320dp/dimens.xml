@@ -83,4 +83,5 @@
    <dimen name="todo_row_height">140dp</dimen>
    <dimen name="task_text_size_small">12sp</dimen>
    <dimen name="secondary_dialog_height">340dp</dimen>
+   <dimen name="normal_dialog_text_size">18sp</dimen>
 </resources>

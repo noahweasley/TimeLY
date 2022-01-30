@@ -101,6 +101,8 @@ public class Zipper {
          return "Timetable";
       } else if (Constants.SCHEDULED_TIMETABLE.equals(dataModelIdentifier)) {
          return "Scheduled Timetable";
+      } else if (dataModelIdentifier.equals("Metadata")) {
+         return dataModelIdentifier;
       }
       throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
 

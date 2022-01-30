@@ -84,4 +84,5 @@
    <dimen name="task_text_size_small">12sp</dimen>
    <dimen name="view_touch_area">48dp</dimen>
    <dimen name="secondary_dialog_height">340dp</dimen>
+   <dimen name="normal_dialog_text_size">18sp</dimen>
 </resources>
