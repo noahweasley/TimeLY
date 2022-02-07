@@ -102,11 +102,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private final String TAG = "SchoolDatabase";
 
    private final Context context;
-   private final int version;
 
    public SchoolDatabase(@Nullable Context context) {
+      // remember to update the database version specified in the super class' constructor
       super(context, "SchoolDatabase.db", null, 2);
-      version = 2;
       this.context = context;
    }
 
@@ -114,7 +113,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     * @return the database version
     */
    public int getDatabaseVersion() {
-      return version;
+      SQLiteDatabase db = getReadableDatabase();
+      return db.getVersion();
    }
 
    /**
@@ -172,7 +172,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          // bunmp version from v1.0 to v2.0. In v1.0, _Todo Table does not exist, so upgrade former version's
          // database, adding the _Todo table to begin data insertion.
          createTodoListTables(db);
-      }
+      }/* else if ((oldVersion == 1 || oldVersion == 2) && newVersion == 3) {
+         // drop Preference_Table in version 3.0 and replace with androidx preferen
+      }*/
 
    }
 

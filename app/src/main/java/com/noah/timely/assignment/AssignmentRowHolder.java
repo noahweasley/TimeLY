@@ -60,7 +60,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
    private List<DataModel> aList;
    private boolean isChecked;
 
-   @SuppressWarnings({"ClickableViewAccessibility", "ConstantConditions"})
+   @SuppressWarnings({ "ClickableViewAccessibility", "ConstantConditions" })
    public AssignmentRowHolder(@NonNull View rootView) {
       super(rootView);
       header = rootView.findViewById(R.id.header);
@@ -75,11 +75,7 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
       viewButton = rootView.findViewById(R.id.viewButton);
       img_stats = rootView.findViewById(R.id.stats);
 
-      viewButton.setOnClickListener(v -> {
-         AssignmentModel assignment = (AssignmentModel) aList.get(getAbsoluteAdapterPosition());
-         assignment.setChronologicalOrder(getAbsoluteAdapterPosition());
-         new AssignmentViewDialog().show(mActivity, assignment);
-      });
+      viewButton.setOnClickListener(v -> viewFullAssignmentDetails());
 
       deleteButton.setOnClickListener(v -> doDeleteAssignment());
 
@@ -119,6 +115,8 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
             if (assignmentRowAdapter.getCheckedAssignmentsCount() == 0) {
                assignmentRowAdapter.setMultiSelectionEnabled(false);
             }
+         } else {
+            viewFullAssignmentDetails();
          }
       });
    }
@@ -169,10 +167,17 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
 
       img_stats.setImageResource(assignment.isSubmitted() ? R.drawable.ic_round_check_circle
                                                           : R.drawable.ic_pending);
-      TooltipCompat.setTooltipText(img_stats, "Submission status");
+      TooltipCompat.setTooltipText(img_stats, "Submission status: "
+              + (assignment.isSubmitted() ? "SUBMITTED" : "PENDING"));
       isChecked = assignmentRowAdapter.isChecked(getAbsoluteAdapterPosition());
       v_selectionOverlay.setVisibility(isChecked ? View.VISIBLE : View.GONE);
       tryDisableViews(assignmentRowAdapter.isMultiSelectionEnabled());
+   }
+
+   private void viewFullAssignmentDetails() {
+      AssignmentModel assignment = (AssignmentModel) aList.get(getAbsoluteAdapterPosition());
+      assignment.setChronologicalOrder(getAbsoluteAdapterPosition());
+      new AssignmentViewDialog().show(mActivity, assignment);
    }
 
    // Determines if there was an added title in the lecturer's name
@@ -187,8 +192,8 @@ public class AssignmentRowHolder extends RecyclerView.ViewHolder {
    private String truncateName(String fullName) {
       String[] nameTokens = fullName.split(" ");
 
-      String[] titles = {"Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr", "Mr",
-                         "Mister", "Mrs", "Ms", "Prof", "Professor"};
+      String[] titles = { "Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr", "Mr",
+                          "Mister", "Mrs", "Ms", "Prof", "Professor" };
 
       StringBuilder nameBuilder = new StringBuilder();
 

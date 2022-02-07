@@ -94,6 +94,23 @@ public class PreferenceUtils {
    }
 
    /**
+    * Sets or create a integer preference
+    *
+    * @param context the context to be used to access the preference file
+    * @param key     the preference key to be accessed
+    * @param value   the value to be written
+    */
+   public static void setIntegerValue(Context context, String key, int value) {
+      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+      // preference editor
+      SharedPreferences.Editor spEditor = sharedPreferences.edit();
+      // if preference key is not created yet, create it and insert a default value
+      spEditor.putInt(key, value);
+      // apply changes
+      spEditor.apply();
+   }
+
+   /**
     * Retrieves a string preference value
     *
     * @param context      the context to be used to access the preference file
@@ -104,5 +121,18 @@ public class PreferenceUtils {
    public static String getStringValue(Context context, String key, String defaultValue) {
       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
       return sharedPreferences.getString(key, defaultValue);
+   }
+
+   /**
+    * Retrieves a integer preference value
+    *
+    * @param context      the context to be used to access the preference file
+    * @param key          the preference to be accessed
+    * @param defaultValue the default value to use, when key doesn't exist yet
+    * @return the value of the preference with (<code>key</code>)
+    */
+   public static int getIntegerValue(Context context, String key, int defaultValue) {
+      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+      return sharedPreferences.getInt(key, defaultValue);
    }
 }

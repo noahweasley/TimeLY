@@ -54,7 +54,7 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
       private ProgressBar progress;
 
       public DataGeneratorDialog(@NonNull Context context) {
-         super(context, R.style.Dialog);
+         super(context, R.style.Dialog_Closeable);
       }
 
       @Override

@@ -193,4 +193,5 @@
    <string name="export_success_message">Data Exported</string>
    <string name="share">share</string>
    <string name="close_">close</string>
+   <string name="_skip">skip</string>
 </resources>

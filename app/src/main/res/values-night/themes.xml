@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-   <!--  Base application theme. -->
+   <!--  Base application theme. (Original Version) -->
    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
       <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
       <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -15,10 +15,8 @@
       <item name="snackbarStyle">@style/SnackbarStyle</item>
       <item name="android:windowBackground">@drawable/bg_day_and_night</item>
       <item name="android:navigationBarColor" tools:targetApi="lollipop">#BE000000</item>
-      <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
       <item name="windowActionModeOverlay">true</item>
       <item name="actionModeBackground">@color/colorPrimary</item>
-      <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">never</item>
       <item name="android:windowAnimationStyle">@style/WindowDefaultAnimations</item>
    </style>
 
@@ -56,8 +54,7 @@
    </style>
 
    <style name="FullscreenTheme" parent="AppTheme">
-      <item name="android:windowFullscreen">true</item>
-      <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">default</item>
+      <item name="android:windowFullscreen">false</item>
    </style>
 
    <style name="ImageViewerTheme" parent="FullscreenTheme">

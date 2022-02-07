@@ -53,9 +53,10 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_outline_shopping_cart.xml" value="0.146875" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_palette.xml" value="0.146875" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_plane_icon.xml" value="0.146875" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_round_check_circle.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_tag.xml" value="0.14536082474226805" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_tag_fill.xml" value="0.14536082474226805" />
-        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout-v21/assignment_list_row.xml" value="0.1361111111111111" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout-v21/assignment_list_row.xml" value="0.33" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout-v21/todo_list_row.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_add_course.xml" value="0.1" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_add_exam.xml" value="0.1361111111111111" />
@@ -65,6 +66,7 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_todo_list.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/add_assignment.xml" value="0.245" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/alarms_row.xml" value="0.21" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/assignment_list_row.xml" value="0.33" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_about.xml" value="0.5" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_course.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_exam.xml" value="0.16196013289036545" />
@@ -79,7 +81,7 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/fragment_todo.xml" value="0.17" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/fragment_todo_list.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/fragment_todo_list_sub.xml" value="0.1361111111111111" />
-        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/intro.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/intro.xml" value="0.1358108108108108" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/landing_page.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/layout_label_editor.xml" value="0.17192982456140352" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/scheduled_timetable_row.xml" value="0.33" />

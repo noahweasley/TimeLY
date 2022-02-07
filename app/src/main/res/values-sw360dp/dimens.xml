@@ -47,7 +47,7 @@
    <dimen name="assignment_course_code_text_size">14sp</dimen>
    <dimen name="storage_viewer_text_size">14sp</dimen>
    <dimen name="storage_view_container_height">70dp</dimen>
-   <dimen name="assignment_list_height_21">220dp</dimen>
+   <dimen name="assignment_list_height_21">210dp</dimen>
    <dimen name="assignment_text_size">14sp</dimen>
    <dimen name="assignment_dialog_text_size_medium">16sp</dimen>
    <dimen name="image_row_size">180dp</dimen>

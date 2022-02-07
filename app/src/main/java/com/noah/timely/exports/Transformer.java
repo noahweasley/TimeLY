@@ -1,9 +1,13 @@
 package com.noah.timely.exports;
 
+import com.noah.timely.core.DataModel;
+import com.noah.timely.util.Constants;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,34 +26,14 @@ import javax.xml.transform.stream.StreamResult;
 public class Transformer {
 
    /**
-    * Types of data that can be transformed by the Transformer
-    */
-   public enum Type {
-      METADATA, DATAMODEL
-   }
-
-   private static void checkType(Type type) {
-      boolean found = false;
-      for (Type tp : Type.values()) {
-         if (tp == type) {
-            found = true;
-            break;
-         }
-      }
-      if (!found) throw new IllegalArgumentException(type + " is not supported");
-   }
-
-   /**
     * Transforms a map into xml
     *
     * @param type the transformation type
     * @param map  the map to be transformed
     * @return the required xml representation of the map
     */
-   public static String getXML(Type type, Map<String, String> map) {
-      checkType(type);
+   public static <T> String getXML(Class<?> type, T data) {
       String xmlString;
-      Set<Map.Entry<String, String>> entrySet = map.entrySet();
 
       try {
          DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -57,15 +41,22 @@ public class Transformer {
          Document document = documentBuilder.newDocument();
          // root element
          Element rootElement;
-
-         if (type == Type.DATAMODEL) {
+         // export main table data - data models
+         if (type == Object[].class) {
+            Object[] ss = (Object[]) data;
+            List<DataModel> dataModelList = (List<DataModel>) ss[1];
+            if (dataModelList.size() == 0) return null;
             rootElement = document.createElement("Table");
+            rootElement.setAttribute("name", getProperTableName((String) ss[0]));
             document.appendChild(rootElement);
-            // structure elements
+            // structure and data elements
             Element structureElement = document.createElement("TableStructure");
-//            rootElement.setAttribute("name", "Timetable");
+            Element dataElement = document.createElement("TableData");
             rootElement.appendChild(structureElement);
          } else {
+            // export metadata
+            Map<String, String> map = (Map<String, String>) data;
+            Set<Map.Entry<String, String>> entrySet = map.entrySet();
             rootElement = document.createElement("metadata");
             document.appendChild(rootElement);
             // data elements
@@ -99,4 +90,20 @@ public class Transformer {
       return xmlString;
    }
 
+
+   private static String getProperTableName(String dataModelIdentifier) {
+      if (Constants.ASSIGNMENT.equals(dataModelIdentifier)) {
+         return "Assignments";
+      } else if (Constants.COURSE.equals(dataModelIdentifier)) {
+         return "Courses";
+      } else if (Constants.EXAM.equals(dataModelIdentifier)) {
+         return "Exams";
+      } else if (Constants.TIMETABLE.equals(dataModelIdentifier)) {
+         return "Timetable";
+      } else if (Constants.SCHEDULED_TIMETABLE.equals(dataModelIdentifier)) {
+         return "Scheduled Timetable";
+      }
+      throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
+
+   }
 }

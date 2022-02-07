@@ -19,7 +19,9 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.noah.timely.R;
 
-public class IntroPageActivity extends AppCompatActivity {
+public class IntroPageActivity extends AppCompatActivity implements View.OnClickListener {
+   private IntroPagerAdapter adapter;
+   private ViewPager2 pager_intro;
 
    @Override
    protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,13 +29,21 @@ public class IntroPageActivity extends AppCompatActivity {
       setContentView(R.layout.intro);
 
       Button start = findViewById(R.id.start);
-      FloatingActionButton skip = findViewById(R.id.skip);
-      ViewPager2 pager_intro = findViewById(R.id.intro_pager);
-      pager_intro.setAdapter(new IntroPagerAdapter(this));
+      Button skip = findViewById(R.id.skip);
+      FloatingActionButton btn_next = findViewById(R.id.next);
+      FloatingActionButton btn_prev = findViewById(R.id.prev);
+
+      adapter = new IntroPagerAdapter(this);
+      pager_intro = findViewById(R.id.intro_pager);
+      pager_intro.setAdapter(adapter);
       // set up page position indicator to react to page scroll
       TabLayout tab = findViewById(R.id.indicator);
       new TabLayoutMediator(tab, pager_intro, (tab1, position) -> {
       }).attach();
+
+      btn_prev.setOnClickListener(this);
+      btn_next.setOnClickListener(this);
+
       // add scroll listener
       pager_intro.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
@@ -51,10 +61,12 @@ public class IntroPageActivity extends AppCompatActivity {
          }
 
       });
+
       // navigate to landing page
       start.setOnClickListener(this::navigateToLandingPage);
       skip.setOnClickListener(this::navigateToLandingPage);
    }
+
 
    private void navigateToLandingPage(View view) {
       Intent nav_main = new Intent(this, MainActivity.class);
@@ -65,6 +77,18 @@ public class IntroPageActivity extends AppCompatActivity {
    @Override
    protected void onDestroy() {
       super.onDestroy();
+   }
+
+   @Override
+   public void onClick(View v) {
+      int shift = 0;
+      int viewId = v.getId();
+      if (viewId == R.id.next) shift = +1;
+      else if (viewId == R.id.prev) shift = -1;
+
+      int selectedItem = pager_intro.getCurrentItem();
+      if (selectedItem >= 0 && selectedItem < adapter.getItemCount())
+         pager_intro.setCurrentItem(pager_intro.getCurrentItem() + shift);
    }
 
    private static class IntroPagerAdapter extends FragmentStateAdapter {

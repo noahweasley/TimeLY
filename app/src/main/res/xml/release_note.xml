@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ReleaseNote>
    <Release>
-      Added export/import data feature.
+      Assignment list items now displays full submission status.
    </Release>
    <Release>
-      Improved introduction page; added skip and improved naviagation
+      Changed status bar color to reflect current theme.
    </Release>
    <Release>
-      Working on full support for Android 12 (S)
+      Added, Click-to-view full list item details on some lists.
+   </Release>
+   <Release>
+      Added Export/Import data feature.
+   </Release>
+   <Release>
+      Improved Introduction Page; added skip and improved naviagation.
+   </Release>
+   <Release>
+      Working on full support for Android 12.
    </Release>
 </ReleaseNote>
