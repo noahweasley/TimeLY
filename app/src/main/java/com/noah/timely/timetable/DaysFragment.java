@@ -43,7 +43,9 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.exports.TimeLYDataGeneratorDialog;
 import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
@@ -226,6 +228,8 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
       if (item.getItemId() == R.id.select_all) {
          rowAdapter.selectAllItems();
+      } else if (item.getItemId() == R.id.export) {
+         new TimeLYDataGeneratorDialog().show(getContext(), Constants.TIMETABLE);
       }
       return super.onOptionsItemSelected(item);
    }

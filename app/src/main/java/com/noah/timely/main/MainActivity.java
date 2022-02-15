@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.Menu;
@@ -46,6 +47,8 @@ import com.noah.timely.util.ReportActionUtil;
 import com.noah.timely.util.TimelyUpdateUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+   private boolean dismissable;
+
    static {
       AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
    }
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new AlertDialog.Builder(this)
                     .setTitle(noticeTitle)
                     .setMessage(noticeMessage)
+                    .setIcon(R.drawable.ic_baseline_info_24)
                     .setNegativeButton(cancelText, this::requestAction)
                     .setNeutralButton(neutralText, this::requestAction)
                     .setPositiveButton(goText, this::requestAction)
@@ -161,12 +165,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       if (drawer.isDrawerOpen(GravityCompat.START))
          drawer.closeDrawer(GravityCompat.START);
       else {
-         FragmentManager manager = getSupportFragmentManager();
-         FragmentTransaction transaction = manager.beginTransaction();
-         Fragment fragment1 = manager.findFragmentByTag("Todo");
-         if (fragment1 == null) finish();
-         else super.onBackPressed();
+         if (dismissable) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            Fragment fragment1 = manager.findFragmentByTag("Todo");
+            if (fragment1 == null) finish();
+            else super.onBackPressed();
+         } else {
+            Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+         }
+         dismissable = true;
+         new Handler(getMainLooper()).postDelayed(() -> dismissable = false, 2000);
       }
+
    }
 
    @Override

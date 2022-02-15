@@ -38,8 +38,10 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_event_available_24.xml" value="0.2770137524557957" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_flight_24.xml" value="0.2770137524557957" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_import_export_24.xml" value="0.2203125" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.148" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_shopping_cart_24.xml" value="0.2770137524557957" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_sports_handball_24.xml" value="0.146875" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_warning_24.xml" value="0.148" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_work_outline_24.xml" value="0.146875" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_blob_7_4_3181.xml" value="0.264375" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_bmc_logo.xml" value="0.1" />
@@ -72,7 +74,7 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_exam.xml" value="0.16196013289036545" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_scheduled.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_export_success.xml" value="0.153125" />
-        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_generate.xml" value="0.67" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_generate.xml" value="0.209375" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_update_info.xml" value="0.25671250818598557" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_view_assignment.xml" value="0.2" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_view_todo.xml" value="0.22" />

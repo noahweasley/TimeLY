@@ -111,6 +111,7 @@ public class TMLFileGenerator {
             throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
       }
 
+      // key - dataModelIdentifier, value - dataModelList
       return Transformer.getXML(Object[].class, new Object[]{ dataModelIdentifier, dataModelList });
    }
 

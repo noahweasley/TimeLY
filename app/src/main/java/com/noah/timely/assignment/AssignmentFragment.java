@@ -37,7 +37,9 @@ import com.noah.timely.core.PositionMessageEvent;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.exports.TimeLYDataGeneratorDialog;
 import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -207,6 +209,8 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
       if (item.getItemId() == R.id.select_all) {
          assignmentAdapter.selectAllItems();
+      } else if (item.getItemId() == R.id.export) {
+         new TimeLYDataGeneratorDialog().show(getContext(), Constants.ASSIGNMENT);
       }
       return super.onOptionsItemSelected(item);
    }
