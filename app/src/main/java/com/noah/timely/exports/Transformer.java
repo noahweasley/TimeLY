@@ -37,7 +37,7 @@ class Transformer {
     * @return the required xml representation of the map
     */
    @SuppressWarnings("unchecked")
-   public static <T> String getXML(Class<?> type, T data) {
+   public static <T> String getXML(T data) {
       String xmlString;
 
       try {
@@ -47,7 +47,7 @@ class Transformer {
          // root element
          Element rootElement;
          // export main table data - data models
-         if (type == Object[].class) {
+         if (data.getClass() == Object[].class) {
             Object[] ss = (Object[]) data;
             String identifier = (String) ss[0];
 
@@ -66,7 +66,7 @@ class Transformer {
             // add list nodes of dataModelList as child nodes to dataElement
             appendTableData(identifier, document, dataElement, dataModelList);
 
-         } else if (type == Map.class) {
+         } else if (data.getClass() == Map.class) {
             // export metadata
             Map<String, String> map = (Map<String, String>) data;
             Set<Map.Entry<String, String>> entrySet = map.entrySet();
@@ -80,7 +80,7 @@ class Transformer {
                rootElement.appendChild(dataElement);
             }
          } else {
-            throw new IllegalArgumentException(type + " is not supported");
+            throw new IllegalArgumentException( data.getClass() + " is not supported");
          }
 
          // then transform generated XML to string representation

@@ -36,7 +36,7 @@ public class TMLFileGenerator {
     */
    public static boolean generate(Context context, List<String> dataModelIdentifierList) {
       Map<String, String> transformed = new HashMap<>();
-      transformed.put("Metadata", Transformer.getXML(Map.class, createMetadataMap(context)));
+      transformed.put("Metadata", Transformer.getXML(createMetadataMap(context)));
 
       for (int i = 0; i <= dataModelIdentifierList.size(); i++) {
          String hashKey = dataModelIdentifierList.get(i);
@@ -112,7 +112,7 @@ public class TMLFileGenerator {
       }
 
       // key - dataModelIdentifier, value - dataModelList
-      return Transformer.getXML(Object[].class, new Object[]{ dataModelIdentifier, dataModelList });
+      return Transformer.getXML(new Object[]{ dataModelIdentifier, dataModelList });
    }
 
 }
