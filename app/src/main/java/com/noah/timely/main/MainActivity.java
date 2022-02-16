@@ -166,13 +166,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          drawer.closeDrawer(GravityCompat.START);
       else {
          if (dismissable) {
+            super.onBackPressed();
+         } else {
             FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
             Fragment fragment1 = manager.findFragmentByTag("Todo");
             if (fragment1 == null) finish();
-            else super.onBackPressed();
-         } else {
-            Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+            else Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
          }
          dismissable = true;
          new Handler(getMainLooper()).postDelayed(() -> dismissable = false, 2000);

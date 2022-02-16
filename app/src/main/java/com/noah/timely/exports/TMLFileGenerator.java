@@ -38,7 +38,7 @@ public class TMLFileGenerator {
       Map<String, String> transformed = new HashMap<>();
       transformed.put("Metadata", Transformer.getXML(createMetadataMap(context)));
 
-      for (int i = 0; i <= dataModelIdentifierList.size(); i++) {
+      for (int i = 0; i < dataModelIdentifierList.size(); i++) {
          String hashKey = dataModelIdentifierList.get(i);
          String xml_database = transformDatabaseToXML(context, hashKey);
          // don't export an empty table
@@ -73,7 +73,7 @@ public class TMLFileGenerator {
       try {
          isCompressed = Zipper.zipXMLArray(context, transformed, output);
       } catch (IOException e) {
-         return false;
+         throw new IllegalStateException(e.getMessage());
       }
       return isCompressed;
    }

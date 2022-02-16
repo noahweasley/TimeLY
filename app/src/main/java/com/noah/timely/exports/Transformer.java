@@ -11,6 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,7 +67,7 @@ class Transformer {
             // add list nodes of dataModelList as child nodes to dataElement
             appendTableData(identifier, document, dataElement, dataModelList);
 
-         } else if (data.getClass() == Map.class) {
+         } else if (data.getClass() == HashMap.class) {
             // export metadata
             Map<String, String> map = (Map<String, String>) data;
             Set<Map.Entry<String, String>> entrySet = map.entrySet();
@@ -115,7 +116,7 @@ class Transformer {
       } else if (Constants.TIMETABLE.equals(dataModelIdentifier)) {
          return "Timetable";
       } else if (Constants.SCHEDULED_TIMETABLE.equals(dataModelIdentifier)) {
-         return "Scheduled Timetable";
+         return "Scheduled_Timetable";
       }
       throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
 
@@ -210,7 +211,7 @@ class Transformer {
       Element node8 = document.createElement("Start-Time");
       node8.setTextContent(model.getStart());
       Element node9 = document.createElement("End-Time");
-      node8.setTextContent(model.getEnd());
+      node9.setTextContent(model.getEnd());
 
       Element[] nodes = { node1, node2, node3, node4, node5, node6, node7, node8, node9 };
       for (Element node : nodes) element.appendChild(node);

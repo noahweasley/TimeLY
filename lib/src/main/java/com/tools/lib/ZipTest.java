@@ -1,5 +1,6 @@
 package com.tools.lib;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -26,7 +27,7 @@ public class ZipTest {
 
       boolean isZipped = false;
       try {
-         isZipped = zipXMLArray(map, "C:\\Users\\Noah\\Desktop\\test.zip");
+         isZipped = zipXMLArray(map, "C:\\Users\\Noah\\Desktop\\exported\\test.zip");
       } catch (IOException e) {
          System.out.println("File zip failed, file not zipped: " + e.getMessage());
       }
@@ -37,7 +38,7 @@ public class ZipTest {
       /////////////////////////////////////////////////////////////////////////////////
       Map<String, String> stringMap = null;
       try {
-         stringMap = unzipToXMLArray("C:\\Users\\Noah\\Desktop\\test.zip");
+         stringMap = unzipToXMLArray("C:\\Users\\Noah\\Desktop\\exported\\test.zip");
       } catch (IOException e) {
          System.out.println("File unzip failed, file not unipped: " + e.getMessage());
       }
@@ -56,6 +57,12 @@ public class ZipTest {
     * @throws FileNotFoundException if file location specified was incorrect
     */
    public static boolean zipXMLArray(Map<String, String> transf, String foutput) throws IOException {
+      File exportFile = new File(foutput);
+      File exportDirectory = exportFile.getParentFile();
+      if (!exportDirectory.exists()) {
+         boolean created = exportDirectory.mkdirs();
+      }
+
       ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(foutput));
       zout.setComment("Archive created by " + String.format("%s v%s", "TimeLY", "1.2.0"));
 

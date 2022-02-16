@@ -1,20 +1,14 @@
 package com.noah.timely.exports;
 
-import static android.os.Looper.getMainLooper;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,9 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
-import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Constants;
-import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +26,8 @@ import java.util.List;
 public class TimeLYDataGeneratorDialog extends DialogFragment {
    private static final String ARG_IDENTIFIER = "default_identifier";
    private final List<String> dataModelList = new ArrayList<>();
-   private boolean dismissable;
+   private CheckBox cbx_courses, cbx_assignments, cbx_timetable, cbx_scheduled, cbx_exams;
+   private Button btn_export;
 
    public void show(Context context) {
       Bundle bundle = new Bundle();
@@ -57,22 +50,10 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
       return new DataGeneratorDialog(getContext());
    }
 
-   public void onCloseDialog(View view) {
-      if (dismissable) {
-         dismiss();
-      } else {
-         Toast.makeText(getContext(), "Press again to stop operation", Toast.LENGTH_SHORT).show();
-      }
-      dismissable = true;
-      new Handler(getMainLooper()).postDelayed(() -> dismissable = false, 2000);
-   }
-
-   private class DataGeneratorDialog extends Dialog implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
-      private Button btn_export;
-      private ProgressBar progress;
+   private class DataGeneratorDialog extends Dialog implements CompoundButton.OnCheckedChangeListener {
 
       public DataGeneratorDialog(@NonNull Context context) {
-         super(context, R.style.Dialog);
+         super(context, R.style.Dialog_Closeable);
       }
 
       @Override
@@ -82,15 +63,15 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
          getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges_8);
          setContentView(R.layout.dialog_generate);
 
-         findViewById(R.id.cancel).setOnClickListener(TimeLYDataGeneratorDialog.this::onCloseDialog);
-
          btn_export = findViewById(R.id.export);
-         progress = findViewById(R.id.progress);
-         btn_export.setOnClickListener(this);
+
+         btn_export.setOnClickListener(v -> {
+            new ActionProcessorDialog().execute(getActivity(), dataModelList);
+            dismiss();
+         });
 
          ViewGroup vg_dataParent = findViewById(R.id.data_parent);
          // Avoiding too much findViewById()'s, for quick load time
-         CheckBox cbx_courses, cbx_assignments, cbx_timetable, cbx_scheduled, cbx_exams;
          cbx_courses = (CheckBox) vg_dataParent.getChildAt(0);
          cbx_assignments = (CheckBox) vg_dataParent.getChildAt(1);
          cbx_timetable = (CheckBox) vg_dataParent.getChildAt(2);
@@ -134,12 +115,6 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
       }
 
       @Override
-      public void dismiss() {
-         if (dismissable) super.dismiss();
-         else onCloseDialog(null);
-      }
-
-      @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
          int id = buttonView.getId();
 
@@ -169,45 +144,12 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
             else dataModelList.remove(Constants.EXAM);
 
          }
-      }
 
-      @Override
-      public void onClick(View v) {
-         btn_export.setText(null);
-         btn_export.setEnabled(false);
-         progress.setVisibility(View.VISIBLE);
-         // generate data
-         ThreadUtils.runBackgroundTask(() -> {
-            // run parallel in background
-            boolean isGenerated = TMLFileGenerator.generate(getContext(), dataModelList);
-            // run in ui thread - required
-            if (isAdded()) {
-               getActivity().runOnUiThread(() -> {
-                  // reset to defaults
-                  btn_export.setText(R.string.generate_export);
-                  btn_export.setEnabled(true);
-                  progress.setVisibility(View.GONE);
-
-                  if (isGenerated) {
-                     // Export successful, show result dialog
-                     new ExportSuccessDialog().show(getContext(), R.string.export_success_message);
-
-                  } else {
-                     // Export unsuccessful. Error occurred
-                     ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
-                     errorBuilder.setShowSuggestions(true)
-                                 .setDialogMessage("An Error occurred while generating your file")
-                                 .setSuggestionCount(1)
-                                 .setSuggestion1("Check that you have enough memory");
-
-                     new ErrorDialog().showErrorMessage(getContext(), errorBuilder.build());
-                  }
-
-               });
-            }
-
-         });
-
+         // disable export button, when user hasn't selected any data to be exported
+         if (!cbx_exams.isChecked() && !cbx_scheduled.isChecked() && !cbx_timetable.isChecked()
+                 && !cbx_courses.isChecked() && !cbx_assignments.isChecked()) {
+            btn_export.setEnabled(false);
+         }
       }
 
    }

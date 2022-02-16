@@ -7,6 +7,7 @@ import android.content.Context;
 
 import com.noah.timely.util.Constants;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -68,41 +69,53 @@ public class Zipper {
     * @throws FileNotFoundException if file location specified was incorrect
     */
    public static boolean zipXMLArray(Context context, Map<String, String> transf, String foutput) throws IOException {
-      ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(foutput));
-      zout.setComment("Archive created by " + String.format("%s v%s", getAppName(context), getAppVesionName(context)));
+      File exportFile = new File(foutput);
+      File exportDirectory = exportFile.getParentFile();
+      boolean created = true;
 
-      Set<Map.Entry<String, String>> entries = transf.entrySet();
-
-      int zippedCount = 0;
-
-      for (Map.Entry<String, String> entry : entries) {
-         String filename = getProperFilename(entry.getKey());
-         ZipEntry zipEntry = new ZipEntry(filename);
-         zout.putNextEntry(zipEntry);
-
-         zout.write(entry.getValue().getBytes(Charset.forName("UTF-8")));
-         zout.closeEntry();
-         zippedCount++;
+      if (!exportDirectory.exists()) {
+         created = exportDirectory.mkdirs();
       }
 
-      zout.finish();
-      zout.close();
-      return entries.size() == zippedCount;
+      if (!created) return false;
+      else {
+         ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(foutput));
+         zout.setComment(
+                 "Archive created by " + String.format("%s v%s", getAppName(context), getAppVesionName(context)));
+
+         Set<Map.Entry<String, String>> entries = transf.entrySet();
+
+         int zippedCount = 0;
+
+         for (Map.Entry<String, String> entry : entries) {
+            String filename = getProperFilename(entry.getKey());
+            ZipEntry zipEntry = new ZipEntry(filename);
+            zout.putNextEntry(zipEntry);
+
+            zout.write(entry.getValue().getBytes(Charset.forName("UTF-8")));
+            zout.closeEntry();
+            zippedCount++;
+         }
+
+         zout.finish();
+         zout.close();
+         return entries.size() == zippedCount;
+      }
    }
 
    private static String getProperFilename(String dataModelIdentifier) {
       if (Constants.ASSIGNMENT.equals(dataModelIdentifier)) {
-         return "Assignments";
+         return "Assignments.xml";
       } else if (Constants.COURSE.equals(dataModelIdentifier)) {
-         return "Courses";
+         return "Courses.xml";
       } else if (Constants.EXAM.equals(dataModelIdentifier)) {
-         return "Exams";
+         return "Exams.xml";
       } else if (Constants.TIMETABLE.equals(dataModelIdentifier)) {
-         return "Timetable";
+         return "Timetable.xml";
       } else if (Constants.SCHEDULED_TIMETABLE.equals(dataModelIdentifier)) {
-         return "Scheduled Timetable";
+         return "Scheduled Timetable.xml";
       } else if (dataModelIdentifier.equals("Metadata")) {
-         return dataModelIdentifier;
+         return dataModelIdentifier + ".xml";
       }
       throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
 

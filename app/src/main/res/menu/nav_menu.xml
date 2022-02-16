@@ -81,7 +81,7 @@
 
             <item
                android:id="@+id/__import"
-               android:icon="@drawable/ic_baseline_import_export_24"
+               android:icon="@drawable/ic_baseline_save"
                android:title="@string/generate_import" />
 
             <item

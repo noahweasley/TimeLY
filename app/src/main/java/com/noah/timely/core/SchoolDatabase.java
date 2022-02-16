@@ -1445,7 +1445,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
                  + ", " + COLUMN_CREDITS
                  + ", " + COLUMN_COURSE_CODE
                  + ", " + COLUMN_FULL_COURSE_NAME
-                 + " FROM " + FIRST_SEMESTER
+                 + " FROM " + SECOND_SEMESTER
                  + " ORDER BY " + COLUMN_FULL_COURSE_NAME;
       }
 
@@ -1485,6 +1485,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       ContentValues courseValues = new ContentValues();
       int insertPos = ++lastID;
       courseValues.put(COLUMN_ID, insertPos);
+      courseValues.put(COLUMN_SEMESTER, courseModel.getSemester());
       courseValues.put(COLUMN_CREDITS, courseModel.getCredits());
       courseValues.put(COLUMN_COURSE_CODE, sanitizeEntry(courseModel.getCourseCode()));
       courseValues.put(COLUMN_FULL_COURSE_NAME, sanitizeEntry(courseModel.getCourseName()));
@@ -1706,9 +1707,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          // query database, merge all exam timetables together all into one
          // get the amount of exam timetable weeks present
          int weekCount = PreferenceUtils.getIntegerValue(getContext(), COLUMN_EXAM_WEEK_COUNT, 8);
-         StringBuilder selectStmtBuilder = null;
+         StringBuilder selectStmtBuilder = new StringBuilder();
 
-         for (int i = 1; i < weekCount; i++) {
+         for (int i = 1; i <= weekCount; i++) {
 
             String stmt = "SELECT " + COLUMN_ID + ","
                     + COLUMN_COURSE_CODE + ","

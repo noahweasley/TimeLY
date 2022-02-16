@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,14 +15,15 @@ import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class ExportSuccessDialog extends DialogFragment {
-   @SuppressWarnings("FieldCanBeLocal")
    public static final String TAG = "com.noah.timely.exports.ExportSuccessDialog";
-   @SuppressWarnings("FieldCanBeLocal")
-   private String message;
+   private static final String MESSAGE = "MESSAGE";
 
    public void show(Context context, @StringRes int message) {
-      this.message = context.getString(message);
+      Bundle bundle = new Bundle();
+      bundle.putString(MESSAGE, context.getString(message));
+      setArguments(bundle);
       FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
       show(manager, TAG);
    }
@@ -29,10 +31,10 @@ public class ExportSuccessDialog extends DialogFragment {
    @NonNull
    @Override
    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-      return null;
+      return new DExportSuccessDialog(getContext());
    }
 
-   private static class DExportSuccessDialog extends Dialog {
+   private class DExportSuccessDialog extends Dialog {
 
       public DExportSuccessDialog(@NonNull Context context) {
          super(context, R.style.Dialog_Closeable);
@@ -44,7 +46,9 @@ public class ExportSuccessDialog extends DialogFragment {
          getWindow().requestFeature(Window.FEATURE_NO_TITLE);
          getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges_8);
          setContentView(R.layout.dialog_export_success);
-
+         TextView tv_message = findViewById(R.id.message);
+         Bundle arguments = getArguments();
+         tv_message.setText(arguments.getString(MESSAGE));
       }
    }
 
