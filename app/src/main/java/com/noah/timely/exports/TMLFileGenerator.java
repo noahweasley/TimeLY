@@ -32,9 +32,9 @@ public class TMLFileGenerator {
     *
     * @param context                 the context used in accessing resources
     * @param dataModelIdentifierList the list of data to be tranformed
-    * @return true if file was saved, false otherwise
+    * @return  the exported file path if file was saved, null otherwise
     */
-   public static boolean generate(Context context, List<String> dataModelIdentifierList) {
+   public static String generate(Context context, List<String> dataModelIdentifierList) {
       Map<String, String> transformed = new HashMap<>();
       transformed.put("Metadata", Transformer.getXML(createMetadataMap(context)));
 
@@ -58,7 +58,7 @@ public class TMLFileGenerator {
       return false;
    }
 
-   private static boolean writeTransformedDatabaseToFile(Context context, Map<String, String> transformed) {
+   private static String writeTransformedDatabaseToFile(Context context, Map<String, String> transformed) {
       SimpleDateFormat dateFormat = new SimpleDateFormat("HHMMddmmyyyy");
       Date date = new Date(System.currentTimeMillis()); // Set unique id for each file generated
       String time = dateFormat.format(date);
@@ -73,9 +73,10 @@ public class TMLFileGenerator {
       try {
          isCompressed = Zipper.zipXMLArray(context, transformed, output);
       } catch (IOException e) {
-         throw new IllegalStateException(e.getMessage());
+         return null;
       }
-      return isCompressed;
+
+      return isCompressed ? output : null;
    }
 
    private static Map<String, String> createMetadataMap(Context context) {

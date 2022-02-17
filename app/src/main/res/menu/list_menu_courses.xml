@@ -12,7 +12,7 @@
 
    <item
       android:id="@+id/select_all"
-      android:title="@string/selct_all"
+      android:title="@string/select_all"
       external:showAsAction="never" />
 
    <item

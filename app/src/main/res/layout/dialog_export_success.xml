@@ -21,7 +21,7 @@
       android:id="@+id/message"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_margin="16dp"
+      android:layout_margin="@dimen/layout_gap"
       android:fontFamily="@font/wendy_one"
       android:gravity="center"
       android:text="@string/export_success_message"
@@ -29,9 +29,24 @@
       android:textSize="@dimen/message_text_size"
       external:layout_constraintBottom_toTopOf="@id/share"
       external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.0"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@id/checkmark"
       external:layout_constraintVertical_bias="0.4" />
+
+   <Button
+      android:id="@+id/locate"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/layout_gap"
+      android:background="@drawable/bg_cta_negative_rounded"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/locate"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toStartOf="@id/share"
+      external:layout_constraintStart_toStartOf="parent"/>
 
    <Button
       android:id="@+id/share"
@@ -44,7 +59,7 @@
       android:textColor="@android:color/white"
       android:textSize="@dimen/button_text_size"
       external:layout_constraintBottom_toBottomOf="parent"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent"/>
+      external:layout_constraintStart_toEndOf="@id/locate"
+      external:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,6 +35,7 @@ import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
 import com.noah.timely.exam.ExamFragment;
+import com.noah.timely.exports.ImportActivity;
 import com.noah.timely.exports.TimeLYDataGeneratorDialog;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.settings.SettingsActivity;
@@ -248,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
       } else if (menuItemId == R.id.__import) {
 
-         Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, ImportActivity.class));
 
       } else if (menuItemId == R.id.report) {
 

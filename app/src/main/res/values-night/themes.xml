@@ -83,6 +83,12 @@
       <item name="android:windowAnimationStyle">@style/DialogAnimationStyle</item>
    </style>
 
+   <style name="Dialog_No_Transition" parent="Dialog">
+      <item name="android:windowBackground">@android:color/transparent</item>
+      <item name="android:windowNoTitle">true</item>
+      <item name="android:windowIsFloating">true</item>
+   </style>
+
    <style name="Dialog.Closeable" parent="Dialog">
       <item name="android:windowCloseOnTouchOutside">true</item>
    </style>

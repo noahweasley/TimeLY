@@ -187,13 +187,15 @@
    <string name="empty_time_range">Time range not set</string>
    <string name="task_viewer_header">Task viewer</string>
    <string name="miscellaneous_channel_desc">Other kinds of notifications</string>
-   <string name="selct_all">Selct all</string>
+   <string name="select_all">Select all</string>
    <string name="buy_me_a_coffee">Buy me a coffee</string>
    <string name="choose_data">Choose data to export</string>
-   <string name="export_success_message">Data Exported</string>
+   <string name="export_success_message">Data exported successfully</string>
    <string name="share">share</string>
    <string name="close_">close</string>
    <string name="_skip">skip</string>
    <string name="export">Export</string>
    <string name="processing">Processing …</string>
+   <string name="import_title">Import</string>
+   <string name="locate">Locate</string>
 </resources>

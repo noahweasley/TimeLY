@@ -39,14 +39,14 @@ public class ActionProcessorDialog extends DialogFragment {
    private class ProcessDialog extends Dialog {
 
       public ProcessDialog(@NonNull Context context) {
-         super(context, R.style.Dialog);
+         super(context, R.style.Dialog_No_Transition);
       }
 
       @Override
       protected void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
          getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-         getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges_8);
+         getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges);
          setContentView(R.layout.dialog_processing);
          ThreadUtils.runBackgroundTask(this::doExport);
       }
@@ -54,12 +54,12 @@ public class ActionProcessorDialog extends DialogFragment {
       private void doExport() {
          // generate data
          Bundle arguments = getArguments();
-         boolean isGenerated = TMLFileGenerator.generate(getContext(), arguments.getStringArrayList(ARG_LIST));
+         String exportPath = TMLFileGenerator.generate(getContext(), arguments.getStringArrayList(ARG_LIST));
          // run in ui thread - required
          getActivity().runOnUiThread(() -> {
-            if (isGenerated) {
+            if (exportPath != null) {
                // Export successful, show result dialog
-               new ExportSuccessDialog().show(getActivity(), R.string.export_success_message);
+               new ExportSuccessDialog().show(getActivity(), R.string.export_success_message, exportPath);
 
             } else {
                // Export unsuccessful. Error occurred
