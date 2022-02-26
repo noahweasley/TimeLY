@@ -68,7 +68,7 @@ public class ExportSuccessDialog extends DialogFragment {
             intent.setDataAndType(selectedUri, "resource/folder");
 
             if (intent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null) {
-               startActivity(intent);
+               startActivity(Intent.createChooser(intent, "Open folder"));
             } else {
                Toast.makeText(getContext(), "Unable to navigate to file", Toast.LENGTH_LONG).show();
             }
@@ -81,10 +81,10 @@ public class ExportSuccessDialog extends DialogFragment {
             File file = new File(exportPath);
 
             if (file.exists()) {
-               shareIntent.setType("application/tmly");
+               shareIntent.setType("*/*");
                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Sharing file using ...");
                shareIntent.putExtra(Intent.EXTRA_TEXT, "Sharing file using ...");
-               shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + exportPath));
+               shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
                startActivity(Intent.createChooser(shareIntent, "Share using"));
             } else {
                Toast.makeText(getActivity(), "Nothing to send", Toast.LENGTH_SHORT).show();

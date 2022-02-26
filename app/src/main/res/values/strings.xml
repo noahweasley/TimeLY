@@ -196,6 +196,8 @@
    <string name="_skip">skip</string>
    <string name="export">Export</string>
    <string name="processing">Processing …</string>
-   <string name="import_title">Import</string>
+   <string name="import_title">Import from file</string>
    <string name="locate">Locate</string>
+   <string name="import_file">Import from file</string>
+   <string name="msg_import">Click on the <b>Import from file</b> button to import data</string>
 </resources>

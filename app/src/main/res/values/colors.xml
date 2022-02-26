@@ -46,5 +46,6 @@
    <color name="holo_blue_dark_5">#0D0099CC</color>
    <color name="teal_700_5">#0D018786</color>
    <color name="tomato_red_5">#0DFF6347</color>
+   <color name="window_background_color_light">#F0F4F6</color>
    <!--  Spotify Dark Theme  -->
 </resources>

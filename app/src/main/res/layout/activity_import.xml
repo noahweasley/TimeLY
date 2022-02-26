@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_width="match_parent"
    android:layout_height="match_parent"
+   android:background="@color/window_background_color_light"
    xmlns:external="http://schemas.android.com/apk/res-auto">
 
    <androidx.appcompat.widget.Toolbar
@@ -15,5 +16,54 @@
       external:layout_constraintTop_toTopOf="parent"
       external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
       external:subtitleTextColor="@android:color/white" />
+
+   <!-- Vector image displaying a no-data entry -->
+
+   <ImageView
+      android:id="@+id/image"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="16dp"
+      android:contentDescription="@string/no_task"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/toolbar"
+      external:layout_constraintVertical_bias="0.25"
+      external:srcCompat="@mipmap/ic_import" />
+
+   <TextView
+      android:id="@+id/info_text"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="22dp"
+      android:fontFamily="sans-serif"
+      android:gravity="center"
+      android:padding="@dimen/layout_gap_secondary"
+      android:text="@string/msg_import"
+      android:textColor="@android:color/black"
+      android:textSize="@dimen/msg_import_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.0"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/image"
+      external:layout_constraintVertical_bias="0.13" />
+
+   <Button
+      android:id="@+id/import_"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:background="@drawable/buttons_explore"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/import_file"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/info_text"
+      external:layout_constraintVertical_bias="0.4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

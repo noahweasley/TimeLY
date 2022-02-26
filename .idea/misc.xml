@@ -67,7 +67,7 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_add_exam.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_add_scheduled.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_add_todo.xml" value="0.5" />
-        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_import.xml" value="0.209375" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_import.xml" value="0.8375" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_todo_list.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/add_assignment.xml" value="0.245" />
@@ -77,7 +77,7 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_course.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_exam.xml" value="0.16196013289036545" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_add_scheduled.xml" value="0.1361111111111111" />
-        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_export_success.xml" value="0.5" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_export_success.xml" value="0.1" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_generate.xml" value="0.209375" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_processing.xml" value="0.5" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/dialog_update_info.xml" value="0.25671250818598557" />

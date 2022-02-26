@@ -32,7 +32,7 @@ public class TMLFileGenerator {
     *
     * @param context                 the context used in accessing resources
     * @param dataModelIdentifierList the list of data to be tranformed
-    * @return  the exported file path if file was saved, null otherwise
+    * @return the exported file path if file was saved, null otherwise
     */
    public static String generate(Context context, List<String> dataModelIdentifierList) {
       Map<String, String> transformed = new HashMap<>();
@@ -52,10 +52,17 @@ public class TMLFileGenerator {
    /**
     * Opens-up a valid .tmly file
     *
-    * @param context the context used in accessing resources
+    * @param context  the context used in accessing resources
+    * @param filePath the path to the file with the data to be imported
     */
-   public static boolean importFromFile(Context context) {
-      return false;
+   public static Map<String, String> importFromFile(Context context, String filePath) {
+      Map<String, String> xmlStringMap = null;
+      try {
+         xmlStringMap = Zipper.unzipToXMLArray(context, filePath);
+      } catch (IOException e) {
+         return null;
+      }
+      return xmlStringMap;
    }
 
    private static String writeTransformedDatabaseToFile(Context context, Map<String, String> transformed) {

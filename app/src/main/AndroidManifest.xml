@@ -191,12 +191,15 @@
          android:name=".exports.ImportActivity"
          android:configChanges="orientation|keyboardHidden"
          android:exported="true"
+         android:priority="1"
          android:screenOrientation="portrait"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize">
          <intent-filter>
             <action android:name="android.intent.action.VIEW" />
+
             <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
 
             <data android:scheme="file" />
             <data android:scheme="content" />
@@ -204,6 +207,26 @@
             <data android:pathPattern=".*\\.tmly" />
             <data android:mimeType="*/*" />
          </intent-filter>
+
+         <!--  Work-around so that TimeLY is able to import data from Whatsapp and MIUI File manager -->
+
+         <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+            <data android:mimeType="text/plain" />
+            <data android:mimeType="application/vnd.oasis.opendocument.text" />
+            <data
+               android:mimeType="application/pdf"
+               android:scheme="file" />
+            <data
+               android:mimeType="application/pdf"
+               android:scheme="content" />
+
+         </intent-filter>
+
       </activity>
 
       <!--        Receivers       -->
