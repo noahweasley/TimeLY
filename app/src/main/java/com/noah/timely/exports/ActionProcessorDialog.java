@@ -54,7 +54,7 @@ public class ActionProcessorDialog extends DialogFragment {
       private void doExport() {
          // generate data
          Bundle arguments = getArguments();
-         String exportPath = TMLFileGenerator.generate(getContext(), arguments.getStringArrayList(ARG_LIST));
+         String exportPath = TMLYFileGenerator.generate(getContext(), arguments.getStringArrayList(ARG_LIST));
          // run in ui thread - required
          getActivity().runOnUiThread(() -> {
             if (exportPath != null) {

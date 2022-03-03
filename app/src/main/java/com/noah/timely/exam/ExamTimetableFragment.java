@@ -38,7 +38,7 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.exports.TimeLYDataGeneratorDialog;
+import com.noah.timely.exports.TMLYDataGeneratorDialog;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.DeviceInfoUtil;
@@ -196,7 +196,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(eList.size()));
       menu.findItem(R.id.select_all).setVisible(eList.isEmpty() ? false : true);
-      TooltipCompat.setTooltipText(itemCount, "Exams Count");
+      TooltipCompat.setTooltipText(itemCount, getString(R.string.exams_count) + eList.size());
 
       super.onCreateOptionsMenu(menu, inflater);
    }
@@ -211,7 +211,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
       if (item.getItemId() == R.id.select_all) {
          examRowAdapter.selectAllItems();
       } else if (item.getItemId() == R.id.export) {
-         new TimeLYDataGeneratorDialog().show(getContext(), Constants.EXAM);
+         new TMLYDataGeneratorDialog().show(getContext(), Constants.EXAM);
       }
       return super.onOptionsItemSelected(item);
    }

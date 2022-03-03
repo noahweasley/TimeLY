@@ -200,4 +200,19 @@
    <string name="locate">Locate</string>
    <string name="import_file">Import from file</string>
    <string name="msg_import">Click on the <b>Import from file</b> button to import data</string>
+   <string name="initializing_please_wait">Initializing, please wait …</string>
+   <string name="share_text_subject_1">Sharing file using</string>
+   <string name="share_text_subject_2">Share using</string>
+   <string name="no_share_subject_text">Nothing to send</string>
+   <string name="open_folder_text_subject">Open folder</string>
+   <string name="link_open_text">Open link using</string>
+   <string name="assignment_count">Assignment Count: </string>
+   <string name="courses_count">Courses Count: </string>
+   <string name="exams_count">Exams Count: </string>
+   <string name="classes_count">Classes Count: </string>
+   <string name="timetable_count">Timetable Count: </string>
+   <string name="todo_count">Todo Count: </string>
+   <string name="default_import_list_text">Scheduled Classes</string>
+   <string name="default_number">24</string>
+   <string name="file_select_title">Select file using</string>
 </resources>

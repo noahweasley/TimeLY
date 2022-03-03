@@ -42,7 +42,7 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.exports.TimeLYDataGeneratorDialog;
+import com.noah.timely.exports.TMLYDataGeneratorDialog;
 import com.noah.timely.main.MainActivity;
 import com.noah.timely.timetable.TimeTableRowHolder;
 import com.noah.timely.timetable.TimetableModel;
@@ -269,7 +269,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(tList.size()));
       menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
-      TooltipCompat.setTooltipText(itemCount, "Classes Count");
+      TooltipCompat.setTooltipText(itemCount, getString(R.string.classes_count) + tList.size());
 
       super.onCreateOptionsMenu(menu, inflater);
    }
@@ -284,7 +284,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
       if (item.getItemId() == R.id.select_all) {
          tableRowAdapter.selectAllItems();
       } else if (item.getItemId() == R.id.export) {
-         new TimeLYDataGeneratorDialog().show(getContext(), Constants.SCHEDULED_TIMETABLE);
+         new TMLYDataGeneratorDialog().show(getContext(), Constants.SCHEDULED_TIMETABLE);
       }
       return super.onOptionsItemSelected(item);
    }

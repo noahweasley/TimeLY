@@ -87,4 +87,8 @@
    <dimen name="normal_dialog_text_size">20sp</dimen>
    <dimen name="message_text_size">24sp</dimen>
    <dimen name="msg_import_text_size">20sp</dimen>
+   <dimen name="small_dialog_width">300dp</dimen>
+   <dimen name="small_dialog_height">270dp</dimen>
+   <dimen name="loader_text_size">18sp</dimen>
+   <dimen name="import_content_text_text_size">18sp</dimen>
 </resources>

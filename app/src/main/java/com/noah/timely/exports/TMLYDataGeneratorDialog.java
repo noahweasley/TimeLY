@@ -23,25 +23,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TimeLYDataGeneratorDialog extends DialogFragment {
-   private static final String ARG_IDENTIFIER = "default_identifier";
+public class TMLYDataGeneratorDialog extends DialogFragment {
+   private static final String ARG_DEFAULT_IDENTIFIER = "default_identifier";
    private final List<String> dataModelList = new ArrayList<>();
-   private CheckBox cbx_courses, cbx_assignments, cbx_timetable, cbx_scheduled, cbx_exams;
    private Button btn_export;
 
    public void show(Context context) {
-      Bundle bundle = new Bundle();
-      setArguments(bundle);
       FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
-      show(manager, TimeLYDataGeneratorDialog.class.getName());
+      show(manager, TMLYDataGeneratorDialog.class.getName());
    }
 
    public void show(Context context, String defaultIdentifier) {
       Bundle bundle = new Bundle();
-      bundle.putString(ARG_IDENTIFIER, defaultIdentifier);
+      bundle.putString(ARG_DEFAULT_IDENTIFIER, defaultIdentifier);
       setArguments(bundle);
       FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
-      show(manager, TimeLYDataGeneratorDialog.class.getName());
+      show(manager, TMLYDataGeneratorDialog.class.getName());
    }
 
    @NonNull
@@ -72,6 +69,7 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
 
          ViewGroup vg_dataParent = findViewById(R.id.data_parent);
          // Avoiding too much findViewById()'s, for quick load time
+         CheckBox cbx_courses, cbx_assignments, cbx_timetable, cbx_scheduled, cbx_exams;
          cbx_courses = (CheckBox) vg_dataParent.getChildAt(0);
          cbx_assignments = (CheckBox) vg_dataParent.getChildAt(1);
          cbx_timetable = (CheckBox) vg_dataParent.getChildAt(2);
@@ -83,9 +81,12 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
 
          String defaultIdentifier = null;
          if (getArguments() != null) {
-            defaultIdentifier = getArguments().getString(ARG_IDENTIFIER);
+            defaultIdentifier = getArguments().getString(ARG_DEFAULT_IDENTIFIER);
          }
+
          if (!TextUtils.isEmpty(defaultIdentifier)) {
+            // de-select all checkboxes
+            for (int i = 0; i < checkBoxes.length; i++) checkBoxes[i].setChecked(false);
             // select default checked checkbox
             switch (defaultIdentifier) {
                case Constants.COURSE:
@@ -142,13 +143,13 @@ public class TimeLYDataGeneratorDialog extends DialogFragment {
             // exams check-box
             if (isChecked) dataModelList.add(Constants.EXAM);
             else dataModelList.remove(Constants.EXAM);
-
          }
 
          // disable export button, when user hasn't selected any data to be exported
-         if (!cbx_exams.isChecked() && !cbx_scheduled.isChecked() && !cbx_timetable.isChecked()
-                 && !cbx_courses.isChecked() && !cbx_assignments.isChecked()) {
+         if (dataModelList.isEmpty()) {
             btn_export.setEnabled(false);
+         } else {
+            btn_export.setEnabled(true);
          }
       }
 

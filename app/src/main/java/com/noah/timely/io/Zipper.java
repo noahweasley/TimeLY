@@ -31,6 +31,16 @@ public class Zipper {
    public static final String FILE_EXTENSION = ".tmly";
 
    /**
+    * The file extension in which all exported data would have
+    */
+   public static final String DATA_FILE_EXTENSION = ".xml";
+
+   /**
+    * The maximum amount of data that can be transferred at once; 10MB
+    */
+   private static final int MAX_DATA_TRANSFER_BITS = 10_048_576;
+
+   /**
     * Un-zips a .tmly file into one single folder
     *
     * @param context the context used in accessing application resources
@@ -39,18 +49,17 @@ public class Zipper {
     * @return true if file was zipped successfully
     * @throws FileNotFoundException if file location specified was incorrect
     */
-   public static Map<String, String> unzipToXMLArray(Context context, String finput) throws IOException {
+   public static Map<String, String> unzipToXMLMap(Context context, String finput) throws IOException {
       ZipInputStream zin = new ZipInputStream(new FileInputStream(finput));
       Map<String, String> xmlmap = new HashMap<>();
 
       ZipEntry zipEntry = null;
 
       while ((zipEntry = zin.getNextEntry()) != null) {
-         byte[] data = new byte[Integer.MAX_VALUE];
+         byte[] data = new byte[MAX_DATA_TRANSFER_BITS];
          if (zin.read(data) != -1) {
             String entryName = zipEntry.getName();
-            String ssEntryName = entryName.substring(0, entryName.indexOf(FILE_EXTENSION));
-            xmlmap.put(ssEntryName, new String(data, Charset.forName("UTF-8")));
+            xmlmap.put(getDatamodelName(entryName), new String(data, Charset.forName("UTF-8")));
          }
 
       }
@@ -68,7 +77,7 @@ public class Zipper {
     * @return true if file was zipped successfully
     * @throws FileNotFoundException if file location specified was incorrect
     */
-   public static boolean zipXMLArray(Context context, Map<String, String> transf, String foutput) throws IOException {
+   public static boolean zipXMLMap(Context context, Map<String, String> transf, String foutput) throws IOException {
       File exportFile = new File(foutput);
       File exportDirectory = exportFile.getParentFile();
       boolean created = true;
@@ -80,8 +89,7 @@ public class Zipper {
       if (!created) return false;
       else {
          ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(foutput));
-         zout.setComment(
-                 "Archive created by " + String.format("%s v%s", getAppName(context), getAppVesionName(context)));
+         zout.setComment("Archive created by " + String.format("%s v%s", getAppName(context), getAppVesionName(context)));
 
          Set<Map.Entry<String, String>> entries = transf.entrySet();
 
@@ -104,21 +112,42 @@ public class Zipper {
    }
 
    private static String getProperFilename(String dataModelIdentifier) {
-      if (Constants.ASSIGNMENT.equals(dataModelIdentifier)) {
-         return "Assignments.xml";
-      } else if (Constants.COURSE.equals(dataModelIdentifier)) {
-         return "Courses.xml";
-      } else if (Constants.EXAM.equals(dataModelIdentifier)) {
-         return "Exams.xml";
-      } else if (Constants.TIMETABLE.equals(dataModelIdentifier)) {
-         return "Timetable.xml";
-      } else if (Constants.SCHEDULED_TIMETABLE.equals(dataModelIdentifier)) {
-         return "Scheduled Timetable.xml";
-      } else if (dataModelIdentifier.equals("Metadata")) {
-         return dataModelIdentifier + ".xml";
+      switch (dataModelIdentifier) {
+         case Constants.ASSIGNMENT:
+            return "Assignments.xml";
+         case Constants.COURSE:
+            return "Courses.xml";
+         case Constants.EXAM:
+            return "Exams.xml";
+         case Constants.TIMETABLE:
+            return "Timetable.xml";
+         case Constants.SCHEDULED_TIMETABLE:
+            return "Scheduled Timetable.xml";
+         case "Metadata":
+            return dataModelIdentifier + ".xml";
+         default:
+            throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
       }
-      throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
 
+   }
+
+   private static String getDatamodelName(String properName) {
+      switch (properName) {
+         case "Assignments.xml":
+            return Constants.ASSIGNMENT;
+         case "Courses.xml":
+            return Constants.COURSE;
+         case "Exams.xml":
+            return Constants.EXAM;
+         case "Timetable.xml":
+            return Constants.TIMETABLE;
+         case "Scheduled Timetable.xml":
+            return Constants.SCHEDULED_TIMETABLE;
+         case "Metadata.xml":
+            return properName;
+         default:
+            throw new IllegalArgumentException("A datamodel with name: " + properName + " doesn't exist in database");
+      }
    }
 
 }

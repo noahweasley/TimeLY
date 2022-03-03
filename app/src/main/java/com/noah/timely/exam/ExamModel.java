@@ -45,6 +45,14 @@ public class ExamModel extends DataModel {
       return courseCode;
    }
 
+   public void setCourseCode(String courseCode) {
+      this.courseCode = courseCode;
+   }
+
+   public void setCourseName(String courseName) {
+      this.courseName = courseName;
+   }
+
    public String getCourseName() {
       return courseName;
    }

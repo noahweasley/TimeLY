@@ -15,36 +15,31 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipTest {
 
+   /**
+    * TimeLY's native export file extension
+    */
+   public static final String FILE_EXTENSION = ".tmly";
+
+   /**
+    * The file extension in which all exported data would have
+    */
+   public static final String DATA_FILE_EXTENSION = ".txt";
+
    public static void main(String... args) {
-      Map<String, String> map = new HashMap<>();
-
-      map.put("key1", "entry1");
-      map.put("key2", "entry2");
-      map.put("key3", "entry3");
-      map.put("key4", "entry4");
-      map.put("key5", "entry5");
-      map.put("key6", "entry6");
-
-      boolean isZipped = false;
-      try {
-         isZipped = zipXMLArray(map, "C:\\Users\\Noah\\Desktop\\exported\\test.zip");
-      } catch (IOException e) {
-         System.out.println("File zip failed, file not zipped: " + e.getMessage());
-      }
-
-      if (isZipped) System.out.println("File zipped succesfully");
-      else System.out.println("File Zip failed, file not zipped 2");
-
       /////////////////////////////////////////////////////////////////////////////////
       Map<String, String> stringMap = null;
       try {
-         stringMap = unzipToXMLArray("C:\\Users\\Noah\\Desktop\\exported\\test.zip");
+         stringMap = unzipToXMLArray("C:\\Users\\Noah\\Desktop\\test.zip");
       } catch (IOException e) {
          System.out.println("File unzip failed, file not unipped: " + e.getMessage());
       }
 
-      if (stringMap != null) System.out.println("File unzipped succesfully\n\n" + stringMap);
-      else System.out.println("File unip failed, file not unipped 2");
+      if (stringMap != null) {
+         System.out.println("File unzipped succesfully\n\n");
+         for (Map.Entry<String, String> entry : stringMap.entrySet()) {
+            System.out.println(entry.getKey().trim() + "=" + entry.getValue().trim());
+         }
+      } else System.out.println("File unzip failed, file not unipped 2");
    }
 
    /**
@@ -103,9 +98,12 @@ public class ZipTest {
       ZipEntry zipEntry = null;
 
       while ((zipEntry = zin.getNextEntry()) != null) {
-         byte[] data = new byte[Byte.MAX_VALUE];
+         byte[] data = new byte[10_048_576];
          if (zin.read(data) != -1) {
-            xmlmap.put(zipEntry.getName(), new String(data, Charset.forName("UTF-8")));
+            String entryName = zipEntry.getName();
+            entryName = entryName.substring(0, entryName.indexOf(DATA_FILE_EXTENSION));
+            System.out.println("Unzipped: " + entryName);
+            xmlmap.put(entryName, new String(data, Charset.forName("UTF-8")));
          }
 
       }

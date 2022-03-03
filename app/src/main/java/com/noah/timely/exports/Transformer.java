@@ -1,5 +1,7 @@
 package com.noah.timely.exports;
 
+import android.util.Log;
+
 import com.noah.timely.assignment.AssignmentModel;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.courses.CourseModel;
@@ -9,8 +11,14 @@ import com.noah.timely.util.Constants;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +68,7 @@ class Transformer {
             document.appendChild(rootElement);
 
             // structure and data elements
-            Element structureElement = document.createElement("TableStructure");
             Element dataElement = document.createElement("TableData");
-            rootElement.appendChild(structureElement);
             rootElement.appendChild(dataElement);
             // add list nodes of dataModelList as child nodes to dataElement
             appendTableData(identifier, document, dataElement, dataModelList);
@@ -81,7 +87,7 @@ class Transformer {
                rootElement.appendChild(dataElement);
             }
          } else {
-            throw new IllegalArgumentException( data.getClass() + " is not supported");
+            throw new IllegalArgumentException(data.getClass() + " is not supported");
          }
 
          // then transform generated XML to string representation
@@ -104,6 +110,311 @@ class Transformer {
       }
 
       return xmlString;
+   }
+
+   /**
+    * Transforms xml data representation of data model list into list of data models
+    *
+    * @param datamodelIdentifier the identifier constant of the data contained in the xml
+    * @param xml                 the xml string data
+    * @return the required List of DataModels
+    */
+   public static List<DataModel> getDataModel(String datamodelIdentifier, String xml) {
+      List<DataModel> dataModels = new ArrayList<>();
+
+      try {
+         XmlPullParserFactory xppf = XmlPullParserFactory.newInstance();
+         XmlPullParser xpp = xppf.newPullParser();
+         xpp.setInput(new StringReader(xml));
+         // get events
+         String tableName = null, parentNode = null;
+         boolean isDataFound = false, isDataRead = false;
+
+         int eventType = xpp.getEventType();
+         while (eventType != XmlPullParser.END_DOCUMENT) {
+            // get data tags
+            if (eventType == XmlPullParser.START_TAG) {
+               // get tag name
+               String tagName = xpp.getName();
+               // get table name
+               if (tagName.equals("Table")) {
+                  // step 1
+                  tableName = xpp.getAttributeValue(0);
+               } else if (tagName.equals("TableData")) {
+                  // step 2
+                  // found TableData element tag, continue to children
+                  parentNode = "TableData";
+                  isDataFound = true;
+                  continue;
+               } else if (isDataFound && !isDataRead) {
+                  // step 3
+                  dataModels.addAll(getListFromElementNode(xpp));
+                  isDataRead = true;
+               } else if (isDataRead) {
+                  // step 5
+                  // stop reading any other data when TableData element's children has been parsed
+                  break;
+               }
+            }
+            eventType = xpp.next();
+         }
+
+      } catch (XmlPullParserException | IOException e) {
+         Log.e(Transformer.class.getSimpleName(), e.getMessage());
+         return null;
+      }
+      return dataModels;
+   }
+
+   private static List<? extends DataModel> getListFromElementNode(XmlPullParser xpp)
+           throws XmlPullParserException, IOException {
+      // stop searching when TableData's end tag has been parsed
+      if (xpp.getEventType() != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
+         String dataTag = xpp.getName();
+         switch (dataTag) {
+            case "Registered-Course":
+               return readCourseData(xpp);
+            case "Assignment":
+               return readAssignmenData(xpp);
+            case "Exam":
+               return readExamData(xpp);
+            case "Timetable":
+            case "Scheduled-Timetable":
+               return readTimetableData(xpp);
+            default:
+               throw new IOException(dataTag + " was read, it is invalid and not supported");
+         }
+
+      }
+
+      return null;
+   }
+
+   private static List<CourseModel> readCourseData(XmlPullParser xpp) throws XmlPullParserException, IOException {
+      List<CourseModel> courseModels = new ArrayList<>();
+
+      CourseModel courseModel = null;
+      boolean isDataFound = false;
+      int eventType = xpp.getEventType();
+
+      while (eventType != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
+         if (eventType == XmlPullParser.START_TAG && xpp.getName().equals("Registered-Course")) {
+            // course model found
+            isDataFound = true;
+            courseModel = new CourseModel();
+         } else if (eventType == XmlPullParser.END_TAG && xpp.getName().equals("Registered-Course")) {
+            // reset flag and prepare to read another course model
+            isDataFound = false;
+            courseModels.add(courseModel);
+         } else if (isDataFound) {
+
+            String dataTagName = xpp.getName();
+            int nextEventType = xpp.next();
+
+            if (nextEventType == XmlPullParser.TEXT) {
+               switch (dataTagName) {
+                  case "id":
+                     courseModel.setId(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "position":
+                     courseModel.setPosition(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "Semester":
+                     courseModel.setSemester(xpp.getText());
+                     break;
+                  case "Credits":
+                     courseModel.setCredits(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "Course-Code":
+                     courseModel.setCourseCode(xpp.getText());
+                     break;
+                  case "Course-Title":
+                     courseModel.setCourseName(xpp.getText());
+                     break;
+               }
+            }
+         }
+
+         xpp.next();
+      }
+
+      return courseModels;
+   }
+
+   private static List<AssignmentModel> readAssignmenData(XmlPullParser xpp) throws XmlPullParserException, IOException {
+      List<AssignmentModel> assignmentModels = new ArrayList<>();
+
+      AssignmentModel assignmentModel = null;
+      boolean isDataFound = false;
+      int eventType = xpp.getEventType();
+
+      while (eventType != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
+         if (eventType == XmlPullParser.START_TAG && xpp.getName().equals("Assignment")) {
+            // course model found
+            isDataFound = true;
+            assignmentModel = new AssignmentModel();
+         } else if (eventType == XmlPullParser.END_TAG && xpp.getName().equals("Assignment")) {
+            // reset flag and prepare to read another course model
+            isDataFound = false;
+            assignmentModels.add(assignmentModel);
+         } else if (isDataFound) {
+
+            String dataTagName = xpp.getName();
+            int nextEventType = xpp.next();
+
+            if (nextEventType == XmlPullParser.TEXT) {
+               switch (dataTagName) {
+                  case "id":
+                     assignmentModel.setId(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "position":
+                     assignmentModel.setPosition(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "Submission-Status":
+                     assignmentModel.setSubmitted(Boolean.parseBoolean(xpp.getText()));
+                     break;
+                  case "Description":
+                     assignmentModel.setDescription(xpp.getText());
+                     break;
+                  case "Course-Code":
+                     assignmentModel.setCourseCode(xpp.getText());
+                     break;
+                  case "Lecturer-Name":
+                     assignmentModel.setLecturerName(xpp.getText());
+                     break;
+                  case "Submission-Date":
+                     assignmentModel.setSubmissionDate(xpp.getText());
+                     break;
+                  case "Title":
+                     assignmentModel.setTitle(xpp.getText());
+                     break;
+               }
+            }
+         }
+
+         xpp.next();
+      }
+
+      return assignmentModels;
+   }
+
+   private static List<ExamModel> readExamData(XmlPullParser xpp) throws XmlPullParserException, IOException {
+      List<ExamModel> examModels = new ArrayList<>();
+
+      ExamModel examModel = null;
+      boolean isDataFound = false;
+      int eventType = xpp.getEventType();
+
+      while (eventType != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
+         if (eventType == XmlPullParser.START_TAG && xpp.getName().equals("Exam")) {
+            // course model found
+            isDataFound = true;
+            examModel = new ExamModel();
+         } else if (eventType == XmlPullParser.END_TAG && xpp.getName().equals("Exam")) {
+            // reset flag and prepare to read another course model
+            isDataFound = false;
+            examModels.add(examModel);
+         } else if (isDataFound) {
+
+            String dataTagName = xpp.getName();
+            int nextEventType = xpp.next();
+
+            if (nextEventType == XmlPullParser.TEXT) {
+               switch (dataTagName) {
+                  case "id":
+                     examModel.setId(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "position":
+                     examModel.setPosition(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "Week":
+                     examModel.setWeek(xpp.getText());
+                     break;
+                  case "Day":
+                     examModel.setDay(xpp.getText());
+                     break;
+                  case "Course-Code":
+                     examModel.setCourseCode(xpp.getText());
+                     break;
+                  case "Course-Title":
+                     examModel.setCourseName(xpp.getText());
+                     break;
+                  case "Start-Time":
+                     examModel.setStart(xpp.getText());
+                     break;
+                  case "End-Time":
+                     examModel.setEnd(xpp.getText());
+                     break;
+               }
+            }
+         }
+
+         xpp.next();
+      }
+
+      return examModels;
+   }
+
+   @SuppressWarnings("all")
+   private static List<TimetableModel> readTimetableData(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+      List<TimetableModel> timetableModels = new ArrayList<>();
+
+      TimetableModel timetableModel = null;
+      boolean isDataFound = false;
+      int eventType = xpp.getEventType();
+
+      while (eventType != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
+         if (eventType == XmlPullParser.START_TAG && xpp.getName() == "Scheduled-Timetable") {
+            // course model found
+            isDataFound = true;
+            timetableModel = new TimetableModel();
+         } else if (eventType == XmlPullParser.END_TAG && xpp.getName() == "Scheduled-Timetable") {
+            // reset flag and prepare to read another course model
+            isDataFound = false;
+            timetableModels.add(timetableModel);
+         } else if (isDataFound) {
+
+            String dataTagName = xpp.getName();
+            int nextEventType = xpp.next();
+
+            if (nextEventType == XmlPullParser.TEXT) {
+               switch (dataTagName) {
+                  case "id":
+                     timetableModel.setId(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "position":
+                     timetableModel.setPosition(Integer.parseInt(xpp.getText()));
+                     break;
+                  case "Day":
+                     timetableModel.setDay(xpp.getText());
+                     break;
+                  case "Course-Code":
+                     timetableModel.setCourseCode(xpp.getText());
+                     break;
+                  case "Course-Title":
+                     timetableModel.setFullCourseName(xpp.getText());
+                     break;
+                  case "Start-Time":
+                     timetableModel.setStartTime(xpp.getText());
+                     break;
+                  case "End-Time":
+                     timetableModel.setEndTime(xpp.getText());
+                     break;
+                  case "Lecturer-Name":
+                     timetableModel.setLecturerName(xpp.getName());
+                     break;
+                  case "Importance":
+                     timetableModel.setImportance(xpp.getName());
+                     break;
+               }
+            }
+         }
+
+         xpp.next();
+      }
+
+      return timetableModels;
    }
 
    private static String getProperTableName(String dataModelIdentifier) {
@@ -193,7 +504,7 @@ class Transformer {
    }
 
    private static Element getExamElement(Document document, ExamModel model) {
-      Element element = document.createElement("Assignment");
+      Element element = document.createElement("Exam");
       Element node1 = document.createElement("id");
       node1.setTextContent(String.valueOf(model.getId()));
       Element node2 = document.createElement("position");
@@ -250,7 +561,11 @@ class Transformer {
          node8.setTextContent(model.getLecturerName());
          Element node9 = document.createElement("Importance");
          node9.setTextContent(model.getImportance());
+         // add extra child nodes in case on scheduled classes
+         Element[] enodes = { node7, node8, node9 };
+         for (Element node : enodes) element.appendChild(node);
       }
+
       return element;
    }
 

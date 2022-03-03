@@ -76,7 +76,7 @@
 
             <item
                android:id="@+id/__export"
-               android:icon="@drawable/ic_baseline_import_export_24"
+               android:icon="@drawable/ic_baseline_export"
                android:title="@string/generate_export" />
 
             <item

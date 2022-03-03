@@ -37,7 +37,7 @@ import com.noah.timely.core.PositionMessageEvent;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.exports.TimeLYDataGeneratorDialog;
+import com.noah.timely.exports.TMLYDataGeneratorDialog;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
@@ -195,7 +195,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(aList.size()));
       menu.findItem(R.id.select_all).setVisible(aList.isEmpty() ? false : true);
-      TooltipCompat.setTooltipText(itemCount, "Assignment Count");
+      TooltipCompat.setTooltipText(itemCount, getString(R.string.assignment_count) + aList.size());
 
       super.onCreateOptionsMenu(menu, inflater);
    }
@@ -210,7 +210,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
       if (item.getItemId() == R.id.select_all) {
          assignmentAdapter.selectAllItems();
       } else if (item.getItemId() == R.id.export) {
-         new TimeLYDataGeneratorDialog().show(getContext(), Constants.ASSIGNMENT);
+         new TMLYDataGeneratorDialog().show(getContext(), Constants.ASSIGNMENT);
       }
       return super.onOptionsItemSelected(item);
    }

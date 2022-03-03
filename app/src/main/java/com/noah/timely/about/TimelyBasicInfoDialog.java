@@ -1,9 +1,11 @@
 package com.noah.timely.about;
 
+import static com.noah.timely.util.AppInfoUtils.getAppVesionName;
+
 import android.app.Dialog;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -16,7 +18,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.noah.timely.BuildConfig;
 import com.noah.timely.R;
 
 public class TimelyBasicInfoDialog extends DialogFragment implements View.OnClickListener {
@@ -55,18 +56,13 @@ public class TimelyBasicInfoDialog extends DialogFragment implements View.OnClic
          ImageButton btn_close = findViewById(R.id.close);
          btn_close.setOnClickListener(TimelyBasicInfoDialog.this);
 
+         findViewById(R.id.bmc).setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.buymeacoffee.com/noahweasley"));
+            getActivity().startActivity(Intent.createChooser(intent, getString(R.string.link_open_text)));
+         });
+
          TextView tv_version = findViewById(R.id.version);
-
-         String version = BuildConfig.VERSION_NAME;
-         String packageName = "com.noah.timely";
-
-         try {
-            PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(packageName, 0);
-            version = packageInfo.versionName;
-         } catch (PackageManager.NameNotFoundException ignored) {
-         }
-
-         tv_version.setText(String.format("V%s", version));
+         tv_version.setText(String.format("V%s", getAppVesionName(getContext())));
       }
    }
 }

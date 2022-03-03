@@ -10,12 +10,15 @@
       Added, Click-to-view full list item details on some lists.
    </Release>
    <Release>
+      List-count tooltip displays size of list.
+   </Release>
+   <Release>
       Added Export/Import data feature.
    </Release>
    <Release>
       Improved Introduction Page; added skip and improved naviagation.
    </Release>
    <Release>
-      Working on full support for Android 12.
+      Working on full support for Android 12 and 13.
    </Release>
 </ReleaseNote>

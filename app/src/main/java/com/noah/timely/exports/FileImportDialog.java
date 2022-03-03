@@ -12,8 +12,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
+import com.noah.timely.core.DataModel;
 import com.noah.timely.util.ThreadUtils;
 
+import java.util.List;
 import java.util.Map;
 
 public class FileImportDialog extends DialogFragment {
@@ -58,10 +60,11 @@ public class FileImportDialog extends DialogFragment {
       private void doFileImport() {
          // generate data
          Bundle arguments = getArguments();
-         Map<String, String> map = TMLFileGenerator.importFromFile(getContext(), getArguments().getString(ARG_FILEPATH));
+         Map<String, List<? extends DataModel>> results
+                 = TMLYFileGenerator.importFromFile(getContext(), getArguments().getString(ARG_FILEPATH));
          // run in ui thread - required
          getActivity().runOnUiThread(() -> {
-            listener.onResultReceived(map);
+            listener.onResultReceived(results);
             dismiss_flag = true;
             dismiss();  // dismiss dialog if data was generated or not
          });
@@ -75,6 +78,6 @@ public class FileImportDialog extends DialogFragment {
    }
 
    public interface OnResultReceivedListener {
-      void onResultReceived(Map<String, String> results);
+      void onResultReceived(Map<String, List<? extends DataModel>> results);
    }
 }

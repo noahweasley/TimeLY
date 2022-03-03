@@ -6,6 +6,7 @@
    android:background="@drawable/bg_day_and_night">
 
    <TextView
+      android:id="@+id/textView5"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/default_gap"
@@ -13,18 +14,18 @@
       android:textSize="@dimen/normal_dialog_text_size"
       android:textStyle="bold"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/materialProgressbar"
+      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.2"
-      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/materialProgressbar"
       app:layout_constraintTop_toTopOf="parent" />
 
    <com.noah.timely.custom.MaterialProgressbar
       android:id="@+id/materialProgressbar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/layout_gap"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      android:layout_margin="16dp"/>
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

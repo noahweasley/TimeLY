@@ -13,10 +13,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.noah.timely.BuildConfig;
 import com.noah.timely.R;
 
 import java.io.File;
@@ -56,38 +58,29 @@ public class ExportSuccessDialog extends DialogFragment {
          Bundle arguments = getArguments();
          tv_message.setText(arguments.getString(MESSAGE));
 
-         Button btn_locate, btn_share;
-         btn_locate = findViewById(R.id.locate);
-         btn_share = findViewById(R.id.share);
+         Button btn_share = findViewById(R.id.share);
 
-         // navigate to file explorer if installed
-         btn_locate.setOnClickListener(v -> {
-            File file = new File(getActivity().getExternalFilesDir(null) + File.separator + "exported" + File.separator);
-            Uri selectedUri = Uri.fromFile(file);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(selectedUri, "resource/folder");
-
-            if (intent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null) {
-               startActivity(Intent.createChooser(intent, "Open folder"));
-            } else {
-               Toast.makeText(getContext(), "Unable to navigate to file", Toast.LENGTH_LONG).show();
-            }
-         });
+         String exportPath = getArguments().getString(ARG_EXPORT_PATH);
+         // can't send a file:// uri, transform it into a content:// uri
+         File file = new File(exportPath);
+         Uri fileUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
 
          // opens up chooser, used to send send the Uri of the exported file
          btn_share.setOnClickListener(v -> {
-            String exportPath = getArguments().getString(ARG_EXPORT_PATH);
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            File file = new File(exportPath);
 
             if (file.exists()) {
-               shareIntent.setType("*/*");
-               shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Sharing file using ...");
-               shareIntent.putExtra(Intent.EXTRA_TEXT, "Sharing file using ...");
-               shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-               startActivity(Intent.createChooser(shareIntent, "Share using"));
+               String shareTextSubject = getString(R.string.share_text_subject_1);
+
+               shareIntent.setDataAndType(fileUri, "application/tmly");
+               shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareTextSubject);
+               shareIntent.putExtra(Intent.EXTRA_TEXT, shareTextSubject);
+               shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+               shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+               startActivity(Intent.createChooser(shareIntent, getString(R.string.share_text_subject_2)));
             } else {
-               Toast.makeText(getActivity(), "Nothing to send", Toast.LENGTH_SHORT).show();
+               Toast.makeText(getActivity(), R.string.no_share_subject_text, Toast.LENGTH_SHORT).show();
             }
          });
       }

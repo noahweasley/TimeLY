@@ -7,9 +7,11 @@ import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -34,6 +36,15 @@ public class AlarmActivity extends AppCompatActivity {
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.alarm_view);
+      // keep screen on
+      getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+      // show activity even when device is locked
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+         setShowWhenLocked(true);
+      } else {
+         // noinspection deprecation
+         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+      }
 
       Intent starterIntent = getIntent();
       // Register this activity as a receiver of the MessageEvent posts

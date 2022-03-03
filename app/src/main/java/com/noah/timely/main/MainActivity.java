@@ -35,8 +35,8 @@ import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
 import com.noah.timely.exam.ExamFragment;
-import com.noah.timely.exports.ImportActivity;
-import com.noah.timely.exports.TimeLYDataGeneratorDialog;
+import com.noah.timely.exports.ImportResultsActivity;
+import com.noah.timely.exports.TMLYDataGeneratorDialog;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TimetableFragment;
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          } else {
             FragmentManager manager = getSupportFragmentManager();
             Fragment fragment1 = manager.findFragmentByTag("Todo");
-            if (fragment1 == null) finish();
+            if (fragment1 != null) super.onBackPressed();
             else Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
          }
          dismissable = true;
@@ -245,11 +245,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
       } else if (menuItemId == R.id.__export) {
 
-         new TimeLYDataGeneratorDialog().show(this);
+         new TMLYDataGeneratorDialog().show(this);
 
       } else if (menuItemId == R.id.__import) {
 
-        startActivity(new Intent(this, ImportActivity.class));
+        startActivity(new Intent(this, ImportResultsActivity.class));
 
       } else if (menuItemId == R.id.report) {
 

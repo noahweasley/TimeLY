@@ -183,7 +183,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(tdList.size()));
       menu.findItem(R.id.select_all).setVisible(tdList.isEmpty() ? false : true);
-      TooltipCompat.setTooltipText(itemCount, "Todo Count");
+      TooltipCompat.setTooltipText(itemCount, getString(R.string.todo_count) + tdList.size());
 
       super.onCreateOptionsMenu(menu, inflater);
    }

@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * TimeLY's native .tmly file generator
  */
-public class TMLFileGenerator {
+public class TMLYFileGenerator {
 
    /**
     * Generates an XML-based file of database
@@ -54,15 +54,29 @@ public class TMLFileGenerator {
     *
     * @param context  the context used in accessing resources
     * @param filePath the path to the file with the data to be imported
+    * @return an hash map containing the datamodel constants as keys and corresponding datamodel list as values
     */
-   public static Map<String, String> importFromFile(Context context, String filePath) {
+   public static Map<String, List<? extends DataModel>> importFromFile(Context context, String filePath) {
       Map<String, String> xmlStringMap = null;
       try {
-         xmlStringMap = Zipper.unzipToXMLArray(context, filePath);
+         xmlStringMap = Zipper.unzipToXMLMap(context, filePath);
       } catch (IOException e) {
-         return null;
+         e.printStackTrace();
       }
-      return xmlStringMap;
+      return transformXMLMapToDatamodelMap(xmlStringMap);
+   }
+
+   private static Map<String, List<? extends DataModel>> transformXMLMapToDatamodelMap(Map<String, String> map) {
+      if (map == null) return null;
+      Map<String, List<? extends DataModel>> datamap = new HashMap<>();
+      // key = data model constant equiv; value = xml as string to be transformed to a datamodel list
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+         // ignore the metadata in the file for now, it's not useful yet
+         if (entry.getKey().equals("Metadata")) continue;
+         datamap.put(entry.getKey(), Transformer.getDataModel(entry.getKey(), entry.getValue()));
+      }
+
+      return datamap;
    }
 
    private static String writeTransformedDatabaseToFile(Context context, Map<String, String> transformed) {
@@ -78,7 +92,7 @@ public class TMLFileGenerator {
 
       boolean isCompressed = false;
       try {
-         isCompressed = Zipper.zipXMLArray(context, transformed, output);
+         isCompressed = Zipper.zipXMLMap(context, transformed, output);
       } catch (IOException e) {
          return null;
       }
