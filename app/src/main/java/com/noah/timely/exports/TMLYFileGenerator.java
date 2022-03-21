@@ -6,6 +6,7 @@ import static com.noah.timely.util.AppInfoUtils.getDatabaseVerion;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.SchoolDatabase;
@@ -61,7 +62,7 @@ public class TMLYFileGenerator {
       try {
          xmlStringMap = Zipper.unzipToXMLMap(context, filePath);
       } catch (IOException e) {
-         e.printStackTrace();
+         return null;
       }
       return transformXMLMapToDatamodelMap(xmlStringMap);
    }
@@ -72,8 +73,14 @@ public class TMLYFileGenerator {
       // key = data model constant equiv; value = xml as string to be transformed to a datamodel list
       for (Map.Entry<String, String> entry : map.entrySet()) {
          // ignore the metadata in the file for now, it's not useful yet
-         if (entry.getKey().equals("Metadata")) continue;
-         datamap.put(entry.getKey(), Transformer.getDataModel(entry.getKey(), entry.getValue()));
+         if (entry.getKey().equals("Metadata.xml")) continue;
+         try {
+            datamap.put(entry.getKey(), Transformer.getDataModel(entry.getKey(), entry.getValue()));
+         } catch (Exception exc) {
+            Log.d(TMLYFileGenerator.class.getSimpleName(), "Exception: " + exc.getMessage());
+           return null;  // file was corrupt, return null
+         }
+
       }
 
       return datamap;
@@ -130,7 +137,8 @@ public class TMLYFileGenerator {
             dataModelList = database.getTimeTableData(SchoolDatabase.SCHEDULED_TIMETABLE);
             break;
          default:
-            throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
+            throw new IllegalArgumentException(
+                    "The identifier " + dataModelIdentifier + " doesn't exists in database");
       }
 
       // key - dataModelIdentifier, value - dataModelList

@@ -59,4 +59,16 @@ public class CourseModel extends DataModel {
    public void setSemester(String semester) {
       this.semester = semester;
    }
+
+   @Override
+   @SuppressWarnings("all")
+   public String toString() {
+      return "CourseModel{" +
+              "semester='" + semester + '\'' +
+              ", credits=" + credits +
+              ", courseCode='" + courseCode + '\'' +
+              ", courseName='" + courseName + '\'' +
+              ", chronologicalOrder=" + chronologicalOrder +
+              '}';
+   }
 }

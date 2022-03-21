@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import com.noah.timely.core.DataModel;
 
+import java.util.Arrays;
+
 @SuppressWarnings("unused")
 public class AlarmModel extends DataModel {
    private String time;
@@ -136,5 +138,23 @@ public class AlarmModel extends DataModel {
 
    public void setPosition(int position) {
       this.position = position;
+   }
+
+   @Override
+   @SuppressWarnings("all")
+   public String toString() {
+      return "AlarmModel{" +
+              "time='" + time + '\'' +
+              ", isOn=" + isOn +
+              ", isRepeated=" + isRepeated +
+              ", ringTone='" + ringTone + '\'' +
+              ", repeatDays=" + Arrays.toString(repeatDays) +
+              ", position=" + position +
+              ", vibrate=" + vibrate +
+              ", label='" + label + '\'' +
+              ", initialPosition=" + initialPosition +
+              ", snoozed=" + snoozed +
+              ", snoozedTime='" + snoozedTime + '\'' +
+              '}';
    }
 }

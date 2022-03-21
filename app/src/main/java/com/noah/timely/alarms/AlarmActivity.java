@@ -33,6 +33,7 @@ public class AlarmActivity extends AppCompatActivity {
    private Intent receiverDismiss;
 
    @Override
+   @SuppressWarnings("deprecation")
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.alarm_view);

@@ -6,7 +6,7 @@
    <color name="colorPrimaryDark_2">#277FFE</color>
    <color name="todo_alt_color">#EDF3FF</color>
    <color name="colorAccent">@color/accent</color>
-   <color name="colorAccentDarker">#FE0000</color>
+   <color name="colorAccentDarker">#DF0505</color>
    <color name="colorAccentDark">#502E8D</color>
    <color name="pink">#F06292</color>
    <color name="accent">#FF2424</color>

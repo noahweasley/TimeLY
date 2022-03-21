@@ -99,6 +99,7 @@ public class AlarmNotificationService extends Service implements Runnable {
          VibratorManager vManager = (VibratorManager) getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
          vibrator = vManager.getDefaultVibrator();
       } else {
+         // noinspection deprecation
          vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
       }
 

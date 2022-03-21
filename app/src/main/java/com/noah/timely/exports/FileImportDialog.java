@@ -15,6 +15,7 @@ import com.noah.timely.R;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.util.ThreadUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,9 +63,12 @@ public class FileImportDialog extends DialogFragment {
          Bundle arguments = getArguments();
          Map<String, List<? extends DataModel>> results
                  = TMLYFileGenerator.importFromFile(getContext(), getArguments().getString(ARG_FILEPATH));
+         // wierd, but I have to do it. I have to transform this map to a list of map entries.
+         List<Map.Entry<String, List<? extends DataModel>>> list = new ArrayList<>();
+         list.addAll(results.entrySet());
          // run in ui thread - required
          getActivity().runOnUiThread(() -> {
-            listener.onResultReceived(results);
+            listener.onResultReceived(list);
             dismiss_flag = true;
             dismiss();  // dismiss dialog if data was generated or not
          });
@@ -78,6 +82,6 @@ public class FileImportDialog extends DialogFragment {
    }
 
    public interface OnResultReceivedListener {
-      void onResultReceived(Map<String, List<? extends DataModel>> results);
+      void onResultReceived(List<Map.Entry<String, List<? extends DataModel>>> results);
    }
 }

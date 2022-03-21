@@ -38,7 +38,7 @@ public class Zipper {
    /**
     * The maximum amount of data that can be transferred at once; 10MB
     */
-   private static final int MAX_DATA_TRANSFER_BITS = 10_048_576;
+   public static final int MAX_DATA_TRANSFER_BITS = 10_048_576;
 
    /**
     * Un-zips a .tmly file into one single folder

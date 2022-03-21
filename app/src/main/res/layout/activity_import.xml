@@ -18,22 +18,48 @@
       external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
       external:subtitleTextColor="@android:color/white" />
 
-   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/import_list"
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/data_layer"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:clipToPadding="false"
-      android:layoutAnimation="@anim/list_layout_anim_gravity_start"
-      android:paddingHorizontal="@dimen/layout_gap"
-      android:paddingTop="@dimen/layout_gap"
-      android:paddingBottom="80dp"
       android:visibility="gone"
-      external:layout_behavior="@string/appbar_scrolling_view_behavior"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toBottomOf="@+id/toolbar"
-      tools:visibility="visible" />
+      external:layout_constraintTop_toBottomOf="@id/toolbar"
+      tools:visibility="gone">
+
+      <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/import_list"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         android:clipToPadding="false"
+         android:layoutAnimation="@anim/list_layout_anim_gravity_start"
+         android:paddingHorizontal="@dimen/layout_gap"
+         android:paddingTop="@dimen/layout_gap"
+         android:paddingBottom="80dp"
+         external:layout_behavior="@string/appbar_scrolling_view_behavior"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         tools:visibility="visible" />
+
+      <Button
+         android:id="@+id/import_selected"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="16dp"
+         android:background="@drawable/buttons_explore"
+         android:minHeight="@dimen/button_min_height"
+         android:text="@string/import_selected"
+         android:textColor="@android:color/white"
+         android:textSize="@dimen/button_text_size"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
    <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/init_view"
@@ -91,7 +117,7 @@
          android:layout_height="0dp"
          android:layout_marginBottom="@dimen/layout_gap_secondary"
          android:background="@drawable/bg_rounded_stroked"
-         external:layout_constraintBottom_toTopOf="@+id/import_"
+         external:layout_constraintBottom_toTopOf="@+id/file_pick"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toTopOf="parent">
@@ -130,7 +156,7 @@
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <Button
-         android:id="@+id/import_"
+         android:id="@+id/file_pick"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_marginBottom="16dp"
@@ -144,6 +170,7 @@
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toTopOf="parent"
          external:layout_constraintVertical_bias="0.8" />
+
    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

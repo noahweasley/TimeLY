@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
+import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.util.Constants;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class TMLYDataGeneratorDialog extends DialogFragment {
          btn_export = findViewById(R.id.export);
 
          btn_export.setOnClickListener(v -> {
-            new ActionProcessorDialog().execute(getActivity(), dataModelList);
+            new ActionProcessorDialog2().execute(getActivity(), this::doExport);
             dismiss();
          });
 
@@ -115,6 +116,30 @@ public class TMLYDataGeneratorDialog extends DialogFragment {
          }
       }
 
+      private void doExport() {
+         // generate data
+         Bundle arguments = getArguments();
+         String exportPath = TMLYFileGenerator.generate(getContext(), dataModelList);
+         // run in ui thread - required
+         getActivity().runOnUiThread(() -> {
+            if (exportPath != null) {
+               // Export successful, show result dialog
+               new ExportSuccessDialog().show(getActivity(), R.string.export_success_message, exportPath);
+
+            } else {
+               // Export unsuccessful. Error occurred
+               ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
+               errorBuilder.setShowSuggestions(true)
+                           .setDialogMessage("An Error occurred while generating data")
+                           .setSuggestionCount(1)
+                           .setSuggestion1("Check that you have enough memory");
+
+               new ErrorDialog().showErrorMessage(getActivity(), errorBuilder.build());
+            }
+
+         });
+      }
+
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
          int id = buttonView.getId();
@@ -124,7 +149,7 @@ public class TMLYDataGeneratorDialog extends DialogFragment {
             if (isChecked) dataModelList.add(Constants.COURSE);
             else dataModelList.remove(Constants.COURSE);
 
-         } else if (id == R.id.assignment) {
+         } else if (id == R.id.assignments) {
             // assignments check-box
             if (isChecked) dataModelList.add(Constants.ASSIGNMENT);
             else dataModelList.remove(Constants.ASSIGNMENT);

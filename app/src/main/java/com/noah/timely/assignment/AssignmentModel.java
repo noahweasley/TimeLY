@@ -46,23 +46,6 @@ public class AssignmentModel extends DataModel implements Serializable {
       this.chronologicalOrder = chronologicalOrder;
    }
 
-   @Override
-   @SuppressWarnings("all")
-   public String toString() {
-      return "AssignmentModel{" +
-              "id=" + super.position +
-              ", courseCode='" + courseCode + '\'' +
-              ", lecturerName='" + lecturerName + '\'' +
-              ", title='" + title + '\'' +
-              ", description='" + description + '\'' +
-              ", date='" + date + '\'' +
-              ", submissionDate='" + submissionDate + '\'' +
-              ", attachedPDF='" + attachedPDF + '\'' +
-              ", attachedImage='" + attachedImage + '\'' +
-              ", isSubmitted=" + isSubmitted +
-              '}';
-   }
-
    public boolean isSubmitted() {
       return isSubmitted;
    }
@@ -141,5 +124,23 @@ public class AssignmentModel extends DataModel implements Serializable {
 
    public void setId(int id) {
       this.id = id;
+   }
+
+   @Override
+   @SuppressWarnings("all")
+   public String toString() {
+      return "AssignmentModel{" +
+              "chronologicalOrder=" + chronologicalOrder +
+              ", courseCode='" + courseCode + '\'' +
+              ", lecturerName='" + lecturerName + '\'' +
+              ", title='" + title + '\'' +
+              ", description='" + description + '\'' +
+              ", date='" + date + '\'' +
+              ", submissionDate='" + submissionDate + '\'' +
+              ", attachedPDF='" + attachedPDF + '\'' +
+              ", attachedImage='" + attachedImage + '\'' +
+              ", isSubmitted=" + isSubmitted +
+              ", id=" + id +
+              '}';
    }
 }

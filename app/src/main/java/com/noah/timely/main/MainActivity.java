@@ -47,6 +47,8 @@ import com.noah.timely.util.PreferenceUtils;
 import com.noah.timely.util.ReportActionUtil;
 import com.noah.timely.util.TimelyUpdateUtils;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
    private boolean dismissable;
 
@@ -172,7 +174,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             FragmentManager manager = getSupportFragmentManager();
             Fragment fragment1 = manager.findFragmentByTag("Todo");
             if (fragment1 != null) super.onBackPressed();
-            else Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+            else {
+               String app_name = getString(R.string.app_name);
+               String exit_message = getString(R.string.exit_message);
+               String full_exit_message = String.format(Locale.US, "%s %s", exit_message, app_name);
+               Toast.makeText(this, full_exit_message, Toast.LENGTH_SHORT).show();
+            }
          }
          dismissable = true;
          new Handler(getMainLooper()).postDelayed(() -> dismissable = false, 2000);
@@ -249,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
       } else if (menuItemId == R.id.__import) {
 
-        startActivity(new Intent(this, ImportResultsActivity.class));
+         startActivity(new Intent(this, ImportResultsActivity.class));
 
       } else if (menuItemId == R.id.report) {
 

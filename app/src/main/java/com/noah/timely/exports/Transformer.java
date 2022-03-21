@@ -1,5 +1,6 @@
 package com.noah.timely.exports;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.noah.timely.assignment.AssignmentModel;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,9 +97,9 @@ class Transformer {
          javax.xml.transform.Transformer transformer = transformerFactory.newTransformer();
          // prettier
          transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
          transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(3));
+//         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(3));
          // to string result
          StringWriter stringWriter = new StringWriter();
          StreamResult streamResult = new StreamResult(stringWriter);
@@ -119,75 +121,72 @@ class Transformer {
     * @param xml                 the xml string data
     * @return the required List of DataModels
     */
-   public static List<DataModel> getDataModel(String datamodelIdentifier, String xml) {
-      List<DataModel> dataModels = new ArrayList<>();
+   public static List<? extends DataModel> getDataModel(String datamodelIdentifier, String xml) {
+      List<? extends DataModel> dataModels = new ArrayList<>();
 
       try {
          XmlPullParserFactory xppf = XmlPullParserFactory.newInstance();
          XmlPullParser xpp = xppf.newPullParser();
          xpp.setInput(new StringReader(xml));
          // get events
-         String tableName = null, parentNode = null;
+         String tableName = null, dataTagNode = null;
          boolean isDataFound = false, isDataRead = false;
 
          int eventType = xpp.getEventType();
          while (eventType != XmlPullParser.END_DOCUMENT) {
-            // get data tags
+            final String tagName = xpp.getName();
             if (eventType == XmlPullParser.START_TAG) {
-               // get tag name
-               String tagName = xpp.getName();
-               // get table name
                if (tagName.equals("Table")) {
-                  // step 1
                   tableName = xpp.getAttributeValue(0);
-               } else if (tagName.equals("TableData")) {
-                  // step 2
-                  // found TableData element tag, continue to children
-                  parentNode = "TableData";
+                  xpp.next();
+               }
+
+               if (tagName.equals("TableData")) {
                   isDataFound = true;
-                  continue;
-               } else if (isDataFound && !isDataRead) {
-                  // step 3
-                  dataModels.addAll(getListFromElementNode(xpp));
-                  isDataRead = true;
-               } else if (isDataRead) {
-                  // step 5
-                  // stop reading any other data when TableData element's children has been parsed
-                  break;
+                  xpp.next();
+               }
+
+               if (haveGotDataElement(tagName)) {
+                  switch (tagName) {
+                     case "Assignment":
+                        dataModels = readAssignmenData(xpp);
+                        break;
+                     case "Registered-Course":
+                        dataModels = readCourseData(xpp);
+                        break;
+                     case "Exam":
+                        dataModels = readExamData(xpp);
+                        break;
+                     case "Timetable":
+                     case "Scheduled-Timetable":
+                        dataModels = readTimetableData(xpp);
+                        break;
+                     default:
+                        throw new IllegalStateException(dataTagNode + " is not supported");
+                  }
+               }
+
+            } else if (eventType == XmlPullParser.END_TAG) {
+               if (haveGotDataElement(tagName)) {
+                  dataTagNode = null;
                }
             }
+
             eventType = xpp.next();
          }
 
       } catch (XmlPullParserException | IOException e) {
+         // debug
          Log.e(Transformer.class.getSimpleName(), e.getMessage());
          return null;
       }
+
       return dataModels;
    }
 
-   private static List<? extends DataModel> getListFromElementNode(XmlPullParser xpp)
-           throws XmlPullParserException, IOException {
-      // stop searching when TableData's end tag has been parsed
-      if (xpp.getEventType() != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
-         String dataTag = xpp.getName();
-         switch (dataTag) {
-            case "Registered-Course":
-               return readCourseData(xpp);
-            case "Assignment":
-               return readAssignmenData(xpp);
-            case "Exam":
-               return readExamData(xpp);
-            case "Timetable":
-            case "Scheduled-Timetable":
-               return readTimetableData(xpp);
-            default:
-               throw new IOException(dataTag + " was read, it is invalid and not supported");
-         }
-
-      }
-
-      return null;
+   private static boolean haveGotDataElement(String tagName) {
+      String[] dataTags = { "Assignment", "Exam", "Registered-Course", "Scheduled-Timetable", "Timetable" };
+      return Arrays.binarySearch(dataTags, tagName) >= 0;
    }
 
    private static List<CourseModel> readCourseData(XmlPullParser xpp) throws XmlPullParserException, IOException {
@@ -195,9 +194,10 @@ class Transformer {
 
       CourseModel courseModel = null;
       boolean isDataFound = false;
+      String dataTagName = "";
       int eventType = xpp.getEventType();
 
-      while (eventType != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
+      while (eventType != XmlPullParser.END_DOCUMENT) {
          if (eventType == XmlPullParser.START_TAG && xpp.getName().equals("Registered-Course")) {
             // course model found
             isDataFound = true;
@@ -207,35 +207,38 @@ class Transformer {
             isDataFound = false;
             courseModels.add(courseModel);
          } else if (isDataFound) {
+            // START_TAG event is emitted, so the next should be a TEXT event. Store the start tag's name and
+            // then prepare to read the text in-between the start and end tags
+            if (eventType == XmlPullParser.START_TAG) dataTagName = xpp.getName();
 
-            String dataTagName = xpp.getName();
-            int nextEventType = xpp.next();
-
-            if (nextEventType == XmlPullParser.TEXT) {
-               switch (dataTagName) {
-                  case "id":
-                     courseModel.setId(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "position":
-                     courseModel.setPosition(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "Semester":
-                     courseModel.setSemester(xpp.getText());
-                     break;
-                  case "Credits":
-                     courseModel.setCredits(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "Course-Code":
-                     courseModel.setCourseCode(xpp.getText());
-                     break;
-                  case "Course-Title":
-                     courseModel.setCourseName(xpp.getText());
-                     break;
+            if (eventType == XmlPullParser.TEXT) {
+               // dataTagName can never be empty at this point, but to just be on a safer side, still check
+               if (!TextUtils.isEmpty(dataTagName)) {
+                  switch (dataTagName) {
+                     case "id":
+                        courseModel.setId(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "position":
+                        courseModel.setPosition(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "Semester":
+                        courseModel.setSemester(xpp.getText());
+                        break;
+                     case "Credits":
+                        courseModel.setCredits(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "Course-Code":
+                        courseModel.setCourseCode(xpp.getText());
+                        break;
+                     case "Course-Title":
+                        courseModel.setCourseName(xpp.getText());
+                        break;
+                  }
                }
             }
          }
 
-         xpp.next();
+         eventType = xpp.next();
       }
 
       return courseModels;
@@ -246,53 +249,59 @@ class Transformer {
 
       AssignmentModel assignmentModel = null;
       boolean isDataFound = false;
+      String dataTagName = "";
       int eventType = xpp.getEventType();
 
-      while (eventType != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
+      while (eventType != XmlPullParser.END_DOCUMENT) {
          if (eventType == XmlPullParser.START_TAG && xpp.getName().equals("Assignment")) {
-            // course model found
+            // assignment model found
             isDataFound = true;
             assignmentModel = new AssignmentModel();
          } else if (eventType == XmlPullParser.END_TAG && xpp.getName().equals("Assignment")) {
-            // reset flag and prepare to read another course model
+            // reset flag and prepare to read another assignment model
             isDataFound = false;
             assignmentModels.add(assignmentModel);
          } else if (isDataFound) {
+            // START_TAG event is emitted, so the next should be a TEXT event. Store the start tag's name and
+            // then prepare to read the text in-between the start and end tags
+            if (eventType == XmlPullParser.START_TAG) dataTagName = xpp.getName();
 
-            String dataTagName = xpp.getName();
-            int nextEventType = xpp.next();
-
-            if (nextEventType == XmlPullParser.TEXT) {
-               switch (dataTagName) {
-                  case "id":
-                     assignmentModel.setId(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "position":
-                     assignmentModel.setPosition(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "Submission-Status":
-                     assignmentModel.setSubmitted(Boolean.parseBoolean(xpp.getText()));
-                     break;
-                  case "Description":
-                     assignmentModel.setDescription(xpp.getText());
-                     break;
-                  case "Course-Code":
-                     assignmentModel.setCourseCode(xpp.getText());
-                     break;
-                  case "Lecturer-Name":
-                     assignmentModel.setLecturerName(xpp.getText());
-                     break;
-                  case "Submission-Date":
-                     assignmentModel.setSubmissionDate(xpp.getText());
-                     break;
-                  case "Title":
-                     assignmentModel.setTitle(xpp.getText());
-                     break;
+            if (eventType == XmlPullParser.TEXT) {
+               // dataTagName can never be empty at this point, but to just be on a safer side, still check
+               if (!TextUtils.isEmpty(dataTagName)) {
+                  switch (dataTagName) {
+                     case "id":
+                        assignmentModel.setId(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "position":
+                        assignmentModel.setPosition(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "Submission-Status":
+                        assignmentModel.setSubmitted(Boolean.parseBoolean(xpp.getText()));
+                        break;
+                     case "Description":
+                        assignmentModel.setDescription(xpp.getText());
+                        break;
+                     case "Course-Code":
+                        assignmentModel.setCourseCode(xpp.getText());
+                        break;
+                     case "Lecturer-Name":
+                        assignmentModel.setLecturerName(xpp.getText());
+                        break;
+                     case "Submission-Date":
+                        assignmentModel.setSubmissionDate(xpp.getText());
+                        break;
+                     case "Title":
+                        assignmentModel.setTitle(xpp.getText());
+                        break;
+                  }
                }
             }
+
          }
 
-         xpp.next();
+         eventType = xpp.next();
+
       }
 
       return assignmentModels;
@@ -303,115 +312,123 @@ class Transformer {
 
       ExamModel examModel = null;
       boolean isDataFound = false;
+      String dataTagName = "";
       int eventType = xpp.getEventType();
 
-      while (eventType != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
+      while (eventType != XmlPullParser.END_DOCUMENT) {
          if (eventType == XmlPullParser.START_TAG && xpp.getName().equals("Exam")) {
-            // course model found
+            // exam model found
             isDataFound = true;
             examModel = new ExamModel();
          } else if (eventType == XmlPullParser.END_TAG && xpp.getName().equals("Exam")) {
-            // reset flag and prepare to read another course model
+            // reset flag and prepare to read another exam model
             isDataFound = false;
             examModels.add(examModel);
          } else if (isDataFound) {
+            // START_TAG event is emitted, so the next should be a TEXT event. Store the start tag's name and
+            // then prepare to read the text in-between the start and end tags
+            if (eventType == XmlPullParser.START_TAG) dataTagName = xpp.getName();
 
-            String dataTagName = xpp.getName();
-            int nextEventType = xpp.next();
-
-            if (nextEventType == XmlPullParser.TEXT) {
-               switch (dataTagName) {
-                  case "id":
-                     examModel.setId(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "position":
-                     examModel.setPosition(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "Week":
-                     examModel.setWeek(xpp.getText());
-                     break;
-                  case "Day":
-                     examModel.setDay(xpp.getText());
-                     break;
-                  case "Course-Code":
-                     examModel.setCourseCode(xpp.getText());
-                     break;
-                  case "Course-Title":
-                     examModel.setCourseName(xpp.getText());
-                     break;
-                  case "Start-Time":
-                     examModel.setStart(xpp.getText());
-                     break;
-                  case "End-Time":
-                     examModel.setEnd(xpp.getText());
-                     break;
+            if (eventType == XmlPullParser.TEXT) {
+               // dataTagName can never be empty at this point, but to just be on a safer side, still check
+               if (!TextUtils.isEmpty(dataTagName)) {
+                  switch (dataTagName) {
+                     case "id":
+                        examModel.setId(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "position":
+                        examModel.setPosition(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "Week":
+                        examModel.setWeek(xpp.getText());
+                        break;
+                     case "Day":
+                        examModel.setDay(xpp.getText());
+                        break;
+                     case "Course-Code":
+                        examModel.setCourseCode(xpp.getText());
+                        break;
+                     case "Course-Title":
+                        examModel.setCourseName(xpp.getText());
+                        break;
+                     case "Start-Time":
+                        examModel.setStart(xpp.getText());
+                        break;
+                     case "End-Time":
+                        examModel.setEnd(xpp.getText());
+                        break;
+                  }
                }
             }
          }
 
-         xpp.next();
+         eventType = xpp.next();
       }
 
       return examModels;
    }
 
-   @SuppressWarnings("all")
    private static List<TimetableModel> readTimetableData(XmlPullParser xpp) throws XmlPullParserException, IOException {
-
       List<TimetableModel> timetableModels = new ArrayList<>();
 
       TimetableModel timetableModel = null;
       boolean isDataFound = false;
+      String dataTagName = "";
       int eventType = xpp.getEventType();
 
-      while (eventType != XmlPullParser.END_TAG && !xpp.getName().equals("TableData")) {
-         if (eventType == XmlPullParser.START_TAG && xpp.getName() == "Scheduled-Timetable") {
-            // course model found
+      while (eventType != XmlPullParser.END_DOCUMENT) {
+         if (eventType == XmlPullParser.START_TAG
+                 && (xpp.getName().equals("Scheduled-Timetable") || xpp.getName().equals("Timetable"))) {
+            // timetable model found
             isDataFound = true;
             timetableModel = new TimetableModel();
-         } else if (eventType == XmlPullParser.END_TAG && xpp.getName() == "Scheduled-Timetable") {
-            // reset flag and prepare to read another course model
+         } else if (eventType == XmlPullParser.END_TAG
+                 && (xpp.getName().equals("Scheduled-Timetable") || xpp.getName().equals("Timetable"))) {
+            // reset flag and prepare to read another timetable model
             isDataFound = false;
             timetableModels.add(timetableModel);
          } else if (isDataFound) {
+            // START_TAG event is emitted, so the next should be a TEXT event. Store the start tag's name and
+            // then prepare to read the text in-between the start and end tags
+            if (eventType == XmlPullParser.START_TAG) dataTagName = xpp.getName();
 
-            String dataTagName = xpp.getName();
-            int nextEventType = xpp.next();
-
-            if (nextEventType == XmlPullParser.TEXT) {
-               switch (dataTagName) {
-                  case "id":
-                     timetableModel.setId(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "position":
-                     timetableModel.setPosition(Integer.parseInt(xpp.getText()));
-                     break;
-                  case "Day":
-                     timetableModel.setDay(xpp.getText());
-                     break;
-                  case "Course-Code":
-                     timetableModel.setCourseCode(xpp.getText());
-                     break;
-                  case "Course-Title":
-                     timetableModel.setFullCourseName(xpp.getText());
-                     break;
-                  case "Start-Time":
-                     timetableModel.setStartTime(xpp.getText());
-                     break;
-                  case "End-Time":
-                     timetableModel.setEndTime(xpp.getText());
-                     break;
-                  case "Lecturer-Name":
-                     timetableModel.setLecturerName(xpp.getName());
-                     break;
-                  case "Importance":
-                     timetableModel.setImportance(xpp.getName());
-                     break;
+            if (eventType == XmlPullParser.TEXT) {
+               // dataTagName can never be empty at this point, but to just be on a safer side, still check
+               if (!TextUtils.isEmpty(dataTagName)) {
+                  switch (dataTagName) {
+                     case "id":
+                        timetableModel.setId(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "position":
+                        timetableModel.setPosition(Integer.parseInt(xpp.getText()));
+                        break;
+                     case "Day":
+                        timetableModel.setDay(xpp.getText());
+                        break;
+                     case "Course-Code":
+                        timetableModel.setCourseCode(xpp.getText());
+                        break;
+                     case "Course-Title":
+                        timetableModel.setFullCourseName(xpp.getText());
+                        break;
+                     case "Start-Time":
+                        timetableModel.setStartTime(xpp.getText());
+                        break;
+                     case "End-Time":
+                        timetableModel.setEndTime(xpp.getText());
+                        break;
+                     case "Lecturer-Name":
+                        timetableModel.setLecturerName(xpp.getName());
+                        break;
+                     case "Importance":
+                        timetableModel.setImportance(xpp.getName());
+                        break;
+                  }
                }
             }
          }
 
-         xpp.next();
+         eventType = xpp.next();
       }
 
       return timetableModels;
@@ -433,9 +450,8 @@ class Transformer {
 
    }
 
-   private static void appendTableData(String identifier, Document doc, Element dataElement,
-                                       List<DataModel> dataModelList) {
-      for (DataModel dataModel : dataModelList) {
+   private static void appendTableData(String identifier, Document doc, Element dataElement, List<DataModel> data) {
+      for (DataModel dataModel : data) {
          Element childElement = getElementFrom(identifier, doc, dataModel);
          dataElement.appendChild(childElement);
       }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+   <string name="exit_message">Swipe or Tap again to exit</string>
    <string name="app_name">TimeLY</string>
    <string name="action_settings">Settings</string>
    <string name="school">School</string>
@@ -206,13 +207,14 @@
    <string name="no_share_subject_text">Nothing to send</string>
    <string name="open_folder_text_subject">Open folder</string>
    <string name="link_open_text">Open link using</string>
-   <string name="assignment_count">Assignment Count: </string>
-   <string name="courses_count">Courses Count: </string>
-   <string name="exams_count">Exams Count: </string>
-   <string name="classes_count">Classes Count: </string>
-   <string name="timetable_count">Timetable Count: </string>
-   <string name="todo_count">Todo Count: </string>
+   <string name="assignment_count">Assignment Count:\ </string>
+   <string name="courses_count">Courses Count:\ </string>
+   <string name="exams_count">Exams Count:\ </string>
+   <string name="classes_count">Classes Count:\ </string>
+   <string name="timetable_count">Timetable Count:\ </string>
+   <string name="todo_count">Todo Count:\ </string>
    <string name="default_import_list_text">Scheduled Classes</string>
    <string name="default_number">24</string>
    <string name="file_select_title">Select file using</string>
+   <string name="import_selected">Import Selected</string>
 </resources>

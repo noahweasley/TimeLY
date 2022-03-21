@@ -14,7 +14,7 @@
       android:layout_height="match_parent">
 
       <View
-         android:id="@+id/header"
+         android:id="@+id/header_top"
          android:layout_width="0dp"
          android:layout_height="5dp"
          android:background="@drawable/bg_decor_top"
@@ -27,6 +27,7 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_margin="@dimen/layout_gap"
+         android:checked="true"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toTopOf="parent"

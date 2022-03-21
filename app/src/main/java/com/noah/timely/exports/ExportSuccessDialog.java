@@ -70,11 +70,7 @@ public class ExportSuccessDialog extends DialogFragment {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
             if (file.exists()) {
-               String shareTextSubject = getString(R.string.share_text_subject_1);
-
-               shareIntent.setDataAndType(fileUri, "application/tmly");
-               shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareTextSubject);
-               shareIntent.putExtra(Intent.EXTRA_TEXT, shareTextSubject);
+               shareIntent.setType("application/tmly");
                shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 

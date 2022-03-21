@@ -1,7 +1,5 @@
 package com.noah.timely.todo;
 
-import androidx.annotation.NonNull;
-
 import com.noah.timely.core.DataModel;
 import com.noah.timely.util.CollectionUtils;
 
@@ -150,8 +148,8 @@ public class TodoModel extends DataModel {
       return searchIndex;
    }
 
-   @NonNull
    @Override
+   @SuppressWarnings("all")
    public String toString() {
       return "TodoModel {" +
               " id = " + id +
