@@ -288,9 +288,12 @@ class Transformer {
                      case "Lecturer-Name":
                         assignmentModel.setLecturerName(xpp.getText());
                         break;
-                     case "Submission-Date":
+                     case "Submission-Date": {
+                        // FIXME: 3/24/2022 merge submission date into a single instance variable
+                        assignmentModel.setDate(xpp.getText());
                         assignmentModel.setSubmissionDate(xpp.getText());
                         break;
+                     }
                      case "Title":
                         assignmentModel.setTitle(xpp.getText());
                         break;
@@ -418,10 +421,10 @@ class Transformer {
                         timetableModel.setEndTime(xpp.getText());
                         break;
                      case "Lecturer-Name":
-                        timetableModel.setLecturerName(xpp.getName());
+                        timetableModel.setLecturerName(xpp.getText());
                         break;
                      case "Importance":
-                        timetableModel.setImportance(xpp.getName());
+                        timetableModel.setImportance(xpp.getText());
                         break;
                   }
                }
@@ -490,7 +493,9 @@ class Transformer {
       Element node7 = document.createElement("Title");
       node7.setTextContent(model.getTitle());
       Element node8 = document.createElement("Submission-Date");
-      node8.setTextContent(model.getSubmissionDate());
+      // FIXME: 3/24/2022 merge assignment date into a single instance variable
+      String submissionDate = TextUtils.isEmpty(model.getSubmissionDate()) ? model.getDate() : model.getSubmissionDate();
+      node8.setTextContent(submissionDate);
 
       Element[] nodes = { node1, node2, node3, node4, node5, node6, node7, node8 };
       for (Element node : nodes) element.appendChild(node);
@@ -566,21 +571,15 @@ class Transformer {
       node5.setTextContent(model.getStartTime());
       Element node6 = document.createElement("End-Time");
       node6.setTextContent(model.getEndTime());
+      Element node7 = document.createElement("Day");
+      node7.setTextContent(model.getDay());
+      Element node8 = document.createElement("Lecturer-Name");
+      node8.setTextContent(model.getLecturerName());
+      Element node9 = document.createElement("Importance");
+      node9.setTextContent(model.getImportance());
 
-      Element[] nodes = { node1, node2, node3, node4, node5, node6 };
+      Element[] nodes = { node1, node2, node3, node4, node5, node6, node7, node8, node9 };
       for (Element node : nodes) element.appendChild(node);
-
-      if (id.equals(Constants.SCHEDULED_TIMETABLE)) {
-         Element node7 = document.createElement("Day");
-         node7.setTextContent(model.getDay());
-         Element node8 = document.createElement("Lecturer-Name");
-         node8.setTextContent(model.getLecturerName());
-         Element node9 = document.createElement("Importance");
-         node9.setTextContent(model.getImportance());
-         // add extra child nodes in case on scheduled classes
-         Element[] enodes = { node7, node8, node9 };
-         for (Element node : enodes) element.appendChild(node);
-      }
 
       return element;
    }

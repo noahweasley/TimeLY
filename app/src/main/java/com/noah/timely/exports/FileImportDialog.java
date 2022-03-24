@@ -68,7 +68,7 @@ public class FileImportDialog extends DialogFragment {
          list.addAll(results.entrySet());
          // run in ui thread - required
          getActivity().runOnUiThread(() -> {
-            listener.onResultReceived(list);
+            if (listener != null) listener.onResultReceived(list);
             dismiss_flag = true;
             dismiss();  // dismiss dialog if data was generated or not
          });

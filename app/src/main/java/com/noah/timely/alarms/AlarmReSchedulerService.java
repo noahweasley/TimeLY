@@ -12,16 +12,24 @@ import static com.noah.timely.timetable.DaysFragment.ARG_PAGE_POSITION;
 import static com.noah.timely.timetable.DaysFragment.ARG_POSITION;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.noah.timely.R;
 import com.noah.timely.assignment.AssignmentModel;
@@ -29,11 +37,13 @@ import com.noah.timely.assignment.Reminder;
 import com.noah.timely.assignment.SubmissionNotifier;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.main.App;
 import com.noah.timely.scheduled.AddScheduledDialog;
 import com.noah.timely.scheduled.ScheduledTaskNotifier;
 import com.noah.timely.timetable.DaysFragment;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.timetable.TimetableNotifier;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.Calendar;
@@ -45,15 +55,18 @@ import java.util.concurrent.TimeUnit;
  * Service that would re-schedule all TimeLY alarms
  */
 public class AlarmReSchedulerService extends Service {
+   private static final int NOTIFICATION_ID = 234543; // a very random number that came out of nowhere
 
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
+      Context context = getApplicationContext();
+      if (intent.getAction().equals(Constants.ACTION.SHOW_NOTIFICATION)) {
+         showActivityNofication(context);
+      }
+
       // make re-scheduler return immediately to avoid blocking main thread
       ThreadUtils.runBackgroundTask(() -> {
-
-         Context context = getApplicationContext();
          SchoolDatabase database = new SchoolDatabase(context);
-
          // Reset the alarm here.
          List<DataModel> activeAlarms = database.getActiveAlarms();
          if (!activeAlarms.isEmpty()) {
@@ -89,6 +102,7 @@ public class AlarmReSchedulerService extends Service {
          List<DataModel> timetables1 = database.getTimeTableData(SchoolDatabase.SCHEDULED_TIMETABLE);
          if (!timetables1.isEmpty()) {
             // re-schedule alarms; get alarm data from app's database
+
             for (DataModel rawData : timetables1) {
                TimetableModel timetable = (TimetableModel) rawData;
                registerPendingScheduledTimetables(context, timetable);
@@ -105,9 +119,47 @@ public class AlarmReSchedulerService extends Service {
             }
          }
 
+         // cancel on-going notification
+         cancelNotification(context);
       }); // end re-schedule task
 
+
       return START_STICKY;
+   }
+
+   private void cancelNotification(Context context) {
+      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      manager.cancel(NOTIFICATION_ID);
+   }
+
+   private void showActivityNofication(Context context) {
+      Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+      Uri APP_DEFAULT = new Uri.Builder()
+              .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+              .authority(context.getPackageName())
+              .path(String.valueOf(R.raw.arpeggio1))
+              .build();
+
+      String type = PreferenceManager.getDefaultSharedPreferences(context)
+                                     .getString("Uri Type", "TimeLY's Default");
+
+      final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
+                                                                                        : SYSTEM_DEFAULT;
+
+      Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon);
+      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.GENERAL_CHANNEL_ID);
+
+      builder.setContentTitle(getString(R.string.app_name) + " is in the background")
+             .setContentText(getString(R.string.app_name) + " is scheduling new notifications")
+             .setChannelId(App.GENERAL_CHANNEL_ID)
+             .setSound(DEFAULT_URI)
+             .setSmallIcon(R.drawable.ic_baseline_info_24)
+             .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+             .setLargeIcon(icon)
+             .setOngoing(true);
+
+      manager.notify(NOTIFICATION_ID, builder.build());
    }
 
    @Nullable
@@ -144,7 +196,7 @@ public class AlarmReSchedulerService extends Service {
               .addCategory("com.noah.timely.scheduled")
               .setAction("com.noah.timely.scheduled.addAction")
               .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + triggerTime),
-                      "com.noah.timely.scheduled.dataType");
+                              "com.noah.timely.scheduled.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 1156, scheduleIntent, 0);
 
@@ -183,14 +235,14 @@ public class AlarmReSchedulerService extends Service {
 
       Intent timetableIntent = new Intent(context, TimetableNotifier.class);
       timetableIntent.putExtra(DaysFragment.ARG_TIME, time)
-              .putExtra(ARG_CLASS, course)
-              .putExtra(ARG_DAY, timetable.getCalendarDay())
-              .putExtra(ARG_POSITION, position)
-              .putExtra(ARG_PAGE_POSITION, position)
-              .addCategory("com.noah.timely.timetable")
-              .setAction("com.noah.timely.timetable.addAction")
-              .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
-                      "com.noah.timely.dataType");
+                     .putExtra(ARG_CLASS, course)
+                     .putExtra(ARG_DAY, timetable.getCalendarDay())
+                     .putExtra(ARG_POSITION, position)
+                     .putExtra(ARG_PAGE_POSITION, position)
+                     .addCategory("com.noah.timely.timetable")
+                     .setAction("com.noah.timely.timetable.addAction")
+                     .setDataAndType(Uri.parse("content://com.noah.timely.add." + timeInMillis),
+                                     "com.noah.timely.dataType");
 
       PendingIntent pi = PendingIntent.getBroadcast(context, 555, timetableIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -231,26 +283,26 @@ public class AlarmReSchedulerService extends Service {
       String ln = truncateLecturerName(context, assignment.getLecturerName());
       Intent notifyIntentCurrent = new Intent(context, SubmissionNotifier.class);
       notifyIntentCurrent.putExtra(LECTURER_NAME, ln)
-              .putExtra(TITLE, assignment.getTitle())
-              .putExtra(POSITION, assignment.getPosition())
-              .addCategory(context.getPackageName() + ".category")
-              .setAction(context.getPackageName() + ".update")
-              .setDataAndType(Uri.parse("content://" + context.getPackageName()),
-                      assignment.toString());
+                         .putExtra(TITLE, assignment.getTitle())
+                         .putExtra(POSITION, assignment.getPosition())
+                         .addCategory(context.getPackageName() + ".category")
+                         .setAction(context.getPackageName() + ".update")
+                         .setDataAndType(Uri.parse("content://" + context.getPackageName()),
+                                         assignment.toString());
 
       Intent notifyIntentPrevious = new Intent(context, Reminder.class);
       notifyIntentPrevious.putExtra(LECTURER_NAME, ln)
-              .putExtra(TITLE, assignment.getTitle())
-              .putExtra(NEXT_ALARM, CURRENT)
-              .addCategory(context.getPackageName() + ".category")
-              .setAction(context.getPackageName() + ".update")
-              .setDataAndType(Uri.parse("content://" + context.getPackageName()),
-                      assignment.toString());
+                          .putExtra(TITLE, assignment.getTitle())
+                          .putExtra(NEXT_ALARM, CURRENT)
+                          .addCategory(context.getPackageName() + ".category")
+                          .setAction(context.getPackageName() + ".update")
+                          .setDataAndType(Uri.parse("content://" + context.getPackageName()),
+                                          assignment.toString());
 
       PendingIntent assignmentPiPrevious = PendingIntent.getBroadcast(context, 147, notifyIntentPrevious,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                                      PendingIntent.FLAG_UPDATE_CURRENT);
       PendingIntent assignmentPiCurrent = PendingIntent.getBroadcast(context, 141, notifyIntentCurrent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                                     PendingIntent.FLAG_UPDATE_CURRENT);
       // Exact alarms not used here, so that android can perform its normal operation
       // on devices
       // >= 4.4 (KITKAT) to prevent unnecessary battery drain by alarms.
@@ -272,8 +324,8 @@ public class AlarmReSchedulerService extends Service {
    private String truncateLecturerName(Context context, String fullName) {
       String[] nameTokens = fullName.split(" ");
 
-      String[] titles = {"Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr",
-              "Mr", "Mister", "Mrs", "Ms", "Prof", "Professor"};
+      String[] titles = { "Barr", "Barrister", "Doc", "Doctor", "Dr", "Engineer", "Engr",
+                          "Mr", "Mister", "Mrs", "Ms", "Prof", "Professor" };
 
       StringBuilder nameBuilder = new StringBuilder();
       String shortenedName = "";
@@ -374,11 +426,11 @@ public class AlarmReSchedulerService extends Service {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(context, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+                                                         PendingIntent.FLAG_CANCEL_CURRENT);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
          // alarm has to be triggered even when device is in idle or doze mode.
          // This alarm is very important
@@ -422,11 +474,11 @@ public class AlarmReSchedulerService extends Service {
       alarmReceiverIntent.addCategory("com.noah.timely.alarm.category");
       alarmReceiverIntent.setAction("com.noah.timely.alarm.cancel");
       alarmReceiverIntent.setDataAndType(Uri.parse("content://com.noah.timely/Alarms/alarm" + alarmMillis),
-              "com.noah.timely.alarm.dataType");
+                                         "com.noah.timely.alarm.dataType");
 
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       PendingIntent alarmPI = PendingIntent.getBroadcast(context, 11789, alarmReceiverIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                                         PendingIntent.FLAG_UPDATE_CURRENT);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

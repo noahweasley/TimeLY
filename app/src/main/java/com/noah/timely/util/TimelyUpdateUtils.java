@@ -98,7 +98,7 @@ public class TimelyUpdateUtils {
                 .setSilent(true)
                 .setChannelId(App.GENERAL_CHANNEL_ID)
                 .setAutoCancel(false)
-                .setSmallIcon(R.drawable.ic_n_upgrade)
+                .setSmallIcon(R.drawable.ic_baseline_info_24)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setLargeIcon(icon);
       }

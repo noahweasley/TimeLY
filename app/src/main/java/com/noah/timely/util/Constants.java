@@ -108,4 +108,17 @@ public class Constants {
     * Constants for Music category
     */
    public static final String TODO_MUSIC = "Music_Todo";
+
+   /**
+    * Custom intent actions used in TimeLY
+    */
+   public static class ACTION {
+
+      /**
+       * Intent action to show notifications
+       */
+      public static final String SHOW_NOTIFICATION = "com.noah.timely.action.show-notification";
+
+   }
+
 }

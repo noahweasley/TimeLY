@@ -1,6 +1,7 @@
 package com.noah.timely.courses;
 
 import com.noah.timely.core.DataModel;
+import com.noah.timely.core.SchoolDatabase;
 
 @SuppressWarnings("unused")
 public class CourseModel extends DataModel {
@@ -70,5 +71,9 @@ public class CourseModel extends DataModel {
               ", courseName='" + courseName + '\'' +
               ", chronologicalOrder=" + chronologicalOrder +
               '}';
+   }
+
+   public int getSemesterIndex() {
+      return semester.equals(SchoolDatabase.FIRST_SEMESTER) ? 0 : 1;
    }
 }

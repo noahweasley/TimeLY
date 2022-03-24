@@ -21,10 +21,10 @@ import com.noah.timely.main.App;
 import java.util.Locale;
 
 public class AlarmReceiver extends BroadcastReceiver {
+   public static String ALARM_POS = "com.noah.timely.position";
    static final int NOTIFICATION_ID = 11789;
    static final String ID = "Notification ID";
    static final String REPEAT_DAYS = "Alarm Repeat Days";
-   public static String ALARM_POS = "com.noah.timely.position";
 
    @Override
    public void onReceive(Context context, Intent intent) {

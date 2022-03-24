@@ -64,8 +64,8 @@ public class TMLYDataGeneratorDialog extends DialogFragment {
          btn_export = findViewById(R.id.export);
 
          btn_export.setOnClickListener(v -> {
-            new ActionProcessorDialog2().execute(getActivity(), this::doExport);
-            dismiss();
+            new ActionProcessorDialog().execute(getActivity(), this::doExport);
+            hide();
          });
 
          ViewGroup vg_dataParent = findViewById(R.id.data_parent);
@@ -138,6 +138,8 @@ public class TMLYDataGeneratorDialog extends DialogFragment {
             }
 
          });
+
+         dismiss();
       }
 
       @Override

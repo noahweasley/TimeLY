@@ -60,6 +60,7 @@ public class ImportListRowHolder extends RecyclerView.ViewHolder {
       this.position = position;
       this.context = context;
       this.adapter = adapter;
+      adapter.onChecked(position, true); // at the default, all the data would be imported if user doesn't toggle states
       this.datamap = datamap;
       return this;
    }

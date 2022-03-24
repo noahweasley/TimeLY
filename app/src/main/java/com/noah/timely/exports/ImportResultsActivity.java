@@ -21,17 +21,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noah.timely.R;
+import com.noah.timely.alarms.AlarmReSchedulerService;
+import com.noah.timely.assignment.AUpdateMessage;
+import com.noah.timely.assignment.AssignmentModel;
 import com.noah.timely.core.ChoiceMode;
 import com.noah.timely.core.DataModel;
 import com.noah.timely.core.MultiChoiceMode;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.courses.CUpdateMessage;
+import com.noah.timely.courses.CourseModel;
 import com.noah.timely.error.ErrorDialog;
+import com.noah.timely.exam.EUpdateMessage;
+import com.noah.timely.exam.ExamModel;
 import com.noah.timely.io.IOUtils;
 import com.noah.timely.io.Zipper;
+import com.noah.timely.main.MainActivity;
+import com.noah.timely.scheduled.SUpdateMessage;
 import com.noah.timely.settings.SettingsActivity;
+import com.noah.timely.timetable.TUpdateMessage;
+import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.TimelyUpdateUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,8 +56,9 @@ import java.util.Map;
 
 public class ImportResultsActivity extends AppCompatActivity implements View.OnClickListener {
    private ImportListRowAdapter listRowAdapter;
-   List<Map.Entry<String, List<? extends DataModel>>> entryList = new ArrayList<>();
-   ViewGroup importView, initView, dataLayerView;
+   private boolean intentReceived;
+   private List<Map.Entry<String, List<? extends DataModel>>> entryList = new ArrayList<>();
+   private ViewGroup importView, initView, dataLayerView;
    private final ActivityResultLauncher<Intent> resourceChooserLauncher =
            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
               if (result.getData() != null) {
@@ -115,12 +129,29 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
       btn_filePick.setOnClickListener(this);
 
       Uri fileUri = null;
+      File file = null;
 
       if ((fileUri = getIntent().getData()) != null) {
-         // noinspection StatementWithEmptyBody
-         if (IOUtils.getFileExtension(new File(fileUri.getPath())).equals(Zipper.FILE_EXTENSION)) {
+         // make it possible to navigate to main activity on back pressed or on navigate up because the main activity
+         // isn't part of the activity stack
+         intentReceived = true;
+         try {
+            file = resolveUriToTempFile(fileUri);
+         } catch (IOException e) {
+            Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
+            dataLayerView.setVisibility(View.GONE);
+            initView.setVisibility(View.GONE);
+            importView.setVisibility(View.VISIBLE);
+         }
 
+         // noinspection StatementWithEmptyBody
+         if (file != null) {
+            performFileImport(file);
          } else {
+            IOUtils.deleteTempFiles(this);
+            dataLayerView.setVisibility(View.GONE);
+            initView.setVisibility(View.GONE);
+            importView.setVisibility(View.VISIBLE);
             // import unsuccessful. Error occurred
             ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
             errorBuilder.setShowSuggestions(true)
@@ -140,8 +171,22 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
 
    @Override
    public boolean onSupportNavigateUp() {
-      super.onBackPressed();
+      onBackPressed();
       return super.onSupportNavigateUp();
+   }
+
+   @Override
+   public void onBackPressed() {
+      tryNavigateToMainActivity();
+   }
+
+   private void tryNavigateToMainActivity() {
+      if (intentReceived) {
+         intentReceived = false;
+         startActivity(new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+      } else {
+         super.onBackPressed();
+      }
    }
 
    @Override
@@ -165,16 +210,20 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
          resourceChooserLauncher.launch(Intent.createChooser(i, getString(R.string.file_select_title)));
       } else if (view.getId() == R.id.import_selected) {
          // save to local database, removing duplicates
-         new ActionProcessorDialog2().execute(this, this::persistSelectedToLocalDatabase);
+         new ActionProcessorDialog()
+                 .execute(this, this::persistSelectedToLocalDatabase)
+                 .setOnActionProcessedListener(() -> {
+                    // just a beautiful custom made Toast, but in dialog form :)
+                    new ImportSuccessDialog().show(this, R.string.import_success_message);
+                 });
       }
    }
 
    private void persistSelectedToLocalDatabase() {
-      SchoolDatabase database = new SchoolDatabase(this);
       Integer[] indices = listRowAdapter.getChoiceMode().getCheckedChoicesIndices();
       List<Map.Entry<String, List<? extends DataModel>>> filteredEntryList = new ArrayList<>();
       for (int i = 0; i < indices.length; i++) {
-         filteredEntryList.add(entryList.get(i));
+         filteredEntryList.add(entryList.get(indices[i]));
       }
 
       for (Map.Entry<String, List<? extends DataModel>> entry : filteredEntryList) {
@@ -199,26 +248,121 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
          }
       }
 
+      // after persisting to local database, use a start a service to schedule notifications for event remninders
+      Intent serviceIntent = new Intent(this, AlarmReSchedulerService.class);
+      serviceIntent.setAction(Constants.ACTION.SHOW_NOTIFICATION);
+      startService(serviceIntent);
    }
 
-   private void persistScheduledTimetable(List<? extends DataModel> value) {
+   private void persistScheduledTimetable(List<? extends DataModel> datamodelList) {
+      SchoolDatabase database = new SchoolDatabase(this);
+      EventBus eventBus = EventBus.getDefault();
 
+      for (DataModel data : datamodelList) {
+         TimetableModel timetable = (TimetableModel) data;
+         if (database.isTimeTableAbsent(SchoolDatabase.SCHEDULED_TIMETABLE, timetable)) {
+            int[] d = database.addTimeTableData(timetable, SchoolDatabase.SCHEDULED_TIMETABLE);
+            // post an application wide event to notify datamodel lists of change in order of list items
+            // after sorting it's elements in database
+            if (eventBus.hasSubscriberForEvent(SUpdateMessage.class)) {
+               timetable.setChronologicalOrder(d[0]);
+               timetable.setId(d[1]);
+               eventBus.post(new SUpdateMessage(timetable, SUpdateMessage.EventType.NEW));
+            }
+         }
+      }
    }
 
-   private void persistTimetable(List<? extends DataModel> value) {
+   private void persistTimetable(List<? extends DataModel> datamodelList) {
+      SchoolDatabase database = new SchoolDatabase(this);
+      EventBus eventBus = EventBus.getDefault();
 
+      for (DataModel data : datamodelList) {
+         TimetableModel timetable = (TimetableModel) data;
+         if (database.isTimeTableAbsent(timetable.getDay(), timetable)) {
+            int[] d = database.addTimeTableData(timetable, timetable.getDay());
+            // post an application wide event to notify datamodel lists of change in order of list items
+            // after sorting it's elements in database
+            if (eventBus.hasSubscriberForEvent(TUpdateMessage.class)) {
+               timetable.setChronologicalOrder(d[0]);
+               timetable.setId(d[1]);
+               int pagePosition = getPagePostion(timetable);
+               eventBus.post(new TUpdateMessage(timetable, pagePosition, TUpdateMessage.EventType.NEW));
+            }
+         }
+      }
    }
 
-   private void persistExam(List<? extends DataModel> value) {
+   private void persistExam(List<? extends DataModel> datamodelList) {
+      SchoolDatabase database = new SchoolDatabase(this);
+      EventBus eventBus = EventBus.getDefault();
 
+      for (DataModel data : datamodelList) {
+         ExamModel exam = (ExamModel) data;
+         if (database.isExamAbsent(exam.getWeek(), exam)) {
+            int[] d = database.addExam(exam, exam.getWeek());
+            // post an application wide event to notify datamodel lists of change in order of list items
+            // after sorting it's elements in database
+            if (eventBus.hasSubscriberForEvent(EUpdateMessage.class)) {
+               exam.setChronologicalOrder(d[0]);
+               exam.setId(d[1]);
+               int pagePosition = getPagePostion(exam);
+               eventBus.post(new EUpdateMessage(exam, EUpdateMessage.EventType.NEW, pagePosition));
+            }
+         }
+      }
    }
 
-   private void persistCourses(List<? extends DataModel> value) {
+   private void persistCourses(List<? extends DataModel> datamodelList) {
+      SchoolDatabase database = new SchoolDatabase(this);
+      EventBus eventBus = EventBus.getDefault();
 
+      for (DataModel data : datamodelList) {
+         CourseModel course = (CourseModel) data;
+         if (database.isCourseAbsent(course)) {
+            int[] d = database.addCourse(course, course.getSemester());
+            // post an application wide event to notify datamodel lists of change in order of list items
+            // after sorting it's elements in database
+            if (eventBus.hasSubscriberForEvent(CUpdateMessage.class)) {
+               course.setChronologicalOrder(d[0]);
+               course.setId(d[1]);
+               int pagePosition = getPagePostion(course);
+               eventBus.post(new CUpdateMessage(course, CUpdateMessage.EventType.NEW, pagePosition));
+            }
+         }
+      }
    }
 
-   private void persistAssignments(List<? extends DataModel> dataModels) {
+   private int getPagePostion(DataModel dataModel) {
+      if (dataModel instanceof ExamModel) {
+         ExamModel examModel = (ExamModel) dataModel;
+         return examModel.getWeekIndex();
+      } else if (dataModel instanceof TimetableModel) {
+         TimetableModel timetableModel = (TimetableModel) dataModel;
+         return timetableModel.getTimetableIndex();
+      } else if (dataModel instanceof CourseModel) {
+         CourseModel courseModel = (CourseModel) dataModel;
+         return courseModel.getSemesterIndex();
+      }
 
+      return 0;
+   }
+
+   private void persistAssignments(List<? extends DataModel> datamodelList) {
+      SchoolDatabase database = new SchoolDatabase(this);
+      EventBus eventBus = EventBus.getDefault();
+
+      for (DataModel data : datamodelList) {
+         AssignmentModel assignment = (AssignmentModel) data;
+         if (database.isAssignmentAbsent(assignment)) {
+            boolean b = database.addAssignmentData(assignment);
+            // post an application wide event to notify datamodel lists of change in order of list items
+            // after sorting it's elements in database
+            if (eventBus.hasSubscriberForEvent(AUpdateMessage.class)) {
+               eventBus.post(new AUpdateMessage(assignment, AUpdateMessage.EventType.NEW));
+            }
+         }
+      }
    }
 
    /*
@@ -230,6 +374,29 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
       // return immediately if the file extension is not supported
       if (!IOUtils.getFileExtension(new File(uri.getPath())).equals(Zipper.FILE_EXTENSION)) return null;
 
+      String parentFolder = getExternalFilesDir(null) + File.separator + "temp" + File.separator;
+      String tempFilePath = String.format(Locale.US, "%stemp%d.tmp", parentFolder, SystemClock.elapsedRealtime());
+
+      File tempFile = new File(tempFilePath);
+      File tempFileDir = tempFile.getParentFile();
+
+      boolean isCreated = true;
+      if (!tempFileDir.exists()) {
+         isCreated = tempFileDir.mkdirs();
+      }
+
+      if (!isCreated) return null;
+      else IOUtils.copy(getContentResolver().openInputStream(uri), new FileOutputStream(tempFile));
+
+      return tempFile;
+   }
+
+   /*
+    *  The resulting URI received from the Android device's file chooser would never be a correct URI to be used
+    *  directly to get the file path because in Android, not all URIs points to a valid file. So a temp file
+    *  was used to copy the data in the stream gotten from the URI, and then the temp file's path was used instead.
+    */
+   private File resolveUriToTempFile(Uri uri) throws IOException {
       String parentFolder = getExternalFilesDir(null) + File.separator + "temp" + File.separator;
       String tempFilePath = String.format(Locale.US, "%stemp%d.tmp", parentFolder, SystemClock.elapsedRealtime());
 

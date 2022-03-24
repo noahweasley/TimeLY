@@ -118,6 +118,10 @@ public class ExamModel extends DataModel {
       }
    }
 
+   public int getWeekIndex() {
+      return Integer.parseInt(week.substring(week.indexOf('_') + 1)) - 1;
+   }
+
    public int getStartAsInt() {
       String[] ss = start.split(":");
       return Integer.parseInt(ss[0] + ss[1]);

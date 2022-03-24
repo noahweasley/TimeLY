@@ -193,7 +193,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
       db.execSQL(createAlarmDB_stmt);
    }
-
    // CREATE ASSIGNMENT DATA TABLE
    private void createAssignmentTable(SQLiteDatabase db) {
       String createAssignmentDB_stmt
@@ -337,7 +336,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     *
     * @return true if a duplicate assignment was found
     */
-   public boolean isAssignmentPresent(AssignmentModel model) {
+   public boolean isAssignmentAbsent(AssignmentModel model) {
       String findAssignmentStmt = "SELECT * FROM " + ASSIGNMENT_TABLE
               + " WHERE " + COLUMN_ASSIGNMENT_TITLE + " = '" + sanitizeEntry(model.getTitle())
               + "' AND " + COLUMN_SUBMISSION_DATE + " = '" + model.getSubmissionDate()
@@ -347,9 +346,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       SQLiteDatabase db = getReadableDatabase();
 
       Cursor findCursor = db.rawQuery(findAssignmentStmt, null);
+      boolean isAbsent = findCursor.getCount() == 0;
       findCursor.close();
-
-      return findCursor.getColumnCount() > 0;
+      return isAbsent;
    }
 
    private String sanitizeEntry(String data) {

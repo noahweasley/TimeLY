@@ -196,6 +196,19 @@
 
          </intent-filter>
 
+         <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.OPENABLE" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <category android:name="android.intent.category.DEFAULT" />
+
+            <data
+               android:mimeType="application/octet-stream"
+               android:scheme="content" />
+
+         </intent-filter>
+
       </activity>
 
       <!--        Receivers       -->

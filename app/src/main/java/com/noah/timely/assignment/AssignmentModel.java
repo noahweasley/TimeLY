@@ -110,7 +110,7 @@ public class AssignmentModel extends DataModel implements Serializable {
       this.description = description;
    }
 
-   String getDate() {
+   public String getDate() {
       return date;
    }
 

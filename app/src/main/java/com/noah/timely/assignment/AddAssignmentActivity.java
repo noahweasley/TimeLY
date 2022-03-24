@@ -295,7 +295,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
       data = new AssignmentModel(pos, ln, tt, description, date, cc, date, attachedPDF, attachedImage, false);
 
-      if (database.isAssignmentPresent(data) && !tryScheduleNotifiers(yy, mm, dd, tt, ln, data, pos)) {
+      if (!database.isAssignmentAbsent(data) && !tryScheduleNotifiers(yy, mm, dd, tt, ln, data, pos)) {
          ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
          errorBuilder.setDialogMessage("Invalid assignment")
                      .setShowSuggestions(true)
