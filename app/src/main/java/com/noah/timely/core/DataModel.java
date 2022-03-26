@@ -34,4 +34,14 @@ public class DataModel {
    public void setUID(int uid) {
       this.uid = uid;
    }
+
+   @Override
+   @SuppressWarnings("all")
+   public String toString() {
+      return "DataModel{" +
+              "id=" + id +
+              ", position=" + position +
+              ", uid=" + uid +
+              '}';
+   }
 }

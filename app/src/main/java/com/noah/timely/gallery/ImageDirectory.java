@@ -131,6 +131,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
       new AlertDialog.Builder(this)
               .setTitle(noticeTitle)
               .setMessage(noticeMessage)
+              .setIcon(R.drawable.ic_baseline_info_24)
               .setNegativeButton(cancelText, this::requestAction)
               .setPositiveButton(goText, this::requestAction)
               .create()
@@ -176,7 +177,7 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
               MediaStore.Images.Media._ID,
               MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
               MediaStore.Images.Media.SIZE,
-              MediaStore.Images.Media.DISPLAY_NAME};
+              MediaStore.Images.Media.DISPLAY_NAME };
 
       Cursor imgCursor = getApplicationContext().getContentResolver().query(storageUri, projection, null, null, null);
 
@@ -242,8 +243,8 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
       @Override
       public void onBindViewHolder(@NonNull ImageDirectoryRowHolder viewHolder, int pos) {
          viewHolder.with(ImageDirectory.this, imageDirectoryList, pos, accessedStorage)
-                 .setRequestAction(getIntent().getAction())
-                 .loadThumbnail();
+                   .setRequestAction(getIntent().getAction())
+                   .loadThumbnail();
       }
 
       @Override

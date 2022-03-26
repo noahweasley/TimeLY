@@ -1,6 +1,7 @@
 package com.noah.timely.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -90,5 +91,15 @@ public class CollectionUtils {
          if (target.get(i).equals(key)) return i; // dir found, return immediately
       }
       return -1; // dir was not found
+   }
+
+   /**
+    * Checks if a collection is empty
+    *
+    * @param collection the data to be checked
+    * @return true if it is empty or null
+    */
+   public static <E> boolean isEmpty(Collection<E> collection) {
+      return collection == null || collection.isEmpty();
    }
 }

@@ -12,3 +12,9 @@
 /captures
 .externalNativeBuild
 /app/android.keystore
+/app/src/main/res/xml/assignments.xml
+/app/src/main/res/xml/courses.xml
+/app/src/main/res/xml/exams.xml
+/app/src/main/res/xml/scheduled_timetable.xml
+/app/src/main/res/xml/timetable.xml
+/app/src/main/res/xml/metadata.xml

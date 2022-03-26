@@ -155,6 +155,7 @@
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toBottomOf="@id/buttonTopDivider"
          external:srcCompat="@drawable/ic_round_check_circle"
+         android:padding="8dp"
          tools:ignore="RtlSymmetry" />
 
       <View

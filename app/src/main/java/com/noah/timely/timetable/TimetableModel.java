@@ -170,7 +170,7 @@ public class TimetableModel extends DataModel implements Serializable {
       this.id = id;
    }
 
-   public int getTimetablePosition() {
+   public int getTimetableIndex() {
       if (this.day != null) {
          switch (this.day) {
             case "Monday":

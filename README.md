@@ -15,6 +15,11 @@
 
 ![Presentation 5](/presentation/5.jpg?raw=true)
 
+### About 
+
+TimeLY is the kind of android application you might want to have as a University student, although, the app isn't 
+complete, when it is, it would pack a lot of features that would make students life much more easier. 
+
 ### Application package usages
 
 **N.B** : _All packages listed here are located [here](https://github.com/noahweasley/TimeLY/tree/master/app/src/main/java/com/noah/timely)_
@@ -31,7 +36,7 @@
 | custom     | Package containing all custom views used in TimeLY                                              |
 | error      | Package housing everything related to TimeLY's error display                                    |
 | exam       | Package housing everything related to TimeLY's exam management system                           |
-| exports    | Package housing everything related to TimeLY's data export mechanisms                           |
+| exports    | Package housing everything related to TimeLY's data export / import feature                     |
 | gallery    | Package housing everything related to TimeLY's image management system                          |
 | main       | The main parts of the app. This package contains mostly the app start-up code                   |
 | report     | Package that houses TimeLY's bug report management systems                                      |

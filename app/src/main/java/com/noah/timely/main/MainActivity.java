@@ -5,10 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -33,6 +35,8 @@ import com.noah.timely.assignment.AssignmentFragment;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
 import com.noah.timely.exam.ExamFragment;
+import com.noah.timely.exports.ImportResultsActivity;
+import com.noah.timely.exports.TMLYDataGeneratorDialog;
 import com.noah.timely.scheduled.ScheduledTimetableFragment;
 import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TimetableFragment;
@@ -43,7 +47,11 @@ import com.noah.timely.util.PreferenceUtils;
 import com.noah.timely.util.ReportActionUtil;
 import com.noah.timely.util.TimelyUpdateUtils;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+   private boolean dismissable;
+
    static {
       AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
    }
@@ -95,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new AlertDialog.Builder(this)
                     .setTitle(noticeTitle)
                     .setMessage(noticeMessage)
+                    .setIcon(R.drawable.ic_baseline_info_24)
                     .setNegativeButton(cancelText, this::requestAction)
                     .setNeutralButton(neutralText, this::requestAction)
                     .setPositiveButton(goText, this::requestAction)
@@ -159,12 +168,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       if (drawer.isDrawerOpen(GravityCompat.START))
          drawer.closeDrawer(GravityCompat.START);
       else {
-         FragmentManager manager = getSupportFragmentManager();
-         FragmentTransaction transaction = manager.beginTransaction();
-         Fragment fragment1 = manager.findFragmentByTag("Todo");
-         if (fragment1 == null) finish();
-         else super.onBackPressed();
+         if (dismissable) {
+            super.onBackPressed();
+         } else {
+            FragmentManager manager = getSupportFragmentManager();
+            Fragment fragment1 = manager.findFragmentByTag("Todo");
+            if (fragment1 != null) super.onBackPressed();
+            else {
+               String app_name = getString(R.string.app_name);
+               String exit_message = getString(R.string.exit_message);
+               String full_exit_message = String.format(Locale.US, "%s %s", exit_message, app_name);
+               Toast.makeText(this, full_exit_message, Toast.LENGTH_SHORT).show();
+            }
+         }
+         dismissable = true;
+         new Handler(getMainLooper()).postDelayed(() -> dismissable = false, 2000);
       }
+
    }
 
    @Override
@@ -230,11 +250,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
          new TimelyUpdateInfoDialog().show(this);
 
-      }/* else if (menuItemId == R.id.generate) {
+      } else if (menuItemId == R.id.__export) {
 
-            Toast.makeText(this, "No action yet", Toast.LENGTH_LONG).show();
+         new TMLYDataGeneratorDialog().show(this);
 
-        }*/ else if (menuItemId == R.id.report) {
+      } else if (menuItemId == R.id.__import) {
+
+         startActivity(new Intent(this, ImportResultsActivity.class));
+
+      } else if (menuItemId == R.id.report) {
 
          new AlertDialog.Builder(this)
                  .setTitle(R.string.report_title)

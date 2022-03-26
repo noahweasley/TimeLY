@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+   <string name="exit_message">Swipe or Tap again to exit</string>
    <string name="app_name">TimeLY</string>
    <string name="action_settings">Settings</string>
    <string name="school">School</string>
@@ -92,7 +93,8 @@
    <string name="no_media">No Images Attached</string>
    <string name="image">Image</string>
    <string name="add_course">add course</string>
-   <string name="generate">Generate and Share</string>
+   <string name="generate_export">Export</string>
+   <string name="generate_import">Import</string>
    <string name="check_update">Check for updates</string>
    <string name="morning">Good Morning</string>
    <string name="afternoon">Good Afternoon</string>
@@ -117,6 +119,7 @@
    <string name="yes">Yes</string>
    <string name="version">v1.0.0</string>
    <string name="dialog_pref">Use dialogs to add new task and reminders. This won\'t work for smaller screen sizes</string>
+   <string name="ei_dialog_pref">Use dialogs to show data to be exported/imported. This won\'t work for smaller screen sizes</string>
    <string name="add_timetable">Add timetable</string>
    <string name="add_exam">add exams</string>
    <string name="night">Good Night</string>
@@ -185,5 +188,34 @@
    <string name="empty_time_range">Time range not set</string>
    <string name="task_viewer_header">Task viewer</string>
    <string name="miscellaneous_channel_desc">Other kinds of notifications</string>
-   <string name="selct_all">Selct all</string>
+   <string name="select_all">Select all</string>
+   <string name="buy_me_a_coffee">Buy me a coffee</string>
+   <string name="choose_data">Choose data to export</string>
+   <string name="export_success_message">Data exported successfully</string>
+   <string name="import_success_message">Data imported Successfully</string>
+   <string name="share">share</string>
+   <string name="close_">close</string>
+   <string name="_skip">skip</string>
+   <string name="export">Export</string>
+   <string name="processing">Processing …</string>
+   <string name="import_title">Import from file</string>
+   <string name="locate">Locate</string>
+   <string name="import_file">Import from file</string>
+   <string name="msg_import">Click on the <b>Import from file</b> button to import data</string>
+   <string name="initializing_please_wait">Initializing, please wait …</string>
+   <string name="share_text_subject_1">Sharing file using</string>
+   <string name="share_text_subject_2">Share using</string>
+   <string name="no_share_subject_text">Nothing to send</string>
+   <string name="open_folder_text_subject">Open folder</string>
+   <string name="link_open_text">Open link using</string>
+   <string name="assignment_count">Assignment Count:\ </string>
+   <string name="courses_count">Courses Count:\ </string>
+   <string name="exams_count">Exams Count:\ </string>
+   <string name="classes_count">Classes Count:\ </string>
+   <string name="timetable_count">Timetable Count:\ </string>
+   <string name="todo_count">Todo Count:\ </string>
+   <string name="default_import_list_text">Scheduled Classes</string>
+   <string name="default_number">24</string>
+   <string name="file_select_title">Select file using</string>
+   <string name="import_selected">Import Selected</string>
 </resources>

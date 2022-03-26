@@ -6,7 +6,7 @@
    <color name="colorPrimaryDark_2">#277FFE</color>
    <color name="todo_alt_color">#EDF3FF</color>
    <color name="colorAccent">@color/accent</color>
-   <color name="colorAccentDarker">#FE0000</color>
+   <color name="colorAccentDarker">#DF0505</color>
    <color name="colorAccentDark">#502E8D</color>
    <color name="pink">#F06292</color>
    <color name="accent">#FF2424</color>
@@ -40,11 +40,20 @@
    <color name="colorPrimary_5">#0D19629C</color>
    <color name="colorPrimary_5_darker">#40164D79</color>
    <color name="holo_orange_dark_5">#0DFF8800</color>
+   <color name="holo_orange_dark_10">#1AFF8800</color>
    <color name="holo_red_light_5">#0DFF4444</color>
+   <color name="holo_red_light_10">#1AFF4444</color>
    <color name="holo_green_dark_5">#0D669900</color>
+   <color name="holo_green_dark_10">#1A669900</color>
    <color name="holo_purple_5">#0DAA66CC</color>
+   <color name="holo_purple_10">#1AAA66CC</color>
    <color name="holo_blue_dark_5">#0D0099CC</color>
+   <color name="holo_blue_dark_10">#1A0099CC</color>
    <color name="teal_700_5">#0D018786</color>
+   <color name="teal_700_10">#1A018786</color>
    <color name="tomato_red_5">#0DFF6347</color>
+   <color name="tomato_red_10">#1AFF6347</color>
+   <color name="window_background_color_light">#F0F4F6</color>
+   <color name="white">#ECECEC</color>
    <!--  Spotify Dark Theme  -->
 </resources>

@@ -45,6 +45,14 @@ public class ExamModel extends DataModel {
       return courseCode;
    }
 
+   public void setCourseCode(String courseCode) {
+      this.courseCode = courseCode;
+   }
+
+   public void setCourseName(String courseName) {
+      this.courseName = courseName;
+   }
+
    public String getCourseName() {
       return courseName;
    }
@@ -110,8 +118,27 @@ public class ExamModel extends DataModel {
       }
    }
 
+   public int getWeekIndex() {
+      return Integer.parseInt(week.substring(week.indexOf('_') + 1)) - 1;
+   }
+
    public int getStartAsInt() {
       String[] ss = start.split(":");
       return Integer.parseInt(ss[0] + ss[1]);
+   }
+
+   @Override
+   @SuppressWarnings("all")
+   public String toString() {
+      return "ExamModel{" +
+              "courseCode='" + courseCode + '\'' +
+              ", courseName='" + courseName + '\'' +
+              ", start='" + start + '\'' +
+              ", end='" + end + '\'' +
+              ", id=" + id +
+              ", chronologicalOrder=" + chronologicalOrder +
+              ", week='" + week + '\'' +
+              ", day='" + day + '\'' +
+              '}';
    }
 }

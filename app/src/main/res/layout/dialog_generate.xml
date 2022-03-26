@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="@dimen/normal_dialog_width"
+   android:layout_height="@dimen/secondary_dialog_height"
+   android:background="@drawable/bg_day_and_night">
+
+   <TextView
+      android:id="@+id/title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/layout_gap"
+      android:fontFamily="sans-serif"
+      android:text="@string/choose_data"
+      android:textColor="@android:color/black"
+      android:textSize="22sp"
+      android:textStyle="bold"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent" />
+
+   <View
+      android:id="@+id/divider2"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/colorPrimary"
+      external:layout_constraintBottom_toTopOf="@+id/update_detail_list"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
+
+   <ScrollView
+      android:id="@+id/update_detail_list"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginVertical="@dimen/layout_gap"
+      external:layout_constraintBottom_toTopOf="@+id/export"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.0"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/title"
+      external:layout_constraintVertical_bias="0.0">
+
+      <LinearLayout
+         android:id="@+id/data_parent"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="@dimen/layout_gap"
+         android:orientation="vertical">
+
+         <CheckBox
+            android:id="@+id/courses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:checked="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/registered_course"
+            android:textSize="@dimen/normal_dialog_text_size" />
+
+         <CheckBox
+            android:id="@+id/assignments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:checked="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/assignment"
+            android:textSize="@dimen/normal_dialog_text_size" />
+
+         <CheckBox
+            android:id="@+id/timetable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:checked="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/timetable"
+            android:textSize="@dimen/normal_dialog_text_size" />
+
+         <CheckBox
+            android:id="@+id/scheduled_classes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:checked="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/classes"
+            android:textSize="@dimen/normal_dialog_text_size" />
+
+         <CheckBox
+            android:id="@+id/exam_timetable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:checked="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/exam_timetable"
+            android:textSize="@dimen/normal_dialog_text_size" />
+
+      </LinearLayout>
+
+   </ScrollView>
+
+   <Button
+      android:id="@+id/export"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@drawable/register_button"
+      android:text="@string/generate_export"
+      android:textSize="@dimen/button_text_size"
+      android:textColor="@android:color/white"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,7 @@
       android:smallScreens="false"
       android:xlargeScreens="true" />
 
-    <!--        Permisions      -->
+   <!--        Permisions      -->
 
    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
@@ -39,14 +39,33 @@
    </queries>
 
    <application
-      android:allowBackup="true"
       android:name=".main.App"
+      android:allowBackup="true"
+      android:configChanges="orientation|keyboardHidden"
       android:fullBackupContent="true"
       android:icon="@mipmap/timely_app_icon"
       android:label="@string/app_name"
       android:requestLegacyExternalStorage="true"
       android:roundIcon="@mipmap/timely_app_icon_round"
-      android:theme="@style/AppTheme">
+      android:screenOrientation="portrait"
+      android:theme="@style/AppTheme"
+      android:windowSoftInputMode="adjustPan">
+
+      <!--     Providers      -->
+
+      <!-- Android Nougat security upgrade; file uris throws FileUriExposedException -->
+
+      <provider
+         android:name="androidx.core.content.FileProvider"
+         android:authorities="${applicationId}.provider"
+         android:exported="false"
+         android:grantUriPermissions="true">
+
+         <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/provider_paths" />
+
+      </provider>
 
       <!--        Services        -->
 
@@ -69,11 +88,8 @@
 
       <activity
          android:name=".main.SplashScreen"
-         android:configChanges="orientation|keyboardHidden"
          android:exported="true"
-         android:screenOrientation="portrait"
-         android:theme="@style/FullscreenTheme"
-         android:windowSoftInputMode="adjustPan">
+         android:theme="@style/FullscreenTheme">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -82,110 +98,118 @@
 
       <activity
          android:name=".main.MainActivity"
-         android:configChanges="orientation|keyboardHidden"
          android:exported="true"
          android:launchMode="singleTask"
-         android:screenOrientation="portrait"
-         android:theme="@style/AppTheme.SlideVertical_caller"
-         android:windowSoftInputMode="adjustPan" />
+         android:theme="@style/AppTheme.SlideVertical_caller" />
 
-      <activity
-         android:name=".settings.SettingsActivity"
-         android:configChanges="orientation|keyboardHidden"
-         android:screenOrientation="portrait"
-         android:windowSoftInputMode="adjustPan" />
+      <activity android:name=".settings.SettingsActivity" />
 
-      <activity
-         android:name=".gallery.ImageGallery"
-         android:configChanges="orientation|keyboardHidden"
-         android:screenOrientation="portrait"
-         android:windowSoftInputMode="adjustPan" />
+      <activity android:name=".gallery.ImageGallery" />
 
       <activity
          android:name=".alarms.AlarmActivity"
-         android:configChanges="orientation|keyboardHidden"
-         android:excludeFromRecents="true"
-         android:screenOrientation="portrait"
-         android:windowSoftInputMode="adjustPan" />
+         android:excludeFromRecents="true" />
 
-      <activity
-         android:name=".gallery.ImageDirectory"
-         android:configChanges="orientation|keyboardHidden"
-         android:screenOrientation="portrait"
-         android:windowSoftInputMode="adjustPan" />
+      <activity android:name=".gallery.ImageDirectory" />
 
       <activity
          android:name=".assignment.AddAssignmentActivity"
-         android:configChanges="orientation|keyboardHidden"
          android:launchMode="singleTask"
-         android:screenOrientation="portrait"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />
 
       <activity
          android:name=".assignment.ImageViewerActivity"
-         android:configChanges="orientation|keyboardHidden"
-         android:launchMode="singleTask"
-         android:screenOrientation="portrait"
-         android:windowSoftInputMode="adjustPan" />
+         android:launchMode="singleTask" />
 
       <activity
          android:name=".gallery.ImageSlideActivity"
-         android:configChanges="orientation|keyboardHidden"
-         android:screenOrientation="portrait"
-         android:theme="@style/ImageViewerTheme"
-         android:windowSoftInputMode="adjustPan" />
+         android:theme="@style/ImageViewerTheme" />
 
-      <activity
-         android:name=".gallery.StorageViewer"
-         android:configChanges="orientation|keyboardHidden"
-         android:screenOrientation="portrait"
-         android:windowSoftInputMode="adjustPan" />
+      <activity android:name=".gallery.StorageViewer" />
 
-      <activity
-         android:name=".main.IntroPageActivity"
-         android:configChanges="orientation|keyboardHidden"
-         android:screenOrientation="portrait"
-         android:windowSoftInputMode="adjustPan" />
+      <activity android:name=".main.IntroPageActivity" />
 
       <activity
          android:name=".courses.AddCourseActivity"
-         android:configChanges="orientation|keyboardHidden"
          android:launchMode="singleTask"
-         android:screenOrientation="portrait"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />
 
       <activity
          android:name=".exam.AddExamActivity"
-         android:configChanges="orientation|keyboardHidden"
          android:launchMode="singleTask"
-         android:screenOrientation="portrait"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />
 
       <activity
          android:name=".timetable.AddTimetableActivity"
-         android:configChanges="orientation|keyboardHidden"
          android:launchMode="singleTask"
-         android:screenOrientation="portrait"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />
 
       <activity
          android:name=".scheduled.AddScheduledActivity"
-         android:configChanges="orientation|keyboardHidden"
          android:launchMode="singleTask"
-         android:screenOrientation="portrait"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />
 
       <activity
          android:name=".todo.AddTodoActivity"
-         android:configChanges="orientation|keyboardHidden"
-         android:screenOrientation="portrait"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />
+
+      <activity
+         android:name=".exports.ImportResultsActivity"
+         android:exported="true"
+         android:priority="1"
+         android:theme="@style/AppTheme.SlideVertical_recipient">
+         <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+            <data android:scheme="file" />
+            <data android:scheme="content" />
+            <data android:host="*" />
+            <data android:pathPattern=".*\\.tmly" />
+            <data android:mimeType="*/*" />
+         </intent-filter>
+
+         <!--  Work-around so that TimeLY is able to import data from Whatsapp and MIUI File manager -->
+
+         <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+            <data android:mimeType="text/plain" />
+            <data android:mimeType="application/vnd.oasis.opendocument.text" />
+            <data
+               android:mimeType="application/pdf"
+               android:scheme="file" />
+            <data
+               android:mimeType="application/pdf"
+               android:scheme="content" />
+
+         </intent-filter>
+
+         <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.OPENABLE" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <category android:name="android.intent.category.DEFAULT" />
+
+            <data
+               android:mimeType="application/octet-stream"
+               android:scheme="content" />
+
+         </intent-filter>
+
+      </activity>
 
       <!--        Receivers       -->
 
@@ -224,7 +248,7 @@
          </intent-filter>
       </receiver>
 
-       <receiver
+      <receiver
          android:name="com.noah.timely.alarms.AlarmStateChangeReceiver"
          android:exported="true">
          <intent-filter>

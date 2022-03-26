@@ -43,19 +43,6 @@
 
    </androidx.appcompat.widget.Toolbar>
 
-   <!--    <ImageButton-->
-   <!--        android:id="@+id/close"-->
-   <!--        android:layout_width="wrap_content"-->
-   <!--        android:layout_height="wrap_content"-->
-   <!--        android:layout_margin="16dp"-->
-   <!--        android:layout_marginEnd="16dp"-->
-   <!--        android:layout_marginRight="16dp"-->
-   <!--        android:background="@null"-->
-   <!--        android:contentDescription="@string/close_description"-->
-   <!--        external:srcCompat="@drawable/ic_x_circle_fill"-->
-   <!--        external:layout_constraintEnd_toEndOf="parent"-->
-   <!--        external:layout_constraintTop_toBottomOf="@id/top_guideline" />-->
-
    <androidx.viewpager2.widget.ViewPager2
       android:id="@+id/intro_pager"
       android:layout_width="0dp"
@@ -100,22 +87,49 @@
       android:text="@string/start"
       android:textColor="@android:color/white"
       android:textSize="@dimen/button_text_size"
-      tools:visibility="gone"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent" />
+      external:layout_constraintStart_toStartOf="parent"
+      tools:visibility="gone" />
 
    <com.google.android.material.floatingactionbutton.FloatingActionButton
-      android:id="@+id/skip"
+      android:id="@+id/prev"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/fab_margin"
       android:contentDescription="@string/skip"
       external:fabCustomSize="@dimen/fab_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
       external:maxImageSize="@dimen/fab_icon_size"
-      external:srcCompat="@drawable/ic_arrow_forward"
+      external:srcCompat="@drawable/ic_baseline_arrow_back_24" />
+
+   <Button
+      android:id="@+id/skip"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/fab_margin"
+      android:background="@drawable/btn_bg_rounded_edges"
+      android:contentDescription="@string/skip"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/_skip"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="@+id/next"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="@+id/next" />
+
+   <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/next"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/fab_margin"
+      android:contentDescription="@string/skip"
+      external:fabCustomSize="@dimen/fab_size"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent" />
+      external:maxImageSize="@dimen/fab_icon_size"
+      external:srcCompat="@drawable/ic_arrow_forward" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

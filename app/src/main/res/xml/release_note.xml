@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ReleaseNote>
    <Release>
-      Fixed bugs in Todo list.
+      Assignment list items now displays full submission status.
    </Release>
    <Release>
-      Added select-all feature
+      Changed status bar color to reflect current theme.
+   </Release>
+   <Release>
+      Added, Click-to-view full list item details on some lists.
+   </Release>
+   <Release>
+      List-count tooltip displays size of list.
+   </Release>
+   <Release>
+      Added Export/Import data feature.
+   </Release>
+   <Release>
+      Improved Introduction Page; added skip and improved naviagation.
+   </Release>
+   <Release>
+      Working on full support for Android 12 and 13.
    </Release>
 </ReleaseNote>

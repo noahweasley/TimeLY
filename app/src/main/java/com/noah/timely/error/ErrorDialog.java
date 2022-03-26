@@ -17,6 +17,9 @@ import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
 
+/**
+ * Basic error dialog to display errors to the user
+ */
 public class ErrorDialog extends DialogFragment implements View.OnClickListener {
    private ErrorMessage err;
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="@dimen/small_dialog_width"
+   android:layout_height="@dimen/small_dialog_height"
+   android:background="@drawable/bg_day_and_night">
+
+   <com.airbnb.lottie.LottieAnimationView
+      android:id="@+id/checkmark"
+      android:layout_width="0dp"
+      android:layout_height="80dp"
+      external:layout_constraintBottom_toTopOf="@id/message"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:lottie_autoPlay="true"
+      external:lottie_loop="false"
+      external:lottie_rawRes="@raw/success_check_2" />
+
+   <TextView
+      android:id="@+id/message"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/layout_gap"
+      android:fontFamily="sans-serif-medium"
+      android:gravity="center"
+      android:text="@string/export_success_message"
+      android:textColor="@android:color/black"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toTopOf="@id/share"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.0"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/checkmark"
+      external:layout_constraintVertical_bias="0.4" />
+
+   <Button
+      android:id="@+id/share"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@color/colorAccent"
+      android:text="@string/share"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

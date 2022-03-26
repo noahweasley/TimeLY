@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@color/window_background_color_light">
+
+   <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="0dp"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+      external:subtitleTextColor="@android:color/white" />
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/data_layer"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/toolbar"
+      tools:visibility="gone">
+
+      <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/import_list"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         android:clipToPadding="false"
+         android:layoutAnimation="@anim/list_layout_anim_gravity_start"
+         android:paddingHorizontal="@dimen/layout_gap"
+         android:paddingTop="@dimen/layout_gap"
+         android:paddingBottom="80dp"
+         external:layout_behavior="@string/appbar_scrolling_view_behavior"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         tools:visibility="visible" />
+
+      <Button
+         android:id="@+id/import_selected"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="16dp"
+         android:background="@drawable/buttons_explore"
+         android:minHeight="@dimen/button_min_height"
+         android:text="@string/import_selected"
+         android:textColor="@android:color/white"
+         android:textSize="@dimen/button_text_size"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/init_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/toolbar"
+      tools:visibility="gone">
+
+      <com.noah.timely.custom.MaterialProgressbar
+         android:id="@+id/indeterminateProgress"
+         style="@style/Widget.MaterialProgressBar.ProgressBar"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:indeterminate="true"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_bias="0.45"
+         external:mpb_progressStyle="circular" />
+
+      <TextView
+         android:id="@+id/loader_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="@dimen/layout_gap"
+         android:text="@string/initializing_please_wait"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/loader_text_size"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@+id/indeterminateProgress" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/import_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginHorizontal="@dimen/layout_gap"
+      android:layout_marginTop="@dimen/layout_gap"
+      android:visibility="gone"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/toolbar"
+      tools:visibility="visible">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         android:layout_marginBottom="@dimen/layout_gap_secondary"
+         android:background="@drawable/bg_rounded_stroked"
+         external:layout_constraintBottom_toTopOf="@+id/file_pick"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent">
+
+         <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/no_task"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintHorizontal_bias="0.493"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            external:layout_constraintVertical_bias="0.235"
+            external:srcCompat="@mipmap/ic_import" />
+
+         <TextView
+            android:id="@+id/info_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:padding="@dimen/layout_gap_secondary"
+            android:text="@string/msg_import"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/msg_import_text_size"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/image"
+            external:layout_constraintVertical_bias="0.327" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <Button
+         android:id="@+id/file_pick"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="16dp"
+         android:background="@drawable/buttons_explore"
+         android:minHeight="@dimen/button_min_height"
+         android:text="@string/import_file"
+         android:textColor="@android:color/white"
+         android:textSize="@dimen/button_text_size"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_bias="0.8" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

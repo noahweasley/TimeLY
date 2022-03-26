@@ -14,7 +14,7 @@ public class MultiChoiceMode implements ChoiceMode {
    public static final String ARG_POS_INDICES = "Position indices";
    public static final String ARG_ID_INDICES = "Id Indices";
 
-   // States to be saved
+   // States to be saved or parceled
    protected List<Integer> indices = new ArrayList<>();
    protected List<Integer> indices2 = new ArrayList<>();
    protected ParcelableSparseBooleanArray sbarr = new ParcelableSparseBooleanArray();
@@ -59,4 +59,15 @@ public class MultiChoiceMode implements ChoiceMode {
    public Integer[] getCheckedChoicePositions() {
       return indices2.toArray(new Integer[0]);
    }
+
+   public void setChecked(int position, boolean isChecked) {
+      if (!isChecked) {
+         sbarr.delete(position);
+         indices.remove(Integer.valueOf(position));
+      } else {
+         sbarr.put(position, true);
+         indices.add(position);
+      }
+   }
+
 }

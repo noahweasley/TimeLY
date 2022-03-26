@@ -74,10 +74,15 @@
                android:icon="@drawable/ic_whats_new"
                android:title="@string/whats_new" />
 
-            <!--     <item
-                     android:id="@+id/generate"
-                     android:icon="@drawable/ic_share"
-                     android:title="@string/generate" />-->
+            <item
+               android:id="@+id/__export"
+               android:icon="@drawable/ic_baseline_export"
+               android:title="@string/generate_export" />
+
+            <item
+               android:id="@+id/__import"
+               android:icon="@drawable/ic_baseline_save"
+               android:title="@string/generate_import" />
 
             <item
                android:id="@+id/report"

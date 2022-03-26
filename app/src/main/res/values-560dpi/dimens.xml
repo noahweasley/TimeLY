@@ -17,7 +17,7 @@
    <dimen name="normal_dialog_width">360dp</dimen>
    <dimen name="normal_dialog_height">370dp</dimen>
    <dimen name="splash_app_name_size">38sp</dimen>
-   <dimen name="button_text_size">16sp</dimen>
+   <dimen name="button_text_size">18sp</dimen>
    <dimen name="alarm_header_size">70sp</dimen>
    <dimen name="alarm_activity_time_size">40sp</dimen>
    <dimen name="alarm_activity_label_size">24sp</dimen>
@@ -65,7 +65,7 @@
    <dimen name="secondary_dialog_width">300dp</dimen>
    <dimen name="intro_top_begin">82dp</dimen>
    <dimen name="secondary_card_margin_bottom">10dp</dimen>
-   <dimen name="course_list_height">120dp</dimen>
+   <dimen name="course_list_height">140dp</dimen>
    <dimen name="assignment_list_height">235dp</dimen>
    <dimen name="course_list_height_">130dp</dimen>
    <dimen name="timetable_list_height">130dp</dimen>
@@ -83,4 +83,12 @@
    <dimen name="timeframe_text_size">20sp</dimen>
    <dimen name="todo_row_height">180dp</dimen>
    <dimen name="task_text_size_small">14sp</dimen>
+   <dimen name="secondary_dialog_height">400dp</dimen>
+   <dimen name="normal_dialog_text_size">20sp</dimen>
+   <dimen name="message_text_size">24sp</dimen>
+   <dimen name="msg_import_text_size">20sp</dimen>
+   <dimen name="small_dialog_width">300dp</dimen>
+   <dimen name="small_dialog_height">270dp</dimen>
+   <dimen name="loader_text_size">18sp</dimen>
+   <dimen name="import_content_text_text_size">18sp</dimen>
 </resources>

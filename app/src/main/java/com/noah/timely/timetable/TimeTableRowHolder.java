@@ -114,7 +114,7 @@ public class TimeTableRowHolder extends RecyclerView.ViewHolder {
          RequestRunner.Builder builder = new RequestRunner.Builder();
          builder.setOwnerContext(user.getActivity())
                  .setAdapterPosition(getAbsoluteAdapterPosition())
-                 .setPagePosition(tModel.getTimetablePosition())
+                 .setPagePosition(tModel.getTimetableIndex())
                  .setModelList(tList)
                  .setTimetable(timetable);
 

@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * The thread responsible for blinking the colon in between the minute and second indicator
+ * The thread responsible for detecting in global time and date changes
  */
 public class TimeChangeDetector extends Thread {
 

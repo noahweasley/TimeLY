@@ -37,7 +37,9 @@ import com.noah.timely.core.MultiUpdateMessage;
 import com.noah.timely.core.RequestParams;
 import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
+import com.noah.timely.exports.TMLYDataGeneratorDialog;
 import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.ThreadUtils;
 
@@ -182,7 +184,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(cList.size()));
       menu.findItem(R.id.select_all).setVisible(cList.isEmpty() ? false : true);
-      TooltipCompat.setTooltipText(itemCount, "Courses Count");
+      TooltipCompat.setTooltipText(itemCount, getString(R.string.courses_count) + cList.size());
 
       super.onCreateOptionsMenu(menu, inflater);
    }
@@ -196,6 +198,8 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
       if (item.getItemId() == R.id.select_all) {
          courseAdapter.selectAllItems();
+      } else if (item.getItemId() == R.id.export) {
+         new TMLYDataGeneratorDialog().show(getContext(), Constants.COURSE);
       }
       return super.onOptionsItemSelected(item);
    }

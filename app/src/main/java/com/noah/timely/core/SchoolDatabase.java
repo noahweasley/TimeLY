@@ -26,6 +26,7 @@ import com.noah.timely.todo.TodoModel;
 import com.noah.timely.util.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.LogUtils;
+import com.noah.timely.util.PreferenceUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private static final String COLUMN_TODO_TITLE = "Title";
    private static final String COLUMN_TODO_DATE = "Completion_date";
    private static final String COLUMN_TODO_TIME = "Completion_time";
+   private static final String COLUMN_SEMESTER = "Semester";
 
    private static boolean mDeleting;
 
@@ -104,8 +106,17 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private final Context context;
 
    public SchoolDatabase(@Nullable Context context) {
-      super(context, "SchoolDatabase.db", null, 2);
+      // remember to update the database version specified in the super class' constructor
+      super(context, "SchoolDatabase.db", null, 3);
       this.context = context;
+   }
+
+   /**
+    * @return the database version
+    */
+   public int getDatabaseVersion() {
+      SQLiteDatabase db = getReadableDatabase();
+      return db.getVersion();
    }
 
    /**
@@ -147,13 +158,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       createTodoListTables(db);
       createAssignmentTable(db);
       createAlarmTable(db);
-      createPrefTable(db);
-      // Insert default value in exam week count. Although it is not useful, as value will never
-      // be retrieved, this is useful to use the update database operation on this table.
-      ContentValues values = new ContentValues();
-      values.put(COLUMN_EXAM_WEEK_COUNT, 8);
-
-      db.insertOrThrow(PREFERENCE_TABLE, null, values);
    }
 
    @Override
@@ -163,14 +167,11 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          // bunmp version from v1.0 to v2.0. In v1.0, _Todo Table does not exist, so upgrade former version's
          // database, adding the _Todo table to begin data insertion.
          createTodoListTables(db);
+      } else if ((oldVersion == 1 || oldVersion == 2) && newVersion == 3) {
+         // drop Preference_Table in version 3.0 and replace with androidx preference
+         db.execSQL("DROP TABLE IF EXISTS " + PREFERENCE_TABLE);
       }
 
-   }
-
-   // CREATE PREFS TABLE
-   private void createPrefTable(SQLiteDatabase db) {
-      String createPrefsDB_stmt = "CREATE TABLE " + PREFERENCE_TABLE + " (" + COLUMN_EXAM_WEEK_COUNT + " INTEGER )";
-      db.execSQL(createPrefsDB_stmt);
    }
 
    // CREATE ALARM TABLE
@@ -192,7 +193,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
       db.execSQL(createAlarmDB_stmt);
    }
-
    // CREATE ASSIGNMENT DATA TABLE
    private void createAssignmentTable(SQLiteDatabase db) {
       String createAssignmentDB_stmt
@@ -265,6 +265,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private void createSemesterTable(SQLiteDatabase db, String semester) {
       String createSemesterTable_stmt = "CREATE TABLE " + semester + " (" +
               COLUMN_ID + " INTEGER, " +
+              COLUMN_SEMESTER + " TEXT, " +
               COLUMN_COURSE_CODE + " TEXT, " +
               COLUMN_FULL_COURSE_NAME + " TEXT, " +
               COLUMN_CREDITS + " INTEGER"
@@ -335,7 +336,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     *
     * @return true if a duplicate assignment was found
     */
-   public boolean isAssignmentPresent(AssignmentModel model) {
+   public boolean isAssignmentAbsent(AssignmentModel model) {
       String findAssignmentStmt = "SELECT * FROM " + ASSIGNMENT_TABLE
               + " WHERE " + COLUMN_ASSIGNMENT_TITLE + " = '" + sanitizeEntry(model.getTitle())
               + "' AND " + COLUMN_SUBMISSION_DATE + " = '" + model.getSubmissionDate()
@@ -345,9 +346,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       SQLiteDatabase db = getReadableDatabase();
 
       Cursor findCursor = db.rawQuery(findAssignmentStmt, null);
+      boolean isAbsent = findCursor.getCount() == 0;
       findCursor.close();
-
-      return findCursor.getColumnCount() > 0;
+      return isAbsent;
    }
 
    private String sanitizeEntry(String data) {
@@ -671,7 +672,6 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       result.close();
       return data;
    }
-
 
    /**
     * <p><Strong>Description</Strong></p>
@@ -1412,34 +1412,54 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    /**
     * Retrieves the number of registered courses for a particular semester
     *
-    * @param SEMESTER the semester in which it's data is to be retrieved
+    * @param SEMESTER the semester in which it's data is to be retrieved, specify <code>null</code> to combine both
+    *                 <strong>FIRST</strong> and <strong>SECOND</strong> semester.
     * @return all registered courses in that semester in alphabetic order of course names
     */
    public List<DataModel> getCoursesData(String SEMESTER) {
       List<DataModel> courseData = new ArrayList<>();
       SQLiteDatabase db = getReadableDatabase();
-      String coursesQuery_stmt =
-              "SELECT " + COLUMN_ID
-                      + ", " + COLUMN_CREDITS
-                      + ", " + COLUMN_COURSE_CODE
-                      + ", " + COLUMN_FULL_COURSE_NAME
-                      + " FROM " + SEMESTER
-                      + " ORDER BY " + COLUMN_FULL_COURSE_NAME;
+      String coursesQuery_stmt = null;
+
+      if (SEMESTER != null) {
+         coursesQuery_stmt =
+                 "SELECT " + COLUMN_ID
+                         + ", " + COLUMN_SEMESTER
+                         + ", " + COLUMN_CREDITS
+                         + ", " + COLUMN_COURSE_CODE
+                         + ", " + COLUMN_FULL_COURSE_NAME
+                         + " FROM " + SEMESTER
+                         + " ORDER BY " + COLUMN_FULL_COURSE_NAME;
+
+      } else {
+         coursesQuery_stmt = " SELECT " + COLUMN_ID
+                 + ", " + COLUMN_SEMESTER
+                 + ", " + COLUMN_CREDITS
+                 + ", " + COLUMN_COURSE_CODE
+                 + ", " + COLUMN_FULL_COURSE_NAME
+                 + " FROM " + FIRST_SEMESTER
+                 + " UNION ALL " +
+                 " SELECT " + COLUMN_ID
+                 + ", " + COLUMN_SEMESTER
+                 + ", " + COLUMN_CREDITS
+                 + ", " + COLUMN_COURSE_CODE
+                 + ", " + COLUMN_FULL_COURSE_NAME
+                 + " FROM " + SECOND_SEMESTER
+                 + " ORDER BY " + COLUMN_FULL_COURSE_NAME;
+      }
 
       if (!db.isOpen()) db = getReadableDatabase();
       Cursor courseCursor = db.rawQuery(coursesQuery_stmt, null);
 
       while (courseCursor.moveToNext()) {
          CourseModel courseModel = new CourseModel();
-         courseModel.setSemester(SEMESTER);
-         courseModel.setCourseCode(retrieveEntry(courseCursor.getString(2)));
-         courseModel.setCourseName(retrieveEntry(courseCursor.getString(3)));
-         courseModel.setCredits(courseCursor.getInt(1));
+         courseModel.setSemester(retrieveEntry(courseCursor.getString(1)));
+         courseModel.setCourseCode(retrieveEntry(courseCursor.getString(3)));
+         courseModel.setCourseName(retrieveEntry(courseCursor.getString(4)));
+         courseModel.setCredits(courseCursor.getInt(2));
          courseModel.setId(courseCursor.getInt(0));
          courseData.add(courseModel);
       }
-      // reverse the order of alarms to show the most recent alarm
-//        Collections.reverse(alarms);
       courseCursor.close();
       return courseData;
    }
@@ -1464,6 +1484,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       ContentValues courseValues = new ContentValues();
       int insertPos = ++lastID;
       courseValues.put(COLUMN_ID, insertPos);
+      courseValues.put(COLUMN_SEMESTER, courseModel.getSemester());
       courseValues.put(COLUMN_CREDITS, courseModel.getCredits());
       courseValues.put(COLUMN_COURSE_CODE, sanitizeEntry(courseModel.getCourseCode()));
       courseValues.put(COLUMN_FULL_COURSE_NAME, sanitizeEntry(courseModel.getCourseName()));
@@ -1633,50 +1654,93 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     * and don't exist yet, so create them, when user wants to use them.
     *
     * @param index the timetable to be retrieved with <strong>index 0</strong>, meaning
-    *              <strong>WEEK 1</strong>
+    *              <strong>WEEK 1</strong>. <strong>NOTE</strong>: specifying an argument of -1 will join all the
+    *              timetables together
     * @return empty data if table doesn't exists yet and then create it or returns the current
     * exam timetable data in database
     */
-   public List<DataModel> getExamTimetableDataFor(int index) {
-      String examTable = "WEEK_" + (index + 1);
+   public List<DataModel> getExamTimetableDataForWeek(int index) {
       SQLiteDatabase db = getReadableDatabase();
-      // Create this table if it doesn't exist
-      String createExamTables_stmt = "CREATE TABLE IF NOT EXISTS " + examTable + " (" +
-              COLUMN_ID + " INTEGER, " +
-              COLUMN_WEEK + " TEXT, " +
-              COLUMN_DAY + " TEXT, " +
-              COLUMN_COURSE_CODE + " TEXT, " +
-              COLUMN_FULL_COURSE_NAME + " TEXT, " +
-              COLUMN_START_TIME + " INTEGER, " +
-              COLUMN_END_TIME + " INTEGER"
-              + ")";
-
-      db.execSQL(createExamTables_stmt);
-
       List<DataModel> exams = new ArrayList<>();
+      // index = -1 fetches all the exam timetables present
+      if (index != -1) {
+         String examTable = "WEEK_" + (index + 1);
+         // Create this table if it doesn't exist
+         String createExamTables_stmt = "CREATE TABLE IF NOT EXISTS " + examTable + " (" +
+                 COLUMN_ID + " INTEGER, " +
+                 COLUMN_WEEK + " TEXT, " +
+                 COLUMN_DAY + " TEXT, " +
+                 COLUMN_COURSE_CODE + " TEXT, " +
+                 COLUMN_FULL_COURSE_NAME + " TEXT, " +
+                 COLUMN_START_TIME + " INTEGER, " +
+                 COLUMN_END_TIME + " INTEGER"
+                 + ")";
 
-      String getExams_stmt
-              = "SELECT " + COLUMN_ID + ","
-              + COLUMN_COURSE_CODE + ","
-              + COLUMN_FULL_COURSE_NAME + ","
-              + COLUMN_START_TIME + ","
-              + COLUMN_END_TIME + ","
-              + COLUMN_WEEK + ","
-              + COLUMN_DAY
-              + " FROM " + examTable;
+         db.execSQL(createExamTables_stmt);
 
-      Cursor getExamsCursor = db.rawQuery(getExams_stmt, null);
-      while (getExamsCursor.moveToNext()) {
-         int id = getExamsCursor.getInt(0);
-         String courseCode = getExamsCursor.getString(1);
-         String courseName = retrieveEntry(getExamsCursor.getString(2));
-         String startTime = getExamsCursor.getString(3);
-         String endTime = getExamsCursor.getString(4);
-         String examWeek = getExamsCursor.getString(5);
-         String day = getExamsCursor.getString(6);
-         exams.add(new ExamModel(day, examWeek, id, courseCode, courseName, startTime, endTime));
+         String getExams_stmt
+                 = "SELECT " + COLUMN_ID + ","
+                 + COLUMN_COURSE_CODE + ","
+                 + COLUMN_FULL_COURSE_NAME + ","
+                 + COLUMN_START_TIME + ","
+                 + COLUMN_END_TIME + ","
+                 + COLUMN_WEEK + ","
+                 + COLUMN_DAY
+                 + " FROM " + examTable;
+
+         Cursor getExamsCursor = db.rawQuery(getExams_stmt, null);
+         while (getExamsCursor.moveToNext()) {
+            int id = getExamsCursor.getInt(0);
+            String courseCode = getExamsCursor.getString(1);
+            String courseName = retrieveEntry(getExamsCursor.getString(2));
+            String startTime = getExamsCursor.getString(3);
+            String endTime = getExamsCursor.getString(4);
+            String examWeek = getExamsCursor.getString(5);
+            String day = getExamsCursor.getString(6);
+            exams.add(new ExamModel(day, examWeek, id, courseCode, courseName, startTime, endTime));
+         }
+         getExamsCursor.close();
+
+      } else {
+
+         // query database, merge all exam timetables together all into one
+         // get the amount of exam timetable weeks present
+         int weekCount = PreferenceUtils.getIntegerValue(getContext(), COLUMN_EXAM_WEEK_COUNT, 8);
+         StringBuilder selectStmtBuilder = new StringBuilder();
+
+         for (int i = 1; i <= weekCount; i++) {
+
+            String stmt = "SELECT " + COLUMN_ID + ","
+                    + COLUMN_COURSE_CODE + ","
+                    + COLUMN_FULL_COURSE_NAME + ","
+                    + COLUMN_START_TIME + ","
+                    + COLUMN_END_TIME + ","
+                    + COLUMN_WEEK + ","
+                    + COLUMN_DAY
+                    + " FROM WEEK_";
+
+            selectStmtBuilder.append(stmt).append(i);
+            if (weekCount > 1 && i != weekCount) {
+               selectStmtBuilder.append(" UNION ALL ");
+            }
+         }
+
+         // after building up the query according to the user selected week-count, retrieve the built-up
+         // string from the String Builder
+         Cursor getExamsCursor = db.rawQuery(selectStmtBuilder.toString(), null);
+         while (getExamsCursor.moveToNext()) {
+            int id = getExamsCursor.getInt(0);
+            String courseCode = getExamsCursor.getString(1);
+            String courseName = retrieveEntry(getExamsCursor.getString(2));
+            String startTime = getExamsCursor.getString(3);
+            String endTime = getExamsCursor.getString(4);
+            String examWeek = getExamsCursor.getString(5);
+            String day = getExamsCursor.getString(6);
+            exams.add(new ExamModel(day, examWeek, id, courseCode, courseName, startTime, endTime));
+         }
+         getExamsCursor.close();
       }
-      getExamsCursor.close();
+
       return exams;
    }
 
@@ -1697,23 +1761,17 @@ public class SchoolDatabase extends SQLiteOpenHelper {
          } catch (NumberFormatException exc) {
             Log.w(TAG, "Ignoring user selected Week count of: " + countValue + ", using 8 weeks instead ");
          }
-         Cursor getEndCursor = db.rawQuery("SELECT " + COLUMN_EXAM_WEEK_COUNT + " FROM " + PREFERENCE_TABLE, null);
          // now perform the main operation of this action
          int wEnd = wStart;
-         if (getEndCursor.moveToFirst()) {
-            wEnd = getEndCursor.getInt(0);
-         }
+         wEnd = PreferenceUtils.getIntegerValue(getContext(), COLUMN_EXAM_WEEK_COUNT, 8);
          if (wStart != wEnd) {
             // drop all the unwanted tables, so as to reduce app's data
             for (int i = wStart + 1; i <= wEnd; i++) {
                db.execSQL("DROP TABLE " + "WEEK_" + i);
             }
             // Update week count to be retrieved later when dropping redundant tables
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_EXAM_WEEK_COUNT, wStart);
-            db.update(PREFERENCE_TABLE, values, null, null);
+            PreferenceUtils.setIntegerValue(getContext(), COLUMN_EXAM_WEEK_COUNT, wStart);
          }
-         getEndCursor.close();
          db.close();
       });
    }

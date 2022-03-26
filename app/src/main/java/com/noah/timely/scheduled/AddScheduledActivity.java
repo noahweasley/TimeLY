@@ -360,8 +360,7 @@ public class AddScheduledActivity extends AppCompatActivity {
                      .setDataAndType(Uri.parse("content://com.noah.timely.scheduled.add." + timeInMillis),
                                      "com.noah.timely.scheduled.dataType");
 
-      PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent,
-                                                    PendingIntent.FLAG_CANCEL_CURRENT);
+      PendingIntent pi = PendingIntent.getBroadcast(context, 1156, timetableIntent, PendingIntent.FLAG_CANCEL_CURRENT);
       pi.cancel();
       manager.cancel(pi);
    }
