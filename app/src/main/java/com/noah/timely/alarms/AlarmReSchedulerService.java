@@ -102,7 +102,6 @@ public class AlarmReSchedulerService extends Service {
          List<DataModel> timetables1 = database.getTimeTableData(SchoolDatabase.SCHEDULED_TIMETABLE);
          if (!timetables1.isEmpty()) {
             // re-schedule alarms; get alarm data from app's database
-
             for (DataModel rawData : timetables1) {
                TimetableModel timetable = (TimetableModel) rawData;
                registerPendingScheduledTimetables(context, timetable);
@@ -122,7 +121,6 @@ public class AlarmReSchedulerService extends Service {
          // cancel on-going notification
          cancelNotification(context);
       }); // end re-schedule task
-
 
       return START_STICKY;
    }

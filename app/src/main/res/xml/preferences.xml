@@ -122,18 +122,4 @@
 
    </PreferenceCategory>
 
-   <PreferenceCategory
-      external:allowDividerAbove="true"
-      external:title="Export and share">
-
-      <SwitchPreferenceCompat
-         android:enabled="true"
-         external:defaultValue="true"
-         external:icon="@drawable/ic_baseline_build_24"
-         external:key="ei_prefer_dialog"
-         external:summary="@string/ei_dialog_pref"
-         external:title="Prefer dialogs for export/import" />
-
-   </PreferenceCategory>
-
 </PreferenceScreen>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -183,7 +184,10 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
    private void tryNavigateToMainActivity() {
       if (intentReceived) {
          intentReceived = false;
-         startActivity(new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+         startActivity(new Intent(this, MainActivity.class));
+         // FIXME: 3/26/2022 remove the call to finish() on this activity and add the normal flag on the intent to
+         //  finish the activity automatically
+         finish();
       } else {
          super.onBackPressed();
       }

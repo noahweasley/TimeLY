@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.noah.timely.util.Constants;
+
 /**
  * <p>An alarm re-scheduler that re-schedules alarm from TimeLY's database.</p>
  * <p>
@@ -23,7 +25,9 @@ public class AlarmReScheduler extends BroadcastReceiver {
               || /* htc devices */ action.equals("com.htc.intent.action.QUICKBOOT_POWERON");
 
       if (isValidBootAction) {
-         context.startService(new Intent(context, AlarmReSchedulerService.class));
+         Intent serviceIntent = new Intent(context, AlarmReSchedulerService.class);
+         serviceIntent.setAction(Constants.ACTION.SHOW_NOTIFICATION);
+         context.startService(serviceIntent);
       }
    }
 }
