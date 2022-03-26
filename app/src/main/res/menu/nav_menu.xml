@@ -50,6 +50,11 @@
                android:icon="@drawable/ic_baseline_event_available_24"
                android:title="@string/todo_list" />
 
+            <item
+               android:id="@+id/calculator"
+               android:icon="@drawable/ic_baseline_calculate_24"
+               android:title="@string/g_p_a_calculator" />
+
          </group>
 
       </menu>

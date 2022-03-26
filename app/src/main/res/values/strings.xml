@@ -218,4 +218,5 @@
    <string name="default_number">24</string>
    <string name="file_select_title">Select file using</string>
    <string name="import_selected">Import Selected</string>
+   <string name="g_p_a_calculator">G.P.A Calculator</string>
 </resources>

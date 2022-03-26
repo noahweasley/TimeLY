@@ -32,6 +32,7 @@ import com.noah.timely.about.TimelyUpdateInfoDialog;
 import com.noah.timely.alarms.AlarmHolderFragment;
 import com.noah.timely.alarms.TimeChangeDetector;
 import com.noah.timely.assignment.AssignmentFragment;
+import com.noah.timely.calculator.ResultCalculator;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
 import com.noah.timely.exam.ExamFragment;
@@ -237,6 +238,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       } else if (menuItemId == R.id.todo_list) {
 
          loadFragment(TodoFragment.newInstance());
+
+      } else if (menuItemId == R.id.calculator) {
+
+         loadFragment(ResultCalculator.newInstance());
 
       } else if (menuItemId == R.id.alarms) {
 
