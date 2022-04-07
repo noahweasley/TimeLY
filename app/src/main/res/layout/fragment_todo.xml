@@ -32,7 +32,7 @@
             android:layout_marginTop="@dimen/todo_group_margin_1"
             android:layout_marginEnd="@dimen/todo_group_margin_2"
             android:layout_marginRight="@dimen/todo_group_margin_2"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hbd"
             external:layout_constraintEnd_toStartOf="@id/p_work"
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent">
@@ -89,7 +89,7 @@
             android:layout_marginTop="@dimen/todo_group_margin_1"
             android:layout_marginEnd="@dimen/todo_group_margin_1"
             android:layout_marginRight="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hod"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toEndOf="@id/p_general"
             external:layout_constraintTop_toTopOf="parent">
@@ -143,7 +143,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/todo_group_height"
             android:layout_marginTop="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hrl"
             external:layout_constraintEnd_toEndOf="@id/p_general"
             external:layout_constraintHorizontal_bias="0.1"
             external:layout_constraintStart_toStartOf="@+id/p_general"
@@ -197,7 +197,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/todo_group_height"
             android:layout_marginTop="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hgd"
             external:layout_constraintEnd_toEndOf="@+id/p_work"
             external:layout_constraintStart_toStartOf="@+id/p_work"
             external:layout_constraintTop_toBottomOf="@+id/p_work">
@@ -250,7 +250,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/todo_group_height"
             android:layout_marginTop="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hp"
             external:layout_constraintEnd_toEndOf="@id/p_general"
             external:layout_constraintStart_toStartOf="@+id/p_general"
             external:layout_constraintTop_toBottomOf="@+id/p_music">
@@ -303,7 +303,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/todo_group_height"
             android:layout_marginTop="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hrl"
             external:layout_constraintEnd_toEndOf="@+id/p_work"
             external:layout_constraintStart_toStartOf="@+id/p_work"
             external:layout_constraintTop_toBottomOf="@+id/p_travel">
@@ -356,7 +356,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/todo_group_height"
             android:layout_marginTop="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hbd"
             external:layout_constraintEnd_toEndOf="@id/p_general"
             external:layout_constraintStart_toStartOf="@+id/p_general"
             external:layout_constraintTop_toBottomOf="@id/p_study">
@@ -409,7 +409,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/todo_group_height"
             android:layout_marginTop="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hgd"
             external:layout_constraintEnd_toEndOf="@+id/p_work"
             external:layout_constraintStart_toStartOf="@+id/p_work"
             external:layout_constraintTop_toBottomOf="@+id/p_home">
@@ -462,7 +462,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/todo_group_height"
             android:layout_marginTop="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hod"
             external:layout_constraintEnd_toEndOf="@+id/p_general"
             external:layout_constraintStart_toStartOf="@+id/p_general"
             external:layout_constraintTop_toBottomOf="@+id/p_creativity">
@@ -515,7 +515,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/todo_group_height"
             android:layout_marginTop="@dimen/todo_group_margin_1"
-            android:background="@drawable/bg_todo"
+            android:background="@drawable/bg_todo_hrl"
             external:layout_constraintEnd_toEndOf="@+id/p_work"
             external:layout_constraintStart_toStartOf="@+id/p_work"
             external:layout_constraintTop_toBottomOf="@+id/p_creativity">

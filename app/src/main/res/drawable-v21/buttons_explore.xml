@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+   android:color="@color/colorAccentDark">
+
+   <item>
+      <shape>
+         <solid android:color="@color/colorAccent" />
+         <corners android:radius="2000dp" />
+         <padding
+            android:bottom="@dimen/small_button_padding_vertical"
+            android:left="@dimen/small_button_padding_horizontal"
+            android:right="@dimen/small_button_padding_horizontal"
+            android:top="@dimen/small_button_padding_vertical" />
+         <stroke android:color="@color/accent_stroke" />
+      </shape>
+   </item>
+
+</ripple>

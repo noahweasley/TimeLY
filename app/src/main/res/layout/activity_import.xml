@@ -171,6 +171,22 @@
          external:layout_constraintTop_toTopOf="parent"
          external:layout_constraintVertical_bias="0.8" />
 
+      <com.noah.timely.custom.MaterialProgressbar
+         android:id="@+id/indeterminateProgress"
+         style="@style/Widget.MaterialProgressBar.ProgressBar"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         android:layout_margin="8dp"
+         android:indeterminate="true"
+         android:theme="@style/LightTheme"
+         android:visibility="gone"
+         external:layout_constraintBottom_toBottomOf="@id/file_pick"
+         external:layout_constraintEnd_toEndOf="@id/file_pick"
+         external:layout_constraintStart_toStartOf="@id/file_pick"
+         external:layout_constraintTop_toTopOf="@id/file_pick"
+         tools:visibility="visible"
+         external:mpb_progressStyle="circular" />
+
    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

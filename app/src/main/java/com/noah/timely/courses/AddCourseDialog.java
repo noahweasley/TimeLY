@@ -139,7 +139,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
    }
 
    private class ACDialog extends Dialog {
-      private final Integer[] credits = {
+      private final Integer[] CREDITS = {
               0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
               11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
               21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
@@ -182,14 +182,15 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
          });
 
          Spinner spin_credits = findViewById(R.id.credits);
-         ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, credits);
+         ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_dropdown_item_1line,
+                                                                  CREDITS);
          creditAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          spin_credits.setAdapter(creditAdapter);
          spin_credits.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position,
                                        long id) {
-               mCredits = credits[position];
+               mCredits = CREDITS[position];
             }
 
          });

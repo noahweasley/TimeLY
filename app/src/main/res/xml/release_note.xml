@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ReleaseNote>
    <Release>
-      Assignment list items now displays full submission status.
+      Fixed bug with study alarm.
    </Release>
    <Release>
-      Changed status bar color to reflect current theme.
+      Added G.P.A calculator.
    </Release>
    <Release>
-      Added, Click-to-view full list item details on some lists.
+      Added click ripple animation to widgets.
    </Release>
    <Release>
-      List-count tooltip displays size of list.
+      Implemented online upload of lecture materials and past questions feature.
    </Release>
    <Release>
-      Added Export/Import data feature.
+      Implemented job finder feature.
    </Release>
    <Release>
-      Improved Introduction Page; added skip and improved naviagation.
-   </Release>
-   <Release>
-      Working on full support for Android 12 and 13.
+      Implemented accomodation finder feature.
    </Release>
 </ReleaseNote>

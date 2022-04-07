@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -20,85 +20,76 @@ import com.noah.timely.R;
  * A custom spinner that tries to mimic Spotify Android app spinner functionality
  */
 public class ExSpinner extends AppCompatSpinner {
-   private Paint linePaint, trianglePaint;
+   private final RectF rect = new RectF();
+   private Paint linePaint;
    private final Point point1 = new Point();
    private final Point point2 = new Point();
    private final Point point3 = new Point();
-   private Path path;
+   private float radius;
 
    public ExSpinner(@NonNull Context context) {
       super(context);
-      init();
+      init(null);
    }
 
    public ExSpinner(@NonNull Context context, int mode) {
       super(context, mode);
-      init();
+      init(null);
    }
 
    public ExSpinner(@NonNull Context context,
                     @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
       super(context, attrs);
-      init();
+      init(attrs);
    }
 
    public ExSpinner(@NonNull Context context,
                     @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
       super(context, attrs, defStyleAttr);
-      init();
+      init(attrs);
    }
 
    public ExSpinner(@NonNull Context context,
                     @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr, int mode) {
       super(context, attrs, defStyleAttr, mode);
-      init();
+      init(attrs);
    }
 
    public ExSpinner(@NonNull Context context,
                     @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr, int mode,
                     Resources.Theme popupTheme) {
       super(context, attrs, defStyleAttr, mode, popupTheme);
-      init();
+      init(attrs);
    }
 
-   private void init() {
+   private void init(AttributeSet attrs) {
+//      TypedArray tarr = attrs.getAttributeValue(R.styleable.);
+
+      radius = getContext().getResources().getDimension(R.dimen.corner_radius);
       linePaint = new Paint();
-      trianglePaint = new Paint();
 
       linePaint.setStyle(Paint.Style.STROKE);
       linePaint.setColor(ContextCompat.getColor(getContext(), android.R.color.darker_gray));
       linePaint.setStrokeWidth(8.f);
-
-      trianglePaint.setColor(ContextCompat.getColor(getContext(), android.R.color.darker_gray));
-      trianglePaint.setStyle(Paint.Style.FILL);
-
-      path = new Path();
-      path.setFillType(Path.FillType.EVEN_ODD);
    }
 
    @Override
    public void onDraw(Canvas canvas) {
       super.onDraw(canvas);
-      setBackground(null);
-      int width = getWidth();
-      int height = getHeight();
-      canvas.drawLine(0, height, width, height, linePaint);
-      path.moveTo(width, height);
-      path.lineTo(width, height - 20);
-      path.lineTo(width - 20, height);
-      path.close();
-      canvas.drawPath(path, trianglePaint);
+      rect.top = 0;
+      rect.left = 0;
+      rect.bottom = getHeight();
+      rect.right = getWidth();
+      canvas.drawRoundRect(rect, radius, radius, linePaint);
    }
 
    @Override
    public boolean onTouchEvent(MotionEvent event) {
       if (event.getAction() == MotionEvent.ACTION_DOWN) {
-         linePaint.setColor(ContextCompat.getColor(getContext(), R.color.accent));
-         trianglePaint.setColor(ContextCompat.getColor(getContext(), R.color.accent));
+         linePaint.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
          invalidate();
       } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
          linePaint.setColor(ContextCompat.getColor(getContext(), android.R.color.darker_gray));
-         trianglePaint.setColor(ContextCompat.getColor(getContext(), android.R.color.darker_gray));
          invalidate();
       }
 

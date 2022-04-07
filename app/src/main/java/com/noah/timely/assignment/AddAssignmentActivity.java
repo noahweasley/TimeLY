@@ -78,6 +78,8 @@ public class AddAssignmentActivity extends AppCompatActivity {
       Toolbar toolbar = findViewById(R.id.toolbar);
       setSupportActionBar(toolbar);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
+      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
       // initialize the course code to the first entry to prevent a null value entry
       Spinner spin_courseCode = findViewById(R.id.chooseCourse);
       Button submitButton = findViewById(R.id.submitButton);
@@ -149,7 +151,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
    @Override
    public void onResume() {
       super.onResume();
-      getSupportActionBar().setTitle(isToEdit ? "Update Assignment" : "Register Assignment");
+      getSupportActionBar().setTitle(isToEdit ? R.string.update_assignment : R.string.reg_assignment);
    }
 
    private void setupDateForm() {

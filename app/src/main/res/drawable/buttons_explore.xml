@@ -3,19 +3,19 @@
 
    <item android:state_pressed="false">
       <shape>
-         <solid android:color="@color/accent" />
+         <solid android:color="@color/colorAccent" />
          <corners android:radius="2000dp" />
-         <padding android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" />
          <stroke android:color="@color/accent_stroke" />
+         <padding android:bottom="@dimen/small_button_padding_vertical" android:left="@dimen/small_button_padding_horizontal" android:right="@dimen/small_button_padding_horizontal" android:top="@dimen/small_button_padding_vertical" />
       </shape>
    </item>
 
    <item android:state_pressed="true">
       <shape>
-         <solid android:color="@color/colorAccentDarker" />
+         <solid android:color="@color/colorAccentDark" />
          <corners android:radius="2000dp" />
-         <padding android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" />
          <stroke android:color="@color/accent_stroke" />
+         <padding android:bottom="@dimen/small_button_padding_vertical" android:left="@dimen/small_button_padding_horizontal" android:right="@dimen/small_button_padding_horizontal" android:top="@dimen/small_button_padding_vertical" />
       </shape>
    </item>
 

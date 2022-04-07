@@ -7,7 +7,7 @@
    <dimen name="layout_gap">16dp</dimen>
    <dimen name="space">16dp</dimen>
    <dimen name="header_size">30dp</dimen>
-   <dimen name="no_task_text_size">35sp</dimen>
+   <dimen name="no_task_text_size">32sp</dimen>
    <dimen name="normal_elevation">8dp</dimen>
    <dimen name="indicator_width">10dp</dimen>
    <dimen name="timetable_space">8dp</dimen>
@@ -77,7 +77,7 @@
    <dimen name="todo_category_textsize">22sp</dimen>
    <dimen name="task_count_textsize">18sp</dimen>
    <dimen name="bottom_overlay_height">90dp</dimen>
-   <dimen name="small_button_padding">40dp</dimen>
+   <dimen name="small_button_padding_horizontal">40dp</dimen>
    <dimen name="small_button_corner_radius">10dp</dimen>
    <dimen name="layout_gap_secondary">42dp</dimen>
    <dimen name="timeframe_text_size">20sp</dimen>
@@ -91,4 +91,9 @@
    <dimen name="small_dialog_height">270dp</dimen>
    <dimen name="loader_text_size">18sp</dimen>
    <dimen name="import_content_text_text_size">18sp</dimen>
+   <dimen name="small_button_padding_vertical">24dp</dimen>
+   <dimen name="no_task_info_text_size">22sp</dimen>
+   <dimen name="dialog_heading_text_size">22sp</dimen>
+   <dimen name="dialog_sub_heading_text_size">18sp</dimen>
+   <dimen name="long_dialog_height">440dp</dimen>
 </resources>

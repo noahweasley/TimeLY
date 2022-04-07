@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent">
+
+   <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/result_list"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:clipToPadding="false"
+      android:layoutAnimation="@anim/list_layout_anim_gravity_top"
+      android:paddingHorizontal="@dimen/data_list_padding"
+      android:paddingTop="@dimen/data_list_padding"
+      android:paddingBottom="80dp"
+      external:layout_behavior="@string/appbar_scrolling_view_behavior"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      tools:visibility="gone"/>
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/loader_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      tools:visibility="gone">
+
+      <com.noah.timely.custom.MaterialProgressbar
+         android:id="@+id/indeterminateProgress"
+         style="@style/Widget.MaterialProgressBar.ProgressBar"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:indeterminate="true"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_bias="0.45"
+         external:mpb_progressStyle="circular" />
+
+      <TextView
+         android:id="@+id/loader_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="@dimen/layout_gap"
+         android:text="@string/prepare_load_text"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/loader_text_size"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@+id/indeterminateProgress" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/no_courses_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      tools:visibility="visible">
+
+      <TextView
+         android:id="@+id/textView11"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:fontFamily="sans-serif-condensed"
+         android:gravity="center"
+         android:letterSpacing="0.04"
+         android:text="@string/registered_courses_not_found"
+         android:textColor="@color/colorPrimaryDark"
+         android:textSize="@dimen/no_task_text_size"
+         android:textStyle="bold"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintHorizontal_bias="0.49"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@+id/img_no_event"
+         external:layout_constraintVertical_bias="0.18" />
+
+      <ImageView
+         android:id="@+id/img_no_event"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:contentDescription="@string/no_task"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintHorizontal_bias="0.398"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_bias="0.215"
+         external:srcCompat="@mipmap/result" />
+
+      <TextView
+         android:id="@+id/textView10"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_margin="24dp"
+         android:fontFamily="sans-serif-medium"
+         android:gravity="center"
+         android:letterSpacing="0.04"
+         android:text="G.P.A calculator uses registered courses to simplify process"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/no_task_info_text_size"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@+id/textView11"
+         external:layout_constraintVertical_bias="0.089999974" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

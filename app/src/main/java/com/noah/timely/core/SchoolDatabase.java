@@ -98,6 +98,8 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private static final String COLUMN_TODO_DATE = "Completion_date";
    private static final String COLUMN_TODO_TIME = "Completion_time";
    private static final String COLUMN_SEMESTER = "Semester";
+   private static final int MAX_EXAM_WEEK_COUNT = 28; // equivalent to 4 months
+   private static final int MIN_EXAM_WEEK_COUNT = 1; // equivalent to 4 months
 
    private static boolean mDeleting;
 
@@ -193,6 +195,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
       db.execSQL(createAlarmDB_stmt);
    }
+
    // CREATE ASSIGNMENT DATA TABLE
    private void createAssignmentTable(SQLiteDatabase db) {
       String createAssignmentDB_stmt
@@ -1750,17 +1753,23 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    public void dropRedundantExamTables() {
       ThreadUtils.runBackgroundTask(() -> {
          SQLiteDatabase db = getWritableDatabase();
-         // First get the user preference for the number of weeks, which corresponds to the
-         // number of tables in database.
+         // First get the user preference for the number of weeks, which corresponds to the number of tables in database.
          int wStart = 8;
-         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
          String countValue = null;
          try {
-            countValue = prefs.getString("exam weeks", "8");
+            countValue = PreferenceUtils.getStringValue(getContext(), "exam weeks", "8");
             if (countValue != null) wStart = Integer.parseInt(countValue);
+            if (wStart > MAX_EXAM_WEEK_COUNT) {
+               wStart = MAX_EXAM_WEEK_COUNT;
+               Log.w(TAG, "Ignoring user selected week count of: " + countValue + ", using" + wStart + " weeks instead ");
+            } else if (wStart < MIN_EXAM_WEEK_COUNT) {
+               wStart = MIN_EXAM_WEEK_COUNT;
+               Log.w(TAG, "Ignoring user selected week count of: " + countValue + ", using" + wStart + " weeks instead ");
+            }
          } catch (NumberFormatException exc) {
-            Log.w(TAG, "Ignoring user selected Week count of: " + countValue + ", using 8 weeks instead ");
+            Log.w(TAG, "Ignoring user selected week count of: " + countValue + ", using 8 weeks instead ");
          }
+
          // now perform the main operation of this action
          int wEnd = wStart;
          wEnd = PreferenceUtils.getIntegerValue(getContext(), COLUMN_EXAM_WEEK_COUNT, 8);
@@ -1769,9 +1778,11 @@ public class SchoolDatabase extends SQLiteOpenHelper {
             for (int i = wStart + 1; i <= wEnd; i++) {
                db.execSQL("DROP TABLE " + "WEEK_" + i);
             }
+
             // Update week count to be retrieved later when dropping redundant tables
             PreferenceUtils.setIntegerValue(getContext(), COLUMN_EXAM_WEEK_COUNT, wStart);
          }
+
          db.close();
       });
    }
@@ -2370,6 +2381,27 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       boolean isAbsent = searchCursor.getCount() == 0;
       searchCursor.close();
       return isAbsent;
+   }
+
+   /**
+    * @return true if there is no registered courses in first semester table
+    */
+   public boolean isFirstSemesterIsAbsent() {
+      return getCoursesCount(SchoolDatabase.FIRST_SEMESTER) == 0;
+   }
+
+   /**
+    * @return true if there is no registered courses in second semester table
+    */
+   public boolean isSecondSemesterIsAbsent() {
+      return getCoursesCount(SchoolDatabase.SECOND_SEMESTER) == 0;
+   }
+
+   /**
+    * @return true if there are no registered courses in database
+    */
+   public boolean isRegisteredCoursesAreAbsent() {
+      return isFirstSemesterIsAbsent() && isSecondSemesterIsAbsent();
    }
 
 }

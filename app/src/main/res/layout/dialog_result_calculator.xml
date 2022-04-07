@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="@dimen/normal_dialog_width"
+   android:layout_height="@dimen/long_dialog_height"
+   android:background="@drawable/bg_day_and_night"
+   android:padding="@dimen/layout_gap">
+
+   <ImageButton
+      android:id="@+id/close"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@null"
+      android:contentDescription="@string/close"
+      android:minWidth="32dp"
+      android:minHeight="32dp"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:srcCompat="@drawable/ic_baseline_clear_18" />
+
+   <ImageView
+      android:id="@+id/imageView3"
+      android:layout_width="wrap_content"
+      android:layout_height="100dp"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:layout_constraintVertical_bias="0.081"
+      tools:srcCompat="@mipmap/result" />
+
+   <TextView
+      android:id="@+id/textView2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:gravity="center"
+      android:text="@string/course_registration_required"
+      android:textColor="@android:color/black"
+      android:textSize="@dimen/dialog_heading_text_size"
+      android:textStyle="bold"
+      external:layout_constraintBottom_toTopOf="@+id/proceed"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/imageView3"
+      external:layout_constraintVertical_bias="0.234" />
+
+   <TextView
+      android:id="@+id/textView9"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/space"
+      android:gravity="center"
+      android:text="@string/gpa_info"
+      android:textSize="@dimen/dialog_sub_heading_text_size"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+   <Button
+      android:id="@+id/proceed"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="16dp"
+      android:background="@drawable/bg_rounded_edges_positive"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/ok_let_s_do_it"
+      android:textColor="@color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toTopOf="@+id/remove"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
+
+   <Button
+      android:id="@+id/remove"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="16dp"
+      android:background="@drawable/bg_rounded_edges_neutral"
+      android:minHeight="@dimen/button_min_height"
+      android:text="@string/no_thanks"
+      android:textColor="@color/black"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

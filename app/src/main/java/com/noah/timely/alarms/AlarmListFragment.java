@@ -49,7 +49,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -179,7 +178,6 @@ public class AlarmListFragment extends Fragment {
       }
 
       /**
-       * z
        * Called when the user is done setting a new time and the dialog has
        * closed.
        *

@@ -10,6 +10,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,8 @@ import com.noah.timely.about.TimelyUpdateInfoDialog;
 import com.noah.timely.alarms.AlarmHolderFragment;
 import com.noah.timely.alarms.TimeChangeDetector;
 import com.noah.timely.assignment.AssignmentFragment;
-import com.noah.timely.calculator.ResultCalculator;
+import com.noah.timely.auth.ui.login.LoginActivity;
+import com.noah.timely.calculator.ResultCalculatorContainerFragment;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.courses.CoursesFragment;
 import com.noah.timely.exam.ExamFragment;
@@ -80,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.EASTER_EGG_KEY, false))
          navView.inflateMenu(R.menu.ee_nav_menu);
       else navView.inflateMenu(R.menu.nav_menu);
+
+      // navigate to user sign up | login screen
+      View vg_authGroup = navView.getHeaderView(R.id.auth_group);
+      vg_authGroup.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
 
       navView.setNavigationItemSelectedListener(this);
       // Set the first viewed fragment on app start
@@ -241,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
       } else if (menuItemId == R.id.calculator) {
 
-         loadFragment(ResultCalculator.newInstance());
+         loadFragment(ResultCalculatorContainerFragment.newInstance());
 
       } else if (menuItemId == R.id.alarms) {
 
@@ -296,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
          float[] deviceRes = DeviceInfoUtil.getDeviceResolutionDP(this);
          String devSpecs = "\n\nDevice specs " + String.valueOf(mobilePhoneEmojiChars) +
-                 "\n"
+                 "\n\n"
                  + "Api Level: " + Build.VERSION.SDK_INT
                  + "\n"
                  + "Device Screen Density: " + DeviceInfoUtil.getScreenDensity(this)
@@ -351,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       startActivity(new Intent(this, SettingsActivity.class));
    }
 
-   private void loadFragment(Fragment fragment) {
+   public void loadFragment(Fragment fragment) {
       FragmentManager manager = getSupportFragmentManager();
       FragmentTransaction transaction = manager.beginTransaction();
 

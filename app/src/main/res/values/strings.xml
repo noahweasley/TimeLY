@@ -12,8 +12,8 @@
    <string name="timetable">Timetable</string>
    <string name="classes">Scheduled Classes</string>
    <string name="about">About</string>
-   <string name="open">Open drawer</string>
-   <string name="close">Close drawer</string>
+   <string name="open">show event list</string>
+   <string name="close">hide event list</string>
    <string name="choose_course">COURSE CODE</string>
    <string name="lecturer">Lecturer</string>
    <string name="title">Title</string>
@@ -34,7 +34,7 @@
    <string name="default_time_2">08:00 – 09:00</string>
    <string name="default_time_3">08:00 AM – 09:00 PM</string>
    <string name="default_time_5">May 6, 08:00 AM – Oct 7, 09:00 PM</string>
-   <string name="default_course_name">Android first generation  programming II</string>
+   <string name="default_course_name">Android first generation programming II</string>
    <string name="lecturer_hint">Lecturer Name</string>
    <string name="start_time_hint">Start Time</string>
    <string name="start_time_hint_optional">Start Time (optional)</string>
@@ -180,7 +180,7 @@
    <string name="default_category">Work</string>
    <string name="deny">Deny</string>
    <string name="optional_info">More info on task (Optional)</string>
-   <string name="update_task">UPDATE TASK</string>
+   <string name="update_task_all_caps">UPDATE TASK</string>
    <string name="lorem_short">Clear stars, to the galaxy.</string>
    <string name="lorem_long">Animaliss sunt buxums de fatalis decor.Cum vita congregabo, omnes advenaes talem pius,flavumollaes.Ubi est neuter deus? lorem</string>
    <string name="lorem_longer">Broccoli combines greatly with yellow chicken breasts.Rhubarb tastes best with cream andlots of vegemite.Everyone loves the consistency of lentils smoothie jumbled with hot chipotle chile powder.</string>
@@ -219,4 +219,28 @@
    <string name="file_select_title">Select file using</string>
    <string name="import_selected">Import Selected</string>
    <string name="g_p_a_calculator">G.P.A Calculator</string>
+   <string name="course_registration_required">Course Registration Required</string>
+   <string name="no_thanks">Don\'t show again</string>
+   <string name="ok_let_s_do_it">OK, Let\'s do it</string>
+   <string name="gpa_info">G.P.A calculator depends on course registration to function properly</string>
+   <string name="registered_courses_not_found">Registered courses not found</string>
+   <string name="prepare_load_text">Preparing, please wait …</string>
+   <string name="calculate_avgerage">Calculate Avgerage</string>
+   <string name="pull_down">Pull down</string>
+   <string name="register_exams">Register Exams</string>
+   <string name="register_courses">Register Courses</string>
+   <string name="update_assignment">Update Assignment</string>
+   <string name="reg_assignment">Register Assignment</string>
+   <string name="add_scheduled_class">Add Scheduled Class</string>
+   <string name="update_task_capitalize">Update Task</string>
+   <string name="new_task">New Task</string>
+   <string name="title_activity_login">LoginActivity</string>
+   <string name="prompt_email">Email</string>
+   <string name="prompt_password">Password</string>
+   <string name="action_sign_in">Sign in or register</string>
+   <string name="action_sign_in_short">Sign in</string>
+   <string name="welcome">"Welcome !"</string>
+   <string name="invalid_username">Not a valid username</string>
+   <string name="invalid_password">Password must be >5 characters</string>
+   <string name="login_failed">"Login failed"</string>
 </resources>

@@ -97,8 +97,10 @@ public class AddTodoActivity extends AppCompatActivity {
       setSupportActionBar(findViewById(R.id.toolbar));
 
       isEditable = getIntent().getBooleanExtra(EXTRA_IS_EDITABLE, false);
-      getSupportActionBar().setTitle(isEditable ? "Update Task" : "New Task");
+      getSupportActionBar().setTitle(isEditable ? R.string.update_task_capitalize : R.string.new_task);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
+      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
 
       Button btn_addTask = findViewById(R.id.add_task);
       edt_taskTitle = findViewById(R.id.task_editor);
@@ -123,7 +125,7 @@ public class AddTodoActivity extends AppCompatActivity {
                  TodoModel.SPINNER_CATEGORIES[0] : defCategory;
       // editing current _todo
       btn_addTask.setOnClickListener(v -> addOrUppdateTask(isEditable));
-      btn_addTask.setText(isEditable ? R.string.update_task : R.string.add_task);
+      btn_addTask.setText(isEditable ? R.string.update_task_all_caps : R.string.add_task);
       if (isEditable) {
          Intent intent = getIntent();
          edt_taskTitle.setText(intent.getStringExtra(EXTRA_TODO_TITLE));

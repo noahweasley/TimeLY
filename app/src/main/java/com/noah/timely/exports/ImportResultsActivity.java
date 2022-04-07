@@ -3,13 +3,12 @@ package com.noah.timely.exports;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -35,7 +34,6 @@ import com.noah.timely.error.ErrorDialog;
 import com.noah.timely.exam.EUpdateMessage;
 import com.noah.timely.exam.ExamModel;
 import com.noah.timely.io.IOUtils;
-import com.noah.timely.io.Zipper;
 import com.noah.timely.main.MainActivity;
 import com.noah.timely.scheduled.SUpdateMessage;
 import com.noah.timely.settings.SettingsActivity;
@@ -48,7 +46,6 @@ import com.noah.timely.util.TimelyUpdateUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,13 +57,19 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
    private boolean intentReceived;
    private List<Map.Entry<String, List<? extends DataModel>>> entryList = new ArrayList<>();
    private ViewGroup importView, initView, dataLayerView;
+   private ProgressBar pickProgressBar;
+   private Button btn_filePick;
    private final ActivityResultLauncher<Intent> resourceChooserLauncher =
            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+              // dismiss the loader views
+              pickProgressBar.setVisibility(View.GONE);
+              btn_filePick.setText(getString(R.string.import_file));
+              // then ...
               if (result.getData() != null) {
                  Intent uploadfileIntent = result.getData();
                  File file = null;
                  try {
-                    file = resolveDataToTempFile(uploadfileIntent.getData());
+                    file = IOUtils.resolveDataToTempFile(this, uploadfileIntent.getData());
                  } catch (IOException e) {
                     Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
                     return;
@@ -116,15 +119,19 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
       rv_importList.setLayoutManager(new LinearLayoutManager(this));
       rv_importList.setAdapter((listRowAdapter = new ImportListRowAdapter(new MultiChoiceMode())));
 
-      Button btn_filePick = findViewById(R.id.file_pick), btn_importSelected = findViewById(R.id.import_selected);
+      btn_filePick = findViewById(R.id.file_pick);
+      Button btn_importSelected = findViewById(R.id.import_selected);
       importView = findViewById(R.id.import_view);
       initView = findViewById(R.id.init_view);
       dataLayerView = findViewById(R.id.data_layer);
+      pickProgressBar = findViewById(R.id.indeterminateProgress);
 
       Toolbar toolbar = findViewById(R.id.toolbar);
       setSupportActionBar(toolbar);
       getSupportActionBar().setTitle(R.string.import_title);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
+      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
 
       btn_importSelected.setOnClickListener(this);
       btn_filePick.setOnClickListener(this);
@@ -137,7 +144,7 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
          // isn't part of the activity stack
          intentReceived = true;
          try {
-            file = resolveUriToTempFile(fileUri);
+            file = IOUtils.resolveUriToTempFile(this, fileUri);
          } catch (IOException e) {
             Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
             dataLayerView.setVisibility(View.GONE);
@@ -209,6 +216,11 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
    @Override
    public void onClick(View view) {
       if (view.getId() == R.id.file_pick) {
+         // add a little bit of action-received status to views
+         Toast.makeText(this, "Showing file picker", Toast.LENGTH_LONG).show();
+         if (view instanceof Button) ((Button) view).setText(null);
+         pickProgressBar.setVisibility(View.VISIBLE);
+         // then ...
          Intent i = new Intent(Intent.ACTION_GET_CONTENT);
          i.setType("*/*");
          resourceChooserLauncher.launch(Intent.createChooser(i, getString(R.string.file_select_title)));
@@ -369,55 +381,6 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
       }
    }
 
-   /*
-    *  The resulting URI received from the Android device's file chooser would never be a correct URI to be used
-    *  directly to get the file path because in Android, not all URIs points to a valid file. So a temp file
-    *  was used to copy the data in the stream gotten from the URI, and then the temp file's path was used instead.
-    */
-   private File resolveDataToTempFile(Uri uri) throws IOException {
-      // return immediately if the file extension is not supported
-      if (!IOUtils.getFileExtension(new File(uri.getPath())).equals(Zipper.FILE_EXTENSION)) return null;
-
-      String parentFolder = getExternalFilesDir(null) + File.separator + "temp" + File.separator;
-      String tempFilePath = String.format(Locale.US, "%stemp%d.tmp", parentFolder, SystemClock.elapsedRealtime());
-
-      File tempFile = new File(tempFilePath);
-      File tempFileDir = tempFile.getParentFile();
-
-      boolean isCreated = true;
-      if (!tempFileDir.exists()) {
-         isCreated = tempFileDir.mkdirs();
-      }
-
-      if (!isCreated) return null;
-      else IOUtils.copy(getContentResolver().openInputStream(uri), new FileOutputStream(tempFile));
-
-      return tempFile;
-   }
-
-   /*
-    *  The resulting URI received from the Android device's file chooser would never be a correct URI to be used
-    *  directly to get the file path because in Android, not all URIs points to a valid file. So a temp file
-    *  was used to copy the data in the stream gotten from the URI, and then the temp file's path was used instead.
-    */
-   private File resolveUriToTempFile(Uri uri) throws IOException {
-      String parentFolder = getExternalFilesDir(null) + File.separator + "temp" + File.separator;
-      String tempFilePath = String.format(Locale.US, "%stemp%d.tmp", parentFolder, SystemClock.elapsedRealtime());
-
-      File tempFile = new File(tempFilePath);
-      File tempFileDir = tempFile.getParentFile();
-
-      boolean isCreated = true;
-      if (!tempFileDir.exists()) {
-         isCreated = tempFileDir.mkdirs();
-      }
-
-      if (!isCreated) return null;
-      else IOUtils.copy(getContentResolver().openInputStream(uri), new FileOutputStream(tempFile));
-
-      return tempFile;
-   }
-
    private void performFileImport(File file) {
       dataLayerView.setVisibility(View.GONE);
       initView.setVisibility(View.VISIBLE);
@@ -426,7 +389,7 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
          if (!CollectionUtils.isEmpty(results)) {
             entryList = results;
             // delete temp files used in file import operation, to free up memory in disk
-            boolean isDeleted = IOUtils.deleteTempFiles(this);
+            IOUtils.deleteTempFiles(this);
             listRowAdapter.notifyDataSetChanged();
             dataLayerView.setVisibility(View.VISIBLE);
             initView.setVisibility(View.GONE);

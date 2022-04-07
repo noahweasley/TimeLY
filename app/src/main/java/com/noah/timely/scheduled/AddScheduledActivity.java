@@ -71,8 +71,10 @@ public class AddScheduledActivity extends AppCompatActivity {
       setContentView(R.layout.activity_add_scheduled);
 
       setSupportActionBar(findViewById(R.id.toolbar));
-      getSupportActionBar().setTitle("Add Scheduled Class");
+      getSupportActionBar().setTitle(R.string.add_scheduled_class);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
+      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
 
       database = new SchoolDatabase(this);
       cbx_clear = findViewById(R.id.clear);

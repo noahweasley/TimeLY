@@ -16,6 +16,7 @@ public class PreferenceUtils {
    public static final String GRANT_ACCESS = "Grant alarm restriction access";
    public static final String UPDATE_ON_STARTUP = "update_startup";
    public static final String EASTER_EGG_KEY = "View new features";
+   public static final String GPA_INFO_SHOWN = "show gpa calculator";
 
    /**
     * Retrieves TimeLY's first launch preference
@@ -26,7 +27,6 @@ public class PreferenceUtils {
    public static boolean getFirstLaunchKey(@NonNull Context context) {
       // default preference file
       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-
       return sharedPreferences.getBoolean(FIRST_LAUNCH_KEY, true);
    }
 

@@ -3,18 +3,18 @@
 
    <item android:state_pressed="false">
       <shape>
-         <solid android:color="@color/accent" />
+         <solid android:color="@color/colorAccent" />
          <corners android:radius="2000dp" />
-         <padding android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" />
+         <padding android:left="@dimen/small_button_padding_horizontal" android:right="@dimen/small_button_padding_horizontal" />
          <stroke android:color="@color/accent_stroke" />
       </shape>
    </item>
 
    <item android:state_pressed="true">
       <shape>
-         <solid android:color="@color/colorAccentDarker" />
+         <solid android:color="@color/colorAccentDark" />
          <corners android:radius="2000dp" />
-         <padding android:left="@dimen/small_button_padding" android:right="@dimen/small_button_padding" />
+         <padding android:left="@dimen/small_button_padding_horizontal" android:right="@dimen/small_button_padding_horizontal" />
          <stroke android:color="@color/accent_stroke" />
       </shape>
    </item>

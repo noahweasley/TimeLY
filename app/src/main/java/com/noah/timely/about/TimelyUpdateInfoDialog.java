@@ -33,12 +33,10 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 public class TimelyUpdateInfoDialog extends DialogFragment implements View.OnClickListener {
-   @SuppressWarnings("FieldCanBeLocal")
-   public static final String TAG = "com.noah.timely.about.UpdateInfoDialog";
 
    public void show(Context context) {
       FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
-      show(manager, TAG);
+      show(manager, TimelyUpdateInfoDialog.class.getName());
    }
 
    @Override

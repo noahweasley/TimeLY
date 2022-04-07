@@ -55,8 +55,10 @@ public class AddExamActivity extends AppCompatActivity {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_add_exam);
       setSupportActionBar(findViewById(R.id.toolbar));
-      getSupportActionBar().setTitle("Register Exams");
+      getSupportActionBar().setTitle(R.string.register_exams);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
+      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
 
       database = new SchoolDatabase(this);
 

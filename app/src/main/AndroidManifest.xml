@@ -155,6 +155,11 @@
          android:windowSoftInputMode="adjustResize" />
 
       <activity
+         android:name=".auth.ui.login.LoginActivity"
+         android:theme="@style/AppTheme.SlideVertical_recipient"
+         android:windowSoftInputMode="adjustResize" />
+
+      <activity
          android:name=".todo.AddTodoActivity"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />

@@ -69,7 +69,7 @@ public class AddTimetableActivity extends AppCompatActivity {
       setContentView(R.layout.activity_add_timetable);
 
       setSupportActionBar(findViewById(R.id.toolbar));
-      getSupportActionBar().setTitle("Add Timetable");
+      getSupportActionBar().setTitle(R.string.add_timetable);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       database = new SchoolDatabase(this);

@@ -45,8 +45,10 @@ public class AddCourseActivity extends AppCompatActivity {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_add_course);
       setSupportActionBar(findViewById(R.id.toolbar));
-      getSupportActionBar().setTitle("Register Courses");
+      getSupportActionBar().setTitle(R.string.register_courses);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
+      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
 
       database = new SchoolDatabase(this);
 
@@ -75,7 +77,7 @@ public class AddCourseActivity extends AppCompatActivity {
       });
 
       Spinner spin_credits = findViewById(R.id.credits);
-      ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, CREDITS);
+      ArrayAdapter<Integer> creditAdapter = new ArrayAdapter<>(this, R.layout.simple_dropdown_item_1line, CREDITS);
       creditAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_credits.setAdapter(creditAdapter);
 
