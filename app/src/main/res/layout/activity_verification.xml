@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:app="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:padding="16dp">
+
+   <TextView
+      android:id="@+id/title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:text="@string/verification"
+      android:textColor="@color/colorPrimary"
+      android:textSize="32sp"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+   <TextView
+      android:id="@+id/sms"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="16dp"
+      android:layout_marginTop="16dp"
+      android:text="@string/code_entry_message"
+      android:textColor="@color/light_grey"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/title" />
+
+   <TextView
+      android:id="@+id/phone_number"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="16dp"
+      android:text="@string/default_phone_number"
+      android:textColor="@android:color/black"
+      android:textStyle="bold"
+      app:layout_constraintBaseline_toBaselineOf="@id/sms"
+      app:layout_constraintStart_toEndOf="@+id/sms"
+      app:layout_constraintTop_toBottomOf="@+id/title" />
+
+   <TextView
+      android:id="@+id/edit"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="@string/edit_phone_number"
+      android:textColor="@color/colorPrimary"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toTopOf="@+id/verification_pin"
+      app:layout_constraintStart_toStartOf="@+id/sms"
+      app:layout_constraintTop_toBottomOf="@+id/sms" />
+
+   <com.chaos.view.PinView
+      android:id="@+id/verification_pin"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:focusable="true"
+      android:focusableInTouchMode="true"
+      android:inputType="number"
+      android:textColor="@android:color/black"
+      android:textSize="18sp"
+      app:cursorWidth="2dp"
+      app:hideLineWhenFilled="true"
+      app:itemCount="4"
+      app:itemHeight="56dp"
+      app:itemRadius="4dp"
+      app:itemSpacing="16dp"
+      app:itemWidth="58dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/edit"
+      app:lineColor="@color/colorPrimary"
+      app:lineWidth="1dp"
+      app:viewType="rectangle">
+
+      <requestFocus />
+
+   </com.chaos.view.PinView>
+
+   <Button
+      android:id="@+id/sign_up"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="16dp"
+      android:background="@drawable/buttons_explore"
+      android:text="@string/submit"
+      android:textColor="@android:color/white"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/verification_pin"
+      app:layout_constraintVertical_bias="0.07999998" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

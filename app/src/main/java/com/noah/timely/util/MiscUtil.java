@@ -58,6 +58,12 @@ public class MiscUtil {
       // If alert tone are disabled, don't play any alert tone
       if (!prefs.getBoolean("enable alerts", true)) return;
       if (alertPlayer == null) alertPlayer = new MediaPlayer();
+      else if (alertPlayer != null) {
+         try {
+            // push internal audio player to it's idle state
+            alertPlayer.reset();
+         } catch (Exception ignored) { }
+      }
 
       try {
 

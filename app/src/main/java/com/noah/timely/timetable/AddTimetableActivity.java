@@ -71,6 +71,8 @@ public class AddTimetableActivity extends AppCompatActivity {
       setSupportActionBar(findViewById(R.id.toolbar));
       getSupportActionBar().setTitle(R.string.add_timetable);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
+      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
 
       database = new SchoolDatabase(this);
 

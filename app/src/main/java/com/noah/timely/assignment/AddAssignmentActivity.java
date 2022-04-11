@@ -66,6 +66,8 @@ public class AddAssignmentActivity extends AppCompatActivity {
    private TextInputLayout dateBox, lecturerBox, titleBox, descriptionBox;
    private SchoolDatabase database;
    private TextView fileCount;
+   @SuppressWarnings("FieldCanBeLocal")
+   private String itemCount = "0";
 
    @Override
    public void onCreate(Bundle savedState) {
@@ -145,7 +147,11 @@ public class AddAssignmentActivity extends AppCompatActivity {
    @Override
    protected void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
-      if (fileCount != null) fileCount.setText(String.valueOf(intent.getIntExtra(ImageGallery.ARG_FILES_COUNT, -1)));
+      if (fileCount != null) {
+         itemCount = String.valueOf(intent.getIntExtra(ImageGallery.ARG_FILES_COUNT, 0));
+         fileCount.setText(itemCount);
+         TooltipCompat.setTooltipText(fileCount, "Attached files: " + itemCount);
+      }
    }
 
    @Override
@@ -233,7 +239,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       fileCount = layout.findViewById(R.id.counter);
       fileCount.setText(String.valueOf(0));
-      TooltipCompat.setTooltipText(fileCount, "Image Count");
+      TooltipCompat.setTooltipText(fileCount, "Attached files: " + itemCount);
       return true;
    }
 

@@ -10,11 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noah.timely.R;
+import com.noah.timely.core.DataModel;
 import com.noah.timely.util.adapters.SimpleOnItemSelectedListener;
+
+import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ResultListRowHolder extends RecyclerView.ViewHolder {
    private int position;
+   private List<DataModel> courseModelList;
    private final Spinner spin_grades;
    private static final String[] GRADES = { "A", "B", "C", "E", "F" };
    private String selectedGrade = GRADES[0];
@@ -40,8 +44,9 @@ public class ResultListRowHolder extends RecyclerView.ViewHolder {
 
    }
 
-   public ResultListRowHolder with(int position) {
+   public ResultListRowHolder with(int position, List<DataModel> courseModelList) {
       this.position = position;
+      this.courseModelList = courseModelList;
       return this;
    }
 

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent">
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/constraintLayout"
+      android:layout_width="0dp"
+      android:layout_height="?android:attr/actionBarSize"
+      android:paddingStart="16dp"
+      android:paddingLeft="16dp"
+      android:paddingEnd="16dp"
+      android:paddingRight="16dp"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      tools:ignore="RtlSymmetry">
+
+      <ImageButton
+         android:id="@+id/exit"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:background="@drawable/round_button"
+         android:contentDescription="@string/back"
+         android:src="@drawable/ic_baseline_chevron_left_24"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+   <TextView
+      android:id="@+id/title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="@string/complete_profile"
+      android:textColor="@color/colorPrimary"
+      android:textSize="32sp"
+      android:textStyle="bold"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+   <TextView
+      android:id="@+id/subtitle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="@string/complete_your_new_profile"
+      android:textColor="@color/light_grey"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/title" />
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/profile_image_parent"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/subtitle">
+
+      <com.google.android.material.imageview.ShapeableImageView
+         android:id="@+id/profile_image"
+         android:layout_width="100dp"
+         android:layout_height="100dp"
+         android:layout_marginTop="32dp"
+         android:padding="2dp"
+         android:src="@drawable/ic_image_4"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:shapeAppearanceOverlay="@style/Circular_Image"
+         external:strokeColor="@color/light_grey"
+         external:strokeWidth="2dp">
+
+      </com.google.android.material.imageview.ShapeableImageView>
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/profile_image_picker"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      external:layout_constraintBottom_toBottomOf="@id/profile_image_parent"
+      external:layout_constraintEnd_toEndOf="@+id/profile_image_parent"
+      external:layout_constraintStart_toStartOf="@+id/profile_image_parent"
+      external:layout_constraintTop_toTopOf="@id/profile_image_parent"
+      external:layout_constraintHorizontal_bias="1"
+      external:layout_constraintVertical_bias="1">
+
+      <View
+         android:id="@+id/view2"
+         android:layout_width="48dp"
+         android:layout_height="48dp"
+         android:background="@drawable/inner_padding"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent" />
+
+      <ImageView
+         android:id="@+id/upload"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:background="@null"
+         android:contentDescription="@string/upload"
+         android:src="@drawable/ic_baseline_photo_camera_24"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+   <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/date_picker_actions"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      external:errorEnabled="true"
+      external:layout_constraintEnd_toEndOf="@id/right_guide"
+      external:layout_constraintStart_toStartOf="@id/left_guide"
+      external:layout_constraintTop_toBottomOf="@id/profile_image_parent">
+
+      <com.google.android.material.textfield.TextInputEditText
+         android:id="@+id/date_picker"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_marginTop="24dp"
+         android:autofillHints=""
+         android:drawableEnd="@drawable/ic_baseline_date_range_24"
+         android:drawablePadding="50dp"
+         android:hint="@string/date_of_birth"
+         android:inputType="date"
+         android:maxLines="1"
+         android:paddingStart="16dp"
+         android:paddingLeft="16dp"
+         android:paddingEnd="16dp"
+         android:paddingRight="16dp"
+         android:textColorHint="@color/light_grey" />
+
+   </com.google.android.material.textfield.TextInputLayout>
+
+   <RadioGroup
+      android:id="@+id/gender"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:orientation="horizontal"
+      android:paddingHorizontal="16dp"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
+      external:layout_constraintTop_toBottomOf="@id/date_picker_actions">
+
+      <RadioButton
+         android:id="@+id/male"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:checked="true"
+         android:text="@string/male" />
+
+      <RadioButton
+         android:id="@+id/female"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:text="@string/female" />
+
+      <RadioButton
+         android:id="@+id/others"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:text="@string/others" />
+
+   </RadioGroup>
+
+   <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/list_item"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
+      external:layout_constraintTop_toBottomOf="@+id/gender">
+
+      <AutoCompleteTextView
+         android:id="@+id/list_countries"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
+         android:hint="@string/country"
+         android:maxLines="2"
+         android:paddingStart="16dp"
+         android:paddingLeft="16dp"
+         android:paddingEnd="16dp"
+         android:paddingRight="16dp"
+         external:layout_constraintEnd_toStartOf="@+id/right_guide"
+         external:layout_constraintStart_toStartOf="@+id/left_guide"
+         external:layout_constraintTop_toBottomOf="@+id/gender" />
+
+   </com.google.android.material.textfield.TextInputLayout>
+
+   <Button
+      android:id="@+id/sign_up"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="24dp"
+      android:layout_marginTop="24dp"
+      android:background="@drawable/buttons_explore"
+      android:text="@string/complete"
+      android:textColor="@android:color/white"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintHorizontal_bias="0.52"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
+      external:layout_constraintTop_toBottomOf="@id/list_item"
+      external:layout_constraintVertical_bias="0.162" />
+
+   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/left_guide"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      external:layout_constraintGuide_percent=".1"
+      tools:viewBindingIgnore="true" />
+
+   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/right_guide"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      external:layout_constraintGuide_percent=".9"
+      tools:viewBindingIgnore="true" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

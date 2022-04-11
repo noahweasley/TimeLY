@@ -89,7 +89,13 @@
       <activity
          android:name=".main.SplashScreen"
          android:exported="true"
-         android:theme="@style/FullscreenTheme">
+         android:theme="@style/FullscreenTheme"></activity>
+
+      <activity
+         android:name=".main.MainActivity"
+         android:exported="true"
+         android:launchMode="singleTask"
+         android:theme="@style/Theme.SplashScreenTheme">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -97,12 +103,8 @@
       </activity>
 
       <activity
-         android:name=".main.MainActivity"
-         android:exported="true"
-         android:launchMode="singleTask"
-         android:theme="@style/AppTheme.SlideVertical_caller" />
-
-      <activity android:name=".settings.SettingsActivity" />
+         android:name=".settings.SettingsActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade" />
 
       <activity android:name=".gallery.ImageGallery" />
 
@@ -124,11 +126,15 @@
 
       <activity
          android:name=".gallery.ImageSlideActivity"
-         android:theme="@style/ImageViewerTheme" />
+         android:theme="@style/SlidingActivityTheme" />
 
       <activity android:name=".gallery.StorageViewer" />
 
-      <activity android:name=".main.IntroPageActivity" />
+      <activity
+         android:name=".main.IntroPageActivity"
+         android:exported="true"
+         android:launchMode="singleTask"
+         android:theme="@style/AppTheme.FadeIn" />
 
       <activity
          android:name=".courses.AddCourseActivity"
@@ -157,7 +163,32 @@
       <activity
          android:name=".auth.ui.login.LoginActivity"
          android:theme="@style/AppTheme.SlideVertical_recipient"
-         android:windowSoftInputMode="adjustResize" />
+         android:windowSoftInputMode="adjustPan" />
+
+      <activity
+         android:name=".auth.ui.login.CompleteRegistrationActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustPan" />
+
+      <activity
+         android:name=".auth.ui.login.GoogleLoginCompletionActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustPan" />
+
+      <activity
+         android:name=".auth.ui.login.RecoveryActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustPan" />
+
+      <activity
+         android:name=".auth.ui.login.RegistrationActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustPan" />
+
+      <activity
+         android:name=".auth.ui.login.VerificationActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustPan" />
 
       <activity
          android:name=".todo.AddTodoActivity"
@@ -168,7 +199,7 @@
          android:name=".exports.ImportResultsActivity"
          android:exported="true"
          android:priority="1"
-         android:theme="@style/AppTheme.SlideVertical_recipient">
+         android:theme="@style/SlidingActivityTheme_No_Fade">
          <intent-filter>
             <action android:name="android.intent.action.VIEW" />
 

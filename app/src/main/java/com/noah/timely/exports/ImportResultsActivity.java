@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,7 +64,8 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
               // dismiss the loader views
               pickProgressBar.setVisibility(View.GONE);
-              btn_filePick.setText(getString(R.string.import_file));
+              btn_filePick.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+              btn_filePick.setText(R.string.import_file);
               // then ...
               if (result.getData() != null) {
                  Intent uploadfileIntent = result.getData();
@@ -130,8 +132,6 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
       setSupportActionBar(toolbar);
       getSupportActionBar().setTitle(R.string.import_title);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
-      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
 
       btn_importSelected.setOnClickListener(this);
       btn_filePick.setOnClickListener(this);
@@ -217,9 +217,11 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
    public void onClick(View view) {
       if (view.getId() == R.id.file_pick) {
          // add a little bit of action-received status to views
-         Toast.makeText(this, "Showing file picker", Toast.LENGTH_LONG).show();
-         if (view instanceof Button) ((Button) view).setText(null);
          pickProgressBar.setVisibility(View.VISIBLE);
+         Toast.makeText(this, "Showing file picker", Toast.LENGTH_LONG).show();
+         if (view instanceof Button) {
+            ((Button) view).setText(R.string.waiting);
+         }
          // then ...
          Intent i = new Intent(Intent.ACTION_GET_CONTENT);
          i.setType("*/*");

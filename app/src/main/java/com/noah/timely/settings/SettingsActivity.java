@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.Preference;
@@ -47,7 +48,6 @@ public class SettingsActivity extends AppCompatActivity {
    @Override
    public void onBackPressed() {
       super.onBackPressed();
-      overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
    }
 
    public static class SettingsFragment extends PreferenceFragmentCompat
@@ -192,9 +192,10 @@ public class SettingsActivity extends AppCompatActivity {
       }
 
       @Override
-      public boolean onPreferenceChange(Preference preference, Object value) {
+      public boolean onPreferenceChange(@NonNull Preference preference, Object value) {
          updatePreferenceSummary(preference, value.toString());
          return true;
       }
    }
+
 }

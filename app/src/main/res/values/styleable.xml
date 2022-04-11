@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <declare-styleable name="box-color" type="color"/>
+   <declare-styleable name="box_color" type="color"/>
 </resources>

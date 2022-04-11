@@ -19,4 +19,13 @@
       </shape>
    </item>
 
+   <item android:enabled="false">
+      <shape>
+         <solid android:color="@color/accent_disabled" />
+         <corners android:radius="2000dp" />
+         <stroke android:color="@color/accent_stroke" />
+         <padding android:bottom="@dimen/small_button_padding_vertical" android:left="@dimen/small_button_padding_horizontal" android:right="@dimen/small_button_padding_horizontal" android:top="@dimen/small_button_padding_vertical" />
+      </shape>
+   </item>
+
 </selector>

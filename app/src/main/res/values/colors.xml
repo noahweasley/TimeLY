@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <color name="colorPrimary">#1213B8</color>
-   <color name="colorPrimaryDark">#1213B8</color>
+   <color name="colorPrimary">#022C68</color>
+   <color name="colorPrimaryDark">#022C68</color>
    <color name="colorPrimary_2">#1213B8</color>
    <color name="colorPurpleDark">#502E8D</color>
    <color name="colorPrimaryDark_2">#1213B8</color>
    <color name="todo_alt_color">#EDF3FF</color>
-   <color name="colorAccent">#D80909</color>
-   <color name="colorAccentDark">#A30D0D</color>
+   <color name="colorAccent">#6C4000</color>
+   <color name="colorAccentDark">#553201</color>
    <color name="colorAccentRipple">#F0C3C3</color>
    <color name="colorhrlRipple">#F0C3C3</color>
    <color name="colorhbdRipple">#BFE0EC</color>
@@ -18,8 +18,8 @@
    <color name="pink">#F06292</color>
    <color name="soft_blue">#EEF5FF</color>
    <color name="tomato_red">#FF6347</color>
-   <color name="accent_click">#E62E2E</color>
-   <color name="accent_stroke">#420B1E</color>
+   <color name="accent_click">#442800</color>
+   <color name="accent_stroke">#442800</color>
    <color name="image_click_bg">#27000000</color>
    <color name="bg_multiSelect_images">#45000000</color>
    <color name="colorAccent_50_percent">#80EC407A</color>
@@ -28,7 +28,7 @@
    <color name="image_background_2">#4F2295FA</color>
    <color name="image_background_stroke">#4A2295FA</color>
    <color name="image_background_stroke_2">#B52295FA</color>
-   <color name="accent_disabled">#ED3434</color>
+   <color name="accent_disabled">#5D411A</color>
    <color name="purple_700">#FF3700B3</color>
    <color name="teal_200">#FF03DAC5</color>
    <color name="teal_700">#FF018786</color>
@@ -61,5 +61,6 @@
    <color name="tomato_red_10">#1AFF6347</color>
    <color name="window_background_color_light">#F0F4F6</color>
    <color name="white">#ECECEC</color>
+   <color name="castro">#4B001F</color>
    <!--  Spotify Dark Theme  -->
 </resources>

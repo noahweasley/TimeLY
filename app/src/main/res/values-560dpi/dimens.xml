@@ -96,4 +96,5 @@
    <dimen name="dialog_heading_text_size">22sp</dimen>
    <dimen name="dialog_sub_heading_text_size">18sp</dimen>
    <dimen name="long_dialog_height">440dp</dimen>
+   <dimen name="min_elevation">2dp</dimen>
 </resources>

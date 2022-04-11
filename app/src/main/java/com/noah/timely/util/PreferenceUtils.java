@@ -16,7 +16,8 @@ public class PreferenceUtils {
    public static final String GRANT_ACCESS = "Grant alarm restriction access";
    public static final String UPDATE_ON_STARTUP = "update_startup";
    public static final String EASTER_EGG_KEY = "View new features";
-   public static final String GPA_INFO_SHOWN = "show gpa calculator";
+   public static final String GPA_INFO_SHOWN_1 = "show gpa calculator 1";
+   public static final String GPA_INFO_SHOWN_2 = "show gpa calculator 2";
 
    /**
     * Retrieves TimeLY's first launch preference

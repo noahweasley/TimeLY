@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,8 +67,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-
+      setTheme(R.style.AppTheme_FadeIn);
       setContentView(R.layout.activity_main);
+      launchIntroActivity();
 
       if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.UPDATE_ON_STARTUP, true))
          TimelyUpdateUtils.checkForUpdates(this);
@@ -84,14 +86,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       else navView.inflateMenu(R.menu.nav_menu);
 
       // navigate to user sign up | login screen
-      View vg_authGroup = navView.getHeaderView(R.id.auth_group);
+      View vg_authGroup = navView.getHeaderView(0);
       vg_authGroup.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
 
       navView.setNavigationItemSelectedListener(this);
       // Set the first viewed fragment on app start
-      if (savedInstanceState == null) {
-         doUpdateFragment(getIntent()); // update the fragment attached to this activity
-      }
+      doUpdateFragment(getIntent()); // update the fragment attached to this activity
+
       tryActivateTimeChangeDetector(); // start OS time and date detection
 
       // ignore power management service to trigger alarms properly
@@ -117,6 +118,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .create()
                     .show();
          }
+      }
+   }
+
+   private void launchIntroActivity() {
+      boolean isFirstLaunch = PreferenceUtils.getFirstLaunchKey(getApplicationContext());
+      // start next screen based on the app's first time launch saved preference
+      if (isFirstLaunch) {
+         Intent launchIntent = new Intent(this, IntroPageActivity.class);
+         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         startActivity(launchIntent);
       }
    }
 
@@ -325,6 +336,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    // Get intent actions and update UI
    private void doUpdateFragment(Intent intent) {
       final String reqAction = intent.getAction();
+
+      Log.d(MainActivity.class.getSimpleName(), "Intent: " + intent + ", action: " + reqAction);
       if (reqAction != null) {
          switch (reqAction) {
             case Constants.ASSIGNMENT:
@@ -344,6 +357,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                break;
             case Constants.ALARM:
                loadFragment(AlarmHolderFragment.newInstance());
+               break;
+            default:
+               loadFragment(LandingPageFragment.newInstance());
                break;
          }
       } else {

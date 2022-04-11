@@ -21,6 +21,16 @@
       <item name="android:windowAnimationStyle">@style/WindowDefaultAnimations</item>
    </style>
 
+   <style name="Theme.SplashScreenTheme" parent="AppTheme">
+      <item name="android:windowAnimationStyle">@style/WindowSlideVerticalAnimations_caller</item>
+      <item name="android:windowBackground">@drawable/splash_background</item>
+      <item name="android:statusBarColor" tools:targetApi="lollipop">@color/window_background_color_light</item>
+   </style>
+
+   <style name="AppTheme.FadeIn" parent="AppTheme">
+      <item name="android:windowAnimationStyle">@style/WindowDefaultAnimations</item>
+   </style>
+
    <style name="AppTheme.SlideVertical_recipient" parent="AppTheme">
       <item name="android:windowAnimationStyle">@style/WindowSlideVerticalAnimations_recipient</item>
    </style>
@@ -83,15 +93,26 @@
       <item name="android:windowFullscreen">true</item>
    </style>
 
-   <style name="ImageViewerTheme" parent="FullscreenTheme">
+   <style name="SlidingActivityTheme" parent="FullscreenTheme">
       <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/black</item>
       <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
       <item name="android:windowAnimationStyle">@style/WindowSlideHorizontalAnimations</item>
    </style>
 
+   <style name="SlidingActivityTheme_No_Fade" parent="FullscreenTheme">
+      <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/black</item>
+      <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
+      <item name="android:windowAnimationStyle">@style/WindowSlideHorizontalAnimations.No_Fade</item>
+   </style>
+
    <style name="WindowSlideHorizontalAnimations" parent="WindowDefaultAnimations">
       <item name="android:activityOpenEnterAnimation">@anim/slide_enter</item>
       <item name="android:activityOpenExitAnimation">@anim/slide_exit</item>
+   </style>
+
+   <style name="WindowSlideHorizontalAnimations.No_Fade" parent="WindowDefaultAnimations">
+      <item name="android:activityOpenEnterAnimation">@anim/slide_enter_no_fade</item>
+      <item name="android:activityOpenExitAnimation">@anim/slide_exit_no_fade</item>
    </style>
 
    <style name="SnackbarStyle" parent="Widget.Design.Snackbar">
@@ -130,7 +151,9 @@
    </style>
 
    <style name="Circular_Image" parent="Rounded_Image_Corners">
-      <item name="cornerSize">20dp</item>
+         <item name="borderWidth">2dp</item>
+         <item name="cornerFamily">rounded</item>
+         <item name="cornerSize">50%</item>
    </style>
 
 </resources>

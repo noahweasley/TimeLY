@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:external="http://schemas.android.com/apk/res-auto"
-   xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="@dimen/normal_dialog_width"
    android:layout_height="@dimen/long_dialog_height"
    android:background="@drawable/bg_day_and_night"
@@ -21,14 +20,14 @@
 
    <ImageView
       android:id="@+id/imageView3"
-      android:layout_width="wrap_content"
+      android:layout_width="80dp"
       android:layout_height="100dp"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toTopOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/close"
       external:layout_constraintVertical_bias="0.081"
-      tools:srcCompat="@mipmap/result" />
+      external:srcCompat="@mipmap/result" />
 
    <TextView
       android:id="@+id/textView2"
@@ -44,7 +43,7 @@
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@+id/imageView3"
-      external:layout_constraintVertical_bias="0.234" />
+      external:layout_constraintVertical_bias="0.1" />
 
    <TextView
       android:id="@+id/textView9"
@@ -54,6 +53,7 @@
       android:gravity="center"
       android:text="@string/gpa_info"
       android:textSize="@dimen/dialog_sub_heading_text_size"
+      external:layout_constraintBottom_toTopOf="@+id/proceed"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -62,7 +62,7 @@
       android:id="@+id/proceed"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_margin="16dp"
+      android:layout_margin="8dp"
       android:background="@drawable/bg_rounded_edges_positive"
       android:minHeight="@dimen/button_min_height"
       android:text="@string/ok_let_s_do_it"
@@ -76,7 +76,7 @@
       android:id="@+id/remove"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_margin="16dp"
+      android:layout_margin="8dp"
       android:background="@drawable/bg_rounded_edges_neutral"
       android:minHeight="@dimen/button_min_height"
       android:text="@string/no_thanks"

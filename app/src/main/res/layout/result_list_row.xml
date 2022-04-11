@@ -1,84 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:external="http://schemas.android.com/apk/res-auto"
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
-   android:layout_height="wrap_content"
-   android:layout_margin="20dp"
-   android:background="@drawable/bg_stroked">
-
-   <HorizontalScrollView
-      android:id="@+id/horizontalScrollView"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:paddingEnd="8dp"
-      android:paddingRight="8dp"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toTopOf="parent"
-      tools:ignore="RtlSymmetry">
-
-      <TextView
-         android:id="@+id/course_name"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_margin="@dimen/space"
-         android:text="@string/default_course_name"
-         android:textColor="@color/black"
-         android:textSize="22sp" />
-
-   </HorizontalScrollView>
-
-   <View
-      android:id="@+id/divider3"
-      android:layout_width="0dp"
-      android:layout_height="1dp"
-      android:layout_marginVertical="8dp"
-      android:background="@color/colorAccent"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+   android:layout_height="160dp"
+   android:layout_marginHorizontal="-8dp"
+   android:layout_marginTop="-8dp"
+   android:layout_marginBottom="@dimen/secondary_card_margin_bottom"
+   external:cardCornerRadius="@dimen/corner_radius"
+   external:cardElevation="@dimen/min_elevation"
+   external:cardPreventCornerOverlap="false"
+   external:cardUseCompatPadding="true"
+   external:layout_constraintEnd_toEndOf="parent"
+   external:layout_constraintStart_toStartOf="parent"
+   external:layout_constraintTop_toTopOf="parent">
 
    <androidx.constraintlayout.widget.ConstraintLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toBottomOf="@id/divider3">
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-      <Spinner
-         android:id="@+id/grades"
-         android:layout_width="wrap_content"
+      <HorizontalScrollView
+         android:id="@+id/horizontalScrollView"
+         android:layout_width="0dp"
          android:layout_height="wrap_content"
-         android:layout_marginHorizontal="@dimen/layout_gap"
-         external:layout_constraintBottom_toBottomOf="parent"
-         external:layout_constraintEnd_toStartOf="@+id/divider4"
+         android:paddingEnd="8dp"
+         android:paddingRight="8dp"
+         external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
-         external:layout_constraintTop_toTopOf="parent" />
+         external:layout_constraintTop_toTopOf="parent"
+         tools:ignore="RtlSymmetry">
+
+         <TextView
+            android:id="@+id/course_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space"
+            android:text="@string/default_course_name"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
+
+      </HorizontalScrollView>
 
       <View
-         android:id="@+id/divider4"
-         android:layout_width="1dp"
-         android:layout_height="0dp"
+         android:id="@+id/divider3"
+         android:layout_width="0dp"
+         android:layout_height="1dp"
+         android:layout_marginVertical="8dp"
          android:background="@color/colorAccent"
-         external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
-         external:layout_constraintTop_toTopOf="parent" />
+         external:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
 
-      <TextView
-         android:id="@+id/textView12"
-         android:layout_width="wrap_content"
+      <androidx.constraintlayout.widget.ConstraintLayout
+         android:layout_width="0dp"
          android:layout_height="wrap_content"
-         android:paddingVertical="16dp"
-         android:text="@string/default_credit"
-         android:textColor="@color/black"
-         android:textSize="18sp"
-         external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
-         external:layout_constraintStart_toEndOf="@+id/divider4"
-         external:layout_constraintTop_toTopOf="@+id/divider4" />
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@id/divider3">
+
+         <Spinner
+            android:id="@+id/grades"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toStartOf="@+id/divider4"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent" />
+
+         <View
+            android:id="@+id/divider4"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/colorAccent"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent" />
+
+         <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="16dp"
+            android:text="@string/default_credit"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toEndOf="@+id/divider4"
+            external:layout_constraintTop_toTopOf="@+id/divider4" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

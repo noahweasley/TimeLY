@@ -34,8 +34,7 @@ public class CoursesFragment extends Fragment {
       ViewPager2 pager = view.findViewById(R.id.pager);
       pager.setAdapter(new SemesterCoursesAdapter(this));
       TabLayout tabs = view.findViewById(R.id.tabs);
-      new TabLayoutMediator(tabs, pager, (tab, position) -> tab.setText(position == 0 ? "First Semester"
-                                                                                      : "Second Semester")).attach();
+      new TabLayoutMediator(tabs, pager, (tab, position) -> tab.setText(position == 0 ? "1st SEM" : "2nd SEM")).attach();
    }
 
    @Override

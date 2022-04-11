@@ -38,7 +38,7 @@
       android:id="@+id/close"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:background="@color/colorAccent"
+      android:background="@drawable/register_button"
       android:text="@string/close_"
       android:textColor="@android:color/white"
       android:textSize="@dimen/button_text_size"
