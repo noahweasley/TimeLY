@@ -5,7 +5,6 @@ import com.noah.timely.auth.data.model.UserAccount;
 @SuppressWarnings("unused")
 public class TuneAPIClient {
 
-
    /**
     * Checks if a user already has an account
     *
