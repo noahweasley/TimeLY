@@ -28,7 +28,7 @@
    <color name="image_background_2">#4F2295FA</color>
    <color name="image_background_stroke">#4A2295FA</color>
    <color name="image_background_stroke_2">#B52295FA</color>
-   <color name="accent_disabled">#5D411A</color>
+   <color name="accent_disabled">#785523</color>
    <color name="purple_700">#FF3700B3</color>
    <color name="teal_200">#FF03DAC5</color>
    <color name="teal_700">#FF018786</color>
@@ -59,7 +59,7 @@
    <color name="teal_700_10">#1A018786</color>
    <color name="tomato_red_5">#0DFF6347</color>
    <color name="tomato_red_10">#1AFF6347</color>
-   <color name="window_background_color_light">#F0F4F6</color>
+   <color name="window_background_color">#F3F7FA</color>
    <color name="white">#ECECEC</color>
    <color name="castro">#4B001F</color>
    <!--  Spotify Dark Theme  -->

@@ -3,7 +3,7 @@ package com.noah.timely.auth.data.api;
 import com.noah.timely.auth.data.model.UserAccount;
 
 @SuppressWarnings("unused")
-public class TuneAPIClient {
+public class APIClient {
 
    /**
     * Checks if a user already has an account

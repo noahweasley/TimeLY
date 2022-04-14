@@ -89,7 +89,7 @@
       <activity
          android:name=".main.SplashScreen"
          android:exported="true"
-         android:theme="@style/FullscreenTheme"></activity>
+         android:theme="@style/FullscreenTheme"/>
 
       <activity
          android:name=".main.MainActivity"

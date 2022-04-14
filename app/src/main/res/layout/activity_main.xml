@@ -17,7 +17,7 @@
       <androidx.appcompat.widget.Toolbar
          android:id="@+id/toolbar"
          android:layout_width="match_parent"
-         android:layout_height="?attr/actionBarSize"
+         android:layout_height="@dimen/action_bar_size"
          android:background="@color/colorPrimary"
          android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
          external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -37,7 +37,7 @@
       android:layout_height="match_parent"
       android:layout_gravity="start"
       android:background="@drawable/bg_day_and_night"
-      android:fitsSystemWindows="true"
+      android:fitsSystemWindows="false"
       external:headerLayout="@layout/nav_header"
       external:itemBackground="@drawable/bg_checked"
       external:itemIconTint="@color/colorPrimary"

@@ -10,11 +10,13 @@
       android:layout_width="0dp"
       android:layout_height="@dimen/action_bar_size"
       android:paddingStart="16dp"
+      android:paddingLeft="16dp"
+      android:paddingEnd="16dp"
+      android:paddingRight="16dp"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toTopOf="parent"
-      tools:ignore="RtlSymmetry"
-      android:paddingLeft="16dp">
+      tools:ignore="RtlSymmetry">
 
       <ImageButton
          android:id="@+id/exit"
@@ -34,7 +36,6 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/login"
-      android:layout_marginVertical="@dimen/layout_gap"
       android:textColor="@color/colorPrimary"
       android:textSize="@dimen/auth_title_text_size"
       android:textStyle="bold"
@@ -46,9 +47,9 @@
       android:id="@+id/subtitle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
       android:text="@string/access_message"
       android:textColor="@color/light_grey"
-      android:textSize="@dimen/min_text_size"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@+id/title" />
@@ -116,24 +117,10 @@
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:layout_marginTop="@dimen/layout_gap"
-         android:orientation="vertical"
+         android:orientation="horizontal"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toBottomOf="@id/phone_number_parent">
-
-         <TextView
-            android:id="@+id/recovery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:text="@string/forgot_password"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            external:layout_constraintBaseline_toBaselineOf="@id/persist_user"
-            external:layout_constraintEnd_toEndOf="parent" />
 
          <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/persist_user"
@@ -142,11 +129,24 @@
             android:layout_gravity="start|center_vertical"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="@dimen/layout_gap"
             android:layout_weight="9"
             android:checked="true"
             android:text="@string/remember_me"
             tools:ignore="RtlSymmetry" />
+
+         <TextView
+            android:id="@+id/recovery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:text="@string/forgot_password"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            external:layout_constraintBaseline_toBaselineOf="@id/persist_user"
+            external:layout_constraintEnd_toEndOf="parent" />
 
       </LinearLayout>
 
@@ -156,7 +156,7 @@
       android:id="@+id/login"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginHorizontal="@dimen/layout_gap_2"
+      android:layout_marginHorizontal="24dp"
       android:background="@drawable/buttons_explore"
       android:text="@string/login"
       android:textColor="@android:color/white"
@@ -170,7 +170,7 @@
       android:id="@+id/gs_header"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/layout_gap_2"
+      android:layout_marginTop="24dp"
       android:fontFamily="monospace"
       android:text="@string/login_alt_text"
       external:layout_constraintBottom_toTopOf="@id/g_sign_parent"
@@ -180,14 +180,15 @@
 
    <androidx.cardview.widget.CardView
       android:id="@+id/g_sign_parent"
-      android:layout_width="@dimen/g_sign_parent_size"
-      android:layout_height="@dimen/g_sign_parent_size"
+      android:layout_width="38dp"
+      android:layout_height="40dp"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="16dp"
       android:innerRadius="0dp"
       android:shape="ring"
       android:thicknessRatio="1.9"
       external:cardCornerRadius="40dp"
       external:contentPadding="8dp"
-      external:layout_constraintBottom_toTopOf="@+id/sign_now"
       external:layout_constraintEnd_toEndOf="@id/right_guide"
       external:layout_constraintStart_toStartOf="@+id/left_guide"
       external:layout_constraintTop_toBottomOf="@+id/gs_header"
@@ -209,7 +210,6 @@
       android:text="@string/login_now"
       android:textColorHighlight="@color/colorPrimary_5"
       android:textColorLink="@color/colorPrimary"
-      android:textSize="@dimen/min_text_size"
       external:layout_constraintBottom_toTopOf="@id/create_acc"
       external:layout_constraintEnd_toStartOf="@+id/right_guide"
       external:layout_constraintHorizontal_bias="0.496"
@@ -221,14 +221,16 @@
       android:id="@+id/create_acc"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginVertical="@dimen/layout_gap"
+      android:layout_margin="@dimen/layout_gap"
+      android:layout_marginTop="8dp"
       android:text="@string/create_account"
       android:textColor="@color/colorPrimary"
-      android:textSize="@dimen/auth_title_text_size_alt"
+      android:textSize="24sp"
       android:textStyle="bold"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent" />
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintVertical_bias="0.52" />
 
    <androidx.constraintlayout.widget.Guideline
       android:id="@+id/left_guide"

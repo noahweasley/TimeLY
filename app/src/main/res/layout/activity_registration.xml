@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   xmlns:app="http://schemas.android.com/apk/res-auto"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
    android:layout_height="match_parent">
@@ -8,14 +8,14 @@
    <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/constraintLayout"
       android:layout_width="0dp"
-      android:layout_height="?android:attr/actionBarSize"
+      android:layout_height="@dimen/action_bar_size"
       android:paddingStart="16dp"
       android:paddingLeft="16dp"
       android:paddingEnd="16dp"
       android:paddingRight="16dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
       tools:ignore="RtlSymmetry"
       tools:viewBindingIgnore="true">
 
@@ -26,9 +26,9 @@
          android:background="@drawable/round_button"
          android:contentDescription="@string/back"
          android:src="@drawable/ic_baseline_chevron_left_24"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toTopOf="parent" />
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -36,35 +36,36 @@
       android:id="@+id/title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
+      android:layout_marginHorizontal="@dimen/layout_gap"
+      android:layout_marginVertical="@dimen/layout_gap"
       android:text="@string/create_account"
       android:textColor="@color/colorPrimary"
-      android:textSize="32sp"
+      android:textSize="@dimen/auth_title_text_size"
       android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
    <TextView
       android:id="@+id/subtitle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
+      android:textSize="@dimen/min_text_size"
       android:text="@string/create"
       android:textColor="@color/light_grey"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/title" />
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/title" />
 
    <ScrollView
       android:id="@+id/scrollView2"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_marginTop="16dp"
-      app:layout_constraintBottom_toTopOf="@id/bottom_guide"
-      app:layout_constraintEnd_toStartOf="@+id/right_guide"
-      app:layout_constraintStart_toEndOf="@+id/left_guide"
-      app:layout_constraintTop_toBottomOf="@+id/subtitle"
+      android:layout_marginTop="@dimen/layout_gap"
+      external:layout_constraintBottom_toTopOf="@id/bottom_guide"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toEndOf="@+id/left_guide"
+      external:layout_constraintTop_toBottomOf="@+id/subtitle"
       tools:viewBindingIgnore="true">
 
       <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,9 +82,10 @@
             android:hint="@string/first_name"
             android:inputType="textPersonName"
             android:textColorHint="@color/light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/editext_text_size"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
             tools:ignore="Autofill,LabelFor" />
 
          <EditText
@@ -97,9 +99,10 @@
             android:hint="@string/last_name"
             android:inputType="textPersonName"
             android:textColorHint="@color/light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/first_name"
+            android:textSize="@dimen/editext_text_size"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/first_name"
             tools:ignore="Autofill,LabelFor" />
 
          <EditText
@@ -113,9 +116,10 @@
             android:hint="@string/user_name"
             android:inputType="textVisiblePassword|textNoSuggestions"
             android:textColorHint="@color/light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/last_name"
+            android:textSize="@dimen/editext_text_size"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/last_name"
             tools:ignore="Autofill,LabelFor" />
 
          <EditText
@@ -129,9 +133,10 @@
             android:hint="@string/phone_number"
             android:inputType="phone"
             android:textColorHint="@color/light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_name"
+            android:textSize="@dimen/editext_text_size"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/user_name"
             tools:ignore="Autofill,LabelFor" />
 
          <EditText
@@ -145,25 +150,26 @@
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:textColorHint="@color/light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone_number"
+            android:textSize="@dimen/editext_text_size"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/phone_number"
             tools:ignore="Autofill,LabelFor" />
 
          <EditText
             android:id="@+id/password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/layout_gap"
             android:drawableStart="@drawable/ic_baseline_lock_24"
-            android:drawableLeft="@drawable/ic_baseline_lock_24"
             android:drawablePadding="8dp"
             android:hint="@string/password"
             android:inputType="textPassword"
             android:textColorHint="@color/light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email"
+            android:textSize="@dimen/editext_text_size"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/email"
             tools:ignore="Autofill,LabelFor" />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
@@ -174,27 +180,20 @@
       android:id="@+id/cbx_lc_agree"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginLeft="8dp"
+      android:layout_marginHorizontal="8dp"
+      android:layout_marginTop="@dimen/layout_gap"
       android:checked="true"
-      app:layout_constraintBaseline_toBaselineOf="@id/txt_lc_agree"
-      app:layout_constraintStart_toStartOf="@id/left_guide"
-      tools:ignore="RtlSymmetry" />
-
-   <TextView
-      android:id="@+id/txt_lc_agree"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:gravity="center"
+      android:gravity="start"
+      android:paddingStart="@dimen/layout_gap"
+      android:paddingLeft="@dimen/layout_gap"
       android:text="@string/license_agreement"
+      android:textColor="@color/black"
       android:textColorHighlight="@color/colorPrimary_5"
       android:textColorLink="@color/colorPrimary"
-      android:textSize="13sp"
-      app:layout_constraintBottom_toTopOf="@+id/sign_up"
-      app:layout_constraintEnd_toStartOf="@+id/right_guide"
-      app:layout_constraintStart_toEndOf="@+id/cbx_lc_agree"
-      app:layout_constraintTop_toBottomOf="@id/scrollView2"
-      app:layout_constraintVertical_bias="0.26999998" />
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toStartOf="@id/left_guide"
+      external:layout_constraintTop_toTopOf="@+id/bottom_guide"
+      tools:ignore="RtlSymmetry" />
 
    <Button
       android:id="@+id/sign_up"
@@ -205,37 +204,59 @@
       android:enabled="true"
       android:text="@string/sign_up"
       android:textColor="@android:color/white"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/right_guide"
-      app:layout_constraintStart_toStartOf="@+id/left_guide"
-      app:layout_constraintTop_toTopOf="@+id/bottom_guide"
-      app:layout_constraintVertical_bias="0.35000002" />
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
+      external:layout_constraintTop_toTopOf="@+id/bottom_guide"
+      external:layout_constraintVertical_bias="0.35000002" />
+
+   <View
+      android:id="@+id/dividerLeft"
+      android:layout_width="0dp"
+      android:layout_height="1dp"
+      android:layout_marginHorizontal="16dp"
+      android:background="?android:attr/listDivider"
+      external:layout_constraintBottom_toBottomOf="@id/gs_header"
+      external:layout_constraintEnd_toStartOf="@+id/gs_header"
+      external:layout_constraintStart_toStartOf="@id/left_guide"
+      external:layout_constraintTop_toTopOf="@id/gs_header" />
+
+   <View
+      android:id="@+id/dividerRight"
+      android:layout_width="0dp"
+      android:layout_height="1dp"
+      android:layout_marginHorizontal="16dp"
+      android:background="?android:attr/listDivider"
+      external:layout_constraintBottom_toBottomOf="@id/gs_header"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toEndOf="@id/gs_header"
+      external:layout_constraintTop_toTopOf="@id/gs_header" />
 
    <TextView
       android:id="@+id/gs_header"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="@dimen/layout_gap"
       android:fontFamily="monospace"
       android:text="@string/signup_alt_text"
-      app:layout_constraintEnd_toStartOf="@+id/right_guide"
-      app:layout_constraintStart_toStartOf="@+id/left_guide"
-      app:layout_constraintTop_toBottomOf="@+id/sign_up" />
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
+      external:layout_constraintTop_toBottomOf="@+id/sign_up" />
 
    <androidx.cardview.widget.CardView
       android:id="@+id/g_sign_parent"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="@dimen/g_sign_parent_size"
+      android:layout_height="@dimen/g_sign_parent_size"
       android:layout_centerHorizontal="true"
       android:innerRadius="0dp"
       android:shape="ring"
       android:thicknessRatio="1.9"
-      app:cardCornerRadius="40dp"
-      app:contentPadding="8dp"
-      app:layout_constraintBottom_toTopOf="@id/sign_now"
-      app:layout_constraintEnd_toEndOf="@id/right_guide"
-      app:layout_constraintStart_toStartOf="@+id/left_guide"
-      app:layout_constraintTop_toBottomOf="@+id/gs_header">
+      external:cardCornerRadius="40dp"
+      external:contentPadding="8dp"
+      external:layout_constraintBottom_toTopOf="@id/sign_now"
+      external:layout_constraintEnd_toEndOf="@id/right_guide"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
+      external:layout_constraintTop_toBottomOf="@+id/gs_header">
 
       <ImageView
          android:id="@+id/g_sign"
@@ -250,20 +271,21 @@
       android:id="@+id/sign_now"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
+      android:layout_marginBottom="@dimen/layout_gap"
       android:text="@string/sign_now"
       android:textColorHighlight="@color/colorPrimary_5"
       android:textColorLink="@color/colorPrimary"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/right_guide"
-      app:layout_constraintStart_toStartOf="@+id/left_guide" />
+      android:textSize="@dimen/min_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toStartOf="@+id/left_guide" />
 
    <androidx.constraintlayout.widget.Guideline
       android:id="@+id/left_guide"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_percent=".1"
+      external:layout_constraintGuide_percent=".1"
       tools:viewBindingIgnore="true" />
 
    <androidx.constraintlayout.widget.Guideline
@@ -271,7 +293,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_percent=".9"
+      external:layout_constraintGuide_percent=".9"
       tools:viewBindingIgnore="true" />
 
    <androidx.constraintlayout.widget.Guideline
@@ -279,6 +301,6 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
-      app:layout_constraintGuide_percent=".7" />
+      external:layout_constraintGuide_percent=".6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

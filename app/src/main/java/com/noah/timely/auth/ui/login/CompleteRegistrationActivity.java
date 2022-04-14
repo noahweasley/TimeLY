@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,9 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_complete_registration);
+
+      ImageButton exit = findViewById(R.id.exit);
+      exit.setOnClickListener(v -> onBackPressed());
 
       listCountries = findViewById(R.id.list_countries);
       edt_datePicker = findViewById(R.id.date_picker);

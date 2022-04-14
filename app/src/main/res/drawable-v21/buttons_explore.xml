@@ -2,11 +2,9 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
    android:color="@color/colorAccentDark">
 
-   <item
-      android:state_enabled="true"
-      android:state_pressed="false">
+   <item android:state_enabled="false">
       <shape>
-         <solid android:color="@color/colorAccent" />
+         <solid android:color="@color/accent_disabled" />
          <corners android:radius="2000dp" />
          <padding
             android:bottom="@dimen/small_button_padding_vertical"
@@ -17,9 +15,10 @@
       </shape>
    </item>
 
-   <item android:state_enabled="false">
+   <item
+      android:state_enabled="true">
       <shape>
-         <solid android:color="@color/accent_disabled" />
+         <solid android:color="@color/colorAccent" />
          <corners android:radius="2000dp" />
          <padding
             android:bottom="@dimen/small_button_padding_vertical"

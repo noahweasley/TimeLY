@@ -45,17 +45,17 @@ public class RegistrationActivity extends AppCompatActivity {
       EditText edt_phoneNumber = findViewById(R.id.phone_number);
       Button signUp = findViewById(R.id.sign_up);
       CheckBox cbxLcAgree = findViewById(R.id.cbx_lc_agree);
-      TextView txtLcAgree = findViewById(R.id.txt_lc_agree), signNow = findViewById(R.id.sign_now);
+      TextView signNow = findViewById(R.id.sign_now);
 
       exit.setOnClickListener(v -> onBackPressed());
       gSignParent.setOnClickListener(v -> doGoogleSignIn());
 
       String phoneNumber = edt_phoneNumber.getText().toString();
       signUp.setOnClickListener(v -> VerificationActivity.start(this, phoneNumber));
-      cbxLcAgree.setOnCheckedChangeListener((buttonView, isChecked) -> signUp.setEnabled(isChecked));
 
+      cbxLcAgree.setOnCheckedChangeListener((buttonView, isChecked) -> signUp.setEnabled(isChecked));
       // Make Licence agreement statements and login text clickable links
-      setLinkOnText(txtLcAgree);
+      setLinkOnText(cbxLcAgree);
       setLinkOnText(signNow);
 
       // Configure sign-in to request the user's ID, email address, and basic

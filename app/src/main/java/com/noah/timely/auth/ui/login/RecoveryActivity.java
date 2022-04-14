@@ -2,7 +2,6 @@ package com.noah.timely.auth.ui.login;
 
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +20,6 @@ public class RecoveryActivity extends AppCompatActivity {
 
       Button btn_signUp = findViewById(R.id.sign_up);
 
-      CheckBox cbx_lcAgree = findViewById(R.id.cbx_lc_agree);
-      cbx_lcAgree.setOnCheckedChangeListener((v, isChecked) -> btn_signUp.setEnabled(isChecked));
    }
 
    @Override

@@ -8,7 +8,7 @@
    <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/constraintLayout"
       android:layout_width="0dp"
-      android:layout_height="?android:attr/actionBarSize"
+      android:layout_height="@dimen/action_bar_size"
       android:paddingStart="16dp"
       android:paddingLeft="16dp"
       android:paddingEnd="16dp"
@@ -35,10 +35,10 @@
       android:id="@+id/title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="@dimen/layout_gap"
       android:text="@string/complete_profile"
       android:textColor="@color/colorPrimary"
-      android:textSize="32sp"
+      android:textSize="@dimen/auth_title_text_size"
       android:textStyle="bold"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
@@ -51,6 +51,7 @@
       android:layout_marginTop="8dp"
       android:text="@string/complete_your_new_profile"
       android:textColor="@color/light_grey"
+      android:textSize="@dimen/min_text_size"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@+id/title" />
@@ -65,9 +66,9 @@
 
       <com.google.android.material.imageview.ShapeableImageView
          android:id="@+id/profile_image"
-         android:layout_width="100dp"
-         android:layout_height="100dp"
-         android:layout_marginTop="32dp"
+         android:layout_width="@dimen/profile_image_size"
+         android:layout_height="@dimen/profile_image_size"
+         android:layout_marginTop="@dimen/layout_gap_2"
          android:padding="2dp"
          android:src="@drawable/ic_image_4"
          external:layout_constraintEnd_toEndOf="parent"
@@ -87,15 +88,15 @@
       android:layout_height="wrap_content"
       external:layout_constraintBottom_toBottomOf="@id/profile_image_parent"
       external:layout_constraintEnd_toEndOf="@+id/profile_image_parent"
+      external:layout_constraintHorizontal_bias="1"
       external:layout_constraintStart_toStartOf="@+id/profile_image_parent"
       external:layout_constraintTop_toTopOf="@id/profile_image_parent"
-      external:layout_constraintHorizontal_bias="1"
       external:layout_constraintVertical_bias="1">
 
       <View
          android:id="@+id/view2"
-         android:layout_width="48dp"
-         android:layout_height="48dp"
+         android:layout_width="@dimen/image_picker_button_size"
+         android:layout_height="@dimen/image_picker_button_size"
          android:background="@drawable/inner_padding"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
@@ -119,7 +120,7 @@
       android:id="@+id/date_picker_actions"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="@dimen/layout_gap"
       external:errorEnabled="true"
       external:layout_constraintEnd_toEndOf="@id/right_guide"
       external:layout_constraintStart_toStartOf="@id/left_guide"
@@ -129,7 +130,7 @@
          android:id="@+id/date_picker"
          android:layout_width="match_parent"
          android:layout_height="match_parent"
-         android:layout_marginTop="24dp"
+         android:layout_marginTop="@dimen/layout_gap_2"
          android:autofillHints=""
          android:drawableEnd="@drawable/ic_baseline_date_range_24"
          android:drawablePadding="50dp"
@@ -140,7 +141,8 @@
          android:paddingLeft="16dp"
          android:paddingEnd="16dp"
          android:paddingRight="16dp"
-         android:textColorHint="@color/light_grey" />
+         android:textColorHint="@color/light_grey"
+         android:textSize="@dimen/editext_text_size" />
 
    </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,9 +150,9 @@
       android:id="@+id/gender"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="@dimen/layout_gap"
       android:orientation="horizontal"
-      android:paddingHorizontal="16dp"
+      android:paddingHorizontal="@dimen/layout_gap"
       external:layout_constraintEnd_toStartOf="@+id/right_guide"
       external:layout_constraintStart_toStartOf="@+id/left_guide"
       external:layout_constraintTop_toBottomOf="@id/date_picker_actions">
@@ -159,23 +161,28 @@
          android:id="@+id/male"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
+         android:layout_gravity="start"
          android:layout_weight="1"
          android:checked="true"
-         android:text="@string/male" />
+         android:text="@string/male"
+         android:textSize="@dimen/min_text_size" />
 
       <RadioButton
          android:id="@+id/female"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_weight="1"
-         android:text="@string/female" />
+         android:text="@string/female"
+         android:textSize="@dimen/min_text_size" />
 
       <RadioButton
          android:id="@+id/others"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
+         android:layout_gravity="end"
          android:layout_weight="1"
-         android:text="@string/others" />
+         android:text="@string/others"
+         android:textSize="@dimen/min_text_size" />
 
    </RadioGroup>
 
@@ -183,8 +190,7 @@
       android:id="@+id/list_item"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="@dimen/layout_gap"
       external:layout_constraintEnd_toStartOf="@+id/right_guide"
       external:layout_constraintStart_toStartOf="@+id/left_guide"
       external:layout_constraintTop_toBottomOf="@+id/gender">
@@ -200,6 +206,7 @@
          android:paddingLeft="16dp"
          android:paddingEnd="16dp"
          android:paddingRight="16dp"
+         android:textSize="@dimen/editext_text_size"
          external:layout_constraintEnd_toStartOf="@+id/right_guide"
          external:layout_constraintStart_toStartOf="@+id/left_guide"
          external:layout_constraintTop_toBottomOf="@+id/gender" />
@@ -210,17 +217,16 @@
       android:id="@+id/sign_up"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginHorizontal="24dp"
-      android:layout_marginTop="24dp"
+      android:layout_marginHorizontal="@dimen/layout_gap"
+      android:layout_marginTop="@dimen/layout_gap_2"
       android:background="@drawable/buttons_explore"
       android:text="@string/complete"
       android:textColor="@android:color/white"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toStartOf="@+id/right_guide"
-      external:layout_constraintHorizontal_bias="0.52"
       external:layout_constraintStart_toStartOf="@+id/left_guide"
       external:layout_constraintTop_toBottomOf="@id/list_item"
-      external:layout_constraintVertical_bias="0.162" />
+      external:layout_constraintVertical_bias="0.492" />
 
    <androidx.constraintlayout.widget.Guideline
       android:id="@+id/left_guide"

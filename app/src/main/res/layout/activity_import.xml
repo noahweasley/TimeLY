@@ -4,12 +4,12 @@
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
    android:layout_height="match_parent"
-   android:background="@color/window_background_color_light">
+   android:background="@color/window_background_color">
 
    <androidx.appcompat.widget.Toolbar
       android:id="@+id/toolbar"
       android:layout_width="0dp"
-      android:layout_height="?attr/actionBarSize"
+      android:layout_height="@dimen/action_bar_size"
       android:background="@color/colorPrimary"
       android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
       external:layout_constraintEnd_toEndOf="parent"
