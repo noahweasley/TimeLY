@@ -23,6 +23,7 @@
    <View
       android:layout_width="0dp"
       android:layout_height="100dp"
+      android:visibility="invisible"
       android:background="@drawable/bg_details"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"

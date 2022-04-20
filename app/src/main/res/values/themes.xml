@@ -17,8 +17,18 @@
       <item name="android:navigationBarColor" tools:targetApi="lollipop">#BE000000</item>
       <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
       <item name="windowActionModeOverlay">true</item>
+      <item name="android:actionModeStyle">@style/ActionModeStyle</item>
       <item name="actionModeBackground">@color/colorPrimary</item>
       <item name="android:windowAnimationStyle">@style/WindowDefaultAnimations</item>
+   </style>
+
+   <style name="ActionModeStyle">
+      <item name="height">@dimen/action_bar_size</item>
+   </style>
+
+   <style name="AppTheme.Immersive" parent="AppTheme">
+      <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+      <item name="android:windowAnimationStyle">@style/WindowSlideHorizontalAnimations.No_Fade</item>
    </style>
 
    <style name="Theme.SplashScreenTheme" parent="AppTheme">
@@ -111,8 +121,10 @@
    </style>
 
    <style name="WindowSlideHorizontalAnimations.No_Fade" parent="WindowDefaultAnimations">
-      <item name="android:activityOpenEnterAnimation">@anim/slide_enter_no_fade</item>
-      <item name="android:activityOpenExitAnimation">@anim/slide_exit_no_fade</item>
+      <item name="android:activityOpenEnterAnimation">@anim/slide_open_enter_no_fade</item>
+      <item name="android:activityOpenExitAnimation">@anim/slide_open_exit_no_fade</item>
+      <item name="android:activityCloseEnterAnimation">@anim/slide_close_enter_no_fade</item>
+      <item name="android:activityCloseExitAnimation">@anim/slide_close_exit_no_fade</item>
    </style>
 
    <style name="SnackbarStyle" parent="Widget.Design.Snackbar">
@@ -151,9 +163,23 @@
    </style>
 
    <style name="Circular_Image" parent="Rounded_Image_Corners">
-         <item name="borderWidth">2dp</item>
-         <item name="cornerFamily">rounded</item>
-         <item name="cornerSize">50%</item>
+      <item name="borderWidth">2dp</item>
+      <item name="cornerFamily">rounded</item>
+      <item name="cornerSize">50%</item>
+   </style>
+
+   <style name="Info_Text">
+      <item name="fontFamily">sans-serif-condensed</item>
+      <item name="android:textSize">@dimen/no_task_text_size</item>
+      <item name="android:textStyle">bold</item>
+      <item name="android:textColor">@color/colorPrimaryDark</item>
+   </style>
+
+   <style name="Info_Text.Small">
+      <item name="fontFamily">sans-serif-medium</item>
+      <item name="android:textSize">@dimen/no_task_info_text_size</item>
+      <item name="android:textColor">@android:color/black</item>
+      <item name="android:textStyle">normal</item>
    </style>
 
 </resources>

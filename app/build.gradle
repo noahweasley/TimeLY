@@ -70,6 +70,8 @@ android {
         implementation 'me.zhanghai.android.materialprogressbar:library:1.1.6'
         implementation 'com.google.code.gson:gson:2.8.8'
         implementation "androidx.multidex:multidex:2.0.1"
+        //noinspection GradleDependency
+        implementation 'com.github.yalantis:ucrop:2.2.6-native'
 
         // networking libraries
         def retrofit_version = "2.9.0"

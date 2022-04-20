@@ -62,5 +62,6 @@
    <color name="window_background_color">#F3F7FA</color>
    <color name="white">#ECECEC</color>
    <color name="castro">#4B001F</color>
+   <color name="blurred_background">#3B000000</color>
    <!--  Spotify Dark Theme  -->
 </resources>

@@ -44,6 +44,8 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
    private ProgressBar indeterminateProgress;
    private RecyclerView imageList;
    private ActionMode actionMode;
+   public static final String ACTION_MULTI_SELECT = "multi select";
+   public static final String ACTION_SINGLE_SELECT = "single select";
 
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -103,9 +105,9 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
               MediaStore.Images.Media._ID,
               MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
               MediaStore.Images.Media.SIZE,
-              MediaStore.Images.Media.DISPLAY_NAME};
+              MediaStore.Images.Media.DISPLAY_NAME };
       String selection = queryAll ? null : MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ?";
-      String[] selectionArgs = queryAll ? null : new String[]{folder};
+      String[] selectionArgs = queryAll ? null : new String[]{ folder };
       String sortOrder = MediaStore.Images.Media.DATE_ADDED;
 
       Cursor imgCursor
@@ -141,8 +143,12 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
    @Override
    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-      getMenuInflater().inflate(R.menu.checked_items, menu);
-      return true;
+      if (getIntent().getAction().equals(ImageGallery.ACTION_MULTI_SELECT)) {
+         getMenuInflater().inflate(R.menu.checked_items, menu);
+         return true;
+      } else {
+         return false;
+      }
    }
 
    @Override
@@ -158,10 +164,10 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
          // FIXME: 2/23/2021 Find the cause of the additional images
          startActivity(new Intent(this, ImageViewerActivity.class)
-                 .putExtra(ARG_URI_LIST, imageMultiChoiceMode.getUriList()));
+                               .putExtra(ARG_URI_LIST, imageMultiChoiceMode.getUriList()));
       } else {
          startActivity(new Intent(this, AddAssignmentActivity.class)
-                 .putExtra(ARG_FILES_COUNT, imageAdapter.getCheckedImageCount()));
+                               .putExtra(ARG_FILES_COUNT, imageAdapter.getCheckedImageCount()));
       }
       finish();
       return true;
@@ -203,7 +209,7 @@ public class ImageGallery extends AppCompatActivity implements Runnable, ActionM
 
       @Override
       public void onBindViewHolder(@NonNull ImageGalleryRowHolder viewHolder, int pos) {
-         viewHolder.with(this, images).bindView();
+         viewHolder.with(this, images).setRequestAction(getIntent().getAction()).bindView();
       }
 
       @Override

@@ -28,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.noah.timely.R;
+import com.noah.timely.auth.data.model.UserAccount;
 
 public class RegistrationActivity extends AppCompatActivity {
    private GoogleSignInClient mGoogleSignInClient;
@@ -42,7 +43,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
       ImageButton exit = findViewById(R.id.exit);
       View gSignParent = findViewById(R.id.g_sign_parent);
-      EditText edt_phoneNumber = findViewById(R.id.phone_number);
       Button signUp = findViewById(R.id.sign_up);
       CheckBox cbxLcAgree = findViewById(R.id.cbx_lc_agree);
       TextView signNow = findViewById(R.id.sign_now);
@@ -50,8 +50,22 @@ public class RegistrationActivity extends AppCompatActivity {
       exit.setOnClickListener(v -> onBackPressed());
       gSignParent.setOnClickListener(v -> doGoogleSignIn());
 
-      String phoneNumber = edt_phoneNumber.getText().toString();
-      signUp.setOnClickListener(v -> VerificationActivity.start(this, phoneNumber));
+      EditText edt_firstName = findViewById(R.id.first_name);
+      EditText edt_lastName = findViewById(R.id.last_name);
+      EditText edt_userName = findViewById(R.id.user_name);
+      EditText edt_phoneNumber = findViewById(R.id.phone_number);
+      EditText edt_email = findViewById(R.id.email);
+      EditText edt_password = findViewById(R.id.password);
+
+      UserAccount userAccount = new UserAccount();
+      userAccount.setFirstName(edt_firstName.getText());
+      userAccount.setLastName(edt_lastName.getText());
+      userAccount.setUserName(edt_userName.getText());
+      userAccount.setPhoneNumber(edt_phoneNumber.getText());
+      userAccount.setEmail(edt_email.getText());
+      userAccount.setPassowrd(edt_password.getText());
+
+      signUp.setOnClickListener(v -> VerificationActivity.start(this, userAccount));
 
       cbxLcAgree.setOnCheckedChangeListener((buttonView, isChecked) -> signUp.setEnabled(isChecked));
       // Make Licence agreement statements and login text clickable links
@@ -71,7 +85,7 @@ public class RegistrationActivity extends AppCompatActivity {
       // the GoogleSignInAccount will be non-null.
       GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
       // if account is non null, update UI accordingly
-      updateUI(account);
+//      updateUI(account);
 
    }
 
@@ -109,7 +123,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
    private void updateUI(GoogleSignInAccount account) {
       if (account != null)
-         GoogleLoginCompletionActivity.start(this, account.getGivenName(), account.getFamilyName());
+         GoogleLoginCompletionActivity.start(this, UserAccount.createFromGoogleSignIn(account));
    }
 
    private void detectLinkClick(SpannableStringBuilder strBuilder, final URLSpan span) {

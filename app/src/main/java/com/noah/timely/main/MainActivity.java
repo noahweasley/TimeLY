@@ -67,13 +67,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setTheme(R.style.AppTheme_FadeIn);
+      checkedUserLoggingStatus();
       setContentView(R.layout.activity_main);
       launchIntroActivity();
-
+      // check for app updates
       if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.UPDATE_ON_STARTUP, true))
          TimelyUpdateUtils.checkForUpdates(this);
-
+      // then ...
       Toolbar toolbar = findViewById(R.id.toolbar);
       setSupportActionBar(toolbar);
       NavigationView navView = findViewById(R.id.nav_view);
@@ -119,6 +119,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .show();
          }
       }
+   }
+
+   private void checkedUserLoggingStatus() {
+      // check if user is logged in
+      if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.USER_IS_LOGGED_IN, false)) {
+         Toast.makeText(this, "User is Logged in", Toast.LENGTH_LONG).show();
+      }
+
+      setTheme(R.style.AppTheme_FadeIn);
    }
 
    private void launchIntroActivity() {

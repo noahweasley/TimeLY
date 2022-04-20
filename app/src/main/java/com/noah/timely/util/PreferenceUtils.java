@@ -18,6 +18,7 @@ public class PreferenceUtils {
    public static final String EASTER_EGG_KEY = "View new features";
    public static final String GPA_INFO_SHOWN_1 = "show gpa calculator 1";
    public static final String GPA_INFO_SHOWN_2 = "show gpa calculator 2";
+   public static final String USER_IS_LOGGED_IN = "User logged-in status";
 
    /**
     * Retrieves TimeLY's first launch preference

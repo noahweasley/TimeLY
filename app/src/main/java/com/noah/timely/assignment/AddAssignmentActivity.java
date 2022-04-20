@@ -104,7 +104,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
       btn_gallery.setOnClickListener(
               v -> startActivity(new Intent(this, ImageDirectory.class)
                                          .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
-                                         .setAction(ADD_NEW)));
+                                         .setAction(ImageGallery.ACTION_MULTI_SELECT)));
 
       ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
                                                               R.layout.simple_spinner_item,

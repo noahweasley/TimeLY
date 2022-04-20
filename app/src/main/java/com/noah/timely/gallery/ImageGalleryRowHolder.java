@@ -27,6 +27,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
    private Uri imageContentUri;
    private List<? extends Image> imageList;
    private boolean isChecked;
+   private String requestAction;
 
    @SuppressLint("ClickableViewAccessibility")
    ImageGalleryRowHolder(View rootView) {
@@ -37,20 +38,29 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
       Context context = img_image.getContext();
 
       rootView.setOnClickListener(c -> {
-         if (imageAdapter.isMultiSelectionEnabled()) {
-            trySelectImage();
-            if (imageAdapter.getCheckedImageCount() == 0) {
-               imageAdapter.setMultiSelectionEnabled(false);
-            }
-         } else ImageSlideActivity.start(context, getAbsoluteAdapterPosition(), imageList);
+         // only when the multi-select action is requested should IT, save uris
+         if (requestAction.equals(ImageGallery.ACTION_MULTI_SELECT)) {
+            if (imageAdapter.isMultiSelectionEnabled()) {
+               trySelectImage();
+               if (imageAdapter.getCheckedImageCount() == 0) {
+                  imageAdapter.setMultiSelectionEnabled(false);
+               }
+            } else ImageSlideActivity.start(context, getAbsoluteAdapterPosition(), imageList);
+
+         } else if (requestAction.equals(ImageGallery.ACTION_SINGLE_SELECT)) {
+            FullScreenImageActivity.start(context, imageList.get(0));
+         }
 
       });
 
       rootView.setOnLongClickListener(l -> {
-         trySelectImage();
-         imageAdapter
-                 .setMultiSelectionEnabled(!imageAdapter.isMultiSelectionEnabled()
-                         || imageAdapter.getCheckedImageCount() != 0);
+         // only when the multi-select action is requested should IT, save uris
+         if (requestAction.equals(ImageGallery.ACTION_MULTI_SELECT)) {
+            trySelectImage();
+            imageAdapter.setMultiSelectionEnabled(!imageAdapter.isMultiSelectionEnabled()
+                                                          || imageAdapter.getCheckedImageCount() != 0);
+         }
+
          return true;
       });
 
@@ -58,9 +68,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
          switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                if (!isChecked)
-                  img_image.setColorFilter(
-                          ContextCompat
-                                  .getColor(img_image.getContext(), R.color.image_click_bg));
+                  img_image.setColorFilter(ContextCompat.getColor(img_image.getContext(), R.color.image_click_bg));
                break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -70,13 +78,17 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
       });
    }
 
-   ImageGalleryRowHolder with(ImageGallery.ImageAdapter imageAdapter,
-                              List<? extends Image> imageList) {
+   ImageGalleryRowHolder with(ImageGallery.ImageAdapter imageAdapter, List<? extends Image> imageList) {
       this.imageList = imageList;
       Image image = imageList.get(getAbsoluteAdapterPosition());
       this.imageContentUri = image.getImageUri();
       this.fileName = image.getFileName();
       this.imageAdapter = imageAdapter;
+      return this;
+   }
+
+   public ImageGalleryRowHolder setRequestAction(String requestAction) {
+      this.requestAction = requestAction;
       return this;
    }
 

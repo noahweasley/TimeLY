@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -20,6 +21,11 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
+import com.noah.timely.auth.data.model.UserAccount;
+import com.noah.timely.gallery.ImageDirectory;
+import com.noah.timely.gallery.ImageGallery;
+import com.noah.timely.main.MainActivity;
+import com.noah.timely.util.PatternUtils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
@@ -27,16 +33,19 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class CompleteRegistrationActivity extends AppCompatActivity {
-   private AutoCompleteTextView listCountries;
+   private static final String EXTRA_USER_ACCOUNT = "User Account";
+   private AutoCompleteTextView listCountries, listSchools;
    private EditText edt_datePicker;
 
    /**
     * Convenience method to start this activity and pass other details to it
     *
-    * @param context the starter
+    * @param context     the starter
+    * @param userAccount the user account that would be used in completing registration
     */
-   public static void start(Context context) {
+   public static void start(Context context, UserAccount userAccount) {
       Intent starter = new Intent(context, CompleteRegistrationActivity.class);
+      starter.putExtra(EXTRA_USER_ACCOUNT, userAccount);
       context.startActivity(starter);
    }
 
@@ -44,40 +53,33 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_complete_registration);
-
+      // image picker
+      View v_image_picker = findViewById(R.id.profile_image_picker);
+      Intent imagePickerIntent = new Intent(this, ImageDirectory.class);
+      imagePickerIntent.setAction(ImageGallery.ACTION_SINGLE_SELECT);
+      v_image_picker.setOnClickListener(v -> startActivity(imagePickerIntent));
+      // ...
       ImageButton exit = findViewById(R.id.exit);
       exit.setOnClickListener(v -> onBackPressed());
 
       listCountries = findViewById(R.id.list_countries);
+      listSchools = findViewById(R.id.list_schools);
       edt_datePicker = findViewById(R.id.date_picker);
 
       setupDateForm();
 
       Button signUp = findViewById(R.id.sign_up);
-
       // populate listCountries, with list of countries for auto-completion
       String[] countryArray = getResources().getStringArray(R.array.countries_array);
-      ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, countryArray);
+      String[] schoolArray = getResources().getStringArray(R.array.school_array);
 
-      listCountries.setAdapter(adapter);
-      // Actions when calendar icon is clicked on the date of birth text field
-      Calendar calendar = Calendar.getInstance();
-      // final actions for date selection
-//      DatePickerDialog.OnDateSetListener listener =
-//              (view, year, month, dayOfMonth) -> {
-//                 // calendar month starts from 0. 0 is not really a month to the user. Add 1
-//                 String dateFormat = String.format(Locale.US, "%02d-%02d-%02d", dayOfMonth, month + 1, year);
-//                 // Replace the whole string, because of errors
-//                 edt_datePicker.setText(dateFormat);
-//              };
-      // listen for right | end drawable clicks
-//        new DatePickerDialog(this,
-//                             listener,
-//                             calendar.get(Calendar.YEAR),
-//                             calendar.get(Calendar.MONTH),
-//                             calendar.get(Calendar.DAY_OF_MONTH))
-//                .show();
+      ArrayAdapter<String> countryAdapter =
+              new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, countryArray);
+      ArrayAdapter<String> schoolAdapter =
+              new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, schoolArray);
 
+      listCountries.setAdapter(countryAdapter);
+      listSchools.setAdapter(schoolAdapter);
       signUp.setOnClickListener(v -> validateFormData());
    }
 
@@ -127,11 +129,10 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
 
             if (event.getX() >= (edt_datePicker.getWidth() - drawableWidth - padding)) {
                Calendar calendar = Calendar.getInstance();
-               DatePickerDialog dpd = DatePickerDialog
-                       .newInstance(odsl,
-                                    calendar.get(Calendar.YEAR),
-                                    calendar.get(Calendar.MONTH),
-                                    calendar.get(Calendar.DAY_OF_MONTH));
+               DatePickerDialog dpd = DatePickerDialog.newInstance(odsl,
+                                                                   calendar.get(Calendar.YEAR),
+                                                                   calendar.get(Calendar.MONTH),
+                                                                   calendar.get(Calendar.DAY_OF_MONTH));
                dpd.setVersion(DatePickerDialog.Version.VERSION_2);
                dpd.show(getSupportFragmentManager(), "DatePickerDialog");
                return true;
@@ -145,14 +146,12 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
    // validate date input
    @SuppressWarnings("all")
    private void validateFormData() {
-      String datePattern = "^((0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](\\d){4})$";
-
       boolean isCountryEmpty = TextUtils.isEmpty(listCountries.getText());
+      boolean isSchoolEmpty = TextUtils.isEmpty(listSchools.getText());
+      boolean dateMatches = edt_datePicker.getText().toString().matches(PatternUtils.DATE_ALL);
 
-      boolean dateMatches = edt_datePicker.getText().toString().matches(datePattern);
-
-      if (dateMatches && !isCountryEmpty) {
-//            startActivity(new Intent(this, AddFollowersPageActivity.class));
+      if (dateMatches && !isCountryEmpty && isSchoolEmpty) {
+         registerNewUser();
       } else {
          // because TextInputLayout has child FrameLayout that is the TextInputEditText's parent
          // view, calling getParent() directly on the TextInputEditText will return the FrameLayout
@@ -168,6 +167,11 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
             ((TextInputLayout) container.getParent()).setError("Field can't be empty");
          }
       }
+   }
+
+   private void registerNewUser() {
+      UserAccount userAccount = (UserAccount) getIntent().getSerializableExtra(EXTRA_USER_ACCOUNT);
+      startActivity(new Intent(this, MainActivity.class));
    }
 
    @Override

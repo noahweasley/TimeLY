@@ -85,8 +85,10 @@
    </style>
 
    <style name="WindowSlideHorizontalAnimations.No_Fade" parent="WindowDefaultAnimations">
-      <item name="android:activityOpenEnterAnimation">@anim/slide_enter_no_fade</item>
-      <item name="android:activityOpenExitAnimation">@anim/slide_exit_no_fade</item>
+      <item name="android:activityOpenEnterAnimation">@anim/slide_open_enter_no_fade</item>
+      <item name="android:activityOpenExitAnimation">@anim/slide_open_exit_no_fade</item>
+      <item name="android:activityCloseEnterAnimation">@anim/slide_close_enter_no_fade</item>
+      <item name="android:activityCloseExitAnimation">@anim/slide_close_exit_no_fade</item>
    </style>
 
    <style name="SnackbarStyle" parent="Widget.Design.Snackbar">

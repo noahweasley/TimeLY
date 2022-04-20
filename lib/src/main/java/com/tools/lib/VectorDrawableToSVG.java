@@ -7,8 +7,8 @@ import java.io.IOException;
 
 public class VectorDrawableToSVG {
     private static final String filePath
-            = "C:\\Users\\Noah\\StudioProjects\\TimeLY\\app\\src\\main\\res\\drawable\\ic_arrow_down.xml";
-    private static final String storagePath = "C:\\Users\\Noah\\Desktop\\ic_arrow_down.svg";
+            = "C:\\Users\\Noah\\StudioProjects\\TimeLY\\app\\src\\main\\res\\drawable\\ic_image_4.xml";
+    private static final String storagePath = "C:\\Users\\Noah\\Desktop\\ic_image_4.svg";
 
     public static void main(String[] args) {
         startConversion();

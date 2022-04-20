@@ -250,7 +250,7 @@
    <string name="login_now">Don\'t have an account yet?</string>
    <string name="create_account">Create New Account</string>
    <string name="password">Password</string>
-   <string name="user_name">Email or Username</string>
+   <string name="user_name">Username</string>
    <string name="access_message">Login to access your account</string>
    <string name="back">navigate back</string>
    <string name="complete_your_new_profile">Complete your new profile</string>
@@ -294,7 +294,8 @@
    <string name="code_entry_message">Enter the SMS Code sent to</string>
    <string name="default_phone_number">+2347055478947</string>
    <string name="edit_phone_number">Edit Phone Number</string>
-   <string name="SIGN_IN_CLIENT_ID">"490372290045-rcpn8t98q20kvqek2qfh74g73a6dm481.apps.googleusercontent.com"</string>
+   <string name="SIGN_IN_CLIENT_ID">342286363251-k07kbsm8p1271pbu27m4aucc4cbtkug9.apps.googleusercontent.com</string>
+   <string name="SIGN_IN_CLIENT_SECRET">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</string>
    <string name="enter_email">Enter your email</string>
    <string name="notifications">notifications</string>
    <string name="title_notification">Notifications</string>
@@ -323,4 +324,10 @@
    <string name="new_password_message">Enter your new password</string>
    <string name="new_password_query">Enter new password</string>
    <string name="confirm_password_query">Confirm new password</string>
+   <string name="log_in_message">Logging in, please wait …</string>
+   <string name="add_assignment_info_text">Click on the add button to add an assignment</string>
+   <string name="add_course_info_text">Click on the add button to add a course</string>
+   <string name="add_exam_info_text">Click on the add buton to add an exam</string>
+   <string name="add_timetable_info_text">Click on the add button to add a timetable</string>
+   <string name="gpa_calculator_info_text">Add courses to continue using calculator</string>
 </resources>

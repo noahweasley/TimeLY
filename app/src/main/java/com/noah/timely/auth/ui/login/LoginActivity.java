@@ -18,7 +18,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.noah.timely.R;
+import com.noah.timely.auth.data.model.UserAccount;
 import com.noah.timely.main.MainActivity;
+import com.noah.timely.util.PreferenceUtils;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
    private GoogleSignInClient mGoogleSignInClient;
@@ -44,16 +46,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       // Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are
       // included in DEFAULT_SIGN_IN.
       GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                      .requestEmail()
-                      .requestIdToken(getString(R.string.SIGN_IN_CLIENT_ID))
-                      .build();
+              .requestEmail()
+              .requestIdToken(getString(R.string.SIGN_IN_CLIENT_ID))
+              .build();
       // Build a GoogleSignInClient with the options specified by gso.
       mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
       // Check for existing Google Sign In account, if the user is already signed in
       // the GoogleSignInAccount will be non-null.
       GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
       // if account is non null, update UI accordingly
-      updateUI(account);
+//      updateUI(account);
 
    }
 
@@ -68,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       if (id == R.id.recovery) {
          startActivity(new Intent(this, RecoveryActivity.class));
       } else if (id == R.id.login) {
-         startActivity(new Intent(this, MainActivity.class));
+         performUserLogin();
       } else if (id == R.id.g_sign_parent) {
          doGoogleSignIn();
       } else if (id == R.id.exit) {
@@ -78,6 +80,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       } else {
          throw new IllegalStateException("Unexpected value: " + v.getId());
       }
+   }
+
+   private void performUserLogin() {
+      // PreferenceUtils#USER_IS_LOGGED_IN would be checked when app is starting up, if the user is logged in,
+      // then show the full app to the user
+      PreferenceUtils.setBooleanValue(this, PreferenceUtils.USER_IS_LOGGED_IN, true);
+      // ... then perform app reboot
+      Intent navigateIntent = new Intent(this, MainActivity.class);
+      navigateIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      startActivity(navigateIntent);
    }
 
    private void doGoogleSignIn() {
@@ -115,8 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
    // if already logged in, just go to the main screen
    private void updateUI(GoogleSignInAccount account) {
       if (account != null)
-         startActivity(new Intent(this, MainActivity.class)
-                               .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+         GoogleLoginCompletionActivity.start(this, UserAccount.createFromGoogleSignIn(account));
    }
 
 }

@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,7 +41,7 @@ public class ResultCalculatorFragment extends Fragment {
 
    @Override
    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-      inflater.inflate(R.menu.fragment_result_calc, menu);
+      inflater.inflate(R.menu.fragment_result_calculator, menu);
       super.onCreateOptionsMenu(menu, inflater);
    }
 
@@ -71,7 +70,8 @@ public class ResultCalculatorFragment extends Fragment {
                              @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
       setHasOptionsMenu(true);
-      ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
+      ViewGroup vg_loaderView = view.findViewById(R.id.loader_view);
+      ViewGroup vg_noOpView = view.findViewById(R.id.no_courses_view);
       // set up list
       RecyclerView rv_resultList = view.findViewById(R.id.result_list);
       rv_resultList.setAdapter(new ResultListAdapter());
@@ -89,7 +89,6 @@ public class ResultCalculatorFragment extends Fragment {
          }
       });
 
-      vg_container = view.findViewById(R.id.no_courses_view);
       if (courseModelList.isEmpty()) {
          vg_container.setVisibility(View.VISIBLE);
          rv_resultList.setVisibility(View.GONE);

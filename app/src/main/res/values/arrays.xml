@@ -310,4 +310,9 @@
       <item>Zimbabwe</item>
    </string-array>
 
+   <string-array name="school_array" >
+      <item>Not specified</item>
+      <item>Nnamdi Azikwe University Awka, Anambra</item>
+   </string-array>
+
 </resources>

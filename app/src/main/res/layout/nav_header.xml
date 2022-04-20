@@ -5,18 +5,6 @@
    android:layout_height="90dp"
    android:background="@color/colorPrimary">
 
-   <!--   <ImageView-->
-   <!--      android:layout_width="60dp"-->
-   <!--      android:layout_height="60dp"-->
-   <!--      android:contentDescription="TimeLY's Icon"-->
-   <!--      external:layout_constraintBottom_toBottomOf="parent"-->
-   <!--      external:layout_constraintEnd_toEndOf="parent"-->
-   <!--      external:layout_constraintStart_toStartOf="parent"-->
-   <!--      external:layout_constraintTop_toTopOf="parent"-->
-   <!--      external:layout_constraintVertical_bias="0.57"-->
-   <!--      external:srcCompat="@drawable/icon"-->
-   <!--      tools:ignore="HardcodedText" />-->
-
    <LinearLayout
       android:id="@+id/auth_group"
       android:layout_width="wrap_content"
@@ -36,7 +24,7 @@
          android:layout_height="wrap_content"
          android:layout_gravity="center"
          android:background="@color/white"
-         android:src="@drawable/ic_baseline_person_black"
+         android:src="@drawable/ic_baseline_person_color_primary"
          external:contentPadding="8dp"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintStart_toStartOf="parent"
@@ -51,12 +39,11 @@
          android:fontFamily="sans-serif-medium"
          android:text="Sign in"
          android:textColor="@color/white"
-         android:textSize="28sp"
+         android:textSize="24sp"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintStart_toEndOf="@+id/shapeableImageView"
          external:layout_constraintTop_toTopOf="parent" />
 
    </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

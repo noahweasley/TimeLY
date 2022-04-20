@@ -19,7 +19,7 @@
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toTopOf="parent"
-      tools:visibility="gone"/>
+      tools:visibility="gone" />
 
    <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/loader_view"
@@ -64,34 +64,29 @@
       android:layout_height="0dp"
       android:visibility="gone"
       external:layout_constraintBottom_toBottomOf="parent"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintEnd_toEndOf="@id/right_guide"
+      external:layout_constraintStart_toStartOf="@id/left_guide"
       external:layout_constraintTop_toTopOf="parent"
       tools:visibility="visible">
 
       <TextView
          android:id="@+id/textView11"
+         style="@style/Info_Text"
          android:layout_width="0dp"
          android:layout_height="wrap_content"
-         android:layout_margin="@dimen/layout_gap"
-         android:fontFamily="sans-serif-condensed"
          android:gravity="center"
-         android:letterSpacing="0.04"
          android:text="@string/registered_courses_not_found"
-         android:textColor="@color/colorPrimaryDark"
-         android:textSize="@dimen/no_task_text_size"
-         android:textStyle="bold"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
-         external:layout_constraintHorizontal_bias="0.49"
+         external:layout_constraintHorizontal_bias="0.0"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toBottomOf="@+id/img_no_event"
-         external:layout_constraintVertical_bias="0.18" />
+         external:layout_constraintVertical_bias="0.14" />
 
       <ImageView
          android:id="@+id/img_no_event"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
+         android:layout_width="100dp"
+         android:layout_height="100dp"
          android:layout_margin="@dimen/layout_gap"
          android:contentDescription="@string/no_task"
          external:layout_constraintBottom_toBottomOf="parent"
@@ -106,13 +101,10 @@
          android:id="@+id/textView10"
          android:layout_width="0dp"
          android:layout_height="wrap_content"
-         android:layout_margin="24dp"
-         android:fontFamily="sans-serif-medium"
          android:gravity="center"
          android:letterSpacing="0.04"
-         android:text="G.P.A calculator uses registered courses to simplify process"
-         android:textColor="@android:color/black"
-         android:textSize="@dimen/no_task_info_text_size"
+         android:text="@string/gpa_calculator_info_text"
+         style="@style/Info_Text.Small"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
@@ -120,5 +112,21 @@
          external:layout_constraintVertical_bias="0.089999974" />
 
    </androidx.constraintlayout.widget.ConstraintLayout>
+
+   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/left_guide"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      external:layout_constraintGuide_percent=".1"
+      tools:viewBindingIgnore="true" />
+
+   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/right_guide"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      external:layout_constraintGuide_percent=".9"
+      tools:viewBindingIgnore="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

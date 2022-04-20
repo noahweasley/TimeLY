@@ -29,6 +29,7 @@ import com.noah.timely.core.RequestRunner;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.gallery.Image;
 import com.noah.timely.gallery.ImageDirectory;
+import com.noah.timely.gallery.ImageGallery;
 import com.noah.timely.gallery.ImageListRowHolder;
 import com.noah.timely.gallery.ImageMultiChoiceMode;
 import com.noah.timely.util.ThreadUtils;
@@ -115,7 +116,7 @@ public class ImageViewerActivity extends AppCompatActivity implements ActionMode
       findViewById(R.id.add_new).setOnClickListener(
               v -> startActivity(new Intent(this, ImageDirectory.class)
                                          .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.EXTERNAL)
-                                         .setAction(ADD_NEW)));
+                                         .setAction(ImageGallery.ACTION_MULTI_SELECT)));
 
       setupSwipeHelper(rv_imageList);
 

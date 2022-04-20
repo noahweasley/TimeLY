@@ -41,24 +41,39 @@
          android:id="@+id/no_timetable_view"
          android:layout_width="0dp"
          android:layout_height="0dp"
-         android:visibility="gone"
          external:layout_constraintBottom_toBottomOf="parent"
-         external:layout_constraintEnd_toEndOf="parent"
-         external:layout_constraintStart_toStartOf="parent"
-         external:layout_constraintTop_toTopOf="parent">
+         external:layout_constraintEnd_toStartOf="@+id/right_guide"
+         external:layout_constraintHorizontal_bias="1.0"
+         external:layout_constraintStart_toStartOf="@+id/left_guide"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_bias="1.0">
 
          <TextView
+            android:id="@+id/no_task_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/wendy_one"
             android:text="@string/no_timetable"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/no_task_text_size"
-            external:layout_constraintBottom_toTopOf="@id/img_no_event"
+            style="@style/Info_Text"
+            external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent" />
+            external:layout_constraintTop_toBottomOf="@+id/img_no_event"
+            external:layout_constraintVertical_bias="0.050000012" />
+
+         <TextView
+            android:id="@+id/textView13"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:gravity="center"
+            style="@style/Info_Text.Small"
+            android:text="@string/add_timetable_info_text"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintHorizontal_bias="1.0"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@id/no_task_text"
+            external:layout_constraintVertical_bias="0.1" />
 
          <ImageView
             android:id="@+id/img_no_event"
@@ -69,9 +84,12 @@
             android:contentDescription="@string/no_task"
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintHorizontal_bias="0.498"
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent"
+            external:layout_constraintVertical_bias="0.24000001"
             external:srcCompat="@drawable/ic_no_task" />
+
 
       </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -82,6 +100,20 @@
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent" />
+
+      <androidx.constraintlayout.widget.Guideline
+         android:id="@+id/left_guide"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         external:layout_constraintGuide_percent=".1" />
+
+      <androidx.constraintlayout.widget.Guideline
+         android:id="@+id/right_guide"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         external:layout_constraintGuide_percent=".9" />
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -95,6 +127,5 @@
       external:fabCustomSize="@dimen/fab_size"
       external:maxImageSize="@dimen/fab_icon_size"
       external:srcCompat="@drawable/ic_add" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

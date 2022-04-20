@@ -202,7 +202,7 @@
       android:layout_marginHorizontal="16dp"
       android:background="@drawable/buttons_explore"
       android:enabled="true"
-      android:text="@string/sign_up"
+      android:text="@string/complete"
       android:textColor="@android:color/white"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toStartOf="@+id/right_guide"
@@ -302,5 +302,44 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal"
       external:layout_constraintGuide_percent=".6" />
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/init_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      android:background="@color/blurred_background"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      tools:visibility="gone">
+
+      <com.noah.timely.custom.MaterialProgressbar
+         android:id="@+id/indeterminateProgress"
+         style="@style/Widget.MaterialProgressBar.ProgressBar"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:indeterminate="true"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         external:layout_constraintVertical_bias="0.45"
+         external:mpb_progressStyle="circular" />
+
+      <TextView
+         android:id="@+id/loader_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="@dimen/layout_gap"
+         android:text="@string/log_in_message"
+         android:textColor="@android:color/black"
+         android:textSize="@dimen/loader_text_size"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@+id/indeterminateProgress" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

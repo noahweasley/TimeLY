@@ -28,6 +28,7 @@
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toTopOf="parent"
+         android:scrollbars="none"
          tools:ignore="RtlSymmetry">
 
          <TextView

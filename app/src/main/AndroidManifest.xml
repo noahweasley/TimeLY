@@ -89,7 +89,7 @@
       <activity
          android:name=".main.SplashScreen"
          android:exported="true"
-         android:theme="@style/FullscreenTheme"/>
+         android:theme="@style/FullscreenTheme" />
 
       <activity
          android:name=".main.MainActivity"
@@ -106,13 +106,20 @@
          android:name=".settings.SettingsActivity"
          android:theme="@style/SlidingActivityTheme_No_Fade" />
 
-      <activity android:name=".gallery.ImageGallery" />
-
       <activity
          android:name=".alarms.AlarmActivity"
          android:excludeFromRecents="true" />
 
-      <activity android:name=".gallery.ImageDirectory" />
+      <activity
+         android:name=".gallery.ImageDirectory"
+         android:theme="@style/SlidingActivityTheme_No_Fade" />
+
+      <activity
+         android:name=".gallery.ImageGallery"
+         android:theme="@style/SlidingActivityTheme_No_Fade" />
+
+      <activity android:name=".gallery.FullScreenImageActivity"
+         android:theme="@style/AppTheme.Immersive"  />
 
       <activity
          android:name=".assignment.AddAssignmentActivity"
@@ -162,7 +169,7 @@
 
       <activity
          android:name=".auth.ui.login.LoginActivity"
-         android:theme="@style/AppTheme.SlideVertical_recipient"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
          android:windowSoftInputMode="adjustPan" />
 
       <activity
