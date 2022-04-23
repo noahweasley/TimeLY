@@ -159,7 +159,7 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
          if (!dateMatches) {
             ViewGroup container = (ViewGroup) edt_datePicker.getParent();
             TextInputLayout til_datePickerParent = ((TextInputLayout) container.getParent());
-            til_datePickerParent.setError("Format: dd-mm-yyyy or dd/mm/yyy");
+            til_datePickerParent.setError("Input a correct data format");
          }
 
          if (isCountryEmpty) {

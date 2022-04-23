@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.noah.timely.R;
-import com.noah.timely.about.TimelyBasicInfoDialog;
+import com.noah.timely.about.BasicInfoListActivity;
 import com.noah.timely.about.TimelyUpdateInfoDialog;
 import com.noah.timely.alarms.AlarmHolderFragment;
 import com.noah.timely.alarms.TimeChangeDetector;
@@ -298,9 +298,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                  .setNegativeButton(android.R.string.cancel, this::reportAction)
                  .create().show();
 
-      } else if (menuItemId == R.id.about) {
+      } else if (menuItemId == R.id.help) {
 
-         new TimelyBasicInfoDialog().show(this);
+       startActivity(new Intent(this, BasicInfoListActivity.class));
 
       }
 

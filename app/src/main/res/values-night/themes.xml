@@ -13,11 +13,16 @@
       <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
       <item name="colorAccent">@color/colorAccent</item>
       <item name="snackbarStyle">@style/SnackbarStyle</item>
+      <item name="android:actionModeStyle">@style/ActionModeStyle</item>
       <item name="android:windowBackground">@color/window_background_color</item>
       <item name="android:navigationBarColor" tools:targetApi="lollipop">#BE000000</item>
       <item name="windowActionModeOverlay">true</item>
       <item name="actionModeBackground">@color/colorPrimary</item>
       <item name="android:windowAnimationStyle">@style/WindowDefaultAnimations</item>
+   </style>
+
+   <style name="ActionModeStyle">
+      <item name="height">@dimen/action_bar_size</item>
    </style>
 
    <style name="AppTheme.SlideVertical_recipient" parent="AppTheme">

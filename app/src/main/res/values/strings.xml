@@ -330,4 +330,15 @@
    <string name="add_exam_info_text">Click on the add buton to add an exam</string>
    <string name="add_timetable_info_text">Click on the add button to add a timetable</string>
    <string name="gpa_calculator_info_text">Add courses to continue using calculator</string>
+   <string name="help_centre">Help Centre</string>
+   <string name="terms_and_policy">Terms and Privacy Policy</string>
+   <string name="app_info">App Info</string>
+   <string name="copyright">\u00A9</string>
+   <string name="company_name">Astrro Inc.</string>
+   <string name="legal_notice_address">http://www.timely.org/legal</string>
+   <string name="help_address">http://www.timely.org/help</string>
+   <string name="calculate">Calculate</string>
+   <string name="units_total">Units Total</string>
+   <string name="default_gpa">0.00</string>
+   <string name="default_credit_units">0.00</string>
 </resources>

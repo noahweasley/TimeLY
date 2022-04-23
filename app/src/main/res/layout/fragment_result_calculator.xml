@@ -1,30 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:external="http://schemas.android.com/apk/res-auto"
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
-   android:layout_height="match_parent">
+   android:layout_height="match_parent"
+   external:layoutDescription="@xml/fragment_result_calculator_scene">
 
-   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/result_list"
+   <androidx.constraintlayout.motion.widget.MotionLayout
+      android:id="@+id/calculate_view"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:clipToPadding="false"
-      android:layoutAnimation="@anim/list_layout_anim_gravity_top"
-      android:paddingHorizontal="@dimen/data_list_padding"
-      android:paddingTop="@dimen/data_list_padding"
-      android:paddingBottom="80dp"
-      external:layout_behavior="@string/appbar_scrolling_view_behavior"
+      android:visibility="gone"
+      external:layoutDescription="@xml/fragment_result_calculator_scene"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toTopOf="parent"
-      tools:visibility="gone" />
+      tools:visibility="visible">
 
-   <androidx.constraintlayout.widget.ConstraintLayout
+      <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/result_list"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         android:clipToPadding="false"
+         android:layoutAnimation="@anim/list_layout_anim_gravity_top"
+         android:paddingHorizontal="@dimen/data_list_padding"
+         android:paddingTop="@dimen/data_list_padding"
+         android:paddingBottom="80dp"
+         external:layout_behavior="@string/appbar_scrolling_view_behavior"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
+         tools:visibility="visible" />
+
+      <Button
+         android:id="@+id/calculate"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="16dp"
+         android:layout_marginBottom="@dimen/layout_gap"
+         android:background="@drawable/cta_button"
+         android:text="@string/calculate"
+         android:textColor="@android:color/white"
+         external:layout_constraintBottom_toTopOf="@id/divider5"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent" />
+
+      <View
+         android:id="@+id/divider5"
+         android:layout_width="0dp"
+         android:layout_height="1dp"
+         android:layout_marginVertical="@dimen/layout_gap"
+         android:background="?android:attr/listDivider"
+         external:layout_constraintBottom_toTopOf="@id/total_units_label"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent" />
+
+      <TextView
+         android:id="@+id/total_units_label"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap_2"
+         android:text="@string/units_total"
+         android:textColor="@color/light_grey"
+         android:textSize="22sp"
+         external:layout_constraintBottom_toTopOf="@id/total_units"
+         external:layout_constraintStart_toStartOf="parent" />
+
+      <TextView
+         android:id="@+id/total_units"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="@dimen/layout_gap_2"
+         android:text="@string/default_credit_units"
+         android:textColor="@color/light_grey"
+         android:textSize="18sp"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="@id/gpa_units" />
+
+      <TextView
+         android:id="@+id/gpa_label"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap_2"
+         android:text="@string/units_total"
+         android:textColor="@color/light_grey"
+         android:textSize="22sp"
+         external:layout_constraintBottom_toTopOf="@id/total_units"
+         external:layout_constraintEnd_toEndOf="parent" />
+
+      <TextView
+         android:id="@+id/gpa_units"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginHorizontal="@dimen/layout_gap_2"
+         android:text="@string/default_gpa"
+         android:textColor="@color/colorAccent"
+         android:textSize="36sp"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintTop_toBottomOf="@+id/gpa_label" />
+
+   </androidx.constraintlayout.motion.widget.MotionLayout>
+
+   <androidx.constraintlayout.motion.widget.MotionLayout
       android:id="@+id/loader_view"
       android:layout_width="0dp"
       android:layout_height="0dp"
+      external:layoutDescription="@xml/fragment_result_calculator_scene"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
@@ -56,18 +141,19 @@
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toBottomOf="@+id/indeterminateProgress" />
 
-   </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.constraintlayout.motion.widget.MotionLayout>
 
-   <androidx.constraintlayout.widget.ConstraintLayout
+   <androidx.constraintlayout.motion.widget.MotionLayout
       android:id="@+id/no_courses_view"
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:visibility="gone"
+      external:layoutDescription="@xml/fragment_result_calculator_scene"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="@id/right_guide"
       external:layout_constraintStart_toStartOf="@id/left_guide"
       external:layout_constraintTop_toTopOf="parent"
-      tools:visibility="visible">
+      tools:visibility="gone">
 
       <TextView
          android:id="@+id/textView11"
@@ -99,19 +185,18 @@
 
       <TextView
          android:id="@+id/textView10"
+         style="@style/Info_Text.Small"
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:gravity="center"
-         android:letterSpacing="0.04"
          android:text="@string/gpa_calculator_info_text"
-         style="@style/Info_Text.Small"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toBottomOf="@+id/textView11"
          external:layout_constraintVertical_bias="0.089999974" />
 
-   </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.constraintlayout.motion.widget.MotionLayout>
 
    <androidx.constraintlayout.widget.Guideline
       android:id="@+id/left_guide"
@@ -129,4 +214,4 @@
       external:layout_constraintGuide_percent=".9"
       tools:viewBindingIgnore="true" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

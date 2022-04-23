@@ -86,7 +86,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginHorizontal="16dp"
-      android:background="@drawable/buttons_explore"
+      android:background="@drawable/cta_button"
       android:text="@string/submit"
       android:textColor="@android:color/white"
       external:layout_constraintBottom_toBottomOf="parent"

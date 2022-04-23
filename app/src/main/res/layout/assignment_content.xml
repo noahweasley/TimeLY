@@ -65,6 +65,7 @@
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:gravity="center"
+         android:text="@string/add_assignment_info_text"
          style="@style/Info_Text.Small"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"

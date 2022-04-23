@@ -60,7 +60,6 @@ public class TimelyBasicInfoDialog extends DialogFragment implements View.OnClic
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.buymeacoffee.com/noahweasley"));
             getActivity().startActivity(Intent.createChooser(intent, getString(R.string.link_open_text)));
          });
-
          TextView tv_version = findViewById(R.id.version);
          tv_version.setText(String.format("V%s", getAppVesionName(getContext())));
       }

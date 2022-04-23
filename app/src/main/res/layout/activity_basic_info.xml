@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@color/colorPrimary"
+   tools:context=".about.BasicInfoListActivity">
+
+   <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/action_bar_size"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+   <TextView
+      android:id="@+id/app_name"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/app_name"
+      android:textColor="@color/white"
+      android:textSize="32sp"
+      external:layout_constraintVertical_chainStyle="packed"
+      external:layout_constraintBottom_toTopOf="@id/version_name"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.0"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/toolbar"
+      external:layout_constraintVertical_bias="0.305" />
+
+   <TextView
+      android:id="@+id/version_name"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/layout_gap"
+      android:gravity="center"
+      android:textColor="@color/light_grey"
+      android:textSize="26sp"
+      external:layout_constraintBottom_toTopOf="@+id/imageView"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/app_name" />
+
+   <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/layout_gap_2"
+      android:contentDescription="@string/timely_icon"
+      external:layout_constraintBottom_toTopOf="@id/production_date"
+      external:layout_goneMarginTop="@dimen/layout_gap_2"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@id/version_name"
+      external:srcCompat="@mipmap/app_icon" />
+
+   <TextView
+      android:id="@+id/production_date"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:textColor="@color/light_grey"
+      android:textSize="24sp"
+      android:layout_marginTop="@dimen/layout_gap_2"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      android:gravity="center"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

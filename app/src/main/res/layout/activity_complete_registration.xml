@@ -211,21 +211,32 @@
          external:layout_constraintStart_toStartOf="@+id/left_guide"
          external:layout_constraintTop_toBottomOf="@+id/gender" />
 
-      <AutoCompleteTextView
-         android:id="@+id/list_schools"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
-         android:hint="@string/country"
-         android:maxLines="2"
-         android:paddingStart="16dp"
-         android:paddingLeft="16dp"
-         android:paddingEnd="16dp"
-         android:paddingRight="16dp"
-         android:textSize="@dimen/editext_text_size"
-         external:layout_constraintEnd_toStartOf="@+id/right_guide"
-         external:layout_constraintStart_toStartOf="@+id/left_guide"
-         external:layout_constraintTop_toBottomOf="@+id/list_countries" />
+   </com.google.android.material.textfield.TextInputLayout>
+
+   <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/list_item_2"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/layout_gap"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
+      external:layout_constraintTop_toBottomOf="@+id/list_item">
+
+   <AutoCompleteTextView
+      android:id="@+id/list_schools"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
+      android:hint="@string/school"
+      android:maxLines="2"
+      android:paddingStart="16dp"
+      android:paddingLeft="16dp"
+      android:paddingEnd="16dp"
+      android:paddingRight="16dp"
+      android:textSize="@dimen/editext_text_size"
+      external:layout_constraintEnd_toStartOf="@+id/right_guide"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
+      external:layout_constraintTop_toBottomOf="@+id/list_countries" />
 
    </com.google.android.material.textfield.TextInputLayout>
 
@@ -234,14 +245,13 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginHorizontal="@dimen/layout_gap"
-      android:layout_marginTop="@dimen/layout_gap_2"
-      android:background="@drawable/buttons_explore"
+      android:background="@drawable/cta_button"
       android:text="@string/complete"
       android:textColor="@android:color/white"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toStartOf="@+id/right_guide"
       external:layout_constraintStart_toStartOf="@+id/left_guide"
-      external:layout_constraintTop_toBottomOf="@id/list_item"
+      external:layout_constraintTop_toBottomOf="@+id/list_item_2"
       external:layout_constraintVertical_bias="0.342" />
 
    <androidx.constraintlayout.widget.Guideline

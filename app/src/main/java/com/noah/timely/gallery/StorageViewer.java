@@ -21,10 +21,10 @@ public class StorageViewer extends AppCompatActivity implements View.OnClickList
       getSupportActionBar().setTitle("Select Storage");
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-      ViewGroup v_internalStorage = findViewById(R.id.internal_storage);
+      ViewGroup v_internalStorage = findViewById(R.id.centre);
       v_internalStorage.setOnClickListener(this);
 
-      ViewGroup v_externalStorage = findViewById(R.id.external_storage);
+      ViewGroup v_externalStorage = findViewById(R.id.contact);
       v_externalStorage.setOnClickListener(this);
 
       boolean ext_str_mounted = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
@@ -33,7 +33,7 @@ public class StorageViewer extends AppCompatActivity implements View.OnClickList
 
    @Override
    public void onClick(View v) {
-      if (v.getId() == R.id.internal_storage) {
+      if (v.getId() == R.id.centre) {
          startActivity(new Intent(this, ImageDirectory.class)
                  .putExtra(ImageDirectory.STORAGE_ACCESS_ROOT, ImageDirectory.INTERNAL)
                  .setAction(getIntent().getAction()));

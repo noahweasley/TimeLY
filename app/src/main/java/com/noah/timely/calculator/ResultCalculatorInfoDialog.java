@@ -61,7 +61,7 @@ public class ResultCalculatorInfoDialog extends DialogFragment {
          super.onCreate(savedInstanceState);
          getWindow().requestFeature(Window.FEATURE_NO_TITLE);
          getWindow().setBackgroundDrawableResource(R.drawable.bg_rounded_edges);
-         setContentView(R.layout.dialog_result_calculator);
+        setContentView(R.layout.dialog_result_calculator);
          ImageButton btn_close = findViewById(R.id.close);
          Button btn_proceed = findViewById(R.id.proceed), btn_remove = findViewById(R.id.remove);
 
@@ -72,23 +72,17 @@ public class ResultCalculatorInfoDialog extends DialogFragment {
       }
 
       @Override
-      @SuppressWarnings("all")
       public void onClick(View view) {
-         switch (view.getId()) {
-            case R.id.close: {
-               if (listener != null) listener.onAction(ACTION_CANCELLED);
-               ResultCalculatorInfoDialog.this.dismiss();
-            }
-            break;
-            case R.id.proceed: {
-               if (listener != null) listener.onAction(ACTION_PROCEED);
-            }
-            break;
-            case R.id.remove: {
-               if (listener != null) listener.onAction(ACTION_DONT_SHOW);
-            }
-            break;
+         int id = view.getId();
+         if (id == R.id.close) {
+            if (listener != null) listener.onAction(ACTION_CANCELLED);
+         } else if (id == R.id.proceed) {
+            if (listener != null) listener.onAction(ACTION_PROCEED);
+         } else if (id == R.id.remove) {
+            if (listener != null) listener.onAction(ACTION_DONT_SHOW);
          }
+         // after any action, dismiss dialog
+         ResultCalculatorInfoDialog.this.dismiss();
 
       }
 

@@ -10,7 +10,6 @@ import java.net.URL;
 
 public class UserAccount implements Serializable {
    private String userId;
-   private String displayName;
    private String firstName;
    private String lastName;
    private String userName;
@@ -26,8 +25,10 @@ public class UserAccount implements Serializable {
 
    public static UserAccount createFromGoogleSignIn(GoogleSignInAccount account) {
       UserAccount userAccount = new UserAccount();
-      userAccount.setFirstName(account.getDisplayName());
+      userAccount.setFirstName(account.getGivenName());
       userAccount.setLastName(account.getFamilyName());
+//      userAccount.setEmail(account.getEmail());
+//      userAccount.setProfilePictureUri(account.getPhotoUrl());
 
       return userAccount;
    }
@@ -38,14 +39,6 @@ public class UserAccount implements Serializable {
 
    public void setUserId(String userId) {
       this.userId = userId;
-   }
-
-   public String getDisplayName() {
-      return displayName;
-   }
-
-   public void setDisplayName(String displayName) {
-      this.displayName = displayName;
    }
 
    public String getFirstName() {

@@ -50,9 +50,9 @@
       android:id="@+id/subtitle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textSize="@dimen/min_text_size"
       android:text="@string/create"
       android:textColor="@color/light_grey"
+      android:textSize="@dimen/min_text_size"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@+id/title" />
@@ -72,105 +72,158 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content">
 
-         <EditText
-            android:id="@+id/first_name"
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/first_name_parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_baseline_person_24"
-            android:drawableLeft="@drawable/ic_baseline_person_24"
-            android:drawablePadding="8dp"
-            android:hint="@string/first_name"
-            android:inputType="textPersonName"
-            android:textColorHint="@color/light_grey"
-            android:textSize="@dimen/editext_text_size"
+            external:errorEnabled="true"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent"
-            tools:ignore="Autofill,LabelFor" />
+            tools:viewBindingIgnore="true">
 
-         <EditText
-            android:id="@+id/last_name"
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/first_name"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:drawableStart="@drawable/ic_baseline_person_24"
+               android:drawableLeft="@drawable/ic_baseline_person_24"
+               android:drawablePadding="8dp"
+               android:hint="@string/first_name"
+               android:inputType="textPersonName"
+               android:textColorHint="@color/light_grey"
+               android:textSize="@dimen/editext_text_size"
+               tools:ignore="Autofill,LabelFor" />
+
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/last_name_parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/ic_baseline_person_24"
-            android:drawableLeft="@drawable/ic_baseline_person_24"
-            android:drawablePadding="8dp"
-            android:hint="@string/last_name"
-            android:inputType="textPersonName"
-            android:textColorHint="@color/light_grey"
-            android:textSize="@dimen/editext_text_size"
+            external:errorEnabled="true"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@+id/first_name"
-            tools:ignore="Autofill,LabelFor" />
+            external:layout_constraintTop_toBottomOf="@+id/first_name_parent"
+            tools:viewBindingIgnore="true">
 
-         <EditText
-            android:id="@+id/user_name"
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/last_name"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="16dp"
+               android:drawableStart="@drawable/ic_baseline_person_24"
+               android:drawableLeft="@drawable/ic_baseline_person_24"
+               android:drawablePadding="8dp"
+               android:hint="@string/last_name"
+               android:inputType="textPersonName"
+               android:textColorHint="@color/light_grey"
+               android:textSize="@dimen/editext_text_size"
+               tools:ignore="Autofill,LabelFor" />
+
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/user_name_parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/ic_baseline_alternate_email_24"
-            android:drawableLeft="@drawable/ic_baseline_alternate_email_24"
-            android:drawablePadding="8dp"
-            android:hint="@string/user_name"
-            android:inputType="textVisiblePassword|textNoSuggestions"
-            android:textColorHint="@color/light_grey"
-            android:textSize="@dimen/editext_text_size"
+            external:errorEnabled="true"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@+id/last_name"
-            tools:ignore="Autofill,LabelFor" />
+            external:layout_constraintTop_toBottomOf="@+id/last_name_parent"
+            tools:viewBindingIgnore="true">
 
-         <EditText
-            android:id="@+id/phone_number"
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/user_name"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:drawableStart="@drawable/ic_baseline_alternate_email_24"
+               android:drawableLeft="@drawable/ic_baseline_alternate_email_24"
+               android:drawablePadding="8dp"
+               android:hint="@string/user_name"
+               android:inputType="textVisiblePassword|textNoSuggestions"
+               android:textColorHint="@color/light_grey"
+               android:textSize="@dimen/editext_text_size"
+               tools:ignore="Autofill,LabelFor" />
+
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phone_number_parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/ic_baseline_phone_24"
-            android:drawableLeft="@drawable/ic_baseline_phone_24"
-            android:drawablePadding="8dp"
-            android:hint="@string/phone_number"
-            android:inputType="phone"
-            android:textColorHint="@color/light_grey"
-            android:textSize="@dimen/editext_text_size"
+            external:errorEnabled="true"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@+id/user_name"
-            tools:ignore="Autofill,LabelFor" />
+            external:layout_constraintTop_toBottomOf="@+id/user_name_parent"
+            tools:viewBindingIgnore="true">
 
-         <EditText
-            android:id="@+id/email"
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/phone_number"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:drawableStart="@drawable/ic_baseline_phone_24"
+               android:drawableLeft="@drawable/ic_baseline_phone_24"
+               android:drawablePadding="8dp"
+               android:hint="@string/phone_number"
+               android:inputType="phone"
+               android:textColorHint="@color/light_grey"
+               android:textSize="@dimen/editext_text_size"
+               tools:ignore="Autofill,LabelFor" />
+
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/ic_outline_email_24"
-            android:drawableLeft="@drawable/ic_outline_email_24"
-            android:drawablePadding="8dp"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:textColorHint="@color/light_grey"
-            android:textSize="@dimen/editext_text_size"
+            external:errorEnabled="true"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@+id/phone_number"
-            tools:ignore="Autofill,LabelFor" />
+            external:layout_constraintTop_toBottomOf="@+id/phone_number_parent"
+            tools:viewBindingIgnore="true">
 
-         <EditText
-            android:id="@+id/password"
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/email"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:drawableStart="@drawable/ic_outline_email_24"
+               android:drawableLeft="@drawable/ic_outline_email_24"
+               android:drawablePadding="8dp"
+               android:hint="@string/email"
+               android:inputType="textEmailAddress"
+               android:textColorHint="@color/light_grey"
+               android:textSize="@dimen/editext_text_size"
+               tools:ignore="Autofill,LabelFor" />
+
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_gap"
-            android:drawableStart="@drawable/ic_baseline_lock_24"
-            android:drawablePadding="8dp"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textColorHint="@color/light_grey"
-            android:textSize="@dimen/editext_text_size"
+            external:errorEnabled="true"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@+id/email"
-            tools:ignore="Autofill,LabelFor" />
+            external:layout_constraintTop_toBottomOf="@+id/email_parent"
+            external:passwordToggleEnabled="true"
+            external:passwordToggleTint="?colorControlNormal"
+            tools:viewBindingIgnore="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+               android:id="@+id/password"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:drawableStart="@drawable/ic_baseline_lock_24"
+               android:drawableLeft="@drawable/ic_baseline_lock_24"
+               android:drawablePadding="8dp"
+               android:hint="@string/password"
+               android:inputType="textPassword"
+               android:textColorHint="@color/light_grey"
+               android:textSize="@dimen/editext_text_size"
+               tools:ignore="Autofill,LabelFor" />
+
+         </com.google.android.material.textfield.TextInputLayout>
 
       </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -200,7 +253,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginHorizontal="16dp"
-      android:background="@drawable/buttons_explore"
+      android:background="@drawable/cta_button"
       android:enabled="true"
       android:text="@string/complete"
       android:textColor="@android:color/white"
@@ -307,8 +360,8 @@
       android:id="@+id/init_view"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:visibility="gone"
       android:background="@color/blurred_background"
+      android:visibility="gone"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"

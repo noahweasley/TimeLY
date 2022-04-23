@@ -75,11 +75,6 @@
                android:title="@string/settings" />
 
             <item
-               android:id="@+id/whats_new"
-               android:icon="@drawable/ic_whats_new"
-               android:title="@string/whats_new" />
-
-            <item
                android:id="@+id/__export"
                android:icon="@drawable/ic_baseline_export"
                android:title="@string/generate_export" />
@@ -90,12 +85,7 @@
                android:title="@string/generate_import" />
 
             <item
-               android:id="@+id/report"
-               android:icon="@drawable/ic_report"
-               android:title="@string/help" />
-
-            <item
-               android:id="@+id/about"
+               android:id="@+id/help"
                android:icon="@drawable/ic_about"
                android:title="@string/about" />
 

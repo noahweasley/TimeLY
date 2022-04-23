@@ -3,6 +3,7 @@ package com.noah.timely.auth.ui.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -34,6 +35,9 @@ public class GoogleLoginCompletionActivity extends AppCompatActivity {
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_google_login);
+
+      View btn_exit = findViewById(R.id.exit);
+      btn_exit.setOnClickListener(v -> onBackPressed());
 
       UserAccount userAccount = (UserAccount) getIntent().getSerializableExtra(EXTRA_USER_ACCOUNT);
       String randomUsername =  userAccount.getRandomUserName();

@@ -17,7 +17,7 @@
       external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
    <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/internal_storage"
+      android:id="@+id/centre"
       android:layout_width="match_parent"
       android:layout_height="@dimen/storage_view_container_height"
       android:layout_marginVertical="@dimen/layout_gap"
@@ -59,7 +59,7 @@
    </androidx.constraintlayout.widget.ConstraintLayout>
 
    <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/external_storage"
+      android:id="@+id/contact"
       android:layout_width="match_parent"
       android:layout_height="80dp"
       android:layout_marginBottom="@dimen/layout_gap"

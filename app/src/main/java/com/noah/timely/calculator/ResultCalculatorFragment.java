@@ -30,6 +30,7 @@ public class ResultCalculatorFragment extends Fragment {
    public static final String ARG_POSITION = "tab position";
    private List<DataModel> courseModelList = new ArrayList<>();
    private ViewGroup vg_container;
+   private ResultListAdapter adapter;
 
    public static Fragment newInstance(int position) {
       Bundle bundle = new Bundle();
@@ -72,9 +73,10 @@ public class ResultCalculatorFragment extends Fragment {
       setHasOptionsMenu(true);
       ViewGroup vg_loaderView = view.findViewById(R.id.loader_view);
       ViewGroup vg_noOpView = view.findViewById(R.id.no_courses_view);
+      ViewGroup vg_calculateView = view.findViewById(R.id.calculate_view);
       // set up list
       RecyclerView rv_resultList = view.findViewById(R.id.result_list);
-      rv_resultList.setAdapter(new ResultListAdapter());
+      rv_resultList.setAdapter((adapter = new ResultListAdapter()));
       rv_resultList.setLayoutManager(new LinearLayoutManager(getContext()));
       // then ...
       SchoolDatabase database = new SchoolDatabase(getContext());
@@ -87,56 +89,57 @@ public class ResultCalculatorFragment extends Fragment {
                courseModelList = database.getCoursesData(SchoolDatabase.SECOND_SEMESTER);
             }
          }
+
+         if (isAdded()) {
+            getActivity().runOnUiThread(() -> {
+               vg_loaderView.setVisibility(View.GONE);
+               if (courseModelList.isEmpty()) {
+                  vg_noOpView.setVisibility(View.VISIBLE);
+                  vg_calculateView.setVisibility(View.GONE);
+               } else {
+                  vg_container.setVisibility(View.GONE);
+                  vg_calculateView.setVisibility(View.VISIBLE);
+                  adapter.notifyDataSetChanged();
+               }
+            });
+         }
+
       });
-
-      if (courseModelList.isEmpty()) {
-         vg_container.setVisibility(View.VISIBLE);
-         rv_resultList.setVisibility(View.GONE);
-
-      } else {
-         vg_container.setVisibility(View.GONE);
-         rv_resultList.setVisibility(View.VISIBLE);
-      }
    }
 
    @Override
    public void onResume() {
       super.onResume();
-      boolean showInfo1 = PreferenceUtils.getBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_1, false);
-      boolean showInfo2 = PreferenceUtils.getBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_2, false);
+      boolean showInfo1 = PreferenceUtils.getBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_1, true);
+      boolean showInfo2 = PreferenceUtils.getBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_2, true);
 
+      // show educational UI
       if (courseModelList.isEmpty()) {
-         // show educational UI
-         vg_container.setVisibility(View.VISIBLE);
+         // don't show info dialog anymore, if user doens't want it to be shown anymore
+         if (getArguments().getInt(ARG_POSITION) == 0 && !showInfo1) {
+            return;
+         } else if (getArguments().getInt(ARG_POSITION) == 1 && !showInfo2) {
+            return;
+         }
 
-         if (courseModelList.isEmpty()) {
-            // don't show info dialog anymore, if user doens't want it to be shown anymore
-            if (getArguments().getInt(ARG_POSITION) == 0 && !showInfo1) {
-               return;
-            } else if (getArguments().getInt(ARG_POSITION) == 1 && !showInfo2) {
-               return;
-            }
+         // inform user that courses need to be registered before they can use the G.P.A calculator
+         new ResultCalculatorInfoDialog().show(getContext(), null).setOnActionReceviedListener(action -> {
+            // naviagate to course fragment to add courses
+            if (action == ResultCalculatorInfoDialog.ACTION_PROCEED) {
+               if (getActivity() != null && getActivity() instanceof MainActivity) {
+                  ((MainActivity) getActivity()).loadFragment(CoursesFragment.newInstance());
+               } // end if
+            } else if (action == ResultCalculatorInfoDialog.ACTION_DONT_SHOW) {
+               if (getArguments().getInt(ARG_POSITION) == 0)
+                  PreferenceUtils.setBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_1, false);
+               else
+                  PreferenceUtils.setBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_2, false);
+            } // end if - else
 
-            // inform user that courses need to be registered before they can use the G.P.A calculator
-            new ResultCalculatorInfoDialog().show(getContext(), null).setOnActionReceviedListener(action -> {
-               // naviagate to course fragment to add courses
-               if (action == ResultCalculatorInfoDialog.ACTION_PROCEED) {
-                  if (getActivity() != null && getActivity() instanceof MainActivity) {
-                     ((MainActivity) getActivity()).loadFragment(CoursesFragment.newInstance());
-                  } // end if
-               } else if (action == ResultCalculatorInfoDialog.ACTION_DONT_SHOW) {
-                  if (getArguments().getInt(ARG_POSITION) == 0)
-                     PreferenceUtils.setBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_1, false);
-                  else
-                     PreferenceUtils.setBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_2, false);
-               } // end if - else
-
-            }); // end callback
-         } else {
-            Toast.makeText(getContext(), "Course is not empty", Toast.LENGTH_LONG).show( );
-         } // end if - else
-
-      }
+         }); // end callback
+      } else {
+         Toast.makeText(getContext(), "Course is not empty", Toast.LENGTH_LONG).show();
+      } // end if - else
 
    }
 
