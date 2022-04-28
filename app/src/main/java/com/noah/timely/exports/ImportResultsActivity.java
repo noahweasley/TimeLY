@@ -40,7 +40,7 @@ import com.noah.timely.scheduled.SUpdateMessage;
 import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TUpdateMessage;
 import com.noah.timely.timetable.TimetableModel;
-import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.collections.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.TimelyUpdateUtils;
 

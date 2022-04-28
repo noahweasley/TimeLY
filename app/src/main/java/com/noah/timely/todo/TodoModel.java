@@ -1,7 +1,7 @@
 package com.noah.timely.todo;
 
 import com.noah.timely.core.DataModel;
-import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.collections.CollectionUtils;
 
 public class TodoModel extends DataModel {
    public static final String[] SPINNER_CATEGORIES = { "Miscellaneous_Todo", "Work_Todo", "Music_Todo", "Travel_Todo",

@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.noah.timely.R;
-import com.noah.timely.util.ISupplier;
+import com.noah.timely.util.collections.ISupplier;
 import com.noah.timely.util.ThreadUtils;
 
 public class ActionProcessorDialog extends DialogFragment {

@@ -1,6 +1,6 @@
 package com.noah.timely.core;
 
-import static com.noah.timely.util.CollectionUtils.linearSearch;
+import static com.noah.timely.util.collections.CollectionUtils.linearSearch;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,7 +23,7 @@ import com.noah.timely.exam.ExamModel;
 import com.noah.timely.gallery.Image;
 import com.noah.timely.timetable.TimetableModel;
 import com.noah.timely.todo.TodoModel;
-import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.collections.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.LogUtils;
 import com.noah.timely.util.PreferenceUtils;

@@ -2,7 +2,7 @@ package com.noah.timely.todo;
 
 import static com.noah.timely.todo.TodoModel.SPINNER_CATEGORIES;
 import static com.noah.timely.todo.TodoModel.SPINNER_CATEGORIES_ALT;
-import static com.noah.timely.util.CollectionUtils.linearSearch;
+import static com.noah.timely.util.collections.CollectionUtils.linearSearch;
 import static com.noah.timely.util.Converter.convertTime;
 import static com.noah.timely.util.MiscUtil.isUserPreferred24Hours;
 import static com.noah.timely.util.MiscUtil.playAlertTone;

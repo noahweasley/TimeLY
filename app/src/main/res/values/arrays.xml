@@ -66,6 +66,16 @@
       <item>dd_mm_yyyy</item>
    </string-array>
 
+   <string-array name="scale_entries">
+      <item>4</item>
+      <item>5</item>
+   </string-array>
+
+   <string-array name="scale_values">
+      <item>4</item>
+      <item>5</item>
+   </string-array>
+
    <string-array name="countries_array">
       <item>Afghanistan</item>
       <item>Albania</item>
@@ -310,7 +320,7 @@
       <item>Zimbabwe</item>
    </string-array>
 
-   <string-array name="school_array" >
+   <string-array name="school_array">
       <item>Not specified</item>
       <item>Nnamdi Azikwe University Awka, Anambra</item>
    </string-array>

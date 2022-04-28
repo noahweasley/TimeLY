@@ -1,4 +1,4 @@
-package com.noah.timely.util;
+package com.noah.timely.util.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +34,7 @@ public class CollectionUtils {
     *
     * @param target   the list to be used
     * @param function the function to used in the mapper
-    * @param <T>      the type of data applied to thee mapper
+    * @param <T>      the type of data applied to the mapper
     * @param <R>      the return type of the mapper
     * @return a list of specified results by the mapper
     */
@@ -42,6 +42,15 @@ public class CollectionUtils {
       List<R> result = new ArrayList<>();
       for (T element : target) {
          result.add(function.apply(element));
+      }
+
+      return result;
+   }
+
+   public static <T> T reduce(List<T> target, T identityVal, IBinaryOperator<T> combiner) {
+      T result = null;
+      for (T element : target) {
+         combiner.apply(result, element);
       }
 
       return result;
@@ -102,4 +111,5 @@ public class CollectionUtils {
    public static <E> boolean isEmpty(Collection<E> collection) {
       return collection == null || collection.isEmpty();
    }
+
 }

@@ -22,6 +22,7 @@ import com.noah.timely.R;
 public class IntroPageActivity extends AppCompatActivity implements View.OnClickListener {
    private IntroPagerAdapter adapter;
    private ViewPager2 pager_intro;
+   public static final int MAX_PAGE_INDEX = 3;
 
    @Override
    protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,8 +56,8 @@ public class IntroPageActivity extends AppCompatActivity implements View.OnClick
             if (s_RecyclerView instanceof RecyclerView)
                s_RecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             // hide or show corresponding views according to page position
-            start.setVisibility(position == 3 ? View.VISIBLE : View.GONE);
-            skip.setVisibility(position == 3 ? View.GONE : View.VISIBLE);
+            start.setVisibility(position == MAX_PAGE_INDEX ? View.VISIBLE : View.GONE);
+            skip.setVisibility(position == MAX_PAGE_INDEX ? View.GONE : View.VISIBLE);
 
          }
 

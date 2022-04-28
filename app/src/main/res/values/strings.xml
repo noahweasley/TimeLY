@@ -221,7 +221,8 @@
    <string name="course_registration_required">Course Registration Required</string>
    <string name="no_thanks">Don\'t show again</string>
    <string name="ok_let_s_do_it">OK, Let\'s do it</string>
-   <string name="gpa_info">G.P.A calculator depends on course registration to function properly</string>
+   <string name="gpa_info">G.P.A calculator depends on course registration to function properly. Also consider
+      setting G.P.A scale in Settings</string>
    <string name="registered_courses_not_found">Registered courses not found</string>
    <string name="prepare_load_text">Preparing, please wait …</string>
    <string name="calculate_avgerage">Calculate Avgerage</string>
@@ -326,6 +327,7 @@
    <string name="confirm_password_query">Confirm new password</string>
    <string name="log_in_message">Logging in, please wait …</string>
    <string name="add_assignment_info_text">Click on the add button to add an assignment</string>
+   <string name="add_todo_info_text">Click on the add button to add a new task</string>
    <string name="add_course_info_text">Click on the add button to add a course</string>
    <string name="add_exam_info_text">Click on the add buton to add an exam</string>
    <string name="add_timetable_info_text">Click on the add button to add a timetable</string>
@@ -341,4 +343,5 @@
    <string name="units_total">Units Total</string>
    <string name="default_gpa">0.00</string>
    <string name="default_credit_units">0.00</string>
+   <string name="gpa_label">Your G.P.A</string>
 </resources>

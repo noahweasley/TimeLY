@@ -144,7 +144,7 @@ public class AlarmReSchedulerService extends Service {
       final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                         : SYSTEM_DEFAULT;
 
-      Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon);
+      Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.timely_app_icon);
       NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.GENERAL_CHANNEL_ID);
 

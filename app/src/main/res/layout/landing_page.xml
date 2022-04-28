@@ -24,18 +24,6 @@
 
    <!-- Vector image displaying a no-data entry -->
 
-   <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_margin="16dp"
-      android:contentDescription="@string/no_task"
-      external:layout_constraintBottom_toTopOf="@+id/discover"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintHorizontal_bias="0.488"
-      external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toBottomOf="@+id/greeting_text"
-      external:srcCompat="@mipmap/task_infographics" />
-
    <Button
       android:id="@+id/discover"
       android:layout_width="wrap_content"

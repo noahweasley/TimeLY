@@ -122,4 +122,19 @@
 
    </PreferenceCategory>
 
+   <PreferenceCategory
+      external:allowDividerAbove="true"
+      external:title="G.P.A Calculator">
+
+      <ListPreference
+         external:defaultValue="5"
+         external:entries="@array/scale_entries"
+         external:entryValues="@array/scale_values"
+         external:icon="@drawable/ic_baseline_linear_scale_24"
+         external:key="max_gpa_scale"
+         external:summary="Snooze"
+         external:title="Max G.P.A scale" />
+
+   </PreferenceCategory>
+
 </PreferenceScreen>

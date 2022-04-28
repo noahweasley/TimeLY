@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.collections.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
 

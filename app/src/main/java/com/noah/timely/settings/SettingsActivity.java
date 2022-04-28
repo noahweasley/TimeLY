@@ -56,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
       @SuppressWarnings("FieldCanBeLocal")
       private Preference pref_EnableNotifications, pref_TimeFormat, pref_eTone,
               pref_DateFormat, pref_SnoozeTime, pref_snoozeOnStop, pref_azz_date_format,
-              pref_uriType, pref_weekNum, pref_ringtoneType, pref_prefer_dialog;
+              pref_uriType, pref_weekNum, pref_ringtoneType, pref_prefer_dialog, pref_max_gpa_scale;
 
       @Override
       public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -72,6 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
          pref_ringtoneType = findPreference("Alarm Ringtone");
          pref_prefer_dialog = findPreference("prefer_dialog");
          pref_azz_date_format = findPreference("a_date_format");
+         pref_max_gpa_scale = findPreference("max_gpa_scale");
 
          pref_DateFormat.setOnPreferenceChangeListener(this);
          pref_EnableNotifications.setOnPreferenceChangeListener(this);
@@ -84,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
          pref_ringtoneType.setOnPreferenceChangeListener(this);
          pref_prefer_dialog.setOnPreferenceChangeListener(this);
          pref_azz_date_format.setOnPreferenceChangeListener(this);
+         pref_max_gpa_scale.setOnPreferenceChangeListener(this);
 
          initialize();
       }
@@ -96,12 +98,12 @@ public class SettingsActivity extends AppCompatActivity {
 
       private void initialize() {
          String prefValue = String.valueOf(pref_EnableNotifications
-                 .getSharedPreferences()
-                 .getBoolean(pref_EnableNotifications.getKey(), true));
+                                                   .getSharedPreferences()
+                                                   .getBoolean(pref_EnableNotifications.getKey(), true));
          updatePreferenceSummary(pref_EnableNotifications, prefValue);
 
          prefValue = String.valueOf(pref_TimeFormat.getSharedPreferences()
-                 .getBoolean(pref_TimeFormat.getKey(), true));
+                                                   .getBoolean(pref_TimeFormat.getKey(), true));
          updatePreferenceSummary(pref_TimeFormat, prefValue);
 
          prefValue = pref_DateFormat.getSharedPreferences().getString(pref_DateFormat.getKey(), "Medium");
@@ -119,12 +121,15 @@ public class SettingsActivity extends AppCompatActivity {
          updatePreferenceSummary(pref_weekNum, prefValue);
 
          prefValue = pref_ringtoneType.getSharedPreferences()
-                 .getString(pref_ringtoneType.getKey(), "TimeLY's Default");
+                                      .getString(pref_ringtoneType.getKey(), "TimeLY's Default");
          updatePreferenceSummary(pref_ringtoneType, prefValue);
 
          String ddf = getContext().getString(R.string.default_date_format);
          prefValue = pref_azz_date_format.getSharedPreferences().getString("a_date_format", ddf);
          updatePreferenceSummary(pref_azz_date_format, prefValue);
+
+         prefValue = pref_max_gpa_scale.getSharedPreferences().getString("max_gpa_scale", "5");
+         updatePreferenceSummary(pref_max_gpa_scale, prefValue);
 
          onStart = false;
       }
@@ -154,15 +159,15 @@ public class SettingsActivity extends AppCompatActivity {
                   break;
                case "snooze_time": {
                   pref.setSummary("All alarms will be snoozed for " + state + " minute"
-                          + (state.equals("1") ? "" : "s"));
+                                          + (state.equals("1") ? "" : "s"));
                }
                break;
                case "exam weeks": {
                   pref.setSummary(state);
                   if (!onStart) {
                      Toast message = Toast.makeText(getContext(),
-                             R.string.change_notification,
-                             Toast.LENGTH_LONG);
+                                                    R.string.change_notification,
+                                                    Toast.LENGTH_LONG);
                      message.setGravity(Gravity.CENTER, 0, 0);
                      message.show();
                   }
@@ -175,7 +180,12 @@ public class SettingsActivity extends AppCompatActivity {
                   if (!onStart) EventBus.getDefault().post(new LayoutRefreshEvent());
                }
                break;
-               case "Uri Type": {
+               case "Uri Type":
+               case "max_gpa_scale": {
+                  EventBus eventBus = EventBus.getDefault();
+                  if (eventBus.hasSubscriberForEvent(LayoutRefreshEvent.class)) {
+                     eventBus.post(new LayoutRefreshEvent());
+                  }
                   pref.setSummary(state);
                }
                break;

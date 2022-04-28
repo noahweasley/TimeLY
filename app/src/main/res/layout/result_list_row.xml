@@ -4,6 +4,7 @@
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
    android:layout_height="wrap_content"
+   android:layout_marginBottom="@dimen/layout_gap"
    android:background="@drawable/bg_rounded_corners_accent"
    tools:layout_margin="8dp">
 
@@ -27,7 +28,6 @@
          android:gravity="center"
          android:maxLines="1"
          android:text="@string/default_course_name"
-         android:textColor="@color/black"
          android:textSize="@dimen/credits_text_size" />
 
    </HorizontalScrollView>
@@ -53,7 +53,7 @@
          android:id="@+id/grades"
          android:layout_width="0dp"
          android:layout_height="wrap_content"
-         android:layout_margin="@dimen/layout_gap"
+         android:padding="@dimen/layout_gap"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toStartOf="@+id/divider4"
          external:layout_constraintStart_toStartOf="parent"
@@ -74,16 +74,13 @@
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:gravity="center"
-         android:layout_margin="@dimen/layout_gap"
          android:text="@string/default_credit"
-         android:textColor="@color/black"
-         android:textSize="18sp"
+         android:textSize="@dimen/assignment_course_code_text_size"
+         android:padding="@dimen/layout_gap"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
-         external:layout_constraintHorizontal_bias="0.0"
          external:layout_constraintStart_toEndOf="@+id/divider4"
-         external:layout_constraintTop_toTopOf="@+id/divider4"
-         external:layout_constraintVertical_bias="0.0" />
+         external:layout_constraintTop_toTopOf="@+id/divider4" />
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 

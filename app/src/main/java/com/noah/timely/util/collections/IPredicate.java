@@ -1,4 +1,4 @@
-package com.noah.timely.util;
+package com.noah.timely.util.collections;
 
 /**
  * A predicate that does same function similar to {@link java.util.function.Predicate}

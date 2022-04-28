@@ -44,23 +44,10 @@
          android:layout_height="0dp"
          android:visibility="gone"
          external:layout_constraintBottom_toBottomOf="parent"
-         external:layout_constraintEnd_toEndOf="parent"
-         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintEnd_toEndOf="@id/right_guide"
+         external:layout_constraintStart_toStartOf="@id/left_guide"
          external:layout_constraintTop_toTopOf="parent"
          tools:visibility="visible">
-
-         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/wendy_one"
-            android:text="@string/no_todos"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/no_task_text_size"
-            external:layout_constraintBottom_toTopOf="@id/img_no_event"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toTopOf="parent" />
 
          <ImageView
             android:id="@+id/img_no_event"
@@ -72,7 +59,35 @@
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent"
+            external:layout_constraintVertical_bias="0.05"
             external:srcCompat="@mipmap/confused_girl" />
+
+         <TextView
+            android:id="@+id/textView11"
+            style="@style/Info_Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_todos"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintHorizontal_bias="0.0"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/img_no_event"
+            external:layout_constraintVertical_bias="0.14" />
+
+         <TextView
+            android:id="@+id/textView10"
+            style="@style/Info_Text.Small"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/add_todo_info_text"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/textView11"
+            external:layout_constraintVertical_bias="0.089999974" />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -83,6 +98,23 @@
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent" />
+
+
+      <androidx.constraintlayout.widget.Guideline
+         android:id="@+id/left_guide"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         external:layout_constraintGuide_percent=".1"
+         tools:viewBindingIgnore="true" />
+
+      <androidx.constraintlayout.widget.Guideline
+         android:id="@+id/right_guide"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         external:layout_constraintGuide_percent=".9"
+         tools:viewBindingIgnore="true" />
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 

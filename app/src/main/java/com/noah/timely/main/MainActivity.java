@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       // start next screen based on the app's first time launch saved preference
       if (isFirstLaunch) {
          Intent launchIntent = new Intent(this, IntroPageActivity.class);
-         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
          startActivity(launchIntent);
       }
    }

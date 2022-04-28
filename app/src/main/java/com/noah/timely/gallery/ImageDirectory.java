@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noah.timely.R;
-import com.noah.timely.util.CollectionUtils;
+import com.noah.timely.util.collections.CollectionUtils;
 import com.noah.timely.util.ThreadUtils;
 
 import java.util.ArrayList;
