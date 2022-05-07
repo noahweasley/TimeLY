@@ -1,14 +1,12 @@
 package com.noah.timely.calculator;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.noah.timely.core.DataModel;
 import com.noah.timely.courses.CourseModel;
 import com.noah.timely.util.PreferenceUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +27,6 @@ public class Calculator {
     * @see java.util.concurrent.CompletableFuture
     */
    public static float calculateGPA(Context context, Map<Integer, String[]> scoreMap) {
-      Log.d(Calculator.class.getSimpleName(), "Calculating with: " + scoreMap);
       Set<Map.Entry<Integer, String[]>> entries = scoreMap.entrySet();
       double totalCredits = 0.0f;
       double totalScore = 0.0f;
@@ -49,14 +46,16 @@ public class Calculator {
       }
 
       // then do final gpa calculations
-      return (float) totalScore / (float) totalCredits;
-
+      float value = (float) totalScore / (float) totalCredits;
+      // just in case the user miraclously is offering only one course that semester and that course is a zero credit
+      // unit course. ;=)
+      if (Float.isNaN(value)) {
+         return 0.0f;
+      } else return value;
    }
 
    // easily get grade scores by multiplying grades with credits
    private static int getGradeScore(Context context, String[] grade) throws NumberFormatException {
-      Log.d(Calculator.class.getSimpleName(), "Got grade score of : " + Arrays.toString(grade));
-
       int gradeScore = 0;
       int multiplier = Integer.parseInt(grade[0]);
       int maxGPAScale = Integer.parseInt(PreferenceUtils.getStringValue(context, "max_gpa_scale", "5"));
@@ -111,5 +110,9 @@ public class Calculator {
       }
 
       return Double.valueOf(counter);
+   }
+
+   public static float calulateAverageGPA(Context context) {
+      return 5.0f;
    }
 }

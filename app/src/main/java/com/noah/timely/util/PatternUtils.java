@@ -52,6 +52,11 @@ public class PatternUtils {
    public static final String DATE_SHORT_12_24_HoursClock = DATE_SHORT + ", " + TIME_ALL;
 
    /**
+    * Pattern to match strong password, at least 8 characters, 1 lowercase and 1 uppercase
+    */
+   public static final String STRONG_PASSWORD = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$";
+
+   /**
     * Validates a regex pattern against an input
     *
     * @param regex the pattern to use to validate the input against

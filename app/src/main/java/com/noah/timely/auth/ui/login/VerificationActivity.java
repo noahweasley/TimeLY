@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.noah.timely.R;
 import com.noah.timely.auth.data.model.UserAccount;
+import com.noah.timely.custom.CountdownTimer;
+import com.noah.timely.util.adapters.SimpleOnTimeUpdateListener;
 
 public class VerificationActivity extends AppCompatActivity {
    private static final String EXTRA_USER_ACCOUNT = "User Account";
@@ -42,6 +44,16 @@ public class VerificationActivity extends AppCompatActivity {
 
       String phoneNumber = getIntent().getStringExtra(EXTRA_USER_ACCOUNT);
       if (!TextUtils.isEmpty(phoneNumber)) tv_phoneNumber.setText(phoneNumber);
+
+      CountdownTimer countdownTimer = findViewById(R.id.timer);
+      countdownTimer.setOnTimerUpdateListener(new SimpleOnTimeUpdateListener(){
+         @Override
+         public void onTimerEnd() {
+
+         }
+      });
+
+      countdownTimer.start();
    }
 
    @Override

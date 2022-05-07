@@ -55,6 +55,7 @@ public class ResultCalculatorFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      setHasOptionsMenu(true);
       EventBus.getDefault().register(this);
    }
 
@@ -67,12 +68,14 @@ public class ResultCalculatorFragment extends Fragment {
    @Override
    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
       int menuItemId = item.getItemId();
-      if (menuItemId == R.id.calculate_average) calculateAvargeGPA();
+      if (menuItemId == R.id.calculate_average) {
+         ThreadUtils.runBackgroundTask(() -> {
+            float avgGPA = Calculator.calulateAverageGPA(getContext());
+            getActivity().runOnUiThread(() -> new GPAAveragerDialog().show(getContext(), avgGPA));
+
+         });
+      }
       return super.onOptionsItemSelected(item);
-   }
-
-   private void calculateAvargeGPA() {
-
    }
 
    private void calculateGPA() {

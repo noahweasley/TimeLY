@@ -4,6 +4,7 @@
    <color name="colorPrimaryDark">@color/colorPrimary</color>
    <color name="colorPrimary_2">@color/colorPrimary</color>
    <color name="colorPrimary_lighter">#B8AAF9</color>
+   <color name="colorPrimary_light">#F1ECFF</color>
    <color name="colorPurpleDark">#5737AF</color>
    <color name="colorPrimaryDark_2">#5737AF</color>
    <color name="todo_alt_color">#EDF3FF</color>

@@ -75,7 +75,7 @@
          android:layout_height="wrap_content"
          android:gravity="center"
          android:text="@string/default_credit"
-         android:textSize="@dimen/assignment_course_code_text_size"
+         android:textSize="@dimen/calc_label_text_size_2"
          android:padding="@dimen/layout_gap"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"

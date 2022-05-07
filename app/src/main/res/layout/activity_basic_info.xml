@@ -25,10 +25,11 @@
       android:layout_margin="@dimen/layout_gap"
       android:gravity="center"
       android:textColor="@color/white"
-      android:textSize="26sp"
+      android:textSize="@dimen/basic_info_text_size"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent"/>
+      external:layout_constraintStart_toStartOf="parent"
+      tools:text="@string/default_version" />
 
    <ImageView
       android:id="@+id/imageView"
@@ -49,7 +50,8 @@
       android:layout_marginTop="@dimen/layout_gap_2"
       android:gravity="center"
       android:textColor="@color/white"
-      android:textSize="24sp"
+      tools:text="@string/company_name"
+      android:textSize="@dimen/basic_info_text_size_2"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintHorizontal_bias="0.0"

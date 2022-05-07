@@ -3,7 +3,7 @@
    xmlns:external="http://schemas.android.com/apk/res-auto"
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
-   android:background="@color/image_background"
+   android:background="@color/colorPrimary_light"
    android:layout_height="match_parent"
    tools:context=".todo.TodoFragment">
 

@@ -46,7 +46,6 @@ import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TimetableFragment;
 import com.noah.timely.todo.TodoFragment;
 import com.noah.timely.util.Constants;
-import com.noah.timely.util.DeviceInfoUtil;
 import com.noah.timely.util.PreferenceUtils;
 import com.noah.timely.util.ReportActionUtil;
 import com.noah.timely.util.TimelyUpdateUtils;
@@ -276,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       } else if (menuItemId == R.id.settings) {
 
          open_upSetting();
+         return true; // immediately return from callback so that the drawer doesn't close
 
       } else if (menuItemId == R.id.whats_new) {
 
@@ -288,19 +288,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       } else if (menuItemId == R.id.__import) {
 
          startActivity(new Intent(this, ImportResultsActivity.class));
-
-      } else if (menuItemId == R.id.report) {
-
-         new AlertDialog.Builder(this)
-                 .setTitle(R.string.report_title)
-                 .setMessage(R.string.report_message)
-                 .setPositiveButton(R.string.yes, this::reportAction)
-                 .setNegativeButton(android.R.string.cancel, this::reportAction)
-                 .create().show();
+         return true; // immediately return from callback so that the drawer doesn't close
 
       } else if (menuItemId == R.id.help) {
 
-       startActivity(new Intent(this, BasicInfoListActivity.class));
+         startActivity(new Intent(this, BasicInfoListActivity.class));
+         return true; // immediately return from callback so that the drawer doesn't close
 
       }
 
@@ -311,31 +304,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
    private void reportAction(DialogInterface dialog, int which) {
       if (which == DialogInterface.BUTTON_POSITIVE) {
-         // send message with emojis
-         int waveEmojiUnicode = 0x1F44B, clapEmojiUnicode = 0x1F44F,
-                 faceTongueEmojiUnicode = 0x1F60B, mobilePhoneEmojiUnicode = 0x1F4F1;
-
-         char[] waveEmojiChars = Character.toChars(waveEmojiUnicode);
-         char[] clapEmojiChars = Character.toChars(clapEmojiUnicode);
-         char[] mobilePhoneEmojiChars = Character.toChars(mobilePhoneEmojiUnicode);
-         char[] faceTongueEmojiChars = Character.toChars(faceTongueEmojiUnicode);
-
-         float[] deviceRes = DeviceInfoUtil.getDeviceResolutionDP(this);
-         String devSpecs = "\n\nDevice specs " + String.valueOf(mobilePhoneEmojiChars) +
-                 "\n\n"
-                 + "Api Level: " + Build.VERSION.SDK_INT
-                 + "\n"
-                 + "Device Screen Density: " + DeviceInfoUtil.getScreenDensity(this)
-                 + "\n"
-                 + "Screen Resolution(dp) : " + deviceRes[0] + " x " + deviceRes[1];
-
-         String s1 = "Hi Noah ", s2 = ", TimeLY is a nice app ", s3 = ". However, I would like" +
-                 " to report a bug *_____* My name is *______* by the way.";
-
-         String message = s1 + String.valueOf(waveEmojiChars) + s2
-                 + String.valueOf(clapEmojiChars) + s3 + String.valueOf(faceTongueEmojiChars) + devSpecs;
-
-         ReportActionUtil.reportBug(this, message);
+         ReportActionUtil.reportBug(this, "");
 
       }
       // whatever the button clicked, close dialog

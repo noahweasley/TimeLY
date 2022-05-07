@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:app="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="@dimen/small_dialog_width"
+   android:layout_height="@dimen/small_dialog_height"
+   tools:layout_gravity="center">
+
+   <TextView
+      android:id="@+id/gpa"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/bg_stroked"
+      android:paddingHorizontal="@dimen/small_button_padding_horizontal"
+      android:paddingVertical="@dimen/small_button_padding_vertical"
+      android:text="@string/default_gpa"
+      android:textSize="56sp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+   <TextView
+      android:id="@+id/textView15"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/layout_gap_2"
+      android:text="@string/average_gpa"
+      android:textSize="22sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toTopOf="@+id/gpa"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.26999998"
+      app:layout_constraintVertical_chainStyle="packed" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

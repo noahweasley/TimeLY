@@ -58,6 +58,7 @@
                android:minLines="2"
                android:textColor="@android:color/black"
                android:textCursorDrawable="@drawable/colored_cursor"
+               android:textSize="@dimen/editext_text_size"
                tools:ignore="Autofill" />
 
          </com.google.android.material.textfield.TextInputLayout>
@@ -89,6 +90,7 @@
                android:minLines="@integer/task_editor_row_size"
                android:textColor="@android:color/black"
                android:textCursorDrawable="@drawable/colored_cursor"
+               android:textSize="@dimen/editext_text_size"
                tools:ignore="Autofill" />
 
          </com.google.android.material.textfield.TextInputLayout>
@@ -143,32 +145,33 @@
                      android:minLines="1"
                      android:textColor="@android:color/black"
                      android:textCursorDrawable="@drawable/colored_cursor"
+                     android:textSize="@dimen/editext_text_size"
                      tools:ignore="Autofill" />
 
                </com.google.android.material.textfield.TextInputLayout>
 
                <ImageButton
                   android:id="@+id/start_time_picker"
-                  android:background="@null"
-                  android:minWidth="@dimen/view_touch_area"
-                  android:minHeight="@dimen/view_touch_area"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center"
                   android:layout_marginEnd="@dimen/default_gap"
                   android:layout_marginRight="@dimen/default_gap"
                   android:layout_weight="1"
+                  android:background="@null"
+                  android:minWidth="@dimen/view_touch_area"
+                  android:minHeight="@dimen/view_touch_area"
                   external:srcCompat="@drawable/ic_access_time_large" />
 
                <ImageButton
                   android:id="@+id/start_date_picker"
-                  android:background="@null"
-                  android:minWidth="@dimen/view_touch_area"
-                  android:minHeight="@dimen/view_touch_area"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center"
                   android:layout_weight="1"
+                  android:background="@null"
+                  android:minWidth="@dimen/view_touch_area"
+                  android:minHeight="@dimen/view_touch_area"
                   external:srcCompat="@drawable/ic_date_large" />
 
             </LinearLayout>
@@ -211,32 +214,33 @@
                      android:minLines="1"
                      android:textColor="@android:color/black"
                      android:textCursorDrawable="@drawable/colored_cursor"
+                     android:textSize="@dimen/editext_text_size"
                      tools:ignore="Autofill" />
 
                </com.google.android.material.textfield.TextInputLayout>
 
                <ImageButton
                   android:id="@+id/end_time_picker"
-                  android:background="@null"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:minWidth="@dimen/view_touch_area"
-                  android:minHeight="@dimen/view_touch_area"
                   android:layout_gravity="center"
                   android:layout_marginEnd="@dimen/default_gap"
                   android:layout_marginRight="@dimen/default_gap"
                   android:layout_weight="1"
+                  android:background="@null"
+                  android:minWidth="@dimen/view_touch_area"
+                  android:minHeight="@dimen/view_touch_area"
                   external:srcCompat="@drawable/ic_access_time_large" />
 
                <ImageButton
                   android:id="@+id/end_date_picker"
-                  android:background="@null"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:minWidth="@dimen/view_touch_area"
-                  android:minHeight="@dimen/view_touch_area"
                   android:layout_gravity="center"
                   android:layout_weight="1"
+                  android:background="@null"
+                  android:minWidth="@dimen/view_touch_area"
+                  android:minHeight="@dimen/view_touch_area"
                   external:srcCompat="@drawable/ic_date_large" />
 
             </LinearLayout>

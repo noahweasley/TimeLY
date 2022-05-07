@@ -225,7 +225,7 @@
       setting G.P.A scale in Settings</string>
    <string name="registered_courses_not_found">Registered courses not found</string>
    <string name="prepare_load_text">Preparing, please wait …</string>
-   <string name="calculate_avgerage">Calculate Avgerage</string>
+   <string name="calculate_avgerage">Calculate average</string>
    <string name="pull_down">Pull down</string>
    <string name="register_exams">Register Exams</string>
    <string name="register_courses">Register Courses</string>
@@ -344,4 +344,12 @@
    <string name="default_gpa">0.00</string>
    <string name="default_credit_units">0.00</string>
    <string name="gpa_label">Your G.P.A</string>
+   <string name="help_hint">Tell us how we can help</string>
+   <string name="tech_details">Include device information? (Optional)\nTechnical details like your model and settings can help us answer your question.</string>
+   <string name="send">send</string>
+   <string name="send_email_title">Send mail via…</string>
+   <string name="company_email">iebenmelu@gmail.com</string>
+   <string name="average_gpa">Average G.P.A</string>
+   <string name="time_min_default">00:00</string>
+   <string name="resend">Resend</string>
 </resources>

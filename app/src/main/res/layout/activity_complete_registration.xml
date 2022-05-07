@@ -29,6 +29,17 @@
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toTopOf="parent" />
 
+      <ImageButton
+         android:id="@+id/skip"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:background="@drawable/round_button"
+         android:contentDescription="@string/skip"
+         android:src="@drawable/ic_baseline_clear_24"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
+
    </androidx.constraintlayout.widget.ConstraintLayout>
 
    <TextView
@@ -241,18 +252,17 @@
    </com.google.android.material.textfield.TextInputLayout>
 
    <Button
-      android:id="@+id/sign_up"
+      android:id="@+id/complete"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginHorizontal="@dimen/layout_gap"
       android:background="@drawable/cta_button"
       android:text="@string/complete"
       android:textColor="@android:color/white"
+      android:layout_marginBottom="@dimen/layout_gap"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toStartOf="@+id/right_guide"
-      external:layout_constraintStart_toStartOf="@+id/left_guide"
-      external:layout_constraintTop_toBottomOf="@+id/list_item_2"
-      external:layout_constraintVertical_bias="0.342" />
+      external:layout_constraintStart_toStartOf="@+id/left_guide"/>
 
    <androidx.constraintlayout.widget.Guideline
       android:id="@+id/left_guide"

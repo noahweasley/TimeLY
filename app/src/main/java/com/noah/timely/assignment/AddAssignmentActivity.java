@@ -73,7 +73,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
       database = new SchoolDatabase(this);
-      setContentView(R.layout.add_assignment);
+      setContentView(R.layout.activity_add_assignment);
 
       boolean shouldEdit = getIntent().getAction().equals("Edit");
 

@@ -19,6 +19,7 @@ public class UserAccount implements Serializable {
    private String dateOfBirth;
    private Uri profilePictureUri;
    private URL profilePictureURL;
+   private String jsonWebToken;
    private String gender;
    private String country;
    private String school;
@@ -31,6 +32,14 @@ public class UserAccount implements Serializable {
 //      userAccount.setProfilePictureUri(account.getPhotoUrl());
 
       return userAccount;
+   }
+
+   public String getJsonWebToken() {
+      return jsonWebToken;
+   }
+
+   public void setJsonWebToken(String jsonWebToken) {
+      this.jsonWebToken = jsonWebToken;
    }
 
    public String getUserId() {

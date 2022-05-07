@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,15 +27,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
    private GoogleSignInClient mGoogleSignInClient;
    public static final String TAG = "LoginActivity";
    private ActivityResultLauncher<Intent> resultLauncher;
+   private CardView gSignParent;
 
    @Override
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_login);
 
-      View recovery = findViewById(R.id.recovery), login = findViewById(R.id.login),
-              gSignParent = findViewById(R.id.g_sign_parent), exit = findViewById(R.id.exit),
-              createAcc = findViewById(R.id.create_acc);
+      View recovery = findViewById(R.id.recovery), login = findViewById(R.id.login)
+              , exit = findViewById(R.id.exit), createAcc = findViewById(R.id.create_acc);
+
+
+      gSignParent = (CardView) findViewById(R.id.g_sign_parent);
 
       registerGoogleSignInCallback();
       recovery.setOnClickListener(this);
@@ -83,8 +87,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
    }
 
    private void performUserLogin() {
+//      gSignParent.setCardElevation(0.0f);
       // PreferenceUtils#USER_IS_LOGGED_IN would be checked when app is starting up, if the user is logged in,
       // then show the full app to the user
+
       PreferenceUtils.setBooleanValue(this, PreferenceUtils.USER_IS_LOGGED_IN, true);
       // ... then perform app reboot
       Intent navigateIntent = new Intent(this, MainActivity.class);

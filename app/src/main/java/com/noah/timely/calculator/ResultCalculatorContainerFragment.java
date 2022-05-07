@@ -39,7 +39,6 @@ public class ResultCalculatorContainerFragment extends Fragment {
    public void onViewCreated(@NonNull View view,
                              @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
-
       ViewPager2 pager = view.findViewById(R.id.pager);
       pager.setAdapter(new ContainerAdapter(this));
       TabLayout tabs = view.findViewById(R.id.tabs);

@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,14 +39,13 @@ import com.noah.timely.scheduled.SUpdateMessage;
 import com.noah.timely.settings.SettingsActivity;
 import com.noah.timely.timetable.TUpdateMessage;
 import com.noah.timely.timetable.TimetableModel;
-import com.noah.timely.util.collections.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.TimelyUpdateUtils;
+import com.noah.timely.util.collections.CollectionUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -64,31 +62,27 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
               // dismiss the loader views
               pickProgressBar.setVisibility(View.GONE);
-              btn_filePick.setTextColor(ContextCompat.getColor(this, android.R.color.white));
               btn_filePick.setText(R.string.import_file);
               // then ...
               if (result.getData() != null) {
                  Intent uploadfileIntent = result.getData();
-                 File file = null;
-                 try {
-                    file = IOUtils.resolveDataToTempFile(this, uploadfileIntent.getData());
-                 } catch (IOException e) {
-                    Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
-                    return;
-                 }
+                 // run resolve task in background to improve UX and run result task in UI Thread
+                 IOUtils.resolveDataToTempFile(this, uploadfileIntent.getData(), file -> runOnUiThread(() -> {
+                    if (file != null) {
+                       performFileImport(file);
+                    } else {
+                       Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
+                       // import unsuccessful. Error occurred
+                       ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
+                       errorBuilder.setShowSuggestions(true)
+                                   .setDialogMessage("An error occurred while importing data")
+                                   .setSuggestionCount(1)
+                                   .setSuggestion1("File extension might not be supported");
 
-                 if (file != null) {
-                    performFileImport(file);
-                 } else {
-                    // import unsuccessful. Error occurred
-                    ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
-                    errorBuilder.setShowSuggestions(true)
-                                .setDialogMessage("An error occurred while importing data")
-                                .setSuggestionCount(1)
-                                .setSuggestion1("File extension might not be supported");
+                       new ErrorDialog().showErrorMessage(this, errorBuilder.build());
+                    }
 
-                    new ErrorDialog().showErrorMessage(this, errorBuilder.build());
-                 }
+                 }));
 
               }
            });
@@ -137,38 +131,32 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
       btn_filePick.setOnClickListener(this);
 
       Uri fileUri = null;
-      File file = null;
 
       if ((fileUri = getIntent().getData()) != null) {
          // make it possible to navigate to main activity on back pressed or on navigate up because the main activity
          // isn't part of the activity stack
          intentReceived = true;
-         try {
-            file = IOUtils.resolveUriToTempFile(this, fileUri);
-         } catch (IOException e) {
-            Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
-            dataLayerView.setVisibility(View.GONE);
-            initView.setVisibility(View.GONE);
-            importView.setVisibility(View.VISIBLE);
-         }
+         // run resolve task in background to improve UX and run result task in UI Thread
+         IOUtils.resolveUriToTempFile(this, fileUri, file -> runOnUiThread(() -> {
+            if (file != null) {
+               performFileImport(file);
+            } else {
+               Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
+               IOUtils.deleteTempFiles(this);
+               dataLayerView.setVisibility(View.GONE);
+               initView.setVisibility(View.GONE);
+               importView.setVisibility(View.VISIBLE);
+               // import unsuccessful. Error occurred
+               ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
+               errorBuilder.setShowSuggestions(true)
+                           .setDialogMessage("An error occurred while importing data")
+                           .setSuggestionCount(1)
+                           .setSuggestion1("File extension might not be supported");
 
-         // noinspection StatementWithEmptyBody
-         if (file != null) {
-            performFileImport(file);
-         } else {
-            IOUtils.deleteTempFiles(this);
-            dataLayerView.setVisibility(View.GONE);
-            initView.setVisibility(View.GONE);
-            importView.setVisibility(View.VISIBLE);
-            // import unsuccessful. Error occurred
-            ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
-            errorBuilder.setShowSuggestions(true)
-                        .setDialogMessage("An error occurred while importing data")
-                        .setSuggestionCount(1)
-                        .setSuggestion1("File extension might not be supported");
+               new ErrorDialog().showErrorMessage(this, errorBuilder.build());
+            }
+         }));
 
-            new ErrorDialog().showErrorMessage(this, errorBuilder.build());
-         }
       } else {
          dataLayerView.setVisibility(View.GONE);
          initView.setVisibility(View.GONE);

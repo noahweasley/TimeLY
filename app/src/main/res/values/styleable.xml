@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <declare-styleable name="box_color" type="color"/>
+   <declare-styleable name="CountdownTimer">
+      <attr name="start_count" format="integer" />
+      <attr name="display_type" format="string" />
+   </declare-styleable>
 </resources>

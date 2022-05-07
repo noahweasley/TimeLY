@@ -55,6 +55,7 @@
                android:minHeight="48dp"
                android:textColor="@android:color/black"
                android:textCursorDrawable="@drawable/colored_cursor"
+               android:textSize="@dimen/editext_text_size"
                tools:ignore="Autofill" />
 
          </com.google.android.material.textfield.TextInputLayout>
@@ -80,6 +81,7 @@
                android:maxLines="1"
                android:minHeight="48dp"
                android:textCursorDrawable="@drawable/colored_cursor"
+               android:textSize="@dimen/editext_text_size"
                tools:ignore="Autofill" />
 
          </com.google.android.material.textfield.TextInputLayout>
@@ -108,6 +110,7 @@
                android:minLines="@integer/editor_large_input_size"
                android:textColor="@android:color/black"
                android:textCursorDrawable="@drawable/colored_cursor"
+               android:textSize="@dimen/editext_text_size"
                tools:ignore="Autofill" />
 
          </com.google.android.material.textfield.TextInputLayout>
@@ -134,6 +137,7 @@
                android:minHeight="48dp"
                android:textColor="@android:color/black"
                android:textCursorDrawable="@drawable/colored_cursor"
+               android:textSize="@dimen/editext_text_size"
                external:drawableEndCompat="@drawable/ic_date_48"
                external:drawableRightCompat="@drawable/ic_date_48"
                tools:ignore="Autofill" />

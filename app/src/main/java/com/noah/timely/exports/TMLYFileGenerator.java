@@ -77,7 +77,7 @@ public class TMLYFileGenerator {
          try {
             datamap.put(entry.getKey(), Transformer.getDataModel(entry.getKey(), entry.getValue()));
          } catch (Exception exc) {
-            Log.d(TMLYFileGenerator.class.getSimpleName(), "Exception: " + exc.getMessage());
+            Log.w(TMLYFileGenerator.class.getSimpleName(), "Exception: " + exc.getMessage());
            return null;  // file was corrupt, return null
          }
 
@@ -137,8 +137,7 @@ public class TMLYFileGenerator {
             dataModelList = database.getTimeTableData(SchoolDatabase.SCHEDULED_TIMETABLE);
             break;
          default:
-            throw new IllegalArgumentException(
-                    "The identifier " + dataModelIdentifier + " doesn't exists in database");
+            throw new IllegalArgumentException("The identifier " + dataModelIdentifier + " doesn't exists in database");
       }
 
       // key - dataModelIdentifier, value - dataModelList

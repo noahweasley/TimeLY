@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
@@ -96,14 +98,21 @@ public class AddCourseActivity extends AppCompatActivity {
       int credit = mCredits;
 
       boolean errorOccurred = false;
+
       if (TextUtils.isEmpty(courseName)) {
-         edt_courseName.setError("Field required");
+         ViewParent container = edt_courseName.getParent();
+         TextInputLayout edt_courseNameParent = ((TextInputLayout) container.getParent());
+         edt_courseNameParent.setError("Field required");
          errorOccurred = true;
       }
+
       if (TextUtils.isEmpty(courseCode)) {
-         edt_courseCode.setError("Field required");
+         ViewParent container = edt_courseName.getParent();
+         TextInputLayout edt_courseCodeParent = ((TextInputLayout) container.getParent());
+         edt_courseCodeParent.setError("Field required");
          errorOccurred = true;
       }
+
       if (errorOccurred) return false;
 
       String semester;

@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -37,6 +38,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
@@ -260,21 +262,29 @@ public class AddTimetableActivity extends AppCompatActivity {
       boolean errorOccurred = false, use24 = isUserPreferred24Hours(this);
 
       if (use24 && !start.matches(timeRegex24)) {
-         edt_startTime.setError("Format: HH:SS");
+         ViewParent container = edt_startTime.getParent();
+         TextInputLayout edt_startTimeParent = ((TextInputLayout) container.getParent());
+         edt_startTimeParent.setError("Format: HH:SS");
          errorOccurred = true;
       } else {
          if (!use24 && !start.matches(timeRegex12)) {
-            edt_startTime.setError("12 hours mode");
+            ViewParent container = edt_startTime.getParent();
+            TextInputLayout edt_startTimeParent = ((TextInputLayout) container.getParent());
+            edt_startTimeParent.setError("12 hours mode");
             errorOccurred = true;
          }
       }
 
       if (use24 && !end.matches(timeRegex24)) {
-         edt_endTime.setError("Format: HH:SS");
+         ViewParent container = edt_endTime.getParent();
+         TextInputLayout edt_endTimeParent = ((TextInputLayout) container.getParent());
+         edt_endTimeParent.setError("Format: HH:SS");
          errorOccurred = true;
       } else {
          if (!use24 && !end.matches(timeRegex12)) {
-            edt_endTime.setError("12 hours mode");
+            ViewParent container = edt_endTime.getParent();
+            TextInputLayout edt_endTimeParent = ((TextInputLayout) container.getParent());
+            edt_endTimeParent.setError("12 hours mode");
             errorOccurred = true;
          }
       }

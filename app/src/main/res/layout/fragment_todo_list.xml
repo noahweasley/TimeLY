@@ -59,7 +59,7 @@
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent"
-            external:layout_constraintVertical_bias="0.05"
+            external:layout_constraintVertical_bias="0.0"
             external:srcCompat="@mipmap/confused_girl" />
 
          <TextView

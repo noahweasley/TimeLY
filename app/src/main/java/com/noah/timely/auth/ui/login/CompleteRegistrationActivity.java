@@ -144,7 +144,6 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
    }
 
    // validate date input
-   @SuppressWarnings("all")
    private void validateFormData() {
       boolean isCountryEmpty = TextUtils.isEmpty(listCountries.getText());
       boolean isSchoolEmpty = TextUtils.isEmpty(listSchools.getText());
@@ -153,7 +152,7 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
       if (dateMatches && !isCountryEmpty && isSchoolEmpty) {
          registerNewUser();
       } else {
-         // because TextInputLayout has child FrameLayout that is the TextInputEditText's parent
+         // because TextInputLayout has child, FrameLayout, that is the TextInputEditText's parent
          // view, calling getParent() directly on the TextInputEditText will return the FrameLayout
          // and not the TextInputLayout
          if (!dateMatches) {

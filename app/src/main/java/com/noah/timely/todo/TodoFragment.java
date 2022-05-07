@@ -14,9 +14,9 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
-import com.noah.timely.util.collections.CollectionUtils;
 import com.noah.timely.util.Constants;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.collections.CollectionUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -134,6 +134,21 @@ public class TodoFragment extends Fragment {
    public void onDestroyView() {
       super.onDestroyView();
       database.close();
+   }
+
+   @Override
+   protected void finalize() throws Throwable {
+      tv_catGen = null;
+      tv_catWork = null;
+      tv_catMusic = null;
+      tv_catTravel = null;
+      tv_catStudy = null;
+      tv_catCreativity = null;
+      tv_catHome = null;
+      tv_catShop = null;
+      tv_catFun = null;
+      tv_catMisc = null;
+      super.finalize();
    }
 
    @Override

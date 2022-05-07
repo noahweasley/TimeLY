@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -51,6 +52,10 @@ public class Zipper {
     */
    public static Map<String, String> unzipToXMLMap(Context context, String finput) throws IOException {
       ZipInputStream zin = new ZipInputStream(new FileInputStream(finput));
+      // timely is unable to unzip any file larger than MAX_DATA_TRANSFER_BITS
+      if (zin.available() > MAX_DATA_TRANSFER_BITS)
+         throw new ZipException("Unable to unzip large file of " + zin.available() + " bytes");
+
       Map<String, String> xmlmap = new HashMap<>();
 
       ZipEntry zipEntry = null;

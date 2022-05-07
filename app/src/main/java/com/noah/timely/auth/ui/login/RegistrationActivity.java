@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -27,13 +30,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.auth.data.model.UserAccount;
+import com.noah.timely.util.PatternUtils;
 
 public class RegistrationActivity extends AppCompatActivity {
    private GoogleSignInClient mGoogleSignInClient;
    public static final String TAG = "RegistrationActivity";
    private ActivityResultLauncher<Intent> resultLauncher;
+   private EditText edt_firstName;
+   private EditText edt_password;
+   private EditText edt_lastName;
+   private EditText edt_userName;
+   private EditText edt_phoneNumber;
+   private EditText edt_email;
 
    @Override
    protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,12 +61,12 @@ public class RegistrationActivity extends AppCompatActivity {
       exit.setOnClickListener(v -> onBackPressed());
       gSignParent.setOnClickListener(v -> doGoogleSignIn());
 
-      EditText edt_firstName = findViewById(R.id.first_name);
-      EditText edt_lastName = findViewById(R.id.last_name);
-      EditText edt_userName = findViewById(R.id.user_name);
-      EditText edt_phoneNumber = findViewById(R.id.phone_number);
-      EditText edt_email = findViewById(R.id.email);
-      EditText edt_password = findViewById(R.id.password);
+      edt_firstName = findViewById(R.id.first_name);
+      edt_lastName = findViewById(R.id.last_name);
+      edt_userName = findViewById(R.id.user_name);
+      edt_phoneNumber = findViewById(R.id.phone_number);
+      edt_email = findViewById(R.id.email);
+      edt_password = findViewById(R.id.password);
 
       UserAccount userAccount = new UserAccount();
       userAccount.setFirstName(edt_firstName.getText());
@@ -65,15 +76,15 @@ public class RegistrationActivity extends AppCompatActivity {
       userAccount.setEmail(edt_email.getText());
       userAccount.setPassowrd(edt_password.getText());
 
-      signUp.setOnClickListener(v -> VerificationActivity.start(this, userAccount));
+      signUp.setOnClickListener(v -> registerAcount(userAccount));
 
       cbxLcAgree.setOnCheckedChangeListener((buttonView, isChecked) -> signUp.setEnabled(isChecked));
       // Make Licence agreement statements and login text clickable links
       setLinkOnText(cbxLcAgree);
       setLinkOnText(signNow);
 
-      // Configure sign-in to request the user's ID, email address, and basic
-      // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+      // Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are
+      // included  in DEFAULT_SIGN_IN.
       GoogleSignInOptions gso =
               new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                       .requestEmail()
@@ -81,12 +92,65 @@ public class RegistrationActivity extends AppCompatActivity {
                       .build();
       // Build a GoogleSignInClient with the options specified by gso.
       mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-      // Check for existing Google Sign In account, if the user is already signed in
-      // the GoogleSignInAccount will be non-null.
+      // Check for existing Google Sign In account, if the user is already signed in the GoogleSignInAccount will be
+      // non-null.
       GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
       // if account is non null, update UI accordingly
-//      updateUI(account);
+   }
 
+   private void registerAcount(UserAccount userAccount) {
+      // first, we verify that the user entered valid inputs
+      boolean isErrorOccurred = false;
+      if (!userAccount.getPhoneNumber().matches(Patterns.PHONE.pattern())) {
+         ViewGroup container = (ViewGroup) edt_phoneNumber.getParent();
+         TextInputLayout til_phoneNumberParent = ((TextInputLayout) container.getParent());
+         til_phoneNumberParent.setError("Input phone number format");
+
+         isErrorOccurred = true;
+      }
+
+      if (TextUtils.isEmpty(edt_userName.getText())) {
+         ViewGroup container = (ViewGroup) edt_userName.getParent();
+         TextInputLayout til_userNameParent = ((TextInputLayout) container.getParent());
+         til_userNameParent.setError("Input phone number format");
+
+         isErrorOccurred = true;
+      }
+
+      if (TextUtils.isEmpty(edt_firstName.getText())) {
+         ViewGroup container = (ViewGroup) edt_firstName.getParent();
+         TextInputLayout til_firstNameParent = ((TextInputLayout) container.getParent());
+         til_firstNameParent.setError("Field can't be empty");
+
+         isErrorOccurred = true;
+      }
+
+      if (TextUtils.isEmpty(edt_lastName.getText())) {
+         ViewGroup container = (ViewGroup) edt_lastName.getParent();
+         TextInputLayout til_lastNameParent = ((TextInputLayout) container.getParent());
+         til_lastNameParent.setError("Field can't be empty");
+
+         isErrorOccurred = true;
+      }
+
+      if (!userAccount.getEmail().matches(Patterns.EMAIL_ADDRESS.pattern())) {
+         ViewGroup container = (ViewGroup) edt_email.getParent();
+         TextInputLayout til_emailParent = ((TextInputLayout) container.getParent());
+         til_emailParent.setError("Input correct e-mail address");
+
+         isErrorOccurred = true;
+      }
+
+      if (!userAccount.getPassowrd().matches(PatternUtils.STRONG_PASSWORD)) {
+         ViewGroup container = (ViewGroup) edt_password.getParent();
+         TextInputLayout til_passwordParent = ((TextInputLayout) container.getParent());
+         til_passwordParent.setError("Must have a minimum of 8 characters, 1 letter and 1 number");
+
+         isErrorOccurred = true;
+      }
+
+      // ... then we naviagate to next page
+      if (!isErrorOccurred) CompleteRegistrationActivity.start(this, userAccount);
    }
 
    private void registerGoogleSignInCallback() {

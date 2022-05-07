@@ -16,6 +16,8 @@
 
    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
+   <uses-permission android:name="android.permission.INTERNET" />
+
    <uses-permission
       android:name="android.permission.WRITE_EXTERNAL_STORAGE"
       android:maxSdkVersion="29"
@@ -169,14 +171,14 @@
 
       <activity
          android:name=".auth.ui.login.LoginActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
          android:launchMode="singleTask"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
          android:windowSoftInputMode="adjustPan" />
 
       <activity
          android:name=".auth.ui.login.CompleteRegistrationActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
          android:launchMode="singleTask"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
          android:windowSoftInputMode="adjustPan" />
 
       <activity
@@ -199,10 +201,10 @@
             <category android:name="android.intent.category.BROWSABLE" />
 
             <data
-               android:mimeType="*/*"
-               android:scheme="http"
                android:host="www.timely.org"
-               android:pathPrefix="/recover"/>
+               android:mimeType="*/*"
+               android:pathPrefix="/recover"
+               android:scheme="http" />
 
          </intent-filter>
 
@@ -238,7 +240,8 @@
 
       <activity
          android:name=".about.ContactActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade" />
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustResize" />
 
       <activity
          android:name=".exports.ImportResultsActivity"

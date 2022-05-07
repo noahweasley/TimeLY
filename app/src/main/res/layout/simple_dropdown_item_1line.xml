@@ -9,4 +9,4 @@
    android:singleLine="true"
    android:textAllCaps="true"
    android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
-   android:textSize="@dimen/assignment_course_code_text_size" />
+   android:textSize="@dimen/calc_label_text_size_2" />

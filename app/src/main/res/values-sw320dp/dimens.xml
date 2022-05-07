@@ -45,7 +45,7 @@
    <dimen name="fab_icon_size">20dp</dimen>
    <dimen name="extra_margin">80dp</dimen>
    <dimen name="assignment_course_code_text_size">14sp</dimen>
-   <dimen name="storage_viewer_text_size">16sp</dimen>
+   <dimen name="storage_viewer_text_size">14sp</dimen>
    <dimen name="storage_view_container_height">60dp</dimen>
    <dimen name="assignment_list_height_21">190dp</dimen>
    <dimen name="assignment_text_size">12sp</dimen>
@@ -90,11 +90,11 @@
    <dimen name="small_dialog_height">210dp</dimen>
    <dimen name="loader_text_size">14sp</dimen>
    <dimen name="import_content_text_text_size">16sp</dimen>
-   <dimen name="small_button_padding_vertical">24dp</dimen>
+   <dimen name="small_button_padding_vertical">16dp</dimen>
    <dimen name="no_task_info_text_size">18sp</dimen>
    <dimen name="dialog_heading_text_size">18sp</dimen>
    <dimen name="dialog_sub_heading_text_size">14sp</dimen>
-   <dimen name="long_dialog_height">380dp</dimen>
+   <dimen name="long_dialog_height">400dp</dimen>
    <dimen name="min_elevation">2dp</dimen>
    <dimen name="auth_title_text_size">26sp</dimen>
    <dimen name="editext_text_size">14sp</dimen>
@@ -105,5 +105,10 @@
    <dimen name="g_sign_parent_size">36dp</dimen>
    <dimen name="profile_image_size">80dp</dimen>
    <dimen name="image_picker_button_size">36dp</dimen>
-   <dimen name="credits_text_size">22sp</dimen>
+   <dimen name="credits_text_size">18sp</dimen>
+   <dimen name="calc_label_text_size">18sp</dimen>
+   <dimen name="calc_label_text_size_2">14sp</dimen>
+   <dimen name="gpa_unit_text_size">28sp</dimen>
+   <dimen name="basic_info_text_size">22sp</dimen>
+   <dimen name="basic_info_text_size_2">20sp</dimen>
 </resources>

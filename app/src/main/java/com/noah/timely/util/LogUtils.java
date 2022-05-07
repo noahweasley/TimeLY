@@ -17,7 +17,7 @@ public class LogUtils {
       if (origin != null) {
          Log.d(origin.getClass().getSimpleName(), message);
       } else {
-         Log.d("Logger", message);
+         Log.d(LogUtils.class.getSimpleName(), message);
       }
    }
 }
