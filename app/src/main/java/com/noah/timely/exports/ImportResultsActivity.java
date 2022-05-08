@@ -58,34 +58,38 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
    private ViewGroup importView, initView, dataLayerView;
    private ProgressBar pickProgressBar;
    private Button btn_filePick;
-   private final ActivityResultLauncher<Intent> resourceChooserLauncher =
-           registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-              // dismiss the loader views
-              pickProgressBar.setVisibility(View.GONE);
-              btn_filePick.setText(R.string.import_file);
-              // then ...
-              if (result.getData() != null) {
-                 Intent uploadfileIntent = result.getData();
-                 // run resolve task in background to improve UX and run result task in UI Thread
-                 IOUtils.resolveDataToTempFile(this, uploadfileIntent.getData(), file -> runOnUiThread(() -> {
-                    if (file != null) {
-                       performFileImport(file);
-                    } else {
-                       Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
-                       // import unsuccessful. Error occurred
-                       ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
-                       errorBuilder.setShowSuggestions(true)
-                                   .setDialogMessage("An error occurred while importing data")
-                                   .setSuggestionCount(1)
-                                   .setSuggestion1("File extension might not be supported");
+   private final ActivityResultLauncher<Intent> resourceChooserLauncher = getResourceChooserLauncher();
 
-                       new ErrorDialog().showErrorMessage(this, errorBuilder.build());
-                    }
+   // just return a resource chooser action, nothing more. Used just to clean-up code.
+   private ActivityResultLauncher<Intent> getResourceChooserLauncher() {
+      return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+         // dismiss the loader views
+         pickProgressBar.setVisibility(View.GONE);
+         btn_filePick.setText(R.string.import_file);
+         // then ...
+         if (result.getData() != null) {
+            Intent uploadfileIntent = result.getData();
+            // run resolve task in background to improve UX and run result task in UI Thread
+            IOUtils.resolveUriDataToTempFile(this, uploadfileIntent.getData(), file -> runOnUiThread(() -> {
+               if (file != null) {
+                  performFileImport(file);
+               } else {
+                  Toast.makeText(this, "An internal error occurred", Toast.LENGTH_LONG).show();
+                  // import unsuccessful. Error occurred
+                  ErrorDialog.Builder errorBuilder = new ErrorDialog.Builder();
+                  errorBuilder.setShowSuggestions(true)
+                              .setDialogMessage("An error occurred while importing data")
+                              .setSuggestionCount(1)
+                              .setSuggestion1("File extension might not be supported");
 
-                 }));
+                  new ErrorDialog().showErrorMessage(this, errorBuilder.build());
+               }
 
-              }
-           });
+            }));
+
+         }
+      });
+   }
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {

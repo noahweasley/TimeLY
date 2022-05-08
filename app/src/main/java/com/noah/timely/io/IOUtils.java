@@ -118,9 +118,12 @@ public class IOUtils {
     *  directly to get the file path because in Android, not all URIs points to a valid file. So a temp file
     *  was used to copy the data in the stream gotten from the URI, and then the temp file's path was used instead.
     */
-   public static void resolveDataToTempFile(Context context, Uri uri, CallBack<File> callBack) {
+   public static void resolveUriDataToTempFile(Context context, Uri uri, CallBack<File> callBack) {
       // return immediately if the file extension is not supported
-      if (!getFileExtension(new File(uri.getPath())).equals(Zipper.FILE_EXTENSION)) return;
+      if (!getFileExtension(new File(uri.getPath())).equals(Zipper.FILE_EXTENSION)) {
+         callBack.onExecuted(null);
+         return;
+      }
 
       ThreadUtils.runBackgroundTask(() -> {
          Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);

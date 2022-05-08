@@ -42,9 +42,9 @@ public class Converter {
     * @return a properly converted time, as specified by options
     */
    public static String convertMillisToRealTime(long timeInMillis, Options options) {
-      long hours = (timeInMillis / 1000) % 60;
+      long seconds = (timeInMillis / 1000) % 60;
       long minutes = (timeInMillis / (1000 * 60)) % 60;
-      long seconds = (timeInMillis / (1000 * 60 * 60)) % 24;
+      long hours = (timeInMillis / (1000 * 60 * 60)) % 24;
 
       if (options == null || options == Options.SECONDS_ONLY) {
          return String.valueOf(seconds);

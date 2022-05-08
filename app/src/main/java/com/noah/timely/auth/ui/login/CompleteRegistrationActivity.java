@@ -32,7 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class CompleteRegistrationActivity extends AppCompatActivity {
+public class CompleteRegistrationActivity extends AppCompatActivity implements View.OnClickListener {
    private static final String EXTRA_USER_ACCOUNT = "User Account";
    private AutoCompleteTextView listCountries, listSchools;
    private EditText edt_datePicker;
@@ -68,7 +68,12 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
 
       setupDateForm();
 
-      Button signUp = findViewById(R.id.sign_up);
+      Button btn_complete = findViewById(R.id.complete);
+      ImageButton btn_skip = findViewById(R.id.skip);
+
+      btn_skip.setOnClickListener(this);
+      btn_complete.setOnClickListener(this);
+
       // populate listCountries, with list of countries for auto-completion
       String[] countryArray = getResources().getStringArray(R.array.countries_array);
       String[] schoolArray = getResources().getStringArray(R.array.school_array);
@@ -80,7 +85,7 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
 
       listCountries.setAdapter(countryAdapter);
       listSchools.setAdapter(schoolAdapter);
-      signUp.setOnClickListener(v -> validateFormData());
+      btn_complete.setOnClickListener(v -> validateFormData());
    }
 
    private void setupDateForm() {
@@ -176,10 +181,22 @@ public class CompleteRegistrationActivity extends AppCompatActivity {
    @Override
    public void onBackPressed() {
       super.onBackPressed();
+      overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
    }
 
    @Override
    protected void onDestroy() {
       super.onDestroy();
+   }
+
+   @Override
+   public void onClick(View v) {
+      int viewId = v.getId();
+      if (viewId == R.id.skip) {
+         Intent intent = new Intent(this, MainActivity.class);
+         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         startActivity(intent);
+         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+      }
    }
 }

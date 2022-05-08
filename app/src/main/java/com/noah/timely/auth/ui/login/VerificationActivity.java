@@ -16,6 +16,7 @@ import com.noah.timely.util.adapters.SimpleOnTimeUpdateListener;
 
 public class VerificationActivity extends AppCompatActivity {
    private static final String EXTRA_USER_ACCOUNT = "User Account";
+   private CountdownTimer countdownTimer;
 
    /**
     * Helper method to start this activity
@@ -35,7 +36,13 @@ public class VerificationActivity extends AppCompatActivity {
       setContentView(R.layout.activity_verification);
 
       Button signUp = findViewById(R.id.sign_up);
+      Button btn_resend = findViewById(R.id.resend);
       TextView tv_phoneNumber = findViewById(R.id.phone_number);
+
+      btn_resend.setOnClickListener(v -> {
+         btn_resend.setEnabled(false);
+         countdownTimer.restart();
+      });
 
       signUp.setOnClickListener(t -> {
          UserAccount userAccount = (UserAccount) getIntent().getSerializableExtra(EXTRA_USER_ACCOUNT);
@@ -45,11 +52,11 @@ public class VerificationActivity extends AppCompatActivity {
       String phoneNumber = getIntent().getStringExtra(EXTRA_USER_ACCOUNT);
       if (!TextUtils.isEmpty(phoneNumber)) tv_phoneNumber.setText(phoneNumber);
 
-      CountdownTimer countdownTimer = findViewById(R.id.timer);
-      countdownTimer.setOnTimerUpdateListener(new SimpleOnTimeUpdateListener(){
+      countdownTimer = findViewById(R.id.timer);
+      countdownTimer.setOnTimerUpdateListener(new SimpleOnTimeUpdateListener() {
          @Override
          public void onTimerEnd() {
-
+            btn_resend.setEnabled(true);
          }
       });
 
@@ -58,6 +65,9 @@ public class VerificationActivity extends AppCompatActivity {
 
    @Override
    protected void onDestroy() {
+      if (countdownTimer.isTimerRunning()) {
+         countdownTimer.stopTimer();
+      }
       super.onDestroy();
    }
 

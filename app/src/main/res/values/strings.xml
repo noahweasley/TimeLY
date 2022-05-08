@@ -292,9 +292,9 @@
    <string name="content_loading">Loading more</string>
    <string name="verification">Verification</string>
    <string name="submit">SUBMIT</string>
-   <string name="code_entry_message">Enter the SMS Code sent to</string>
+   <string name="code_entry_message">Enter the OTP sent to your email <b>ieb***elu@gmail.com</b></string>
    <string name="default_phone_number">+2347055478947</string>
-   <string name="edit_phone_number">Edit Phone Number</string>
+   <string name="edit_email">Edit email address</string>
    <string name="SIGN_IN_CLIENT_ID">342286363251-k07kbsm8p1271pbu27m4aucc4cbtkug9.apps.googleusercontent.com</string>
    <string name="SIGN_IN_CLIENT_SECRET">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</string>
    <string name="enter_email">Enter your email</string>
@@ -352,4 +352,6 @@
    <string name="average_gpa">Average G.P.A</string>
    <string name="time_min_default">00:00</string>
    <string name="resend">Resend</string>
+   <string name="verify">Verify</string>
+   <string name="didn_t_receive_code">Didn\'t receive code?</string>
 </resources>

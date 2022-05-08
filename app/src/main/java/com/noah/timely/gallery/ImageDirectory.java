@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noah.timely.R;
-import com.noah.timely.util.collections.CollectionUtils;
 import com.noah.timely.util.ThreadUtils;
+import com.noah.timely.util.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,45 +42,53 @@ public class ImageDirectory extends AppCompatActivity implements Runnable {
    public static final String INTERNAL = "Internal Storage";
    private final List<List<Image>> imageDirectoryList = new ArrayList<>();
    private final ImageAdapter imageAdapter = new ImageAdapter();
-   private final ActivityResultLauncher<Intent> requestPermissionLauncher2 =
-           registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                 if (Environment.isExternalStorageManager()) {
-                    // Permission is granted. Continue the action or workflow.
-                    ThreadUtils.runBackgroundTask(this);
-                 } else {
-                    // Explain to the user that the feature is unavailable because the feature requires a
-                    // permission that the was denied.
-                    Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
-                    finish();
-                 }
-              }
-           });
-   private final ActivityResultLauncher<String> requestPermissionLauncher =
-           registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-              if (isGranted) {
-                 // Permission is granted. Continue the action or workflow.
-                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    if (!Environment.isExternalStorageManager()) {
-                       Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                       requestPermissionLauncher2.launch(intent);
-                    } else {
-                       ThreadUtils.runBackgroundTask(this);
-                    }
-                 } else {
-                    ThreadUtils.runBackgroundTask(this);
-                 }
-              } else {
-                 // Explain to the user that the feature is unavailable because the feature requires a permission
-                 // that the was denied.
-                 Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
-                 finish();
-              }
-           });
    private ProgressBar indeterminateProgress;
    private RecyclerView imageList;
    private ViewGroup v_noMedia;
    private String accessedStorage;
+   private final ActivityResultLauncher<String> requestPermissionLauncher = getRequestPermissionLauncher();
+   private final ActivityResultLauncher<Intent> requestPermissionLauncher2 = getRequestPermissionLauncher2();
+
+   // clean up code by returning a permission launcher.
+   private ActivityResultLauncher<String> getRequestPermissionLauncher() {
+      return registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+         if (isGranted) {
+            // Permission is granted, continue the action or workflow.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+               if (!Environment.isExternalStorageManager()) {
+                  Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                  requestPermissionLauncher2.launch(intent);
+               } else {
+                  ThreadUtils.runBackgroundTask(this);
+               }
+            } else {
+               ThreadUtils.runBackgroundTask(this);
+            }
+         } else {
+            // Explain to the user that the feature is unavailable because the feature requires a permission
+            // that the was denied.
+            Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
+            finish();
+         }
+      });
+   }
+
+   // clean up code by returning a permission lancher
+   private ActivityResultLauncher<Intent> getRequestPermissionLauncher2() {
+      return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) {
+               // Permission is granted. Continue the action or workflow.
+               ThreadUtils.runBackgroundTask(this);
+            } else {
+               // Explain to the user that the feature is unavailable because the feature requires a
+               // permission that the was denied.
+               Toast.makeText(this, "Image selector requires permission", Toast.LENGTH_LONG).show();
+               finish();
+            }
+         }
+      });
+   }
 
    protected void onCreate(Bundle state) {
       super.onCreate(state);

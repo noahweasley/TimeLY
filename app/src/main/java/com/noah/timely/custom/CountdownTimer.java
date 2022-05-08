@@ -22,7 +22,8 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
    public static final String DISPLAY_TYPE_SECONDS = "seconds";
    public static final String DISPLAY_TYPE_HOURS = "hours";
    private String displayType = DISPLAY_TYPE_SECONDS;
-   private long startCount = 0L;
+   private long counter = 0L;
+   private long initialCount = 0L;
    private volatile boolean wantToStopOp;
    private volatile boolean isTimerPaused;
    private boolean isTimerRunning;
@@ -48,7 +49,7 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
       if (attrs != null) {
          TypedArray tarr = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CountdownTimer, 0, 0);
          try {
-            startCount = tarr.getInt(R.styleable.CountdownTimer_start_count, 0);
+            setCounter(tarr.getInt(R.styleable.CountdownTimer_start_count, 0));
             if (tarr.hasValue(R.styleable.CountdownTimer_display_type))
                displayType = tarr.getString(R.styleable.CountdownTimer_display_type);
          } finally {
@@ -63,18 +64,18 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
    }
 
    public void clearTimer() {
-      startCount = 0;
+      counter = 0;
       pause();
       timerThread = null;
       isTimerRunning = false;
 
       String formattedTime = null;
       if (displayType.equals(DISPLAY_TYPE_MINUTES)) {
-         formattedTime = Converter.convertMillisToRealTime(startCount, Converter.Options.INCLUDE_MIN);
+         formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.INCLUDE_MIN);
       } else if (displayType.equals(DISPLAY_TYPE_HOURS)) {
-         formattedTime = Converter.convertMillisToRealTime(startCount, Converter.Options.INCLUDE_HOUR);
+         formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.INCLUDE_HOUR);
       } else {
-         formattedTime = Converter.convertMillisToRealTime(startCount, Converter.Options.SECONDS_ONLY);
+         formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.SECONDS_ONLY);
       }
 
       setText(formattedTime);
@@ -82,6 +83,15 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
 
    public boolean isTimerRunning() {
       return isTimerRunning;
+   }
+
+   public void stopTimer() {
+      pauseTimer();
+      pause();
+      timerThread = null;
+      isTimerRunning = false;
+      setCounter(0L);
+      setText(R.string.time_min_default);
    }
 
    private void pause() {
@@ -105,12 +115,26 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
       this.listener = listener;
    }
 
-   public void setStartCount(long millis) {
-      this.startCount = millis;
+   public void setCounter(long millis) {
+      this.counter = millis;
+      this.initialCount = millis;
    }
 
    public String getDisplayType() {
       return displayType;
+   }
+
+   public void restart() {
+      if (!isTimerRunning) {
+         this.counter = this.initialCount;
+         if (timerThread == null) {
+            timerThread = new Thread(this);
+            timerThread.start();
+         }
+         resumeTimer();
+      } else {
+         throw new IllegalStateException("timer is already running");
+      }
    }
 
    public void start() {
@@ -128,33 +152,36 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
          if (!isTimerPaused) {
             String formattedTime = null;
             if (displayType.equals(DISPLAY_TYPE_MINUTES)) {
-               formattedTime = Converter.convertMillisToRealTime(startCount, Converter.Options.INCLUDE_MIN);
+               formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.INCLUDE_MIN);
             } else if (displayType.equals(DISPLAY_TYPE_HOURS)) {
-               formattedTime = Converter.convertMillisToRealTime(startCount, Converter.Options.INCLUDE_HOUR);
+               formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.INCLUDE_HOUR);
             } else {
-               formattedTime = Converter.convertMillisToRealTime(startCount, Converter.Options.SECONDS_ONLY);
+               formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.SECONDS_ONLY);
             }
 
             final String finalFormattedTime = formattedTime;
 
             SystemClock.sleep(1000);
-            startCount -= 1000;
+            counter -= 1000;
 
-            if (listener != null) {
-               listener.onTimeDecrement(startCount);
-               if (startCount == 0) {
-                  listener.onTimerEnd();
-               }
-            }
-
-            getHandler().post(() -> setText(finalFormattedTime));
+            if (getHandler() != null)
+               getHandler().post(() -> {
+                  if (listener != null) {
+                     listener.onTimeDecrement(counter);
+                     if (counter == 0) {
+                        listener.onTimerEnd();
+                        pauseTimer();
+                     }
+                  }
+                  setText(finalFormattedTime);
+               });
          }
-      } while (startCount > 0 && !wantToStopOp);
+      } while (!wantToStopOp);
    }
 
    public interface OnTimerUpdateListener {
       void onTimerEnd();
 
-      void onTimeDecrement(long counRemain);
+      void onTimeDecrement(long countRemain);
    }
 }

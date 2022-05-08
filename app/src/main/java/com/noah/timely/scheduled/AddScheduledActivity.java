@@ -179,8 +179,7 @@ public class AddScheduledActivity extends AppCompatActivity {
 
    private boolean onTouch(View view, MotionEvent event) {
       EditText editText = (EditText) view;
-      TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute,
-                                                int second) -> {
+      TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute, int second) -> {
          Calendar calendar = Calendar.getInstance();
          calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
          calendar.set(Calendar.MINUTE, minute);

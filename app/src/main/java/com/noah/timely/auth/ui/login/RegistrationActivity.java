@@ -150,7 +150,9 @@ public class RegistrationActivity extends AppCompatActivity {
       }
 
       // ... then we naviagate to next page
-      if (!isErrorOccurred) CompleteRegistrationActivity.start(this, userAccount);
+//      if (!isErrorOccurred) {
+      VerificationActivity.start(this, userAccount);
+//      }
    }
 
    private void registerGoogleSignInCallback() {

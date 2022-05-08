@@ -39,23 +39,9 @@
       android:layout_marginTop="16dp"
       android:text="@string/code_entry_message"
       android:textColor="@color/light_grey"
-      external:layout_constraintEnd_toStartOf="@id/phone_number"
+      external:layout_constraintEnd_toEndOf="@id/right_guide"
       external:layout_constraintHorizontal_chainStyle="packed"
-      external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toBottomOf="@+id/title" />
-
-   <TextView
-      android:id="@+id/phone_number"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/layout_gap"
-      android:layout_marginLeft="@dimen/layout_gap"
-      android:text="@string/default_phone_number"
-      android:textColor="@android:color/black"
-      android:textStyle="bold"
-      external:layout_constraintBaseline_toBaselineOf="@id/sms"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toEndOf="@+id/sms"
+      external:layout_constraintStart_toStartOf="@+id/left_guide"
       external:layout_constraintTop_toBottomOf="@+id/title" />
 
    <TextView
@@ -63,10 +49,11 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginVertical="@dimen/layout_gap_2"
-      android:text="@string/edit_phone_number"
+      android:drawablePadding="@dimen/layout_gap"
+      android:textSize="@dimen/min_text_size"
+      android:text="@string/edit_email"
       android:textColor="@color/colorPrimary"
       android:textStyle="bold"
-      android:drawablePadding="@dimen/layout_gap"
 
       external:layout_constraintBottom_toTopOf="@+id/verification_pin"
       external:layout_constraintStart_toStartOf="@+id/sms"
@@ -100,6 +87,17 @@
 
    </com.chaos.view.PinView>
 
+   <TextView
+      android:id="@+id/label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/didn_t_receive_code"
+      android:textColor="@color/light_grey"
+      external:layout_constraintVertical_chainStyle="packed"
+      external:layout_constraintBottom_toTopOf="@+id/resend"
+      external:layout_constraintStart_toStartOf="@+id/timer"
+      external:layout_constraintTop_toBottomOf="@+id/verification_pin" />
+
    <com.noah.timely.custom.CountdownTimer
       android:id="@+id/timer"
       android:layout_width="0dp"
@@ -110,22 +108,26 @@
       android:gravity="center"
       android:text="@string/time_min_default"
       android:textColor="@color/black"
+      android:textSize="@dimen/min_text_size"
       android:textStyle="bold"
       external:display_type="minutes"
-      external:layout_constraintBaseline_toBaselineOf="@id/button"
+      external:layout_constraintBaseline_toBaselineOf="@id/resend"
       external:layout_constraintStart_toStartOf="@+id/edit"
       external:start_count="240000" />
 
    <Button
-      android:id="@+id/button"
+      android:id="@+id/resend"
       style="@style/Widget.AppCompat.Button.Borderless"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginHorizontal="@dimen/layout_gap"
+      android:enabled="false"
       android:text="@string/resend"
+      android:textSize="@dimen/min_text_size"
+      android:layout_marginTop="@dimen/layout_gap"
       external:layout_constraintBottom_toTopOf="@+id/sign_up"
       external:layout_constraintStart_toEndOf="@+id/timer"
-      external:layout_constraintTop_toBottomOf="@+id/verification_pin"
+      external:layout_constraintTop_toBottomOf="@+id/label"
       external:layout_constraintVertical_bias="0.25" />
 
    <Button
@@ -134,7 +136,7 @@
       android:layout_height="wrap_content"
       android:layout_marginHorizontal="8dp"
       android:background="@drawable/cta_button"
-      android:text="@string/submit"
+      android:text="@string/verify"
       android:textColor="@android:color/white"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toStartOf="@+id/right_guide"
