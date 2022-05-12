@@ -4,7 +4,8 @@
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
    android:layout_height="@dimen/image_row_size"
-   android:layout_margin="2dp">
+   android:layout_margin="2dp"
+   android:background="?attr/selectableItemBackground">
 
    <com.google.android.material.imageview.ShapeableImageView
       android:id="@+id/rowImage"
@@ -76,9 +77,9 @@
       android:layout_margin="@dimen/folder_img_margin"
       android:ellipsize="middle"
       android:singleLine="true"
-      android:visibility="invisible"
       android:text="@string/long_text"
       android:textColor="@android:color/white"
+      android:visibility="invisible"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toEndOf="@id/img_folder" />

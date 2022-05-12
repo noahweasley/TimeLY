@@ -2,21 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:external="http://schemas.android.com/apk/res-auto"
    android:layout_width="match_parent"
-   android:background="@color/black"
-   android:layout_height="match_parent">
+   android:layout_height="match_parent"
+   android:background="@color/black">
 
-   <!--  <ProgressBar
-         android:id="@+id/indeterminateProgress"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:theme="@style/LightTheme"
-         style="?attr/indeterminateProgressStyle"
-         external:layout_constraintTop_toTopOf="parent"
-         external:layout_constraintBottom_toBottomOf="parent"
-         external:layout_constraintStart_toStartOf="parent"
-         external:layout_constraintEnd_toEndOf="parent" />-->
-
-   <com.github.chrisbanes.photoview.PhotoView
+   <ImageView
       android:id="@+id/fullscreen_image"
       android:layout_width="0dp"
       android:layout_height="0dp"
@@ -26,5 +15,40 @@
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toTopOf="parent" />
+
+   <Button
+      android:id="@+id/cancel"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:text="@android:string/cancel"
+      android:textColor="@color/white"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toStartOf="@+id/rotate"
+      external:layout_constraintStart_toStartOf="parent" />
+
+   <ImageButton
+      android:id="@+id/rotate"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      external:layout_constraintBottom_toBottomOf="@+id/fullscreen_image"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:srcCompat="@drawable/ic_baseline_rotate_90_degrees_ccw_24" />
+
+   <Button
+      android:id="@+id/done"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:text="@string/done"
+      android:textColor="@color/white"
+      android:contentDescription="@string/crop_done_description"
+      android:textSize="@dimen/button_text_size"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toEndOf="@+id/rotate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

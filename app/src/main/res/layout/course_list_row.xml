@@ -6,7 +6,6 @@
    android:layout_marginHorizontal="-8dp"
    android:layout_marginTop="-8dp"
    android:layout_marginBottom="@dimen/secondary_card_margin_bottom"
-   android:background="?attr/selectableItemBackground"
    external:cardCornerRadius="@dimen/corner_radius"
    external:cardElevation="@dimen/normal_elevation"
    external:cardPreventCornerOverlap="false"
@@ -15,7 +14,8 @@
 
    <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      android:background="?attr/selectableItemBackground">
 
       <View
          android:id="@+id/left_indicator"

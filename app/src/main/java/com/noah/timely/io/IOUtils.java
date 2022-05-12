@@ -79,10 +79,14 @@ public class IOUtils {
       });
    }
 
-   /*
-    *  The resulting URI received from the Android device's file chooser would never be a correct URI to be used
-    *  directly to get the file path because in Android, not all URIs points to a valid file. So a temp file
-    *  was used to copy the data in the stream gotten from the URI, and then the temp file's path was used instead.
+   /**
+    * The resulting URI received from the Android device's file chooser would never be a correct URI to be used
+    * directly to get the file path because in Android, not all URIs points to a valid file. So a temp file
+    * was used to copy the data in the stream gotten from the URI, and then the temp file's path was used instead.
+    *
+    * @param context  the context in which storage access would be used
+    * @param uri      the {@link Uri} to be resolved to a temporary file
+    * @param callBack the callback that returns a {@link File} object or null, if an error occurred
     */
    public static void resolveUriToTempFile(Context context, Uri uri, CallBack<File> callBack) {
       ThreadUtils.runBackgroundTask(() -> {
@@ -113,10 +117,14 @@ public class IOUtils {
 
    }
 
-   /*
-    *  The resulting URI received from the Android device's file chooser would never be a correct URI to be used
-    *  directly to get the file path because in Android, not all URIs points to a valid file. So a temp file
-    *  was used to copy the data in the stream gotten from the URI, and then the temp file's path was used instead.
+   /**
+    * The resulting URI received from the Android device's file chooser would never be a correct URI to be used
+    * directly to get the file path because in Android, not all URIs points to a valid file. So a temp file
+    * was used to copy the data in the stream gotten from the URI, and then the temp file's path was used instead.
+    *
+    * @param context  the context in which storage access would be used
+    * @param uri      the {@link Uri} to be resolved to a temporary file
+    * @param callBack the callback that returns a {@link File} object or null, if an error occurred
     */
    public static void resolveUriDataToTempFile(Context context, Uri uri, CallBack<File> callBack) {
       // return immediately if the file extension is not supported
@@ -150,6 +158,55 @@ public class IOUtils {
          }
       });
 
+   }
+
+   /**
+    * Creates a temporary file asynchronously
+    *
+    * @param context  the context in which external files storage location would be checked
+    * @param fileName the file name of the temporary file to be created
+    * @param callBack the callback which returns a {@link File} object or null, if an error occurred
+    */
+   public static void createTempFile(Context context, String fileName, CallBack<File> callBack) {
+      ThreadUtils.runBackgroundTask(() -> {
+         String parentFolder = context.getExternalFilesDir(null) + File.separator + "temp" + File.separator;
+         String tempFilePath = String.format(Locale.US, "%s%s.tmp", parentFolder, fileName);
+         File file = new File(tempFilePath);
+         File tempFileDir = file.getParentFile();
+
+         boolean isCreated = true;
+         if (!tempFileDir.exists()) {
+            isCreated = tempFileDir.mkdirs();
+         }
+
+         if (isCreated) {
+            try {
+               //noinspection ResultOfMethodCallIgnored
+               if (file.createNewFile()) {
+                  callBack.onExecuted(file);
+               } else {
+                  callBack.onExecuted(null);
+               }
+            } catch (IOException e) {
+               callBack.onExecuted(null);
+            }
+
+         } else {
+            callBack.onExecuted(null);
+         }
+      });
+   }
+
+   /**
+    * Creates a temporary image asynchronously
+    *
+    * @param context  the context in which external files storage location would be checked
+    * @param fileName the file name of the temporary image to be created
+    * @param callBack the callback which returns a {@link File} object or null, if an error occurred
+    */
+   public static void createTempImage(Context context, String fileName, CallBack<File> callBack) {
+      String imageFileName = String.format(Locale.US, "images%1$%s%2$s", File.separator, fileName);
+      createTempFile(context, imageFileName, callBack);
    }
 
    /**

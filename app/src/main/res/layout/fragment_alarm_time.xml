@@ -22,6 +22,7 @@
       android:layout_height="wrap_content"
       external:layout_constraintBottom_toTopOf="@id/alarm_date"
       external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.45"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toTopOf="parent">
 

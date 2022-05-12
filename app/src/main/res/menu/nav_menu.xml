@@ -55,6 +55,12 @@
                android:icon="@drawable/ic_baseline_calculate_24"
                android:title="@string/g_p_a_calculator" />
 
+            <item
+               android:id="@+id/alarms"
+               android:icon="@drawable/ic_alarm"
+               android:title="@string/alarms" />
+
+
          </group>
 
       </menu>

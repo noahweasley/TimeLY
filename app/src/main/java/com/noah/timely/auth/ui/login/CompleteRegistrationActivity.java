@@ -3,8 +3,10 @@ package com.noah.timely.auth.ui.login;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,25 +19,35 @@ import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.auth.data.model.UserAccount;
+import com.noah.timely.gallery.Image;
 import com.noah.timely.gallery.ImageDirectory;
 import com.noah.timely.gallery.ImageGallery;
+import com.noah.timely.io.IOUtils;
 import com.noah.timely.main.MainActivity;
+import com.noah.timely.util.Constants;
 import com.noah.timely.util.PatternUtils;
+import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.yalantis.ucrop.UCrop;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class CompleteRegistrationActivity extends AppCompatActivity implements View.OnClickListener {
+   private static final int MAX_IMAGE_WIDTH = 400;
+   private static final int MAX_IMAGE_HEIGHT = 400;
    private static final String EXTRA_USER_ACCOUNT = "User Account";
    private AutoCompleteTextView listCountries, listSchools;
    private EditText edt_datePicker;
+   private ShapeableImageView img_profileImage;
 
    /**
     * Convenience method to start this activity and pass other details to it
@@ -53,11 +65,14 @@ public class CompleteRegistrationActivity extends AppCompatActivity implements V
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_complete_registration);
+      img_profileImage = findViewById(R.id.profile_image);
       // image picker
       View v_image_picker = findViewById(R.id.profile_image_picker);
-      Intent imagePickerIntent = new Intent(this, ImageDirectory.class);
-      imagePickerIntent.setAction(ImageGallery.ACTION_SINGLE_SELECT);
-      v_image_picker.setOnClickListener(v -> startActivity(imagePickerIntent));
+      v_image_picker.setOnClickListener(v -> {
+         Intent imagePickerIntent = new Intent(this, ImageDirectory.class);
+         imagePickerIntent.setAction(ImageGallery.ACTION_SINGLE_SELECT);
+         startActivity(imagePickerIntent);
+      });
       // ...
       ImageButton exit = findViewById(R.id.exit);
       exit.setOnClickListener(v -> onBackPressed());
@@ -187,6 +202,7 @@ public class CompleteRegistrationActivity extends AppCompatActivity implements V
    @Override
    protected void onDestroy() {
       super.onDestroy();
+
    }
 
    @Override
@@ -199,4 +215,44 @@ public class CompleteRegistrationActivity extends AppCompatActivity implements V
          overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
       }
    }
+
+   @Override
+   protected void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+      if (intent.getAction().equals(Constants.ACTION.SHOW_PICTURE)) {
+         Image selectedImage = (Image) intent.getSerializableExtra(Constants.EXTRA.EXTRA_IMAGE);
+
+         if (selectedImage != null) {
+            String tempImageFileName = String.format(Locale.US, "IMG%d", SystemClock.elapsedRealtime());
+            IOUtils.createTempImage(this, tempImageFileName, file -> {
+               // ... then start image cropper
+               UCrop.Options options = new UCrop.Options();
+               options.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+               options.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+               options.setToolbarWidgetColor(ContextCompat.getColor(this, R.color.white));
+
+               UCrop.of(selectedImage.getImageUri(), Uri.fromFile(file))
+                    .withAspectRatio(6f, 6f)
+                    .withOptions(options)
+                    .withMaxResultSize(MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT)
+                    .start(this);
+
+            });
+         }
+      }
+   }
+
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode,
+                                   @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+      if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+         Uri uri = UCrop.getOutput(data);
+         Picasso.get().load(uri).fit().centerInside().into(img_profileImage);
+      } else if (resultCode == UCrop.RESULT_ERROR) {
+         //noinspection ThrowableNotThrown
+         Throwable cropError = UCrop.getError(data);
+      }
+   }
+
 }

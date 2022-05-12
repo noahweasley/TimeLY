@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
@@ -88,15 +90,23 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
       int credit = mCredits;
 
       boolean errorOccurred = false;
+
       if (TextUtils.isEmpty(courseName)) {
-         edt_courseName.setError("Field required");
+         ViewParent container = edt_courseName.getParent();
+         TextInputLayout edt_courseNameParent = ((TextInputLayout) container.getParent());
+         edt_courseNameParent.setError("Field required");
          errorOccurred = true;
       }
+
       if (TextUtils.isEmpty(courseCode)) {
-         edt_courseCode.setError("Field required");
+         ViewParent container = edt_courseCode.getParent();
+         TextInputLayout edt_courseCodeParent = ((TextInputLayout) container.getParent());
+         edt_courseCodeParent.setError("Field required");
          errorOccurred = true;
       }
+
       if (errorOccurred) return false;
+
 
       String semester;
       if (grp_semesterGroup.getCheckedRadioButtonId() == R.id.second) {
@@ -178,7 +188,6 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
                message.show();
             } else
                Toast.makeText(getContext(), "An Error occurred", Toast.LENGTH_SHORT).show();
-
          });
 
          Spinner spin_credits = findViewById(R.id.credits);

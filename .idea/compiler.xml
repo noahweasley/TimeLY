@@ -3,6 +3,8 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="TimeLY.app" target="11" />
+      <module name="TimeLY.uCrop" target="11" />
+      <module name="TimeLY.ucrop" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

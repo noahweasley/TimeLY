@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-   android:color="@color/colorAccentDark">
+   android:color="@color/colorPrimaryClick">
 
    <item android:state_pressed="false">
       <shape>
-         <solid android:color="@color/colorAccent" />
+         <solid android:color="@color/colorPrimary" />
          <corners android:radius="10dp" />
          <padding
             android:left="10dp"

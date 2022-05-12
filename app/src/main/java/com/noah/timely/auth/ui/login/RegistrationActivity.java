@@ -202,15 +202,19 @@ public class RegistrationActivity extends AppCompatActivity {
             String clickedUrl = span.getURL();
             switch (clickedUrl) {
                case "@login_page":
-                  startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                  Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                  startActivity(intent);
                   break;
                case "http://www.privacy-options.com":
                   Uri link1 = Uri.parse("http://www.privacy-options.com");
-                  startActivity(new Intent(Intent.ACTION_VIEW, link1));
+                  Intent intent1 = new Intent(Intent.ACTION_VIEW, link1);
+                  startActivity(Intent.createChooser(intent1, getString(R.string.link_open_text)));
                   break;
                case "http://www.terms-and-conditions.com":
                   Uri link2 = Uri.parse("http://www.terms-and-conditions.com");
-                  startActivity(new Intent(Intent.ACTION_VIEW, link2));
+                  Intent intent2 = new Intent(Intent.ACTION_VIEW, link2);
+                  startActivity(Intent.createChooser(intent2, getString(R.string.link_open_text)));
                   break;
 
             }

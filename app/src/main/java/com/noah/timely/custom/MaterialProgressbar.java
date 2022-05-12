@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
+/**
+ * Just a regular progress bar that has backward compatibility to Android Jelly bean MR2
+ */
 public class MaterialProgressbar extends MaterialProgressBar {
 
    public MaterialProgressbar(Context context) {

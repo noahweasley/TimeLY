@@ -31,48 +31,14 @@
          android:layout_height="wrap_content">
 
          <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/update_info"
+            android:id="@+id/centre"
             android:layout_width="match_parent"
             android:layout_height="@dimen/storage_view_container_height"
             android:layout_marginTop="@dimen/layout_gap"
             android:background="?attr/selectableItemBackground"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-            <ImageView
-               android:id="@+id/internal_storage_icon"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginHorizontal="@dimen/layout_gap_2"
-               android:contentDescription="@string/internal_storage"
-               external:layout_constraintBottom_toBottomOf="parent"
-               external:layout_constraintStart_toStartOf="parent"
-               external:layout_constraintTop_toTopOf="parent"
-               external:srcCompat="@drawable/ic_whats_new" />
-
-            <TextView
-               android:id="@+id/help_center_label"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginHorizontal="@dimen/layout_gap_2"
-               android:text="What's New"
-               android:textColor="@android:color/black"
-               android:textSize="@dimen/storage_viewer_text_size"
-               external:layout_constraintBottom_toBottomOf="parent"
-               external:layout_constraintStart_toEndOf="@id/internal_storage_icon"
-               external:layout_constraintTop_toTopOf="parent" />
-
-         </androidx.constraintlayout.widget.ConstraintLayout>
-
-         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/centre"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/storage_view_container_height"
-            android:background="?attr/selectableItemBackground"
-            external:layout_constraintEnd_toEndOf="parent"
-            external:layout_constraintStart_toStartOf="parent"
-            external:layout_constraintTop_toBottomOf="@+id/update_info">
+            external:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                android:id="@+id/internal_storage_icon"
@@ -143,13 +109,6 @@
                external:layout_constraintBottom_toBottomOf="parent"
                external:layout_constraintStart_toStartOf="@id/contact_us_label"
                external:layout_constraintTop_toBottomOf="@+id/contact_us_label" />
-
-            <!--      <View-->
-            <!--         android:layout_width="0dp"-->
-            <!--         android:layout_height="1dp"-->
-            <!--         android:background="?android:attr/listDivider"-->
-            <!--         external:layout_constraintBottom_toBottomOf="parent"-->
-            <!--         external:layout_constraintStart_toStartOf="@id/ext_label" />-->
 
          </androidx.constraintlayout.widget.ConstraintLayout>
 

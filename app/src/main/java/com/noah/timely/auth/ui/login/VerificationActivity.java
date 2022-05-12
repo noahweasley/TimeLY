@@ -60,7 +60,7 @@ public class VerificationActivity extends AppCompatActivity {
          }
       });
 
-      countdownTimer.start();
+//      countdownTimer.start();
    }
 
    @Override

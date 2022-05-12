@@ -22,7 +22,7 @@
    <dimen name="alarm_activity_time_size">30sp</dimen>
    <dimen name="alarm_activity_label_size">18sp</dimen>
    <dimen name="button_min_height">56dp</dimen>
-   <dimen name="alarm_time_head_num_size">32sp</dimen>
+   <dimen name="alarm_time_head_num_size">36sp</dimen>
    <dimen name="alarm_header_text_size_secondary">24sp</dimen>
    <dimen name="alarm_date_size">18sp</dimen>
    <dimen name="alarm_time_bottom_position">250dp</dimen>
@@ -89,7 +89,7 @@
    <dimen name="msg_import_text_size">18sp</dimen>
    <dimen name="small_dialog_width">250dp</dimen>
    <dimen name="small_dialog_height">230dp</dimen>
-   <dimen name="loader_text_size">18sp</dimen>
+   <dimen name="loader_text_size">16sp</dimen>
    <dimen name="import_content_text_text_size">16sp</dimen>
    <dimen name="small_button_padding_vertical">16dp</dimen>
    <dimen name="no_task_info_text_size">22sp</dimen>

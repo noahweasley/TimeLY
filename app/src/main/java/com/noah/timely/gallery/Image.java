@@ -4,16 +4,15 @@ import android.net.Uri;
 
 import java.io.Serializable;
 
-@SuppressWarnings("unused")
 public class Image implements Serializable {
    private String folderName;
-   private Uri imageUri;
+   private String imageUri;
    private int size;
    private String fileName;
 
    public Image(Uri imageUri, int size, String fileName, String folderName) {
       this.folderName = folderName;
-      this.imageUri = imageUri;
+      this.imageUri = imageUri.toString();
       this.size = size;
       this.fileName = fileName;
    }
@@ -27,31 +26,31 @@ public class Image implements Serializable {
       return image;
    }
 
-   String getFileName() {
+   public String getFileName() {
       return fileName;
    }
 
-   void setFileName(String fileName) {
+   public void setFileName(String fileName) {
       this.fileName = fileName;
    }
 
-   String getFolderName() {
+   public String getFolderName() {
       return folderName;
    }
 
-   Uri getImageUri() {
-      return imageUri;
+   public Uri getImageUri() {
+      return Uri.parse(imageUri);
    }
 
-   void setImageUri(Uri imageUri) {
-      this.imageUri = imageUri;
+   public void setImageUri(Uri imageUri) {
+      this.imageUri = imageUri.toString();
    }
 
-   int getSize() {
+   public int getSize() {
       return size;
    }
 
-   void setSize(int size) {
+   public void setSize(int size) {
       this.size = size;
    }
 

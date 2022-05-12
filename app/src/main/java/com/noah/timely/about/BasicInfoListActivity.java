@@ -24,9 +24,8 @@ public class BasicInfoListActivity extends AppCompatActivity implements View.OnC
       ViewGroup vg_contact = findViewById(R.id.contact);
       ViewGroup vg_helpCenter = findViewById(R.id.centre);
       ViewGroup vg_appInfo = findViewById(R.id.app_info);
-      ViewGroup vg_updateInfo = findViewById(R.id.update_info);
       // avoiding stupid duplicate code
-      ViewGroup[] vgs = { vg_legal, vg_contact, vg_helpCenter, vg_appInfo, vg_updateInfo };
+      ViewGroup[] vgs = { vg_legal, vg_contact, vg_helpCenter, vg_appInfo};
       for (ViewGroup vg : vgs) vg.setOnClickListener(this);
    }
 
@@ -39,9 +38,8 @@ public class BasicInfoListActivity extends AppCompatActivity implements View.OnC
    @Override
    public void onClick(View view) {
       int viewId = view.getId();
-      if (viewId == R.id.update_info) {
-         startActivity(new Intent(this, TimelyUpdateInfoActivity.class));
-      } else if (viewId == R.id.app_info) {
+
+      if (viewId == R.id.app_info) {
          startActivity(new Intent(this, TimelyBasicInfoActivity.class));
       } else if (viewId == R.id.contact) {
          startActivity(new Intent(this, ContactActivity.class));

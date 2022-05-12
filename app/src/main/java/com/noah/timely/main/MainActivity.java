@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +29,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.navigation.NavigationView;
 import com.noah.timely.R;
 import com.noah.timely.about.BasicInfoListActivity;
-import com.noah.timely.about.TimelyUpdateInfoDialog;
 import com.noah.timely.alarms.AlarmHolderFragment;
 import com.noah.timely.alarms.TimeChangeDetector;
 import com.noah.timely.assignment.AssignmentFragment;
@@ -69,9 +67,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       checkedUserLoggingStatus();
       setContentView(R.layout.activity_main);
       launchIntroActivity();
+
       // check for app updates
       if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.UPDATE_ON_STARTUP, true))
          TimelyUpdateUtils.checkForUpdates(this);
+
       // then ...
       Toolbar toolbar = findViewById(R.id.toolbar);
       setSupportActionBar(toolbar);
@@ -79,10 +79,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       drawer = findViewById(R.id.drawer);
       toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
       drawer.addDrawerListener(toggle);
-      // Easter egg activation
-      if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.EASTER_EGG_KEY, false))
-         navView.inflateMenu(R.menu.ee_nav_menu);
-      else navView.inflateMenu(R.menu.nav_menu);
 
       // navigate to user sign up | login screen
       View vg_authGroup = navView.getHeaderView(0);
@@ -277,10 +273,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          open_upSetting();
          return true; // immediately return from callback so that the drawer doesn't close
 
-      } else if (menuItemId == R.id.whats_new) {
-
-         new TimelyUpdateInfoDialog().show(this);
-
       } else if (menuItemId == R.id.__export) {
 
          new TMLYDataGeneratorDialog().show(this);
@@ -315,7 +307,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    private void doUpdateFragment(Intent intent) {
       final String reqAction = intent.getAction();
 
-      Log.d(MainActivity.class.getSimpleName(), "Intent: " + intent + ", action: " + reqAction);
       if (reqAction != null) {
          switch (reqAction) {
             case Constants.ASSIGNMENT:

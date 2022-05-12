@@ -116,9 +116,7 @@ public class AddScheduledActivity extends AppCompatActivity {
       atv_courseName.setAdapter(courseAdapter);
 
       Spinner spin_days = findViewById(R.id.day_spin);
-      ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(this,
-                                                            R.layout.simple_spinner_item,
-                                                            DAYS);
+      ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, DAYS);
 
       daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
       spin_days.setAdapter(daysAdapter);

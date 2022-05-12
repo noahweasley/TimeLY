@@ -51,7 +51,7 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_margin="@dimen/layout_gap"
-         android:fontFamily="@font/wendy_one"
+         android:fontFamily="sans-serif-medium"
          android:text="@string/no_image"
          android:textColor="@color/colorPrimaryDark"
          android:textSize="@dimen/no_task_text_size"

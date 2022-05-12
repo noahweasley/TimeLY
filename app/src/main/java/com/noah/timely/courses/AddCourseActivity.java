@@ -107,7 +107,7 @@ public class AddCourseActivity extends AppCompatActivity {
       }
 
       if (TextUtils.isEmpty(courseCode)) {
-         ViewParent container = edt_courseName.getParent();
+         ViewParent container = edt_courseCode.getParent();
          TextInputLayout edt_courseCodeParent = ((TextInputLayout) container.getParent());
          edt_courseCodeParent.setError("Field required");
          errorOccurred = true;

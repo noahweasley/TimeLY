@@ -14,7 +14,7 @@
       <item name="colorAccent">@color/colorAccent</item>
       <item name="snackbarStyle">@style/SnackbarStyle</item>
       <item name="android:windowBackground">@color/window_background_color</item>
-      <item name="android:navigationBarColor" tools:targetApi="lollipop">#BE000000</item>
+      <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/color_ebony_clay</item>
       <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
       <item name="windowActionModeOverlay">true</item>
       <item name="android:actionModeStyle">@style/ActionModeStyle</item>

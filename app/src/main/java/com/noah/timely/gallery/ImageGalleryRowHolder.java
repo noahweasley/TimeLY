@@ -2,6 +2,7 @@ package com.noah.timely.gallery;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noah.timely.R;
 import com.noah.timely.assignment.AddAssignmentActivity;
+import com.noah.timely.auth.ui.login.CompleteRegistrationActivity;
+import com.noah.timely.util.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,6 +31,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
    private List<? extends Image> imageList;
    private boolean isChecked;
    private String requestAction;
+   private Image image;
 
    @SuppressLint("ClickableViewAccessibility")
    ImageGalleryRowHolder(View rootView) {
@@ -48,9 +52,12 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
             } else ImageSlideActivity.start(context, getAbsoluteAdapterPosition(), imageList);
 
          } else if (requestAction.equals(ImageGallery.ACTION_SINGLE_SELECT)) {
-            FullScreenImageActivity.start(context, imageList.get(0));
+            Intent intent = new Intent(context, CompleteRegistrationActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(Constants.EXTRA.EXTRA_IMAGE, image);
+            intent.setAction(Constants.ACTION.SHOW_PICTURE);
+            context.startActivity(intent);
          }
-
       });
 
       rootView.setOnLongClickListener(l -> {
@@ -80,7 +87,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
 
    ImageGalleryRowHolder with(ImageGallery.ImageAdapter imageAdapter, List<? extends Image> imageList) {
       this.imageList = imageList;
-      Image image = imageList.get(getAbsoluteAdapterPosition());
+      this.image = imageList.get(getAbsoluteAdapterPosition());
       this.imageContentUri = image.getImageUri();
       this.fileName = image.getFileName();
       this.imageAdapter = imageAdapter;

@@ -119,6 +119,12 @@ public class Constants {
        */
       public static final String SHOW_NOTIFICATION = "com.noah.timely.action.show-notification";
 
+      public static final String SHOW_PICTURE = "com.noah.timely.action.show-picutures";
+
    }
 
+   public static class EXTRA {
+
+      public static final String EXTRA_IMAGE = "extra image";
+   }
 }

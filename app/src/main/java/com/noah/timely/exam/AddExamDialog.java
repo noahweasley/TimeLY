@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
@@ -113,27 +115,37 @@ public class AddExamDialog extends DialogFragment implements View.OnClickListene
       boolean errorOccurred = false, use24 = isUserPreferred24Hours(getContext());
 
       if (use24 && !start.matches(timeRegex24)) {
-         edt_startTime.setError("Format: hh:ss");
+         ViewParent container = edt_startTime.getParent();
+         TextInputLayout edt_startTimeParent = ((TextInputLayout) container.getParent());
+         edt_startTimeParent.setError("Format: HH:SS");
          errorOccurred = true;
       } else {
          if (!use24 && !start.matches(timeRegex12)) {
-            edt_startTime.setError("12 hours mode");
+            ViewParent container = edt_startTime.getParent();
+            TextInputLayout edt_startTimeParent = ((TextInputLayout) container.getParent());
+            edt_startTimeParent.setError("12 hours mode");
             errorOccurred = true;
          }
       }
 
       if (use24 && !end.matches(timeRegex24)) {
-         edt_endTime.setError("Format: hh:ss");
+         ViewParent container = edt_endTime.getParent();
+         TextInputLayout edt_endTimeParent = ((TextInputLayout) container.getParent());
+         edt_endTimeParent.setError("Format: HH:SS");
          errorOccurred = true;
       } else {
          if (!use24 && !end.matches(timeRegex12)) {
-            edt_endTime.setError("12 hours mode");
+            ViewParent container = edt_endTime.getParent();
+            TextInputLayout edt_endTimeParent = ((TextInputLayout) container.getParent());
+            edt_endTimeParent.setError("12 hours mode");
             errorOccurred = true;
          }
       }
 
       if (TextUtils.isEmpty(course)) {
-         atv_courseName.setError("Required");
+         ViewParent container = atv_courseName.getParent();
+         TextInputLayout atv_courseNameParent = ((TextInputLayout) container.getParent());
+         atv_courseNameParent.setError("Field Required");
          errorOccurred = true;
       }
 

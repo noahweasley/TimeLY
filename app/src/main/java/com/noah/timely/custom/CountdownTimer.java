@@ -18,15 +18,14 @@ import org.intellij.lang.annotations.MagicConstant;
  * A nomal TextView sometimes :) but is mainly used as a countdown timer
  */
 public class CountdownTimer extends AppCompatTextView implements Runnable {
-   public static final String DISPLAY_TYPE_MINUTES = "minutes";
-   public static final String DISPLAY_TYPE_SECONDS = "seconds";
-   public static final String DISPLAY_TYPE_HOURS = "hours";
-   private String displayType = DISPLAY_TYPE_SECONDS;
+   public static final String DISPLAY_FORMAT_MINUTES = "minutes";
+   public static final String DISPLAY_FORMAT_SECONDS = "seconds";
+   public static final String DISPLAY_FORMAT_HOURS = "hours";
+   private String displayFormat = DISPLAY_FORMAT_SECONDS;
    private long counter = 0L;
    private long initialCount = 0L;
    private volatile boolean wantToStopOp;
-   private volatile boolean isTimerPaused;
-   private boolean isTimerRunning;
+   private volatile boolean isTimerRunning;
    private Thread timerThread;
    private OnTimerUpdateListener listener;
 
@@ -51,7 +50,7 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
          try {
             setCounter(tarr.getInt(R.styleable.CountdownTimer_start_count, 0));
             if (tarr.hasValue(R.styleable.CountdownTimer_display_type))
-               displayType = tarr.getString(R.styleable.CountdownTimer_display_type);
+               displayFormat = tarr.getString(R.styleable.CountdownTimer_display_type);
          } finally {
             tarr.recycle();
          }
@@ -63,6 +62,9 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
       super.onDraw(canvas);
    }
 
+   /**
+    * Clears the timers, resetting it to start
+    */
    public void clearTimer() {
       counter = 0;
       pause();
@@ -70,9 +72,9 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
       isTimerRunning = false;
 
       String formattedTime = null;
-      if (displayType.equals(DISPLAY_TYPE_MINUTES)) {
+      if (displayFormat.equals(DISPLAY_FORMAT_MINUTES)) {
          formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.INCLUDE_MIN);
-      } else if (displayType.equals(DISPLAY_TYPE_HOURS)) {
+      } else if (displayFormat.equals(DISPLAY_FORMAT_HOURS)) {
          formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.INCLUDE_HOUR);
       } else {
          formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.SECONDS_ONLY);
@@ -81,10 +83,16 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
       setText(formattedTime);
    }
 
+   /**
+    * @return the status of the countdown timer
+    */
    public boolean isTimerRunning() {
       return isTimerRunning;
    }
 
+   /**
+    * Stops the timer and resets it
+    */
    public void stopTimer() {
       pauseTimer();
       pause();
@@ -96,34 +104,62 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
 
    private void pause() {
       wantToStopOp = true;
+      isTimerRunning = false;
    }
 
+   /**
+    * Pause the timer but timer is still active. All callbacks would not be invoked.
+    */
    public void pauseTimer() {
-      isTimerPaused = true;
+      isTimerRunning = true;
    }
 
+   /**
+    * Resumes excecution of timer. All callbacks would be invoked now.
+    */
    public void resumeTimer() {
-      isTimerPaused = false;
+      isTimerRunning = true;
    }
 
-   public void setDisplayType(@MagicConstant(
-           stringValues = { DISPLAY_TYPE_HOURS, DISPLAY_TYPE_MINUTES, DISPLAY_TYPE_SECONDS }) String displayType) {
-      this.displayType = displayType;
+   /**
+    * Sets the display format of the count-down timer
+    *
+    * @param displayFormat the format to be displayed
+    */
+   public void setDisplayFormat(@MagicConstant(
+           stringValues = { DISPLAY_FORMAT_HOURS, DISPLAY_FORMAT_MINUTES, DISPLAY_FORMAT_SECONDS }) String displayFormat) {
+      this.displayFormat = displayFormat;
    }
 
+   /**
+    * Sets the count-down timer update listener
+    *
+    * @param listener the listener in which it's callback functions would to be invoked
+    */
    public void setOnTimerUpdateListener(OnTimerUpdateListener listener) {
       this.listener = listener;
    }
 
+   /**
+    * Sets the counter start decrement value
+    * @param millis the start decrement in milli-seconds
+    */
    public void setCounter(long millis) {
       this.counter = millis;
       this.initialCount = millis;
    }
 
-   public String getDisplayType() {
-      return displayType;
+   /**
+    * @return the display format of the count-down timer
+    */
+   public String getDisplayFormat() {
+      return displayFormat;
    }
 
+   /**
+    * If the count-down timer was stopped, this would restart it, and the timer starts counting from
+    * value set at {@link this#setCounter(long)}
+    */
    public void restart() {
       if (!isTimerRunning) {
          this.counter = this.initialCount;
@@ -137,6 +173,9 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
       }
    }
 
+   /**
+    * Call this to start running the timer. Count-down timer never runs, until this is called.
+    */
    public void start() {
       if (timerThread == null) {
          timerThread = new Thread(this);
@@ -149,11 +188,11 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
    @Override
    public void run() {
       do {
-         if (!isTimerPaused) {
+         if (isTimerRunning) {
             String formattedTime = null;
-            if (displayType.equals(DISPLAY_TYPE_MINUTES)) {
+            if (displayFormat.equals(DISPLAY_FORMAT_MINUTES)) {
                formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.INCLUDE_MIN);
-            } else if (displayType.equals(DISPLAY_TYPE_HOURS)) {
+            } else if (displayFormat.equals(DISPLAY_FORMAT_HOURS)) {
                formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.INCLUDE_HOUR);
             } else {
                formattedTime = Converter.convertMillisToRealTime(counter, Converter.Options.SECONDS_ONLY);
@@ -179,6 +218,15 @@ public class CountdownTimer extends AppCompatTextView implements Runnable {
       } while (!wantToStopOp);
    }
 
+   @Override
+   protected void finalize() throws Throwable {
+      super.finalize();
+      listener = null;
+   }
+
+   /**
+    * Callbacks that would be invoked when timer counts-down to zero
+    */
    public interface OnTimerUpdateListener {
       void onTimerEnd();
 

@@ -32,7 +32,6 @@ public class VerticalTextView extends AppCompatTextView {
       super.onMeasure(widthMeasureSpec, heightMeasureSpec);
       height = getMeasuredWidth();
       width = getMeasuredHeight();
-
       setMeasuredDimension(width, height);
    }
 
@@ -41,6 +40,7 @@ public class VerticalTextView extends AppCompatTextView {
       canvas.save();
       canvas.translate(width, height);
       canvas.rotate(-90);
+
       TextPaint paint = getPaint();
       paint.setColor(getTextColors().getDefaultColor());
 

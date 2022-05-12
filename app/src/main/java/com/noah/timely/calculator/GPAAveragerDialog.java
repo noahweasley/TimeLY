@@ -20,7 +20,7 @@ import com.noah.timely.R;
 
 import java.util.Locale;
 
-public class GPAAveragerDialog extends DialogFragment implements Runnable  {
+public class GPAAveragerDialog extends DialogFragment implements Runnable {
    private static final String ARG_GPA = "User average GPA";
    private TextView tv_gpa;
    private Handler handler;
@@ -36,10 +36,11 @@ public class GPAAveragerDialog extends DialogFragment implements Runnable  {
       show(manager, GPAAveragerDialog.class.getName());
       Bundle bundle = new Bundle();
       bundle.putFloat(ARG_GPA, gpa);
+      setArguments(bundle);
       return this;
    }
 
-   private class DGPAAverager extends Dialog{
+   private class DGPAAverager extends Dialog {
 
       public DGPAAverager(@NonNull Context context) {
          super(context, R.style.Dialog_Closeable);

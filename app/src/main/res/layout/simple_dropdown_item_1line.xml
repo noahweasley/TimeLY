@@ -3,10 +3,9 @@
    android:id="@android:id/text1"
    style="?android:attr/dropDownItemStyle"
    android:layout_width="match_parent"
-   android:padding="8dp"
+   android:padding="16dp"
    android:layout_height="?android:attr/listPreferredItemHeight"
    android:ellipsize="marquee"
    android:singleLine="true"
    android:textAllCaps="true"
-   android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
    android:textSize="@dimen/calc_label_text_size_2" />

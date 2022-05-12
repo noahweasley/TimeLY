@@ -12,7 +12,7 @@
    <string name="timetable">Timetable</string>
    <string name="classes">Scheduled Classes</string>
    <string name="about">About</string>
-   <string name="open">show event list</string>
+   <string name="open">Show event list</string>
    <string name="close">hide event list</string>
    <string name="choose_course">COURSE CODE</string>
    <string name="lecturer">Lecturer</string>
@@ -354,4 +354,7 @@
    <string name="resend">Resend</string>
    <string name="verify">Verify</string>
    <string name="didn_t_receive_code">Didn\'t receive code?</string>
+   <string name="done">done</string>
+   <string name="crop_done_description">finish operation</string>
+   <string name="open_using">Open using…</string>
 </resources>

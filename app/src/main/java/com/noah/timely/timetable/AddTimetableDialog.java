@@ -27,6 +27,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,6 +43,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.noah.timely.R;
 import com.noah.timely.core.SchoolDatabase;
 import com.noah.timely.error.ErrorDialog;
@@ -139,21 +141,29 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
       boolean errorOccurred = false, use24 = isUserPreferred24Hours(getContext());
 
       if (use24 && !start.matches(timeRegex24)) {
-         edt_startTime.setError("Format: HH:SS");
+         ViewParent container = edt_startTime.getParent();
+         TextInputLayout edt_startTimeParent = ((TextInputLayout) container.getParent());
+         edt_startTimeParent.setError("Format: HH:SS");
          errorOccurred = true;
       } else {
          if (!use24 && !start.matches(timeRegex12)) {
-            edt_startTime.setError("12 hours mode");
+            ViewParent container = edt_startTime.getParent();
+            TextInputLayout edt_startTimeParent = ((TextInputLayout) container.getParent());
+            edt_startTimeParent.setError("12 hours mode");
             errorOccurred = true;
          }
       }
 
       if (use24 && !end.matches(timeRegex24)) {
-         edt_endTime.setError("Format: HH:SS");
+         ViewParent container = edt_endTime.getParent();
+         TextInputLayout edt_endTimeParent = ((TextInputLayout) container.getParent());
+         edt_endTimeParent.setError("Format: HH:SS");
          errorOccurred = true;
       } else {
          if (!use24 && !end.matches(timeRegex12)) {
-            edt_endTime.setError("12 hours mode");
+            ViewParent container = edt_endTime.getParent();
+            TextInputLayout edt_endTimeParent = ((TextInputLayout) container.getParent());
+            edt_endTimeParent.setError("12 hours mode");
             errorOccurred = true;
          }
       }
@@ -369,9 +379,7 @@ public class AddTimetableDialog extends DialogFragment implements View.OnClickLi
          atv_courseName.setAdapter(courseAdapter);
 
          Spinner spin_days = findViewById(R.id.day_spin);
-         ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(getContext(),
-                                                               R.layout.simple_spinner_item,
-                                                               DAYS);
+         ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, DAYS);
          daysAdapter.setDropDownViewResource(R.layout.simple_dropdown_item_1line);
          spin_days.setAdapter(daysAdapter);
          spin_days.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
