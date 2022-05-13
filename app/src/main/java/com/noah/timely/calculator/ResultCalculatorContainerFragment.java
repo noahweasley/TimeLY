@@ -52,7 +52,7 @@ public class ResultCalculatorContainerFragment extends Fragment {
    @Override
    public void onResume() {
       super.onResume();
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("GPA Calculator");
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.gpa_calculator);
    }
 
    private static class ContainerAdapter extends FragmentStateAdapter {

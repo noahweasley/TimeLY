@@ -55,7 +55,6 @@ public class ResultCalculatorFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setHasOptionsMenu(true);
       EventBus.getDefault().register(this);
    }
 
@@ -70,7 +69,8 @@ public class ResultCalculatorFragment extends Fragment {
       int menuItemId = item.getItemId();
       if (menuItemId == R.id.calculate_average) {
          ThreadUtils.runBackgroundTask(() -> {
-            float avgGPA = Calculator.calulateAverageGPA(getContext());
+            Map<Integer, String[]>[] scoreMaps = adapter.getViewHolder().getScoreMaps();
+            float avgGPA = Calculator.calulateAverageGPA(getContext(), scoreMaps);
             getActivity().runOnUiThread(() -> new GPAAveragerDialog().show(getContext(), avgGPA));
 
          });
@@ -128,7 +128,6 @@ public class ResultCalculatorFragment extends Fragment {
    public void onViewCreated(@NonNull View view,
                              @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
-      setHasOptionsMenu(true);
 
       tv_gpaUnits = view.findViewById(R.id.gpa_units);
 
@@ -188,7 +187,11 @@ public class ResultCalculatorFragment extends Fragment {
 
    @Override
    public void onResume() {
+      // Prevent glitch on adding menu to the toolbar. Only show a particular semester's list rows, if that is the
+      // only visible semester
+      setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
       super.onResume();
+      // .. and then
       boolean showInfo1 = PreferenceUtils.getBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_1, true);
       boolean showInfo2 = PreferenceUtils.getBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_2, true);
 
@@ -233,7 +236,7 @@ public class ResultCalculatorFragment extends Fragment {
 
       @Override
       public void onBindViewHolder(@NonNull ResultListRowHolder holder, int position) {
-         holder.with(position, courseModelList).bindView();
+         holder.with(position, getArguments().getInt(ARG_POSITION), courseModelList).bindView();
       }
 
       @Override

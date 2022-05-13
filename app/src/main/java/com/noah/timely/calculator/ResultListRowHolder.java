@@ -29,9 +29,12 @@ public class ResultListRowHolder extends RecyclerView.ViewHolder {
    private static final String[] GRADES = { "A", "B", "C", "D", "E", "F" };
    private static final String[] GRADES_2 = { "A", "B", "C", "D", "E" };
    public static String[] selectedGrades;
+   public static String[][] selectedGradesArr;
    public static int totalUnits;
    private CourseModel courseModel;
+   private int semesterIndex;
    private int listSize;
+   private final int[] listSizes = new int[2];
 
    public ResultListRowHolder(@NonNull View itemView) {
       super(itemView);
@@ -54,14 +57,17 @@ public class ResultListRowHolder extends RecyclerView.ViewHolder {
          @Override
          public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             selectedGrades[position] = GRADESS[i];
+            selectedGradesArr[semesterIndex][position] = GRADESS[i];
          }
 
       });
 
    }
 
-   public ResultListRowHolder with(int position, List<DataModel> courseModelList) {
+   public ResultListRowHolder with(int position, int semesterIndex, List<DataModel> courseModelList) {
+      this.semesterIndex = semesterIndex;
       listSize = courseModelList.size();
+      listSizes[semesterIndex] = courseModelList.size();
       initializeGrades();
       this.position = position;
       this.courseModel = (CourseModel) courseModelList.get(position);
@@ -81,6 +87,7 @@ public class ResultListRowHolder extends RecyclerView.ViewHolder {
 
    public static void doCleanUp() {
       selectedGrades = null;
+      selectedGradesArr = null;
       totalUnits = 0;
    }
 
@@ -103,11 +110,38 @@ public class ResultListRowHolder extends RecyclerView.ViewHolder {
       return scoreMap;
    }
 
+   /**
+    * @return both the user's score map; first and second semester
+    */
+   public Map<Integer, String[]>[] getScoreMaps() {
+      initializeGrades();
+      HashMap<Integer, String[]> scoreMap = new HashMap<>();
+      HashMap<Integer, String[]> scoreMap2 = new HashMap<>();
+      Map<Integer, String[]>[] scoreMaps = new HashMap[]{ scoreMap, scoreMap2 };
+
+      for (int row = 0; row < selectedGradesArr.length; row++) {
+         for (int column = 0; column < selectedGradesArr[row].length; column++) {
+            String selectedGrade = selectedGradesArr[row][column];
+            String credits = String.valueOf(courseModel.getCredits());
+            scoreMaps[row].put(row, new String[]{ credits, selectedGrade });
+         }
+      }
+
+      return scoreMaps;
+   }
+
    private void initializeGrades() {
       // initialize and fill up selected grades to the defaults
       if (selectedGrades == null) {
          selectedGrades = new String[listSize];
          Arrays.fill(selectedGrades, "A");
+      }
+
+      if (selectedGradesArr == null) {
+         selectedGradesArr = new String[2][listSizes[semesterIndex]]; // 2 = semester count
+         for (String[] row : selectedGradesArr) {
+            Arrays.fill(row, "A");
+         }
       }
    }
 

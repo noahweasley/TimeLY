@@ -112,7 +112,16 @@ public class Calculator {
       return Double.valueOf(counter);
    }
 
-   public static float calulateAverageGPA(Context context) {
-      return 5.0f;
+   /**
+    * Simple function that just calculates the average semester of both first and second semester
+    *
+    * @param firstSemesterGPA  the first G.P.A
+    * @param secondSemesterGPA the second semester's G.P.A
+    * @return the calculated average G.P.A
+    */
+   public static float calulateAverageGPA(Context context, Map<Integer, String[]>[] scoreMaps) {
+      float gpa1 = calculateGPA(context, scoreMaps[0]);
+      float gpa2 = calculateGPA(context, scoreMaps[1]);
+      return (gpa1 + gpa2) / 2;
    }
 }
