@@ -1,0 +1,6 @@
+package com.astrro.timely.core;
+
+public enum DayPart {
+   SLEEP_TIME, MORNING, AFTERNOON, EVENING,
+   NIGHT, DAY_START_ACTIVE_PERIOD, DEFAULT_INTERVAL_DAY, DEFAULT_INTERVAL_NIGHT
+}

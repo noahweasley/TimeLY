@@ -358,4 +358,5 @@
    <string name="crop_done_description">finish operation</string>
    <string name="open_using">Open using…</string>
    <string name="gpa_calculator">GPA Calculator</string>
+   <string name="exact_alarm_request_info">"Permission is required to trigger alarms at the time you specified. Grant permission? "</string>
 </resources>

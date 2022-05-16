@@ -23,7 +23,6 @@
    </style>
 
    <style name="Theme.SplashScreenTheme" parent="AppTheme">
-      <item name="android:windowAnimationStyle">@style/WindowSlideVerticalAnimations_caller</item>
       <item name="android:windowBackground">@drawable/splash_background</item>
       <item name="android:statusBarColor" tools:targetApi="lollipop">@color/window_background_color</item>
    </style>

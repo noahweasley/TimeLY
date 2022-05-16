@@ -28,7 +28,7 @@
    <color name="image_click_bg">#27000000</color>
    <color name="bg_multiSelect_images">#45000000</color>
    <color name="colorAccent_50_percent">#80EC407A</color>
-   <color name="tabIndicatorColor">@color/color_blaze_orange</color>z
+   <color name="tabIndicatorColor">@color/colorAccent</color>z
    <color name="image_background">#267C4FF8</color>
    <color name="image_background_stroke">#4D7C4FF8</color>
    <color name="image_background_2">@color/image_background_stroke</color>
@@ -68,5 +68,4 @@
    <color name="white">#ECECEC</color>
    <color name="castro">#FF0069</color>
    <color name="blurred_background">#3B000000</color>
-   <!--  Spotify Dark Theme  -->
 </resources>

@@ -6,7 +6,7 @@
    tools:layout_gravity="center"
    xmlns:external="http://schemas.android.com/apk/res-auto">
 
-   <com.noah.timely.custom.MaterialProgressbar
+   <com.astrro.timely.custom.MaterialProgressbar
       android:id="@+id/indeterminateProgress"
       style="@style/Widget.MaterialProgressBar.ProgressBar"
       external:layout_constraintBottom_toTopOf="@id/loader_text"
