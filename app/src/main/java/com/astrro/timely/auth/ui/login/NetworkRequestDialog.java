@@ -61,13 +61,14 @@ public class NetworkRequestDialog extends DialogFragment {
          setContentView(R.layout.dialog_network_request);
 
          Bundle arguments = null;
+         TextView tv_loaderText = findViewById(R.id.loader_text);
          if ((arguments = getArguments()) != null) {
-            TextView tv_loaderText = findViewById(R.id.loader_text);
             String loaderText = null;
             if (!TextUtils.isEmpty((loaderText = arguments.getString(ARG_LOADING_INFO)))) {
                tv_loaderText.setText(loaderText);
             }
-
+         } else {
+            tv_loaderText.setText(getString(R.string.processing));
          }
 
          ThreadUtils.runBackgroundTask(() -> {

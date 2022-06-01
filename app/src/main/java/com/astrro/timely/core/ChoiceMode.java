@@ -15,6 +15,7 @@ public interface ChoiceMode {
     * Multi-choice mode to be used with image list
     */
    ChoiceMode IMAGE_MULTI_SELECT = new ImageMultiChoiceMode();
+
    /**
     * Multi-choice mode to be used with data list
     */

@@ -9,7 +9,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -31,7 +29,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.astrro.timely.R;
 import com.astrro.timely.core.DataModel;
 import com.astrro.timely.core.EmptyListEvent;
@@ -41,6 +38,7 @@ import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.util.MiscUtil.Alert;
 import com.astrro.timely.util.Primitives;
 import com.astrro.timely.util.ThreadUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -186,11 +184,9 @@ public class AlarmListFragment extends Fragment {
          calendar.set(Calendar.MINUTE, minute);
 
          boolean is24 = isUserPreferred24Hours(getContext());
-         Configuration config = getResources().getConfiguration();
-         Locale currentLocale = ConfigurationCompat.getLocales(config).get(0);
 
-         SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", currentLocale);
-         SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", currentLocale);
+         SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm", Locale.US);
+         SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm aa", Locale.US);
 
          String time = timeFormat24.format(calendar.getTime());
 
@@ -328,4 +324,5 @@ public class AlarmListFragment extends Fragment {
          return aList.size();
       }
    }
+
 }

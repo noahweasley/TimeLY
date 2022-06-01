@@ -196,7 +196,7 @@
    <string name="close_">close</string>
    <string name="_skip">skip</string>
    <string name="export">Export</string>
-   <string name="processing">Processing …</string>
+   <string name="processing">Processing…</string>
    <string name="import_title">Import from file</string>
    <string name="locate">Locate</string>
    <string name="import_file">Import from file</string>
@@ -359,4 +359,6 @@
    <string name="open_using">Open using…</string>
    <string name="gpa_calculator">GPA Calculator</string>
    <string name="exact_alarm_request_info">"Permission is required to trigger alarms at the time you specified. Grant permission? "</string>
+   <string name="log_in_text">Logging in…</string>
+   <string name="delete_button_descritption">delete button</string>
 </resources>

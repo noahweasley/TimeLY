@@ -23,6 +23,7 @@ import com.astrro.timely.exam.ExamModel;
 import com.astrro.timely.gallery.Image;
 import com.astrro.timely.timetable.TimetableModel;
 import com.astrro.timely.todo.TodoModel;
+import com.astrro.timely.util.Primitives;
 import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.LogUtils;
@@ -118,7 +119,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
     */
    public int getDatabaseVersion() {
       SQLiteDatabase db = getReadableDatabase();
-      return db.getVersion();
+      int db_ver = db.getVersion();
+      db.close();
+      return db_ver;
    }
 
    /**
@@ -997,22 +1000,10 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       Cursor daysCursor = db.rawQuery(getSelectedDays_stmt, null);
       daysCursor.moveToFirst();
 
-      Boolean[] days = convertToBooleanArray(daysCursor.getString(0).split(","));
+      Boolean[] days = Primitives.convertToBooleanArray(daysCursor.getString(0).split(","));
 
       daysCursor.close();
       return days;
-   }
-
-   // Convert database string array into the required boolean values.
-   private Boolean[] convertToBooleanArray(String[] repeatDays) {
-      boolean _1 = Boolean.parseBoolean(repeatDays[0]);
-      boolean _2 = Boolean.parseBoolean(repeatDays[1]);
-      boolean _3 = Boolean.parseBoolean(repeatDays[2]);
-      boolean _4 = Boolean.parseBoolean(repeatDays[3]);
-      boolean _5 = Boolean.parseBoolean(repeatDays[4]);
-      boolean _6 = Boolean.parseBoolean(repeatDays[5]);
-      boolean _7 = Boolean.parseBoolean(repeatDays[6]);
-      return new Boolean[]{ _1, _2, _3, _4, _5, _6, _7 };
    }
 
    /**

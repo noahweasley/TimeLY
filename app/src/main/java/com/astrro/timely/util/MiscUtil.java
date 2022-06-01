@@ -3,9 +3,13 @@ package com.astrro.timely.util;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RawRes;
 import androidx.preference.PreferenceManager;
@@ -62,7 +66,9 @@ public class MiscUtil {
          try {
             // push internal audio player to it's idle state
             alertPlayer.reset();
-         } catch (Exception ignored) { }
+         } catch (Exception ignored) {
+         }
+
       }
 
       try {
@@ -76,7 +82,25 @@ public class MiscUtil {
          else
             alertPlayer.setDataSource(context, getUri(context, R.raw.accomplished1));
 
-         alertPlayer.prepare();
+         alertPlayer.setOnPreparedListener(MediaPlayer::start);
+
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            alertPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                                                   .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                                   .setUsage(AudioAttributes.USAGE_MEDIA)
+                                                   .build());
+         } else {
+            // backward compatibility for pre LOLLIPOP devices
+            alertPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+         }
+
+         alertPlayer.setOnErrorListener((mp, what, extra) -> {
+            Toast.makeText(context, "Error playing sound", Toast.LENGTH_LONG).show();
+            mp.reset();
+            return false;
+         });
+
+         alertPlayer.prepareAsync();
 
       } catch (IOException e) {
          Log.w(MiscUtil.class.getSimpleName(), e.getMessage(), e);
@@ -92,6 +116,13 @@ public class MiscUtil {
               .authority(context.getPackageName())
               .path(String.valueOf(rawRes))
               .build();
+   }
+
+   public static void doCleanUp() {
+      if (alertPlayer != null) {
+         alertPlayer = null;
+         alertPlayer.release();
+      }
    }
 
    public enum Alert {

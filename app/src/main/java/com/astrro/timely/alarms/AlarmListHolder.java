@@ -35,14 +35,14 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
-import com.kevalpatel.ringtonepicker.RingtoneUtils;
 import com.astrro.timely.R;
 import com.astrro.timely.core.DataModel;
 import com.astrro.timely.core.RequestRunner;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.util.ThreadUtils;
+import com.google.android.material.snackbar.Snackbar;
+import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
+import com.kevalpatel.ringtonepicker.RingtoneUtils;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener;
 
@@ -205,7 +205,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          // hide or show rows of button
          thisAlarm.setRepeated(repeated);
          // cancel previous repeating alarm, while leaving any alarm that was set to be triggered the day the
-         // alarm was set or the day after, only if time has passed
+         // alarm was set or the day after, only if time has passed.
          if (thisAlarm.isOn()) {
             if (repeated) updateRepeatingPendingAlarm();
             else updateRepeatingPendingAlarm2();
@@ -288,16 +288,20 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                                                              : R.drawable.enabled_round_button);
       }
 
-      // check if all the buttons are cleared and deactivate repeat
+      deactivateRepeatIfSelectedDaysCleared();
+
+      boolean updated = database.updateSelectedDays(alarmPosition, selectedDays);
+      // don't update alarm when the current selected alarm is still off
+      if (updated && thisAlarm.isOn()) updateRepeatingPendingAlarm();
+   }
+
+   // check if all the buttons are cleared and deactivate repeat
+   private void deactivateRepeatIfSelectedDaysCleared() {
       int sCount = 0;
       for (boolean selected : selectedDays) {
          if (selected) break;
          else if (++sCount == 7) cbx_Repeat.setChecked(false);
       }
-
-      boolean updated = database.updateSelectedDays(alarmPosition, selectedDays);
-      // don't update alarm when the current selected alarm is still off
-      if (updated && thisAlarm.isOn()) updateRepeatingPendingAlarm();
    }
 
    // updated the next alarm trigger time based on the repeatStatus. When repeatStatus is true, then alarm would be
@@ -573,7 +577,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          AlarmHelper.showInContextUI(mActivity);
          return;
       }
-      
+
       // This gets the current day of the week as of TODAY / NOW
       Calendar calendar = Calendar.getInstance();
 
@@ -649,7 +653,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          AlarmHelper.showInContextUI(mActivity);
          return;
       }
-      
+
       String[] realTime = time.split(":");
       String label = thisAlarm.getLabel();
 
@@ -698,13 +702,13 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
     */
    private void rescheduleNonRepeatingAlarm(String label, String[] time, boolean playSound) {
       AlarmManager alarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
-      
+
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
          // schedule exact alarm access denied on Android 12 and above
          AlarmHelper.showInContextUI(mActivity);
          return;
       }
-      
+
       calendar.setTimeInMillis(System.currentTimeMillis());
       calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
       calendar.set(Calendar.MINUTE, Integer.parseInt(time[1]));
@@ -717,7 +721,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
                                    : calendar.getTimeInMillis();
 
       String st = TextUtils.join(":", time);
-      
+
       Intent alarmReceiverIntent = new Intent(mActivity, AlarmReceiver.class);
       alarmReceiverIntent.putExtra(ALARM_POS, getAbsoluteAdapterPosition());
       alarmReceiverIntent.putExtra("Label", label);     // This is just used to prevent cancelling all pending

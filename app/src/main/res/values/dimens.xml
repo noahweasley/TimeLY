@@ -28,7 +28,7 @@
    <dimen name="alarm_time_bottom_position">150dp</dimen>
    <dimen name="alarm_list_top_position">100dp</dimen>
    <dimen name="alarm_list_corner_radius">8dp</dimen>
-   <dimen name="alarm_list_time_text_size">22sp</dimen>
+   <dimen name="alarm_list_time_text_size">18sp</dimen>
    <dimen name="alarm_list_repeat_text_size">18sp</dimen>
    <dimen name="alarm_list_label_text_size">16sp</dimen>
    <dimen name="alarm_list_ringtone_text_size">15sp</dimen>

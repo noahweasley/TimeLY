@@ -91,13 +91,13 @@
       <com.google.android.material.textfield.TextInputLayout
          android:id="@+id/password_parent"
          android:layout_width="0dp"
-         external:passwordToggleEnabled="true"
-         external:passwordToggleTint="?colorControlNormal"
          android:layout_height="wrap_content"
          external:errorEnabled="true"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toBottomOf="@+id/user_name_parent"
+         external:passwordToggleEnabled="true"
+         external:passwordToggleTint="?colorControlNormal"
          tools:viewBindingIgnore="true">
 
          <com.google.android.material.textfield.TextInputEditText
@@ -160,6 +160,7 @@
       android:layout_height="wrap_content"
       android:layout_marginHorizontal="24dp"
       android:background="@drawable/cta_button"
+      android:enabled="false"
       android:text="@string/login"
       android:textColor="@android:color/white"
       external:layout_constraintBottom_toBottomOf="parent"
@@ -276,8 +277,8 @@
       android:id="@+id/init_view"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:visibility="gone"
       android:background="@color/blurred_background"
+      android:visibility="gone"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"

@@ -3,14 +3,10 @@ package com.astrro.timely.alarms;
 import static com.astrro.timely.util.MiscUtil.isUserPreferred24Hours;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Process;
 
-import androidx.core.os.ConfigurationCompat;
-import androidx.preference.PreferenceManager;
-
 import com.astrro.timely.core.Time;
+import com.astrro.timely.util.PreferenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -25,7 +21,6 @@ import java.util.Locale;
  */
 public class TimeChangeDetector extends Thread {
 
-   private static SharedPreferences mPreferences;
    private static String prevDateFormat;
    private String min = "";
    private volatile boolean wantToStopOperation;
@@ -37,10 +32,6 @@ public class TimeChangeDetector extends Thread {
     * @return the current OS time immediately
     */
    public static Time requestImmediateTime(Context mContext) {
-      // mPreferences can be null when time or date changes but TimeLY is not in use
-      if (mPreferences == null)
-         mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-
       return getCalculatedTime(mContext);
    }
 
@@ -48,17 +39,13 @@ public class TimeChangeDetector extends Thread {
    private static Time getCalculatedTime(Context mContext) {
 
       boolean isMilitaryTime = isUserPreferred24Hours(mContext);
-
       Calendar calendar = Calendar.getInstance();
 
-      Configuration config = mContext.getResources().getConfiguration();
-      Locale currentLocale = ConfigurationCompat.getLocales(config).get(0);
-
-      SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm:aa", currentLocale);
-      SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm:aa", currentLocale);
+      SimpleDateFormat timeFormat24 = new SimpleDateFormat("HH:mm:aa", Locale.US);
+      SimpleDateFormat timeFormat12 = new SimpleDateFormat("hh:mm:aa", Locale.US);
 
       String formattedDate;
-      String dateFormat = mPreferences.getString("date_format", "Medium");
+      String dateFormat = PreferenceUtils.getStringValue(mContext, "date_format", "Medium");
 
       String timeView;
       Date calendarTime = calendar.getTime();
@@ -69,7 +56,7 @@ public class TimeChangeDetector extends Thread {
       String hour = splitTime[0];
       String min = splitTime[1];
 
-      boolean isForenoon = splitTime[2].equals("AM");
+      boolean isForenoon = splitTime[2].equalsIgnoreCase("AM");
 
       switch (dateFormat) {
          case "Full":
@@ -92,7 +79,6 @@ public class TimeChangeDetector extends Thread {
     * @return the same instance of the TimeChangeDetector for chain calls
     */
    public TimeChangeDetector with(Context context) {
-      mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
       mContext = context.getApplicationContext();
       return this;
    }

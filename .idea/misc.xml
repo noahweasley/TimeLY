@@ -67,6 +67,7 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_access_time.xml" value="0.14536082474226805" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_access_time_green.xml" value="0.146875" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_access_time_large.xml" value="0.295" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_arrow_down.xml" value="0.211" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_arrow_forward.xml" value="0.2203125" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_average.xml" value="0.171" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/drawable/ic_baseline_arrow.xml" value="0.146875" />
@@ -160,7 +161,7 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/activity_verification.xml" value="0.2" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/add_assignment.xml" value="0.17149122807017544" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/alarm_view.xml" value="0.16" />
-        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/alarms_row.xml" value="0.21" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/alarms_row.xml" value="0.67" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/assignment_content.xml" value="0.13436426116838487" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/assignment_list_row.xml" value="0.152734375" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/layout/complete_registration.xml" value="0.152734375" />
@@ -212,6 +213,7 @@
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/menu/list_menu_exams.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/menu/nav_menu.xml" value="0.22" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/mipmap-anydpi-v26/timely_app_icon_2.xml" value="0.1285" />
+        <entry key="..\:/Users/Noah/StudioProjects/TimeLY/app/src/main/res/xml/network_security_config.xml" value="0.1320945945945946" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/uCrop/src/main/res/layout/ucrop_activity_photobox.xml" value="0.1320945945945946" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/uCrop/src/main/res/layout/ucrop_controls.xml" value="0.1320945945945946" />
         <entry key="..\:/Users/Noah/StudioProjects/TimeLY/uCrop/src/main/res/layout/ucrop_layout_rotate_wheel.xml" value="0.1320945945945946" />

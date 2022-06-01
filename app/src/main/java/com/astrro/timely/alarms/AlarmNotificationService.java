@@ -10,7 +10,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -32,7 +32,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
-public class AlarmNotificationService extends Service implements Runnable {
+public class AlarmNotificationService extends Service implements Runnable, MediaPlayer.OnErrorListener {
    private static int notificationID;
    private MediaPlayer alarmRingtonePlayer;
    private Vibrator vibrator;
@@ -83,11 +83,21 @@ public class AlarmNotificationService extends Service implements Runnable {
 
          try {
 
-            alarmRingtonePlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
             alarmRingtonePlayer.setDataSource(this, DEFAULT_URI);
             alarmRingtonePlayer.setLooping(true); // repeatedly play alarm tone
-            alarmRingtonePlayer.prepare();
-            alarmRingtonePlayer.start();
+            alarmRingtonePlayer.setOnErrorListener(this);
+            alarmRingtonePlayer.setOnPreparedListener(MediaPlayer::start);
+            alarmRingtonePlayer.prepareAsync();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+               alarmRingtonePlayer.setAudioAttributes(new AudioAttributes.Builder()
+                                                              .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                                              .setUsage(AudioAttributes.USAGE_ALARM)
+                                                              .build());
+            } else {
+               // backward compatibility for pre LOLLIPOP devices
+               alarmRingtonePlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            }
 
          } catch (IOException ignored) {
          }
@@ -129,12 +139,8 @@ public class AlarmNotificationService extends Service implements Runnable {
       worker.interrupt(); // Stop waiting for user action
       worker = null;
       stopNotificationAlert();
+      alarmRingtonePlayer.release();
       super.onDestroy();
-   }
-
-   @Override
-   public void onConfigurationChanged(Configuration newConfig) {
-      super.onConfigurationChanged(newConfig);
    }
 
    @Override
@@ -175,6 +181,12 @@ public class AlarmNotificationService extends Service implements Runnable {
                                  .putExtra(ID, NOTIFICATION_ID)
                                  .putExtra(ALARM_POS, alarmPos));
       stopSelf();
+   }
+
+   @Override
+   public boolean onError(MediaPlayer mp, int what, int extra) {
+      mp.reset();
+      return false;
    }
 
 }

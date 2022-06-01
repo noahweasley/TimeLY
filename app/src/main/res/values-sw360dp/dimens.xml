@@ -61,7 +61,7 @@
    <dimen name="app_desc_text_size">14sp</dimen>
    <dimen name="course_course_name_text_size">14sp</dimen>
    <dimen name="bg_repeat_check_size">30dp</dimen>
-   <dimen name="alarm_decor_margin">16dp</dimen>
+   <dimen name="alarm_decor_margin">24dp</dimen>
    <dimen name="secondary_dialog_width">300dp</dimen>
    <dimen name="intro_top_begin">82dp</dimen>
    <dimen name="secondary_card_margin_bottom">2dp</dimen>

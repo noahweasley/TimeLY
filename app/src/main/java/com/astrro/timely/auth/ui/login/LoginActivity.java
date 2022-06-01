@@ -3,8 +3,13 @@ package com.astrro.timely.auth.ui.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewParent;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -12,37 +17,54 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.astrro.timely.R;
+import com.astrro.timely.auth.data.api.AuthenticationService;
+import com.astrro.timely.auth.data.api.ServiceGenerator;
+import com.astrro.timely.auth.data.model.UserAccount;
+import com.astrro.timely.util.adapters.SimpleTextWatcher;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.astrro.timely.R;
-import com.astrro.timely.auth.data.model.UserAccount;
-import com.astrro.timely.main.MainActivity;
-import com.astrro.timely.util.PreferenceUtils;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
    private GoogleSignInClient mGoogleSignInClient;
    public static final String TAG = "LoginActivity";
    private ActivityResultLauncher<Intent> resultLauncher;
-   private CardView gSignParent;
+   private EditText edt_userName;
+   private EditText edt_passwword;
+   private Button btn_login;
 
    @Override
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_login);
 
-      View recovery = findViewById(R.id.recovery), login = findViewById(R.id.login)
-              , exit = findViewById(R.id.exit), createAcc = findViewById(R.id.create_acc);
+      View recovery = findViewById(R.id.recovery), exit = findViewById(
+              R.id.exit), createAcc = findViewById(R.id.create_acc);
 
+      btn_login = findViewById(R.id.login);
 
-      gSignParent = (CardView) findViewById(R.id.g_sign_parent);
+      CardView gSignParent = (CardView) findViewById(R.id.g_sign_parent);
+      edt_userName = findViewById(R.id.user_name);
+      edt_passwword = findViewById(R.id.password);
+
+      TextChangeListener listener = new TextChangeListener();
+      edt_userName.addTextChangedListener(listener);
+      edt_passwword.addTextChangedListener(listener);
 
       registerGoogleSignInCallback();
       recovery.setOnClickListener(this);
-      login.setOnClickListener(this);
+      btn_login.setOnClickListener(this);
       gSignParent.setOnClickListener(this);
       exit.setOnClickListener(this);
       createAcc.setOnClickListener(this);
@@ -51,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       // included in DEFAULT_SIGN_IN.
       GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
               .requestEmail()
+              .requestProfile()
               .requestIdToken(getString(R.string.SIGN_IN_CLIENT_ID))
               .build();
       // Build a GoogleSignInClient with the options specified by gso.
@@ -60,7 +83,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
       // if account is non null, update UI accordingly
 //      updateUI(account);
-
    }
 
    @Override
@@ -74,7 +96,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       if (id == R.id.recovery) {
          startActivity(new Intent(this, RecoveryActivity.class));
       } else if (id == R.id.login) {
-         performUserLogin();
+         new NetworkRequestDialog().setLoadingInfo(getString(R.string.log_in_text))
+                                   .execute(this, this::performUserLogin);
       } else if (id == R.id.g_sign_parent) {
          doGoogleSignIn();
       } else if (id == R.id.exit) {
@@ -87,15 +110,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
    }
 
    private void performUserLogin() {
-//      gSignParent.setCardElevation(0.0f);
       // PreferenceUtils#USER_IS_LOGGED_IN would be checked when app is starting up, if the user is logged in,
       // then show the full app to the user
+      AuthenticationService authService = ServiceGenerator.createService(AuthenticationService.class);
+      UserAccount userAccount = new UserAccount();
+      userAccount.setEmail(edt_userName.getText());
+      userAccount.setPassowrd(edt_passwword.getText());
+      Call<ResponseBody> call = authService.verifyUserLogin(userAccount);
+      try {
+         Response<ResponseBody> responseBody = call.execute();
+         runOnUiThread(() -> Toast.makeText(this,
+                                            "Successful: " + responseBody.isSuccessful()
+                                                    + ", Response code: " + responseBody.code(),
+                                            Toast.LENGTH_LONG).show());
 
-      PreferenceUtils.setBooleanValue(this, PreferenceUtils.USER_IS_LOGGED_IN, true);
-      // ... then perform app reboot
-      Intent navigateIntent = new Intent(this, MainActivity.class);
-      navigateIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      startActivity(navigateIntent);
+         if (!responseBody.isSuccessful() && responseBody.code() == 401) {
+            ViewParent viewParent = edt_userName.getParent();
+            TextInputLayout til_userName = (TextInputLayout) viewParent.getParent();
+            til_userName.setError("Username might be incorrect");
+
+            ViewParent viewParent2 = edt_passwword.getParent();
+            TextInputLayout til_password = (TextInputLayout) viewParent2.getParent();
+            til_password.setError("Password might be incorrect");
+         }
+
+      } catch (IOException ioException) {
+         runOnUiThread(
+                 () -> Toast.makeText(this, "Error occurred: " + ioException.getMessage(), Toast.LENGTH_LONG).show());
+      }
+
    }
 
    private void doGoogleSignIn() {
@@ -124,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       } catch (ApiException e) {
          // The ApiException status code indicates the detailed failure reason.
          // Please refer to the GoogleSignInStatusCodes class reference for more information.
-         Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+         Log.w(TAG, "signInResult: failed code = " + e.getStatusCode());
          updateUI(null);
       }
 
@@ -132,8 +175,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
    // if already logged in, just go to the main screen
    private void updateUI(GoogleSignInAccount account) {
-      if (account != null)
-         GoogleLoginCompletionActivity.start(this, UserAccount.createFromGoogleSignIn(account));
+      if (account != null) {
+         new NetworkRequestDialog().setLoadingInfo(getString(R.string.log_in_text))
+                                   .execute(this, this::performUserLogin);
+      } else {
+         Toast.makeText(this, "Google login failed", Toast.LENGTH_LONG).show();
+      }
    }
 
+   private class TextChangeListener extends SimpleTextWatcher {
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+         if (!TextUtils.isEmpty(edt_userName.getText()) && !TextUtils.isEmpty(edt_passwword.getText())) {
+            btn_login.setEnabled(true);
+         } else {
+            btn_login.setEnabled(false);
+         }
+      }
+
+   }
 }

@@ -18,7 +18,7 @@
          android:layout_marginLeft="16dp"
          android:layout_marginTop="8dp"
          android:drawablePadding="8dp"
-         android:fontFamily="sans-serif-condensed-light"
+         android:fontFamily="sans-serif"
          android:textColor="@android:color/black"
          android:textSize="@dimen/alarm_list_time_text_size"
          external:drawableLeftCompat="@drawable/ic_alarm"
@@ -29,7 +29,9 @@
          external:layout_constraintHorizontal_chainStyle="packed"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toTopOf="parent"
-         tools:ignore="HardcodedText" />
+         external:layout_constraintVertical_bias="1.0"
+         tools:ignore="HardcodedText"
+         tools:text="12:00" />
 
       <TextView
          android:id="@+id/am_pm"
@@ -37,13 +39,14 @@
          android:layout_height="wrap_content"
          android:layout_marginStart="8dp"
          android:layout_marginLeft="8dp"
-         android:fontFamily="sans-serif-condensed-light"
+         android:fontFamily="sans-serif"
          android:textColor="@android:color/black"
-         android:textSize="15sp"
+         android:textSize="@dimen/min_text_size"
          external:layout_constraintBaseline_toBaselineOf="@id/alarm_list_time"
          external:layout_constraintStart_toEndOf="@id/alarm_list_time"
          external:layout_constraintVertical_bias=".1"
-         tools:ignore="HardcodedText" />
+         tools:ignore="HardcodedText"
+         tools:text="@string/am" />
 
       <androidx.appcompat.widget.SwitchCompat
          android:id="@+id/alarm_status"
@@ -65,7 +68,8 @@
       android:layout_height="wrap_content"
       external:el_duration="250"
       external:el_expanded="false"
-      external:el_parallax="0.5">
+      external:el_parallax="0.5"
+      tools:el_expanded="true">
 
       <LinearLayout
          android:layout_width="match_parent"
@@ -75,6 +79,7 @@
          <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
             android:orientation="horizontal">
 
             <CheckBox
@@ -83,11 +88,9 @@
                android:layout_height="wrap_content"
                android:layout_marginStart="@dimen/layout_gap"
                android:layout_marginLeft="@dimen/layout_gap"
-               android:enabled="false"
-               android:focusable="false"
-               android:fontFamily="sans-serif-condensed-light"
+               android:fontFamily="sans-serif"
                android:text="@string/repeat"
-               android:textSize="@dimen/alarm_list_repeat_text_size"
+               android:textSize="@dimen/min_text_size"
                external:layout_constraintBottom_toBottomOf="parent"
                external:layout_constraintStart_toStartOf="parent"
                external:layout_constraintTop_toTopOf="parent" />
@@ -99,9 +102,9 @@
                android:layout_gravity="end|center_horizontal"
                android:layout_marginEnd="@dimen/layout_gap"
                android:layout_marginRight="@dimen/layout_gap"
-               android:fontFamily="sans-serif-condensed-light"
+               android:fontFamily="sans-serif"
                android:text="@string/vibrate"
-               android:textSize="@dimen/alarm_list_repeat_text_size"
+               android:textSize="@dimen/min_text_size"
                external:layout_constraintBottom_toBottomOf="parent"
                external:layout_constraintEnd_toEndOf="parent"
                external:layout_constraintTop_toTopOf="parent" />
@@ -112,8 +115,9 @@
             android:id="@+id/button_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/layout_gap"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
             android:orientation="horizontal">
 
             <TextView
@@ -125,7 +129,8 @@
                android:gravity="center"
                android:text="S"
                android:textColor="@android:color/white"
-               android:textSize="@dimen/alarm_list_repeat_days_text_size"
+               android:textSize="@dimen/min_text_size"
+               tools:background="@drawable/enabled_round_button"
                tools:ignore="HardcodedText" />
 
             <TextView
@@ -137,7 +142,8 @@
                android:gravity="center"
                android:text="M"
                android:textColor="@android:color/white"
-               android:textSize="@dimen/alarm_list_repeat_days_text_size"
+               android:textSize="@dimen/min_text_size"
+               tools:background="@drawable/enabled_round_button"
                tools:ignore="HardcodedText" />
 
             <TextView
@@ -149,7 +155,8 @@
                android:gravity="center"
                android:text="T"
                android:textColor="@android:color/white"
-               android:textSize="@dimen/alarm_list_repeat_days_text_size"
+               android:textSize="@dimen/min_text_size"
+               tools:background="@drawable/disabled_round_button"
                tools:ignore="HardcodedText" />
 
             <TextView
@@ -161,7 +168,8 @@
                android:gravity="center"
                android:text="W"
                android:textColor="@android:color/white"
-               android:textSize="@dimen/alarm_list_repeat_days_text_size"
+               android:textSize="@dimen/min_text_size"
+               tools:background="@drawable/disabled_round_button"
                tools:ignore="HardcodedText" />
 
             <TextView
@@ -173,7 +181,8 @@
                android:gravity="center"
                android:text="T"
                android:textColor="@android:color/white"
-               android:textSize="@dimen/alarm_list_repeat_days_text_size"
+               android:textSize="@dimen/min_text_size"
+               tools:background="@drawable/enabled_round_button"
                tools:ignore="HardcodedText" />
 
             <TextView
@@ -185,7 +194,8 @@
                android:gravity="center"
                android:text="F"
                android:textColor="@android:color/white"
-               android:textSize="@dimen/alarm_list_repeat_days_text_size"
+               android:textSize="@dimen/min_text_size"
+               tools:background="@drawable/enabled_round_button"
                tools:ignore="HardcodedText" />
 
             <TextView
@@ -197,7 +207,8 @@
                android:gravity="center"
                android:text="S"
                android:textColor="@android:color/white"
-               android:textSize="@dimen/alarm_list_repeat_days_text_size"
+               android:textSize="@dimen/min_text_size"
+               tools:background="@drawable/enabled_round_button"
                tools:ignore="HardcodedText" />
 
          </LinearLayout>
@@ -206,13 +217,14 @@
             android:id="@+id/tv_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_gap"
+            android:layout_marginHorizontal="@dimen/layout_gap"
+            android:layout_marginTop="@dimen/layout_gap"
             android:drawablePadding="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/label"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/alarm_list_label_text_size"
+            android:textSize="@dimen/min_text_size"
             external:drawableLeftCompat="@drawable/ic_label"
             external:drawableStartCompat="@drawable/ic_label" />
 
@@ -224,10 +236,10 @@
             android:background="@drawable/bg_rng"
             android:drawablePadding="8dp"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="1" android:gravity="center"
             android:text="@string/choose_ringtone"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/alarm_list_ringtone_text_size"
+            android:textSize="@dimen/min_text_size"
             external:drawableLeftCompat="@drawable/ic_notification"
             external:drawableStartCompat="@drawable/ic_notification"
             tools:ignore="RtlSymmetry" />
@@ -247,7 +259,7 @@
          android:layout_height="20dp"
          android:layout_marginStart="@dimen/alarm_decor_margin"
          android:layout_marginLeft="@dimen/alarm_decor_margin"
-         android:background="@drawable/enabled_round_button"
+         tools:background="@drawable/round_pu"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintStart_toStartOf="parent"
          external:layout_constraintTop_toTopOf="parent" />
@@ -271,11 +283,11 @@
          android:layout_marginEnd="8dp"
          android:layout_marginRight="8dp"
          android:padding="0dp"
+         android:contentDescription="@string/delete_button_descritption"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintTop_toTopOf="parent"
-         external:srcCompat="@drawable/ic_delete_grey"
-         tools:ignore="ContentDescription" />
+         external:srcCompat="@drawable/ic_delete_grey"/>
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 
