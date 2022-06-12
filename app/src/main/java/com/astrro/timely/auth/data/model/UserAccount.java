@@ -4,18 +4,30 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Locale;
 
 public class UserAccount implements Serializable {
+   @SerializedName("_id")
    private String userId;
+
+   @SerializedName("username")
+   private String userName;
+
+   @SerializedName("mobile")
+   private String phoneNumber;
+
+   @SerializedName("name")
+   private String fullName;
+
    private String firstName;
    private String lastName;
-   private String userName;
-   private String phoneNumber;
+
    private String email;
-   private String passowrd;
+   private String password;
    private String dateOfBirth;
    private Uri profilePictureUri;
    private URL profilePictureURL;
@@ -110,16 +122,16 @@ public class UserAccount implements Serializable {
       this.email = email.toString();
    }
 
-   public String getPassowrd() {
-      return passowrd;
+   public String getPassword() {
+      return password;
    }
 
-   public void setPassowrd(String passowrd) {
-      this.passowrd = passowrd;
+   public void setPassword(String password) {
+      this.password = password;
    }
 
-   public void setPassowrd(CharSequence passowrd) {
-      this.passowrd = passowrd.toString();
+   public void setPassword(CharSequence password) {
+      this.password = password.toString();
    }
 
    public String getDateOfBirth() {
@@ -168,6 +180,14 @@ public class UserAccount implements Serializable {
 
    public void setSchool(String school) {
       this.school = school;
+   }
+
+   public String getFullName() {
+      return TextUtils.isEmpty(fullName) ? String.format(Locale.US, "%s %s", firstName, lastName) : fullName;
+   }
+
+   public void setFullName(String fullName) {
+      this.fullName = fullName;
    }
 
    public String getRandomUserName() {

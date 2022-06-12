@@ -11,6 +11,9 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,11 +29,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.navigation.NavigationView;
 import com.astrro.timely.R;
 import com.astrro.timely.about.BasicInfoListActivity;
 import com.astrro.timely.alarms.AlarmHolderFragment;
 import com.astrro.timely.alarms.TimeChangeDetector;
+import com.astrro.timely.alarms.TimeChangeDetectorService;
 import com.astrro.timely.assignment.AssignmentFragment;
 import com.astrro.timely.auth.ui.login.LoginActivity;
 import com.astrro.timely.calculator.ResultCalculatorContainerFragment;
@@ -39,6 +42,7 @@ import com.astrro.timely.courses.CoursesFragment;
 import com.astrro.timely.exam.ExamFragment;
 import com.astrro.timely.exports.ImportResultsActivity;
 import com.astrro.timely.exports.TMLYDataGeneratorDialog;
+import com.astrro.timely.main.notification.NotificationsActivity;
 import com.astrro.timely.scheduled.ScheduledTimetableFragment;
 import com.astrro.timely.settings.SettingsActivity;
 import com.astrro.timely.timetable.TimetableFragment;
@@ -47,11 +51,15 @@ import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.PreferenceUtils;
 import com.astrro.timely.util.ReportActionUtil;
 import com.astrro.timely.util.TimelyUpdateUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
    private boolean dismissable;
+   public static final String ACTION_LOGIN = "Login_user_action";
 
    static {
       AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -60,13 +68,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    DrawerLayout drawer;
    private ActionBarDrawerToggle toggle;
    private TimeChangeDetector timeChangeDetector;
+   private View vg_headerView;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      checkedUserLoggingStatus();
+      setTheme(R.style.AppTheme_FadeIn);
       setContentView(R.layout.activity_main);
-      launchIntroActivity();
+
+      NavigationView navView = findViewById(R.id.nav_view);
+      BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+      bottomNavigationView.setOnItemSelectedListener(new NavigationBarItemListener());
+      // navigate to user sign up | login screen
+      vg_headerView = navView.getHeaderView(0);
+      vg_headerView.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+      checkedUserLoggingStatus();
+
+      navView.setNavigationItemSelectedListener(this);
 
       // check for app updates
       if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.UPDATE_ON_STARTUP, true))
@@ -75,20 +94,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       // then ...
       Toolbar toolbar = findViewById(R.id.toolbar);
       setSupportActionBar(toolbar);
-      NavigationView navView = findViewById(R.id.nav_view);
       drawer = findViewById(R.id.drawer);
       toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
       drawer.addDrawerListener(toggle);
-
-      // navigate to user sign up | login screen
-      View vg_authGroup = navView.getHeaderView(0);
-      vg_authGroup.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
-
-      navView.setNavigationItemSelectedListener(this);
       // Set the first viewed fragment on app start
-      doUpdateFragment(getIntent()); // update the fragment attached to this activity
+      doHandleRequestAction(getIntent()); // update the fragment attached to this activity
 
-      tryActivateTimeChangeDetector(); // start OS time and date detection
+      startService(new Intent(this, TimeChangeDetectorService.class)); // start OS time and date detection
 
       // ignore power management service to trigger alarms properly
       String cancelText = getString(R.string.later);
@@ -116,13 +128,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       }
    }
 
+   @Override
+   protected void onResume() {
+      super.onResume();
+      launchIntroActivity();
+   }
+
    private void checkedUserLoggingStatus() {
       // check if user is logged in
-      if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.USER_IS_LOGGED_IN, false)) {
-         Toast.makeText(this, "User is Logged in", Toast.LENGTH_LONG).show();
+      boolean isUserLoggedIn =
+              Boolean.valueOf(PreferenceUtils.getStringValue(this, PreferenceUtils.USER_IS_LOGGED_IN, "false"));
+
+      ViewGroup header = (ViewGroup) vg_headerView;
+      ViewGroup vg_authGroup = (ViewGroup) header.getChildAt(0);
+      ViewGroup vg_userProfile = (ViewGroup) header.getChildAt(1);
+
+      if (isUserLoggedIn) {
+         View[] userProfileViews = getUserProfileViews(vg_userProfile);
+
+         String username = PreferenceUtils.getStringValue(this, PreferenceUtils.USER_NAME, null);
+         ((TextView) userProfileViews[1]).setText(username);
+
+         String userSchool = PreferenceUtils.getStringValue(this, PreferenceUtils.USER_SCHOOL, null);
+         ((TextView) userProfileViews[2]).setText(userSchool);
+
+         vg_userProfile.setVisibility(View.VISIBLE);
+         vg_authGroup.setVisibility(View.GONE);
+      } else {
+         vg_userProfile.setVisibility(View.GONE);
+         vg_authGroup.setVisibility(View.VISIBLE);
       }
 
-      setTheme(R.style.AppTheme_FadeIn);
+   }
+
+   private View[] getUserProfileViews(ViewGroup userProfileGroup) {
+      ImageView img_userProfilePicture = (ImageView) userProfileGroup.getChildAt(0);
+
+      ViewGroup vg_userDetails = (ViewGroup) userProfileGroup.getChildAt(1);
+      TextView tv_username = (TextView) vg_userDetails.getChildAt(0);
+      TextView tv_userSchool = (TextView) vg_userDetails.getChildAt(1);
+
+      return new View[]{ img_userProfilePicture, tv_username, tv_userSchool };
    }
 
    private void launchIntroActivity() {
@@ -142,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    @Override
    protected void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
-      doUpdateFragment(intent);
+      doHandleRequestAction(intent);
    }
 
    @RequiresApi(api = Build.VERSION_CODES.M)
@@ -172,17 +218,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       // TimeLY is being exited, set the first launch key to false
       PreferenceUtils.setFirstLaunchKey(getApplicationContext(), false);
       // cannot activate, stop OS time and date detection
-      tryActivateTimeChangeDetector();
+      stopService(new Intent(this, TimeChangeDetectorService.class));
       super.onDestroy();
-   }
-
-   private void tryActivateTimeChangeDetector() {
-      if (timeChangeDetector == null) {
-         (timeChangeDetector = new TimeChangeDetector().with(this)).start();
-      } else {
-         timeChangeDetector.pauseOperation();
-         timeChangeDetector = null;
-      }
    }
 
    @Override
@@ -304,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    }
 
    // Get intent actions and update UI
-   private void doUpdateFragment(Intent intent) {
+   private void doHandleRequestAction(Intent intent) {
       final String reqAction = intent.getAction();
 
       if (reqAction != null) {
@@ -326,6 +363,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                break;
             case Constants.ALARM:
                loadFragment(AlarmHolderFragment.newInstance());
+               break;
+            case MainActivity.ACTION_LOGIN:
+               checkedUserLoggingStatus();
                break;
             default:
                loadFragment(LandingPageFragment.newInstance());
@@ -358,6 +398,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       Fragment fragment1 = manager.findFragmentByTag(TAG);
       if (fragment1 == null) {
          transaction.replace(R.id.frame, fragment, TAG).commit();
+      }
+   }
+
+   private class NavigationBarItemListener implements NavigationBarView.OnItemSelectedListener {
+
+      @Override
+      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+         int itemId = item.getItemId();
+         if (itemId == R.id.notification) {
+            startActivity(new Intent(MainActivity.this, NotificationsActivity.class));
+         }
+
+         return true;
       }
    }
 }

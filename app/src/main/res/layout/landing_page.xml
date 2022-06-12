@@ -22,20 +22,4 @@
       external:layout_constraintTop_toTopOf="parent"
       external:layout_constraintVertical_bias="0.060000002" />
 
-   <!-- Vector image displaying a no-data entry -->
-
-   <Button
-      android:id="@+id/discover"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
-      android:background="@drawable/cta_button"
-      android:minHeight="@dimen/button_min_height"
-      android:text="@string/discover"
-      android:textColor="@android:color/white"
-      android:textSize="@dimen/button_text_size"
-      external:layout_constraintBottom_toBottomOf="parent"
-      external:layout_constraintEnd_toEndOf="parent"
-      external:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

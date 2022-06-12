@@ -1,10 +1,13 @@
 package com.astrro.timely.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
+
+import java.util.Map;
 
 /**
  * All utilities to access TimeLY's preferences
@@ -18,7 +21,11 @@ public class PreferenceUtils {
    public static final String EASTER_EGG_KEY = "View new features";
    public static final String GPA_INFO_SHOWN_1 = "show gpa calculator 1";
    public static final String GPA_INFO_SHOWN_2 = "show gpa calculator 2";
-   public static final String USER_IS_LOGGED_IN = "User logged-in status";
+   public static final String USER_IS_LOGGED_IN = "USER_IS_LOGGED_IN";
+   public static final String USER_PASSWORD = "USER_PASSWORD";
+   public static final String USER_NAME = "USER_NAME";
+   public static final String USER_SCHOOL = "USER_SCHOOL";
+   public static final String USER_ID = "USER_UNIQUE_ID";
 
    /**
     * Retrieves TimeLY's first launch preference
@@ -136,5 +143,41 @@ public class PreferenceUtils {
    public static int getIntegerValue(Context context, String key, int defaultValue) {
       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
       return sharedPreferences.getInt(key, defaultValue);
+   }
+
+   /**
+    * Persists a collection of value synchronously
+    *
+    * @param context the context to open up file
+    * @param map     the map with key-value pairs
+    */
+   @SuppressLint("ApplySharedPref")
+   public static void setStringArraySync(Context context, Map<String, String> map) {
+      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+      // preference editor
+      SharedPreferences.Editor spEditor = sharedPreferences.edit();
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+         spEditor.putString(entry.getKey(), entry.getValue());
+         spEditor.commit();
+      }
+
+   }
+
+   /**
+    * Persists a collection of value asynchrnonously
+    *
+    * @param context the context to open up file
+    * @param map     the map with key-value pairs
+    */
+   @SuppressLint("ApplySharedPref")
+   public static void setStringArray(Context context, Map<String, String> map) {
+      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+      // preference editor
+      SharedPreferences.Editor spEditor = sharedPreferences.edit();
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+         spEditor.putString(entry.getKey(), entry.getValue());
+         spEditor.apply();
+      }
+
    }
 }

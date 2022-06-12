@@ -90,8 +90,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
 
    AlarmListHolder(@NonNull View rootView) {
       super(rootView);
-      rootView.setActivated(false);
-
       decoration = rootView.findViewById(R.id.decoration);
       alarmStatus = rootView.findViewById(R.id.alarm_status);
       tv_alarmTime = rootView.findViewById(R.id.alarm_list_time);
@@ -128,7 +126,6 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
    }
 
    private void registerAllListeners(View rootView) {
-      // repeat buttons
       btn_sunday.setOnClickListener(this::onRepeatButtonClick);
       btn_monday.setOnClickListener(this::onRepeatButtonClick);
       btn_tuesday.setOnClickListener(this::onRepeatButtonClick);
@@ -207,8 +204,15 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          // cancel previous repeating alarm, while leaving any alarm that was set to be triggered the day the
          // alarm was set or the day after, only if time has passed.
          if (thisAlarm.isOn()) {
-            if (repeated) updateRepeatingPendingAlarm();
-            else updateRepeatingPendingAlarm2();
+            if (repeated) {
+               // alarm is on and is set to be repeated, first cancel all previous alarms if any and set alarm to the next
+               // repeating day closest to the current day user set the repeating alarm.
+               updateRepeatingPendingAlarm();
+            } else {
+               // alarm is on and is not repeated, first cancel all previous alarms if any and set a normal alarm, to be
+               // executed that same day ( if the time hasn't passed yet ), or the next day ( if time has passed ).
+               updateRepeatingPendingAlarm2();
+            }
          }
       });
 
@@ -305,10 +309,9 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
    }
 
    // updated the next alarm trigger time based on the repeatStatus. When repeatStatus is true, then alarm would be
-   // triggered according to the checked repeat days. If it is not, alarm would be triggered the exact closest time
+   // triggered according to the checked repeat days. If it is not, alarm would be triggered at the exact closest time
    // as specified by alarm time.
    private void updateRepeatingPendingAlarm() {
-      // This gets the current day of the week as of TODAY / NOW
       Calendar calendar = Calendar.getInstance();
       int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
       int closestRepeatDay = getClosestRepeatDay(dayOfWeek);
@@ -382,7 +385,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             result = nextSearch;
             break;
          }
-         nextSearch = nextSearch == Calendar.SATURDAY ? Calendar.SUNDAY : ++nextSearch;
+         nextSearch = ((nextSearch == Calendar.SATURDAY) ? Calendar.SUNDAY : ++nextSearch);
       }
 
       return result;
@@ -971,4 +974,5 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
       }
 
    }
+
 }

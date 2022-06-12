@@ -78,6 +78,11 @@
          android:exported="false" />
 
       <service
+         android:name=".alarms.TimeChangeDetectorService"
+         android:enabled="true"
+         android:exported="false" />
+
+      <service
          android:name=".assignment.AssignmentCheckerService"
          android:enabled="true"
          android:exported="false" />
@@ -216,6 +221,10 @@
          android:name=".auth.ui.login.VerificationActivity"
          android:theme="@style/SlidingActivityTheme_No_Fade"
          android:windowSoftInputMode="adjustPan" />
+
+      <activity
+         android:name=".main.notification.NotificationsActivity"
+         android:theme="@style/AppTheme.SlideVertical_recipient" />
 
       <activity
          android:name=".todo.AddTodoActivity"

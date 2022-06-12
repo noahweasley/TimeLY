@@ -19,12 +19,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Service Genrator class used for network calls
  */
 public class ServiceGenerator {
+   private static final String API_BASE_URL = "https://timley.herokuapp.com/";
    public static final long CONNECTION_TIMEOUT = 30;
    public static final long READ_TIMEOUT = 30;
    public static final long WRITE_TIMEOUT = 30;
-   private static final String API_BASE_URL = "https://timley.herokuapp.com/";
-   private static Retrofit retrofit;
    private static OkHttpClient baseHttpClient;
+   private static Retrofit retrofit;
 
    /**
     * Can't use this constructor, use the factory methods provided
@@ -32,7 +32,7 @@ public class ServiceGenerator {
    private ServiceGenerator() {
    }
 
-   private static Retrofit getRetrofit() {
+   private static Retrofit getBaseRetrofit() {
       if (retrofit == null)
          return retrofit = new Retrofit.Builder()
                  .baseUrl(API_BASE_URL)
@@ -41,6 +41,33 @@ public class ServiceGenerator {
                  .build();
 
       else return retrofit;
+   }
+
+   private static Retrofit getRetrofit() {
+      if (retrofit == null)
+         return retrofit = new Retrofit.Builder()
+                 .baseUrl(API_BASE_URL)
+                 .client(getHttpClient())
+                 .addConverterFactory(GsonConverterFactory.create())
+                 .build();
+
+      else return retrofit;
+   }
+
+   /**
+    * @return a normal http client
+    */
+   public static OkHttpClient getHttpClient() {
+      HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+      if (BuildConfig.DEBUG) {
+         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+      } else {
+         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+      }
+
+      return getBaseHttpClient().newBuilder()
+                                .addInterceptor(loggingInterceptor)
+                                .build();
    }
 
    /**
@@ -66,14 +93,10 @@ public class ServiceGenerator {
          }
       }
 
-      HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-      loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
       baseHttpClient = new OkHttpClient.Builder()
               .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
               .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
               .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-              .addInterceptor(loggingInterceptor)
               .connectionSpecs(tlsSpec)
               .build();
 

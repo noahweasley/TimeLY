@@ -111,4 +111,5 @@
    <dimen name="gpa_unit_text_size">36sp</dimen>
    <dimen name="basic_info_text_size">26sp</dimen>
    <dimen name="basic_info_text_size_2">24sp</dimen>
+   <dimen name="notification_row_height">100dp</dimen>
 </resources>

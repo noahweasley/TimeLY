@@ -220,7 +220,7 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
          resourceChooserLauncher.launch(Intent.createChooser(i, getString(R.string.file_select_title)));
       } else if (view.getId() == R.id.import_selected) {
          // save to local database, removing duplicates
-         new ActionProcessorDialog()
+         new ActionProcessorDialog<Void>()
                  .execute(this, this::persistSelectedToLocalDatabase)
                  .setOnActionProcessedListener(() -> {
                     // just a beautiful custom made Toast, but in dialog form :)
@@ -229,7 +229,7 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
       }
    }
 
-   private void persistSelectedToLocalDatabase() {
+   private Void persistSelectedToLocalDatabase() {
       Integer[] indices = listRowAdapter.getChoiceMode().getCheckedChoicesIndices();
       List<Map.Entry<String, List<? extends DataModel>>> filteredEntryList = new ArrayList<>();
       for (int i = 0; i < indices.length; i++) {
@@ -262,6 +262,8 @@ public class ImportResultsActivity extends AppCompatActivity implements View.OnC
       Intent serviceIntent = new Intent(this, AlarmReSchedulerService.class);
       serviceIntent.setAction(Constants.ACTION.SHOW_NOTIFICATION);
       startService(serviceIntent);
+
+      return null;
    }
 
    private void persistScheduledTimetable(List<? extends DataModel> datamodelList) {

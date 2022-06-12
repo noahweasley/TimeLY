@@ -95,8 +95,8 @@
          android:maxLength="8"
          android:maxLines="1"
          android:textSize="@dimen/editext_text_size"
-         external:drawableEndCompat="@drawable/ic_access_time"
-         external:drawableRightCompat="@drawable/ic_access_time"
+         external:drawableEndCompat="@drawable/ic_access_time_accent"
+         external:drawableRightCompat="@drawable/ic_access_time_accent"
          tools:ignore="Autofill,TextFields" />
 
    </com.google.android.material.textfield.TextInputLayout>
@@ -125,8 +125,8 @@
          android:maxLength="8"
          android:maxLines="1"
          android:textSize="@dimen/editext_text_size"
-         external:drawableEndCompat="@drawable/ic_access_time"
-         external:drawableRightCompat="@drawable/ic_access_time"
+         external:drawableEndCompat="@drawable/ic_access_time_accent"
+         external:drawableRightCompat="@drawable/ic_access_time_accent"
          tools:ignore="Autofill,TextFields" />
 
    </com.google.android.material.textfield.TextInputLayout>

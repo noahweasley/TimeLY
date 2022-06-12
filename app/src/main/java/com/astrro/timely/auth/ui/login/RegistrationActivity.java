@@ -18,12 +18,20 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.astrro.timely.R;
+import com.astrro.timely.auth.data.api.TimelyApi;
+import com.astrro.timely.auth.data.model.LoginResponse;
+import com.astrro.timely.auth.data.model.UserAccount;
+import com.astrro.timely.main.MainActivity;
+import com.astrro.timely.util.PatternUtils;
+import com.astrro.timely.util.PreferenceUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -31,9 +39,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.astrro.timely.R;
-import com.astrro.timely.auth.data.model.UserAccount;
-import com.astrro.timely.util.PatternUtils;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
    private GoogleSignInClient mGoogleSignInClient;
@@ -74,7 +83,7 @@ public class RegistrationActivity extends AppCompatActivity {
       userAccount.setUserName(edt_userName.getText());
       userAccount.setPhoneNumber(edt_phoneNumber.getText());
       userAccount.setEmail(edt_email.getText());
-      userAccount.setPassowrd(edt_password.getText());
+      userAccount.setPassword(edt_password.getText());
 
       signUp.setOnClickListener(v -> registerAcount(userAccount));
 
@@ -141,7 +150,7 @@ public class RegistrationActivity extends AppCompatActivity {
          isErrorOccurred = true;
       }
 
-      if (!userAccount.getPassowrd().matches(PatternUtils.STRONG_PASSWORD)) {
+      if (!userAccount.getPassword().matches(PatternUtils.STRONG_PASSWORD)) {
          ViewGroup container = (ViewGroup) edt_password.getParent();
          TextInputLayout til_passwordParent = ((TextInputLayout) container.getParent());
          til_passwordParent.setError("Must have a minimum of 8 characters, 1 letter and 1 number");
@@ -149,10 +158,40 @@ public class RegistrationActivity extends AppCompatActivity {
          isErrorOccurred = true;
       }
 
-      // ... then we naviagate to next page
-//      if (!isErrorOccurred) {
-      VerificationActivity.start(this, userAccount);
-//      }
+      if (!isErrorOccurred) registerNewUser();
+   }
+
+   private void registerNewUser() {
+      new NetworkRequestDialog<LoginResponse>()
+              .setLoadingInfo(getString(R.string.registering))
+              .execute(this, () -> {
+                 UserAccount userAccount = new UserAccount();
+                 try {
+                    return TimelyApi.registerNewUser(userAccount);
+                 } catch (IOException ioException) {
+                    Toast.makeText(this, "Network error occurred", Toast.LENGTH_LONG).show();
+                    return null;
+                 }
+              }).setOnActionProcessedListener(loginResponse -> {
+
+         if (loginResponse.getStatusCode() == HttpStatusCodes.OK) {
+            Map<String, String> map = new HashMap<>();
+            UserAccount userAccount1 = loginResponse.getUserAccount();
+
+            map.put(PreferenceUtils.USER_ID, userAccount1.getUserId());
+            map.put(PreferenceUtils.USER_PASSWORD, userAccount1.getPassword());
+            map.put(PreferenceUtils.USER_NAME, userAccount1.getEmail());
+            map.put(PreferenceUtils.USER_SCHOOL, userAccount1.getSchool());
+            map.put(PreferenceUtils.USER_IS_LOGGED_IN, String.valueOf(true));
+
+            PreferenceUtils.setStringArraySync(this, map);
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setAction(MainActivity.ACTION_LOGIN);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+         }
+      });
    }
 
    private void registerGoogleSignInCallback() {

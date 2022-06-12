@@ -56,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Service that would re-schedule all TimeLY alarms
  */
-public class AlarmReSchedulerService extends Service {
+public class  AlarmReSchedulerService extends Service {
    private static final int NOTIFICATION_ID = 234543; // a very random number that came out of nowhere
 
    @Override
@@ -153,7 +153,7 @@ public class AlarmReSchedulerService extends Service {
       
       builder.setContentTitle("An error occurred")
              .setContentText(getString(R.string.app_name) + " was unable to re-schedule notifications because exact " +
-                                     "notification scheduling permission was revoked")
+                                     "alarm scheduling permission was revoked")
              .setChannelId(App.GENERAL_CHANNEL_ID)
              .setSmallIcon(R.drawable.ic_baseline_error_24)
              .addAction(new NotificationCompat.Action(R.drawable.ic_settings, "Grant Permission", intent))

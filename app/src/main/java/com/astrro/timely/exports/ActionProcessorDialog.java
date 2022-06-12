@@ -15,13 +15,13 @@ import com.astrro.timely.R;
 import com.astrro.timely.util.collections.ISupplier;
 import com.astrro.timely.util.ThreadUtils;
 
-public class ActionProcessorDialog extends DialogFragment {
+public class ActionProcessorDialog<T> extends DialogFragment {
    private static final String ARG_LIST = "list";
    private static boolean dismiss_flag;
-   private ISupplier supplier;
+   private ISupplier<T> supplier;
    private OnActionProcessedListener listener;
 
-   public ActionProcessorDialog execute(Context context, ISupplier supplier) {
+   public ActionProcessorDialog<T> execute(Context context, ISupplier<T> supplier) {
       this.supplier = supplier;
       FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
       show(manager, ActionProcessorDialog.class.getName());

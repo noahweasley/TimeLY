@@ -18,9 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.astrro.timely.R;
-import com.astrro.timely.auth.data.api.AuthenticationService;
-import com.astrro.timely.auth.data.api.ServiceGenerator;
+import com.astrro.timely.auth.data.api.TimelyApi;
+import com.astrro.timely.auth.data.model.LoginResponse;
 import com.astrro.timely.auth.data.model.UserAccount;
+import com.astrro.timely.main.MainActivity;
+import com.astrro.timely.util.PreferenceUtils;
 import com.astrro.timely.util.adapters.SimpleTextWatcher;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,10 +33,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
    private GoogleSignInClient mGoogleSignInClient;
@@ -96,8 +96,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       if (id == R.id.recovery) {
          startActivity(new Intent(this, RecoveryActivity.class));
       } else if (id == R.id.login) {
-         new NetworkRequestDialog().setLoadingInfo(getString(R.string.log_in_text))
-                                   .execute(this, this::performUserLogin);
+         performUserLoginAsync(null);
       } else if (id == R.id.g_sign_parent) {
          doGoogleSignIn();
       } else if (id == R.id.exit) {
@@ -109,36 +108,56 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       }
    }
 
-   private void performUserLogin() {
-      // PreferenceUtils#USER_IS_LOGGED_IN would be checked when app is starting up, if the user is logged in,
-      // then show the full app to the user
-      AuthenticationService authService = ServiceGenerator.createService(AuthenticationService.class);
-      UserAccount userAccount = new UserAccount();
-      userAccount.setEmail(edt_userName.getText());
-      userAccount.setPassowrd(edt_passwword.getText());
-      Call<ResponseBody> call = authService.verifyUserLogin(userAccount);
-      try {
-         Response<ResponseBody> responseBody = call.execute();
-         runOnUiThread(() -> Toast.makeText(this,
-                                            "Successful: " + responseBody.isSuccessful()
-                                                    + ", Response code: " + responseBody.code(),
-                                            Toast.LENGTH_LONG).show());
+   private void performUserLoginAsync(UserAccount googleSignInAccount) {
+      new NetworkRequestDialog<LoginResponse>()
+              .setLoadingInfo(getString(R.string.log_in_text))
+              .execute(this, () -> {
+                 UserAccount userAccount = googleSignInAccount;
 
-         if (!responseBody.isSuccessful() && responseBody.code() == 401) {
-            ViewParent viewParent = edt_userName.getParent();
-            TextInputLayout til_userName = (TextInputLayout) viewParent.getParent();
-            til_userName.setError("Username might be incorrect");
+                 if (googleSignInAccount == null) {
+                    userAccount = new UserAccount();
+                    userAccount.setEmail(edt_userName.getText());
+                    userAccount.setPassword(edt_passwword.getText());
+                 }
 
-            ViewParent viewParent2 = edt_passwword.getParent();
-            TextInputLayout til_password = (TextInputLayout) viewParent2.getParent();
-            til_password.setError("Password might be incorrect");
+                 try {
+                    return TimelyApi.loginUser(userAccount);
+                 } catch (IOException ioException) {
+                    Toast.makeText(this, "Network error occurred", Toast.LENGTH_LONG).show();
+                    return null;
+                 }
+
+              }).setOnActionProcessedListener(loginResponse -> {
+
+         if (loginResponse != null) {
+            if (loginResponse.getStatusCode() == HttpStatusCodes.OK) {
+               Map<String, String> map = new HashMap<>();
+               UserAccount userAccount1 = loginResponse.getUserAccount();
+
+               map.put(PreferenceUtils.USER_ID, userAccount1.getUserId());
+               map.put(PreferenceUtils.USER_PASSWORD, userAccount1.getPassword());
+               map.put(PreferenceUtils.USER_NAME, userAccount1.getEmail());
+               map.put(PreferenceUtils.USER_SCHOOL, userAccount1.getSchool());
+               map.put(PreferenceUtils.USER_IS_LOGGED_IN, String.valueOf(true));
+
+               PreferenceUtils.setStringArraySync(this, map);
+
+               Intent intent = new Intent(this, MainActivity.class);
+               intent.setAction(MainActivity.ACTION_LOGIN);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+               startActivity(intent);
+            } else {
+               ViewParent viewParent = edt_userName.getParent();
+               TextInputLayout til_userName = (TextInputLayout) viewParent.getParent();
+               til_userName.setError("Username might be incorrect");
+
+               ViewParent viewParent2 = edt_passwword.getParent();
+               TextInputLayout til_password = (TextInputLayout) viewParent2.getParent();
+               til_password.setError("Password might be incorrect");
+            }
+
          }
-
-      } catch (IOException ioException) {
-         runOnUiThread(
-                 () -> Toast.makeText(this, "Error occurred: " + ioException.getMessage(), Toast.LENGTH_LONG).show());
-      }
-
+      });
    }
 
    private void doGoogleSignIn() {
@@ -176,8 +195,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
    // if already logged in, just go to the main screen
    private void updateUI(GoogleSignInAccount account) {
       if (account != null) {
-         new NetworkRequestDialog().setLoadingInfo(getString(R.string.log_in_text))
-                                   .execute(this, this::performUserLogin);
+         performUserLoginAsync(UserAccount.createFromGoogleSignIn(account));
       } else {
          Toast.makeText(this, "Google login failed", Toast.LENGTH_LONG).show();
       }

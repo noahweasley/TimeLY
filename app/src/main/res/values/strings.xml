@@ -13,7 +13,7 @@
    <string name="classes">Scheduled Classes</string>
    <string name="about">About</string>
    <string name="open">Show event list</string>
-   <string name="close">hide event list</string>
+   <string name="close">Hide event list</string>
    <string name="choose_course">COURSE CODE</string>
    <string name="lecturer">Lecturer</string>
    <string name="title">Title</string>
@@ -299,6 +299,7 @@
    <string name="SIGN_IN_CLIENT_SECRET">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</string>
    <string name="enter_email">Enter your email</string>
    <string name="notifications">notifications</string>
+   <string name="notification">Notification</string>
    <string name="title_notification">Notifications</string>
    <string name="_1">1</string>
    <string name="_99">99</string>
@@ -361,4 +362,6 @@
    <string name="exact_alarm_request_info">"Permission is required to trigger alarms at the time you specified. Grant permission? "</string>
    <string name="log_in_text">Logging in…</string>
    <string name="delete_button_descritption">delete button</string>
+   <string name="profile">Profile</string>
+   <string name="registering">Registering…</string>
 </resources>

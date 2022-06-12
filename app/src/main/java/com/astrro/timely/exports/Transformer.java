@@ -97,9 +97,7 @@ class Transformer {
          javax.xml.transform.Transformer transformer = transformerFactory.newTransformer();
          // prettier
          transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-//         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
          transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-//         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(3));
          // to string result
          StringWriter stringWriter = new StringWriter();
          StreamResult streamResult = new StreamResult(stringWriter);

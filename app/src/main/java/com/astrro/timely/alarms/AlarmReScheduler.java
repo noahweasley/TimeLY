@@ -11,8 +11,10 @@ import com.astrro.timely.util.Constants;
 /**
  * <p>An alarm re-scheduler that re-schedules alarm from TimeLY's database.</p>
  * <p>
- * When user devices switches off, all alarms are terminated and no longer exists.
- * On re-boot, this receiver would re-set the alarms that was previously set.
+ * When user devices switches off, all alarms are terminated and no longer exists. Also on Android S and above, if the
+ * user denies exact alarm permission, all exact alarms would be cleared.
+ * On re-boot or when the user grants permission to schedule exact alarms, all previous alarms that was cleared would
+ * be re-set.
  */
 public class AlarmReScheduler extends BroadcastReceiver {
 

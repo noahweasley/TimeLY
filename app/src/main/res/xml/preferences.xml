@@ -28,7 +28,7 @@
 
       <SwitchPreferenceCompat
          external:defaultValue="true"
-         external:icon="@drawable/ic_access_time"
+         external:icon="@drawable/ic_access_time_primary"
          external:key="time_format"
          external:summary="@string/time_format_summary"
          external:title="Use 24-hours format" />

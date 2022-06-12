@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+   <color name="color_background">#121212</color>
    <color name="color_blaze_orange">#FF6300</color>
    <color name="color_ebony_clay">#20242F</color>
    <color name="colorPrimary">#7C4FF8</color>
@@ -33,7 +34,7 @@
    <color name="image_background_stroke">#4D7C4FF8</color>
    <color name="image_background_2">@color/image_background_stroke</color>
    <color name="image_background_stroke_2">@color/image_background_stroke</color>
-   <color name="accent_disabled">#8360E4</color>
+   <color name="accent_disabled">@color/colorAccentDark</color>
    <color name="purple_700">#FF3700B3</color>
    <color name="teal_200">#FF03DAC5</color>
    <color name="teal_700">#FF018786</color>
@@ -68,4 +69,5 @@
    <color name="white">#ECECEC</color>
    <color name="castro">#FF0069</color>
    <color name="blurred_background">#3B000000</color>
+   <color name="bottom_nav_ripple_color">#41FF9D00</color>
 </resources>

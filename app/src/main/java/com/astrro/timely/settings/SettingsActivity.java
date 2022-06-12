@@ -20,7 +20,6 @@ import com.astrro.timely.core.TimeRefreshEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
-@SuppressWarnings("ConstantConditions")
 public class SettingsActivity extends AppCompatActivity {
    private static boolean onStart = true;
 
@@ -50,8 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
       super.onBackPressed();
    }
 
-   public static class SettingsFragment extends PreferenceFragmentCompat
-           implements Preference.OnPreferenceChangeListener {
+   public static class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
 
       @SuppressWarnings("FieldCanBeLocal")
       private Preference pref_EnableNotifications, pref_TimeFormat, pref_eTone,
@@ -67,6 +65,7 @@ public class SettingsActivity extends AppCompatActivity {
          pref_SnoozeTime = findPreference("snooze_time");
          pref_TimeFormat = findPreference("time_format");
          pref_snoozeOnStop = findPreference("snoozeOnStop");
+
          pref_uriType = findPreference("Uri Type");
          pref_weekNum = findPreference("exam weeks");
          pref_ringtoneType = findPreference("Alarm Ringtone");

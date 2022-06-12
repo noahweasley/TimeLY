@@ -64,7 +64,7 @@ public class TMLYDataGeneratorDialog extends DialogFragment {
          btn_export = findViewById(R.id.export);
 
          btn_export.setOnClickListener(v -> {
-            new ActionProcessorDialog().execute(getActivity(), this::doExport);
+            new ActionProcessorDialog<Void>().execute(getActivity(), this::doExport);
             hide();
          });
 
@@ -116,7 +116,7 @@ public class TMLYDataGeneratorDialog extends DialogFragment {
          }
       }
 
-      private void doExport() {
+      private Void doExport() {
          // generate data
          Bundle arguments = getArguments();
          String exportPath = TMLYFileGenerator.generate(getContext(), dataModelList);
@@ -140,6 +140,7 @@ public class TMLYDataGeneratorDialog extends DialogFragment {
          });
 
          dismiss();
+         return null;
       }
 
       @Override

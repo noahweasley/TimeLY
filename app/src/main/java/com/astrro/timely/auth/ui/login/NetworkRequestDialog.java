@@ -17,11 +17,11 @@ import com.astrro.timely.R;
 import com.astrro.timely.util.ThreadUtils;
 import com.astrro.timely.util.collections.ISupplier;
 
-public class NetworkRequestDialog extends DialogFragment {
+public class NetworkRequestDialog<T> extends DialogFragment {
    public static final String ARG_LOADING_INFO = "Arg loading info";
-   private ISupplier supplier;
+   private ISupplier<T> supplier;
    private boolean dismiss_flag;
-   private OnActionProcessedListener listener;
+   private OnActionProcessedListener<T> listener;
 
    @NonNull
    @Override
@@ -29,21 +29,21 @@ public class NetworkRequestDialog extends DialogFragment {
       return new NetReqDialog(getContext());
    }
 
-   public NetworkRequestDialog setLoadingInfo(@NonNull String loaderInfo) {
+   public NetworkRequestDialog<T> setLoadingInfo(@NonNull String loaderInfo) {
       Bundle bundle = new Bundle();
       bundle.putString(ARG_LOADING_INFO, loaderInfo);
       setArguments(bundle);
       return this;
    }
 
-   public NetworkRequestDialog execute(Context context, ISupplier supplier) {
+   public NetworkRequestDialog<T> execute(Context context, ISupplier<T> supplier) {
       this.supplier = supplier;
       FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
       show(manager, NetworkRequestDialog.class.getName());
       return this;
    }
 
-   public void setOnActionProcessedListener(OnActionProcessedListener listener) {
+   public void setOnActionProcessedListener(OnActionProcessedListener<T> listener) {
       this.listener = listener;
    }
 
@@ -72,10 +72,10 @@ public class NetworkRequestDialog extends DialogFragment {
          }
 
          ThreadUtils.runBackgroundTask(() -> {
-            supplier.get();
+            T data = supplier.get();
             dismiss_flag = true;
             getActivity().runOnUiThread(() -> {
-               if (listener != null) listener.onActionProcessed();
+               if (listener != null) listener.onActionProcessed(data);
                dismiss();
             });
          });
@@ -90,8 +90,8 @@ public class NetworkRequestDialog extends DialogFragment {
 
    }
 
-   public interface OnActionProcessedListener {
-      void onActionProcessed();
+   public interface OnActionProcessedListener<D> {
+       void onActionProcessed(D data);
    }
 
 }

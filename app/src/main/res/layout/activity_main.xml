@@ -9,10 +9,9 @@
    tools:context=".main.MainActivity"
    tools:openDrawer="start">
 
-   <LinearLayout
+   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
+      android:layout_height="match_parent">
 
       <androidx.appcompat.widget.Toolbar
          android:id="@+id/toolbar"
@@ -20,28 +19,47 @@
          android:layout_height="@dimen/action_bar_size"
          android:background="@color/colorPrimary"
          android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent"
          external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
          external:subtitleTextColor="@android:color/white" />
 
       <FrameLayout
          android:id="@+id/frame"
          android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:background="@drawable/bg_day_and_night" />
+         android:layout_height="0dp"
+         external:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-   </LinearLayout>
+      <com.google.android.material.bottomnavigation.BottomNavigationView
+         android:id="@+id/bottom_navigation"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="@color/window_background_color"
+         android:paddingBottom="@dimen/layout_gap"
+         external:itemBackground="@color/window_background_color"
+         external:itemIconTint="@color/bottom_navigation_selection"
+         external:itemRippleColor="@color/bottom_nav_ripple_color"
+         external:labelVisibilityMode="labeled"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintStart_toStartOf="parent"
+         external:menu="@menu/bottom_menu" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
 
    <com.google.android.material.navigation.NavigationView
       android:id="@+id/nav_view"
       android:layout_width="240dp"
       android:layout_height="match_parent"
       android:layout_gravity="start"
-      android:background="@drawable/bg_day_and_night"
       android:fitsSystemWindows="false"
       external:headerLayout="@layout/nav_header"
       external:itemBackground="@drawable/bg_checked"
       external:itemIconTint="@color/colorPrimary"
-      external:itemTextColor="@android:color/black"
       external:menu="@menu/nav_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

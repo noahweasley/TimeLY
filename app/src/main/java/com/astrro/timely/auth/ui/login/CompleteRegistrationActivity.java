@@ -230,7 +230,6 @@ public class CompleteRegistrationActivity extends AppCompatActivity implements V
                options.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
                options.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
                options.setToolbarWidgetColor(ContextCompat.getColor(this, R.color.white));
-
                UCrop.of(selectedImage.getImageUri(), Uri.fromFile(file))
                     .withAspectRatio(6f, 6f)
                     .withOptions(options)
