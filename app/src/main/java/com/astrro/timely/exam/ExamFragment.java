@@ -9,15 +9,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.astrro.timely.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.astrro.timely.R;
-import com.astrro.timely.main.MainActivity;
 
 public class ExamFragment extends Fragment {
    private int weekCount;
@@ -41,8 +41,7 @@ public class ExamFragment extends Fragment {
          countValue = prefs.getString("exam weeks", "8");
          weekCount = Integer.parseInt(countValue);
       } catch (NumberFormatException exc) {
-         Log.w(getClass().getSimpleName(),
-               "Week count of: " + countValue + " is ignored, using" + " 8 weeks instead ");
+         Log.w(getClass().getSimpleName(), "Week count of: " + countValue + " is ignored, using" + " 8 weeks instead ");
          weekCount = 8;
       }
 
@@ -57,7 +56,7 @@ public class ExamFragment extends Fragment {
    @Override
    public void onResume() {
       super.onResume();
-      ((MainActivity) getActivity()).getSupportActionBar().setTitle("Exam Timetable");
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Exam Timetable");
    }
 
    private class ExamPageAdapter extends FragmentStateAdapter {

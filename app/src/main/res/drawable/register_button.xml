@@ -15,7 +15,7 @@
 
    <item android:state_enabled="false">
       <shape>
-         <solid android:color="@color/accent_disabled" />
+         <solid android:color="@color/colorPrimary_disabled" />
       </shape>
    </item>
 

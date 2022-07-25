@@ -1,7 +1,6 @@
 package com.astrro.timely.courses;
 
 import static com.astrro.timely.courses.SemesterFragment.ARG_POSITION;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,13 +19,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.astrro.timely.R;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.error.ErrorDialog;
-import com.astrro.timely.util.MiscUtil;
 import com.astrro.timely.util.ThreadUtils;
 import com.astrro.timely.util.adapters.SimpleOnItemSelectedListener;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -140,7 +140,7 @@ public class AddCourseActivity extends AppCompatActivity {
             if (addPos != -1) {
                model.setId(addPos);
                model.setChronologicalOrder(data[0]);
-               playAlertTone(getApplicationContext(), MiscUtil.Alert.COURSE);
+               SoundUtils.playAlertTone(getApplicationContext(), AlertType.COURSE);
                EventBus.getDefault().post(new CUpdateMessage(model, CUpdateMessage.EventType.NEW, pagePosition1));
             } else {
                Toast.makeText(this, "An Error occurred", Toast.LENGTH_LONG).show();

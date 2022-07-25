@@ -3,7 +3,6 @@ package com.astrro.timely.alarms;
 import static com.astrro.timely.alarms.AlarmReceiver.ALARM_POS;
 import static com.astrro.timely.alarms.AlarmReceiver.REPEAT_DAYS;
 import static com.astrro.timely.util.MiscUtil.isUserPreferred24Hours;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -35,9 +34,10 @@ import com.astrro.timely.core.EmptyListEvent;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.core.TimeRefreshEvent;
 import com.astrro.timely.error.ErrorDialog;
-import com.astrro.timely.util.MiscUtil.Alert;
 import com.astrro.timely.util.Primitives;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -295,8 +295,7 @@ public class AlarmListFragment extends Fragment {
             Toast alert = Toast.makeText(mActivity, message, Toast.LENGTH_LONG);
             int yOffset = getResources().getInteger(R.integer.toast_y_offset);
             alert.show();
-            playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
-
+            SoundUtils.playAlertTone(mActivity.getApplicationContext(), AlertType.ALARM);
          } else
             // This shouldn't show at all, it was only used in application testing
             Toast.makeText(mActivity, "A problem occurred", Toast.LENGTH_SHORT).show();

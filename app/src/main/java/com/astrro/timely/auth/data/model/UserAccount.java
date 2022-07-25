@@ -40,8 +40,8 @@ public class UserAccount implements Serializable {
       UserAccount userAccount = new UserAccount();
       userAccount.setFirstName(account.getGivenName());
       userAccount.setLastName(account.getFamilyName());
-//      userAccount.setEmail(account.getEmail());
-//      userAccount.setProfilePictureUri(account.getPhotoUrl());
+      userAccount.setEmail(account.getEmail());
+      userAccount.setProfilePictureUri(account.getPhotoUrl());
 
       return userAccount;
    }

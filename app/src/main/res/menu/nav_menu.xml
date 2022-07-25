@@ -14,7 +14,7 @@
 
    <!-- School category-->
 
-   <item android:title="@string/school">
+   <item android:title="@string/school_utilities">
 
       <menu>
 
@@ -60,6 +60,15 @@
                android:icon="@drawable/ic_alarm"
                android:title="@string/alarms" />
 
+            <item
+               android:id="@+id/__export"
+               android:icon="@drawable/ic_file_export"
+               android:title="@string/generate_export" />
+
+            <item
+               android:id="@+id/__import"
+               android:icon="@drawable/ic_file_import"
+               android:title="@string/generate_import" />
 
          </group>
 
@@ -79,16 +88,6 @@
                android:id="@+id/settings"
                android:icon="@drawable/ic_settings"
                android:title="@string/settings" />
-
-            <item
-               android:id="@+id/__export"
-               android:icon="@drawable/ic_baseline_export"
-               android:title="@string/generate_export" />
-
-            <item
-               android:id="@+id/__import"
-               android:icon="@drawable/ic_baseline_save"
-               android:title="@string/generate_import" />
 
             <item
                android:id="@+id/help"

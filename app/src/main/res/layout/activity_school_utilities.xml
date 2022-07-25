@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent">
+
+   <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/action_bar_size"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.0"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+   <ScrollView
+      android:id="@+id/utility_list"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:padding="@dimen/layout_gap"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+      <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical">
+
+         <LinearLayout
+            android:id="@+id/registered_courses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_hbd"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/layout_gap"
+            android:paddingVertical="@dimen/layout_gap_2"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:tint="@android:color/holo_blue_dark"
+               external:srcCompat="@drawable/ic_subject" />
+
+            <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_weight="8"
+               android:text="@string/register_courses"
+               android:textColor="@android:color/black"
+               android:textSize="18sp" />
+
+            <TextView
+               android:id="@+id/course_count"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:textColor="@android:color/black"
+               android:textSize="18sp"
+               tools:text="20" />
+
+         </LinearLayout>
+
+         <LinearLayout
+            android:id="@+id/timetable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_holo_orange_dark_5"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/layout_gap"
+            android:paddingVertical="@dimen/layout_gap_2"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:tint="@android:color/holo_orange_dark"
+               external:srcCompat="@drawable/ic_table_blue" />
+
+            <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_weight="8"
+               android:text="@string/timetable"
+               android:textColor="@android:color/black"
+               android:textSize="18sp" />
+
+            <TextView
+               android:id="@+id/timetable_count"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:textColor="@android:color/black"
+               android:textSize="18sp"
+               tools:text="20" />
+
+         </LinearLayout>
+
+         <LinearLayout
+            android:id="@+id/scheduled_classes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_holo_green_dark_5"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/layout_gap"
+            android:paddingVertical="@dimen/layout_gap_2"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:tint="@android:color/holo_green_dark"
+               external:srcCompat="@drawable/ic_access_time_primary" />
+
+            <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_weight="8"
+               android:text="@string/classes"
+               android:textColor="@android:color/black"
+               android:textSize="18sp" />
+
+            <TextView
+               android:id="@+id/scduled_count"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:textColor="@android:color/black"
+               android:textSize="18sp"
+               tools:text="20" />
+
+         </LinearLayout>
+
+         <LinearLayout
+            android:id="@+id/assignment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_holo_red_light_5"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/layout_gap"
+            android:paddingVertical="@dimen/layout_gap_2"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:tint="@android:color/holo_red_light"
+               external:srcCompat="@drawable/ic_assignment" />
+
+            <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_weight="8"
+               android:text="@string/assignment"
+               android:textColor="@android:color/black"
+               android:textSize="18sp" />
+
+            <TextView
+               android:id="@+id/assignment_count"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:textColor="@android:color/black"
+               android:textSize="18sp"
+               tools:text="20" />
+
+         </LinearLayout>
+
+         <LinearLayout
+            android:id="@+id/exam_timetable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_holo_purple_5"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/layout_gap"
+            android:paddingVertical="@dimen/layout_gap_2"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:tint="@android:color/holo_purple"
+               external:srcCompat="@drawable/ic_event_note" />
+
+            <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_weight="8"
+               android:text="@string/exam_timetable"
+               android:textColor="@android:color/black"
+               android:textSize="18sp" />
+
+            <TextView
+               android:id="@+id/exam_count"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:textColor="@android:color/black"
+               android:textSize="18sp"
+               tools:text="20" />
+
+         </LinearLayout>
+
+         <LinearLayout
+            android:id="@+id/todo_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_holo_blue_dark_5"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/layout_gap"
+            android:paddingVertical="@dimen/layout_gap_2"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:tint="@color/colorPrimaryDark"
+               external:srcCompat="@drawable/ic_baseline_event_available_24" />
+
+            <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_weight="8"
+               android:text="@string/todo_list"
+               android:textColor="@android:color/black"
+               android:textSize="18sp" />
+
+            <TextView
+               android:id="@+id/todo_count"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:textColor="@android:color/black"
+               android:textSize="18sp"
+               tools:text="20" />
+
+         </LinearLayout>
+
+         <LinearLayout
+            android:id="@+id/gpa_calculator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_holo_tomato_red_5"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/layout_gap"
+            android:paddingVertical="@dimen/layout_gap_2"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:tint="@color/tomato_red"
+               external:srcCompat="@drawable/ic_baseline_calculate_24" />
+
+            <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_weight="8"
+               android:text="@string/g_p_a_calculator"
+               android:textColor="@android:color/black"
+               android:textSize="18sp" />
+
+         </LinearLayout>
+
+         <LinearLayout
+            android:id="@+id/alarms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_gap"
+            android:background="@drawable/bg_teal_5"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/layout_gap"
+            android:paddingVertical="@dimen/layout_gap_2"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:tint="@color/teal_700"
+               external:srcCompat="@drawable/ic_alarm" />
+
+            <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/layout_gap"
+               android:layout_weight="8"
+               android:text="@string/alarms"
+               android:textColor="@android:color/black"
+               android:textSize="18sp" />
+
+            <TextView
+               android:id="@+id/alarm_count"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:textColor="@android:color/black"
+               android:textSize="18sp"
+               tools:text="20" />
+
+         </LinearLayout>
+
+      </LinearLayout>
+
+   </ScrollView>
+
+   <FrameLayout
+      android:id="@+id/frame"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

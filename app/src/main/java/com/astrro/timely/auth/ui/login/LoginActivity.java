@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
               .requestEmail()
               .requestProfile()
+//              .requestScopes(new Scope(Scopes.EMAIL), new Scope(Scopes.PROFILE))
               .requestIdToken(getString(R.string.SIGN_IN_CLIENT_ID))
               .build();
       // Build a GoogleSignInClient with the options specified by gso.
@@ -127,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     return null;
                  }
 
-              }).setOnActionProcessedListener(loginResponse -> {
+              }).setOnResponseProcessedListener(loginResponse -> {
 
          if (loginResponse != null) {
             if (loginResponse.getStatusCode() == HttpStatusCodes.OK) {

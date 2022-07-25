@@ -26,8 +26,6 @@ public class NotificationsActivity extends AppCompatActivity {
       setSupportActionBar(findViewById(R.id.toolbar));
       getSupportActionBar().setTitle("Notification");
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_arrow_down_24);
-      getSupportActionBar().setHomeActionContentDescription(R.string.pull_down);
 
       RecyclerView rv_notificationList = findViewById(R.id.notification_list);
       rv_notificationList.setAdapter(new NotificationsAdapter());

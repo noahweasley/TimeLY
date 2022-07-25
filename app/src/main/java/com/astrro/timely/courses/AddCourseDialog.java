@@ -1,7 +1,6 @@
 package com.astrro.timely.courses;
 
 import static com.astrro.timely.courses.SemesterFragment.ARG_POSITION;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -26,13 +25,14 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.astrro.timely.R;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.error.ErrorDialog;
-import com.astrro.timely.util.MiscUtil.Alert;
 import com.astrro.timely.util.ThreadUtils;
 import com.astrro.timely.util.adapters.SimpleOnItemSelectedListener;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -133,7 +133,7 @@ public class AddCourseDialog extends DialogFragment implements View.OnClickListe
             if (addPos != -1) {
                model.setId(addPos);
                model.setChronologicalOrder(data[0]);
-               playAlertTone(context.getApplicationContext(), Alert.COURSE);
+               SoundUtils.playAlertTone(context.getApplicationContext(), AlertType.COURSE);
                EventBus.getDefault().post(new CUpdateMessage(model, CUpdateMessage.EventType.NEW, pagePosition1));
             } else {
                Toast.makeText(context, "An Error occurred", Toast.LENGTH_LONG).show();

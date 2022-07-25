@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.assignment.LayoutRefreshEvent;
 import com.astrro.timely.core.ChoiceMode;
@@ -43,13 +42,13 @@ import com.astrro.timely.core.RequestParams;
 import com.astrro.timely.core.RequestRunner;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.exports.TMLYDataGeneratorDialog;
-import com.astrro.timely.main.MainActivity;
 import com.astrro.timely.timetable.TimeTableRowHolder;
 import com.astrro.timely.timetable.TimetableModel;
-import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.DeviceInfoUtil;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.collections.CollectionUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -246,7 +245,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
    @Override
    public void onResume() {
       super.onResume();
-      ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.classes);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.classes);
    }
 
    @Override

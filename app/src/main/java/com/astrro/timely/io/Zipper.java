@@ -49,7 +49,7 @@ public class Zipper {
     * @param input   the directory in which all it's contents would be zipped into one file
     * @return true if file was zipped successfully
     * @throws FileNotFoundException if file location specified was incorrect
-    */
+     */
    public static Map<String, String> unzipToXMLMap(Context context, String finput) throws IOException {
       ZipInputStream zin = new ZipInputStream(new FileInputStream(finput));
       // timely is unable to unzip any file larger than MAX_DATA_TRANSFER_BITS

@@ -7,7 +7,7 @@
    <dimen name="layout_gap">8dp</dimen>
    <dimen name="space">8dp</dimen>
    <dimen name="header_size">24dp</dimen>
-   <dimen name="no_task_text_size">22sp</dimen>
+   <dimen name="no_task_text_size">18sp</dimen>
    <dimen name="normal_elevation">8dp</dimen>
    <dimen name="indicator_width">10dp</dimen>
    <dimen name="timetable_space">8dp</dimen>
@@ -50,7 +50,7 @@
    <dimen name="assignment_list_height_21">190dp</dimen>
    <dimen name="assignment_text_size">12sp</dimen>
    <dimen name="assignment_dialog_text_size_medium">14sp</dimen>
-   <dimen name="image_row_size">180dp</dimen>
+   <dimen name="_2_grid_height">180dp</dimen>
    <dimen name="image_row_size_2">270dp</dimen>
    <dimen name="update_dialog_height">380dp</dimen>
    <dimen name="wave_decoration_height">80dp</dimen>
@@ -112,4 +112,5 @@
    <dimen name="basic_info_text_size">22sp</dimen>
    <dimen name="basic_info_text_size_2">20sp</dimen>
    <dimen name="notification_row_height">100dp</dimen>
+   <dimen name="list_bottom_inset">80dp</dimen>
 </resources>

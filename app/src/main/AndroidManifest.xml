@@ -92,7 +92,6 @@
       <activity
          android:name=".main.MainActivity"
          android:exported="true"
-         android:launchMode="singleTask"
          android:theme="@style/Theme.SplashScreenTheme">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -139,6 +138,8 @@
       <activity
          android:name=".gallery.ImageSlideActivity"
          android:theme="@style/SlidingActivityTheme" />
+
+      <!--  Unused activity    -->
       <activity android:name=".gallery.StorageViewer" />
 
       <activity
@@ -224,7 +225,7 @@
 
       <activity
          android:name=".main.notification.NotificationsActivity"
-         android:theme="@style/AppTheme.SlideVertical_recipient" />
+         android:theme="@style/SlidingActivityTheme_No_Fade" />
 
       <activity
          android:name=".todo.AddTodoActivity"
@@ -235,13 +236,27 @@
          android:name=".about.TimelyBasicInfoActivity"
          android:theme="@style/SlidingActivityTheme_No_Fade" />
 
+      <activity android:name=".main.library.LibrarySearchActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"/>
+
       <activity
          android:name=".about.BasicInfoListActivity"
          android:exported="false"
          android:theme="@style/SlidingActivityTheme_No_Fade" />
 
       <activity
+         android:name=".main.UserProfileActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustResize" />
+
+      <activity
          android:name=".about.ContactActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustResize" />
+
+      <activity
+         android:name=".main.SchoolUtilitesActivity"
+         android:launchMode="singleTask"
          android:theme="@style/SlidingActivityTheme_No_Fade"
          android:windowSoftInputMode="adjustResize" />
 

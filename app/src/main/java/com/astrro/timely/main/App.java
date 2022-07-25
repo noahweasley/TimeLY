@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.astrro.timely.R;
-import com.astrro.timely.util.MiscUtil;
 import com.astrro.timely.util.adapters.ActivityLifecycleObservingApplication;
 
 public class App extends ActivityLifecycleObservingApplication {
@@ -66,7 +65,6 @@ public class App extends ActivityLifecycleObservingApplication {
 
    @Override
    public void onActivityDestroyed(@NonNull Activity activity) {
-      MiscUtil.doCleanUp();
       super.onActivityDestroyed(activity);
    }
 

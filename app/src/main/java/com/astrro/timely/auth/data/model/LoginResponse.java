@@ -1,13 +1,13 @@
 package com.astrro.timely.auth.data.model;
 
+import com.astrro.timely.auth.data.api.IResponse;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse {
-   int statusCode;
-   String time;
+public class LoginResponse extends IResponse {
+   private String time;
 
    @SerializedName("user")
-   UserAccount userAccount;
+   private UserAccount userAccount;
 
    @SerializedName("token")
    String jsonWebToken;
@@ -16,14 +16,6 @@ public class LoginResponse {
       LoginResponse loginResponse = new LoginResponse();
       loginResponse.setStatusCode(code);
       return loginResponse;
-   }
-
-   public int getStatusCode() {
-      return statusCode;
-   }
-
-   public void setStatusCode(int statusCode) {
-      this.statusCode = statusCode;
    }
 
    public UserAccount getUserAccount() {

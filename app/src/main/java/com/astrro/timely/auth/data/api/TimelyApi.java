@@ -46,14 +46,14 @@ public class TimelyApi {
     * @return the repsonse descibing if the user has been registered or not
     * @throws IOException if a network error occurs
     */
-   public static LoginResponse registerNewUser(UserAccount userAccount) throws IOException {
+   public static RegistrationResponse registerNewUser(UserAccount userAccount) throws IOException {
       AuthenticationService apiService = ServiceGenerator.createService(AuthenticationService.class);
-      Call<LoginResponse> responseCall = apiService.registerUser(userAccount);
+      Call<RegistrationResponse> responseCall = apiService.registerUser(userAccount);
 
-      Response<LoginResponse> loginResponse = responseCall.execute();
+      Response<RegistrationResponse> loginResponse = responseCall.execute();
 
       if (loginResponse.isSuccessful()) {
-         LoginResponse response = loginResponse.body();
+         RegistrationResponse response = loginResponse.body();
          response.setStatusCode(loginResponse.code());
          return response;
       } else {

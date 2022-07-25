@@ -26,12 +26,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.astrro.timely.R;
+import com.astrro.timely.auth.data.api.RegistrationResponse;
 import com.astrro.timely.auth.data.api.TimelyApi;
-import com.astrro.timely.auth.data.model.LoginResponse;
 import com.astrro.timely.auth.data.model.UserAccount;
 import com.astrro.timely.main.MainActivity;
 import com.astrro.timely.util.PatternUtils;
-import com.astrro.timely.util.PreferenceUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -41,8 +40,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
    private GoogleSignInClient mGoogleSignInClient;
@@ -94,9 +91,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
       // Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are
       // included  in DEFAULT_SIGN_IN.
+
       GoogleSignInOptions gso =
               new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                       .requestEmail()
+                      .requestProfile()
                       .requestIdToken(getString(R.string.SIGN_IN_CLIENT_ID))
                       .build();
       // Build a GoogleSignInClient with the options specified by gso.
@@ -110,7 +109,7 @@ public class RegistrationActivity extends AppCompatActivity {
    private void registerAcount(UserAccount userAccount) {
       // first, we verify that the user entered valid inputs
       boolean isErrorOccurred = false;
-      if (!userAccount.getPhoneNumber().matches(Patterns.PHONE.pattern())) {
+      if (!(Patterns.PHONE.matcher(userAccount.getPhoneNumber()).matches())) {
          ViewGroup container = (ViewGroup) edt_phoneNumber.getParent();
          TextInputLayout til_phoneNumberParent = ((TextInputLayout) container.getParent());
          til_phoneNumberParent.setError("Input phone number format");
@@ -121,7 +120,7 @@ public class RegistrationActivity extends AppCompatActivity {
       if (TextUtils.isEmpty(edt_userName.getText())) {
          ViewGroup container = (ViewGroup) edt_userName.getParent();
          TextInputLayout til_userNameParent = ((TextInputLayout) container.getParent());
-         til_userNameParent.setError("Input phone number format");
+         til_userNameParent.setError("Field can't be empty");
 
          isErrorOccurred = true;
       }
@@ -142,7 +141,7 @@ public class RegistrationActivity extends AppCompatActivity {
          isErrorOccurred = true;
       }
 
-      if (!userAccount.getEmail().matches(Patterns.EMAIL_ADDRESS.pattern())) {
+      if (!Patterns.EMAIL_ADDRESS.matcher(userAccount.getEmail()).matches()) {
          ViewGroup container = (ViewGroup) edt_email.getParent();
          TextInputLayout til_emailParent = ((TextInputLayout) container.getParent());
          til_emailParent.setError("Input correct e-mail address");
@@ -162,7 +161,7 @@ public class RegistrationActivity extends AppCompatActivity {
    }
 
    private void registerNewUser() {
-      new NetworkRequestDialog<LoginResponse>()
+      new NetworkRequestDialog<RegistrationResponse>()
               .setLoadingInfo(getString(R.string.registering))
               .execute(this, () -> {
                  UserAccount userAccount = new UserAccount();
@@ -172,19 +171,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(this, "Network error occurred", Toast.LENGTH_LONG).show();
                     return null;
                  }
-              }).setOnActionProcessedListener(loginResponse -> {
+              }).setOnResponseProcessedListener(regResponse -> {
 
-         if (loginResponse.getStatusCode() == HttpStatusCodes.OK) {
-            Map<String, String> map = new HashMap<>();
-            UserAccount userAccount1 = loginResponse.getUserAccount();
-
-            map.put(PreferenceUtils.USER_ID, userAccount1.getUserId());
-            map.put(PreferenceUtils.USER_PASSWORD, userAccount1.getPassword());
-            map.put(PreferenceUtils.USER_NAME, userAccount1.getEmail());
-            map.put(PreferenceUtils.USER_SCHOOL, userAccount1.getSchool());
-            map.put(PreferenceUtils.USER_IS_LOGGED_IN, String.valueOf(true));
-
-            PreferenceUtils.setStringArraySync(this, map);
+         if (regResponse.getStatusCode() == HttpStatusCodes.OK && regResponse.isUserRegistered()) {
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.setAction(MainActivity.ACTION_LOGIN);
@@ -227,8 +216,8 @@ public class RegistrationActivity extends AppCompatActivity {
    }
 
    private void updateUI(GoogleSignInAccount account) {
-      if (account != null)
-         GoogleLoginCompletionActivity.start(this, UserAccount.createFromGoogleSignIn(account));
+      if (account != null) GoogleLoginCompletionActivity.start(this, UserAccount.createFromGoogleSignIn(account));
+      else Toast.makeText(this, "Google sign-up failed", Toast.LENGTH_LONG).show();
    }
 
    private void detectLinkClick(SpannableStringBuilder strBuilder, final URLSpan span) {

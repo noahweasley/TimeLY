@@ -322,6 +322,12 @@
 
    <string-array name="school_array">
       <item>Not specified</item>
+      <item>Abia State University, Uturu</item>
+      <item>Abubakar Tafawa Balewa University, Bauchi</item>
+      <item>Achievers University, Owo</item>
+      <item>Adamawa State University, Mubi</item>
+      <item>Adekunle Ajasin University, Ondo</item>
+      <item></item>
       <item>Nnamdi Azikwe University Awka, Anambra</item>
    </string-array>
 

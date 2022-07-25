@@ -24,7 +24,7 @@ import com.astrro.timely.assignment.LayoutRefreshEvent;
 import com.astrro.timely.core.DataModel;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.courses.CoursesFragment;
-import com.astrro.timely.main.MainActivity;
+import com.astrro.timely.main.SchoolUtilitesActivity;
 import com.astrro.timely.util.PreferenceUtils;
 import com.astrro.timely.util.ThreadUtils;
 
@@ -216,8 +216,8 @@ public class ResultCalculatorFragment extends Fragment {
          new ResultCalculatorInfoDialog().show(getContext(), null).setOnActionReceviedListener(action -> {
             // naviagate to course fragment to add courses
             if (action == ResultCalculatorInfoDialog.ACTION_PROCEED) {
-               if (getActivity() != null && getActivity() instanceof MainActivity) {
-                  ((MainActivity) getActivity()).loadFragment(CoursesFragment.newInstance());
+               if (getActivity() != null && getActivity() instanceof SchoolUtilitesActivity) {
+                  ((SchoolUtilitesActivity) getActivity()).loadFragment(CoursesFragment.newInstance());
                } // end if
             } else if (action == ResultCalculatorInfoDialog.ACTION_DONT_SHOW) {
                if (getArguments().getInt(ARG_POSITION) == 0)

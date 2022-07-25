@@ -21,13 +21,20 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Random;
 
-public class LandingPageFragment extends Fragment {
+public class MainPageFragment extends Fragment {
+   public static final String TAG = "com.astrro.timely.main.MainPageFragment";
    private TextView tv_gText;
    private DayPart lastDayPart;
    private Context context;
+   private static final Fragment fragmentInstance = new MainPageFragment();
+   private static final String TOOLBAR_TITLE = "Discover";
 
-   static LandingPageFragment newInstance() {
-      return new LandingPageFragment();
+   public static Fragment getInstance() {
+      return fragmentInstance;
+   }
+
+   public static String getToolbarTitle() {
+      return TOOLBAR_TITLE;
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -76,7 +83,7 @@ public class LandingPageFragment extends Fragment {
 
    @Override
    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedState) {
-      return inflater.inflate(R.layout.landing_page, parent, false);
+      return inflater.inflate(R.layout.fragment_main_page, parent, false);
    }
 
    @Override
@@ -90,7 +97,7 @@ public class LandingPageFragment extends Fragment {
    @Override
    public void onResume() {
       super.onResume();
-      ((MainActivity) getActivity()).getSupportActionBar().setTitle("Events");
+      ((MainActivity) getActivity()).getSupportActionBar().setTitle(TOOLBAR_TITLE);
    }
 
    @Override

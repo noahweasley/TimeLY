@@ -31,33 +31,27 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.astrro.timely.R;
 import com.astrro.timely.about.BasicInfoListActivity;
-import com.astrro.timely.alarms.AlarmHolderFragment;
 import com.astrro.timely.alarms.TimeChangeDetector;
 import com.astrro.timely.alarms.TimeChangeDetectorService;
-import com.astrro.timely.assignment.AssignmentFragment;
 import com.astrro.timely.auth.ui.login.LoginActivity;
-import com.astrro.timely.calculator.ResultCalculatorContainerFragment;
 import com.astrro.timely.core.SchoolDatabase;
-import com.astrro.timely.courses.CoursesFragment;
-import com.astrro.timely.exam.ExamFragment;
 import com.astrro.timely.exports.ImportResultsActivity;
 import com.astrro.timely.exports.TMLYDataGeneratorDialog;
+import com.astrro.timely.main.library.StudentLibraryFragment;
+import com.astrro.timely.main.marketplace.MarketPlaceFragment;
 import com.astrro.timely.main.notification.NotificationsActivity;
-import com.astrro.timely.scheduled.ScheduledTimetableFragment;
 import com.astrro.timely.settings.SettingsActivity;
-import com.astrro.timely.timetable.TimetableFragment;
-import com.astrro.timely.todo.TodoFragment;
-import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.PreferenceUtils;
-import com.astrro.timely.util.ReportActionUtil;
 import com.astrro.timely.util.TimelyUpdateUtils;
+import com.astrro.timely.util.sound.SoundUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
+   private Fragment visibleFragment = MainPageFragment.getInstance();
    private boolean dismissable;
    public static final String ACTION_LOGIN = "Login_user_action";
 
@@ -82,11 +76,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       bottomNavigationView.setOnItemSelectedListener(new NavigationBarItemListener());
       // navigate to user sign up | login screen
       vg_headerView = navView.getHeaderView(0);
-      vg_headerView.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+      detectUserLoginClickRequest();
       checkedUserLoggingStatus();
+      showFragment(MainPageFragment.getInstance());
 
-      navView.setNavigationItemSelectedListener(this);
-
+      navView.setNavigationItemSelectedListener(new NavigationItemListener());
       // check for app updates
       if (PreferenceUtils.getBooleanValue(this, PreferenceUtils.UPDATE_ON_STARTUP, true))
          TimelyUpdateUtils.checkForUpdates(this);
@@ -97,9 +91,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       drawer = findViewById(R.id.drawer);
       toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
       drawer.addDrawerListener(toggle);
-      // Set the first viewed fragment on app start
-      doHandleRequestAction(getIntent()); // update the fragment attached to this activity
-
       startService(new Intent(this, TimeChangeDetectorService.class)); // start OS time and date detection
 
       // ignore power management service to trigger alarms properly
@@ -128,6 +119,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       }
    }
 
+   private void showFragment(Fragment fragment) {
+      FragmentManager manager = getSupportFragmentManager();
+      FragmentTransaction transaction = manager.beginTransaction();
+      transaction.setReorderingAllowed(true);
+
+      final String TAG = fragment.getClass().getSimpleName();
+
+      if (fragment.isAdded()) {
+         updateToolbarTitle(fragment);
+         transaction.hide(visibleFragment).show(fragment);
+      } else {
+         transaction.hide(visibleFragment).add(R.id.frame, fragment, TAG);
+      }
+
+      transaction.commit();
+      visibleFragment = fragment;
+   }
+
+   private void updateToolbarTitle(Fragment fragment) {
+      String title = null;
+      if (fragment.getClass() == MarketPlaceFragment.class) title = MarketPlaceFragment.getToolbarTitle();
+      else if (fragment.getClass() == StudentLibraryFragment.class) title = StudentLibraryFragment.getToolbarTitle();
+      else if (fragment.getClass() == MainPageFragment.class) title = MainPageFragment.getToolbarTitle();
+
+      getSupportActionBar().setTitle(title);
+   }
+
+   private void detectUserLoginClickRequest() {
+      ViewGroup header = (ViewGroup) vg_headerView;
+      ViewGroup vg_authGroup = (ViewGroup) header.getChildAt(0);
+      ViewGroup vg_userProfile = (ViewGroup) header.getChildAt(1);
+
+      vg_authGroup.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+      vg_userProfile.setOnClickListener(v -> startActivity(new Intent(this, UserProfileActivity.class)));
+   }
+
    @Override
    protected void onResume() {
       super.onResume();
@@ -138,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       // check if user is logged in
       boolean isUserLoggedIn =
               Boolean.valueOf(PreferenceUtils.getStringValue(this, PreferenceUtils.USER_IS_LOGGED_IN, "false"));
-
       ViewGroup header = (ViewGroup) vg_headerView;
       ViewGroup vg_authGroup = (ViewGroup) header.getChildAt(0);
       ViewGroup vg_userProfile = (ViewGroup) header.getChildAt(1);
@@ -181,16 +207,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       }
    }
 
-   // Because launch mode of this activity is set to single task, this callback will be invoked. When will this be
-   // invoked ? It will be invoked when a user clicked on the notification to view a particular fragment, but
-   // onCreate won't be invoked if the app is already running but onNewIntent will be invoked so, bring MainActivity
-   // to front, and replace fragment to view.
-   @Override
-   protected void onNewIntent(Intent intent) {
-      super.onNewIntent(intent);
-      doHandleRequestAction(intent);
-   }
-
    @RequiresApi(api = Build.VERSION_CODES.M)
    private void requestAction(DialogInterface dialog, int which) {
       if (which == DialogInterface.BUTTON_POSITIVE)
@@ -215,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
    @Override
    protected void onDestroy() {
+      // clean up resources used in playing alert tones
+      SoundUtils.doCleanUp();
       // TimeLY is being exited, set the first launch key to false
       PreferenceUtils.setFirstLaunchKey(getApplicationContext(), false);
       // cannot activate, stop OS time and date detection
@@ -230,15 +248,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          if (dismissable) {
             super.onBackPressed();
          } else {
-            FragmentManager manager = getSupportFragmentManager();
-            Fragment fragment1 = manager.findFragmentByTag("Todo");
-            if (fragment1 != null) super.onBackPressed();
-            else {
-               String app_name = getString(R.string.app_name);
-               String exit_message = getString(R.string.exit_message);
-               String full_exit_message = String.format(Locale.US, "%s %s", exit_message, app_name);
-               Toast.makeText(this, full_exit_message, Toast.LENGTH_SHORT).show();
-            }
+            String app_name = getString(R.string.app_name);
+            String exit_message = getString(R.string.exit_message);
+            String full_exit_message = String.format(Locale.US, "%s %s", exit_message, app_name);
+            Toast.makeText(this, full_exit_message, Toast.LENGTH_SHORT).show();
          }
          dismissable = true;
          new Handler(getMainLooper()).postDelayed(() -> dismissable = false, 2000);
@@ -247,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    }
 
    @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
+   public boolean onCreateOptionsMenu(@NonNull Menu menu) {
       // Inflate the menu; this adds items to the action bar if it is present.
       getMenuInflater().inflate(R.menu.menu_main, menu);
       return true;
@@ -257,147 +270,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
       int id = item.getItemId();
       if (id == R.id.action_settings) {
-         open_upSetting();
+         startActivity(new Intent(this, SettingsActivity.class));
       } else if (id == R.id.update) {
          TimelyUpdateUtils.checkForUpdates(this);
       }
       return super.onOptionsItemSelected(item);
    }
 
-   @Override
-   public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-      int menuItemId = menuItem.getItemId();
-
-      if (menuItemId == R.id.home) {
-
-         loadFragment(LandingPageFragment.newInstance());
-
-      } else if (menuItemId == R.id.courses) {
-
-         loadFragment(CoursesFragment.newInstance());
-
-      } else if (menuItemId == R.id.timetable) {
-
-         loadFragment(TimetableFragment.newInstance());
-
-      } else if (menuItemId == R.id.scheduled_classes) {
-
-         loadFragment(ScheduledTimetableFragment.newInstance());
-
-      } else if (menuItemId == R.id.assignment) {
-
-         loadFragment(AssignmentFragment.newInstance());
-
-      } else if (menuItemId == R.id.exam_timetable) {
-
-         loadFragment(ExamFragment.newInstance());
-
-      } else if (menuItemId == R.id.todo_list) {
-
-         loadFragment(TodoFragment.newInstance());
-
-      } else if (menuItemId == R.id.calculator) {
-
-         loadFragment(ResultCalculatorContainerFragment.newInstance());
-
-      } else if (menuItemId == R.id.alarms) {
-
-         loadFragment(AlarmHolderFragment.newInstance());
-
-      } else if (menuItemId == R.id.settings) {
-
-         open_upSetting();
-         return true; // immediately return from callback so that the drawer doesn't close
-
-      } else if (menuItemId == R.id.__export) {
-
-         new TMLYDataGeneratorDialog().show(this);
-
-      } else if (menuItemId == R.id.__import) {
-
-         startActivity(new Intent(this, ImportResultsActivity.class));
-         return true; // immediately return from callback so that the drawer doesn't close
-
-      } else if (menuItemId == R.id.help) {
-
-         startActivity(new Intent(this, BasicInfoListActivity.class));
-         return true; // immediately return from callback so that the drawer doesn't close
-
-      }
-
-      if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
-
-      return true;
-   }
-
-   private void reportAction(DialogInterface dialog, int which) {
-      if (which == DialogInterface.BUTTON_POSITIVE) {
-         ReportActionUtil.reportBug(this, "");
-
-      }
-      // whatever the button clicked, close dialog
-      dialog.cancel();
-   }
-
    // Get intent actions and update UI
    private void doHandleRequestAction(Intent intent) {
       final String reqAction = intent.getAction();
-
-      if (reqAction != null) {
-         switch (reqAction) {
-            case Constants.ASSIGNMENT:
-               loadFragment(AssignmentFragment.newInstance());
-               break;
-            case Constants.SCHEDULED_TIMETABLE:
-               loadFragment(ScheduledTimetableFragment.newInstance());
-               break;
-            case Constants.TIMETABLE:
-               loadFragment(TimetableFragment.newInstance());
-               break;
-            case Constants.EXAM:
-               loadFragment(ExamFragment.newInstance());
-               break;
-            case Constants.COURSE:
-               loadFragment(CoursesFragment.newInstance());
-               break;
-            case Constants.ALARM:
-               loadFragment(AlarmHolderFragment.newInstance());
-               break;
-            case MainActivity.ACTION_LOGIN:
-               checkedUserLoggingStatus();
-               break;
-            default:
-               loadFragment(LandingPageFragment.newInstance());
-               break;
-         }
-      } else {
-         // Loads landing page on start up.
-         loadFragment(LandingPageFragment.newInstance());
+      if (reqAction != null && reqAction.equals(MainActivity.ACTION_LOGIN)) {
+         checkedUserLoggingStatus();
       }
    }
 
-   // open up settings with a custom animation
-   private void open_upSetting() {
-      startActivity(new Intent(this, SettingsActivity.class));
-   }
+   private class NavigationItemListener implements NavigationView.OnNavigationItemSelectedListener {
 
-   public void loadFragment(Fragment fragment) {
-      FragmentManager manager = getSupportFragmentManager();
-      FragmentTransaction transaction = manager.beginTransaction();
+      @Override
+      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+         int itemId = item.getItemId();
+         if (itemId == R.id.home) {
+            showFragment(MainPageFragment.getInstance());
+         } else if (itemId == R.id.courses || itemId == R.id.timetable || itemId == R.id.scheduled_classes
+                 || itemId == R.id.assignment || itemId == R.id.exam_timetable || itemId == R.id.todo_list
+                 || itemId == R.id.calculator || itemId == R.id.alarms) {
 
-      //  Remove TodoFragment from the backstack on navigation item click
-      Fragment fragment2 = manager.findFragmentByTag("Todo");
-      if (fragment2 != null) {
-         for (int fx = 0; fx < manager.getBackStackEntryCount(); ++fx) {
-            manager.popBackStack();
+            SchoolUtilitesActivity.start(MainActivity.this, itemId);
+         } else if (itemId == R.id.__export) {
+            new TMLYDataGeneratorDialog().show(MainActivity.this);
+         } else if (itemId == R.id.__import) {
+            startActivity(new Intent(MainActivity.this, ImportResultsActivity.class));
+            return true;
+         } else if (itemId == R.id.settings) {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            return true;
+         } else if (itemId == R.id.help) {
+            startActivity(new Intent(MainActivity.this, BasicInfoListActivity.class));
+            return true;
          }
-      }
 
-      final String TAG = fragment.getClass().getName();
-      Fragment fragment1 = manager.findFragmentByTag(TAG);
-      if (fragment1 == null) {
-         transaction.replace(R.id.frame, fragment, TAG).commit();
+         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+         }
+         return true;
       }
    }
 
@@ -408,9 +324,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          int itemId = item.getItemId();
          if (itemId == R.id.notification) {
             startActivity(new Intent(MainActivity.this, NotificationsActivity.class));
+         } else if (itemId == R.id.profile) {
+            startActivity(new Intent(MainActivity.this, UserProfileActivity.class));
+         } else if (itemId == R.id.home) {
+            showFragment(MainPageFragment.getInstance());
+         } else if (itemId == R.id.library) {
+            showFragment(StudentLibraryFragment.getInstance());
+         } else if (itemId == R.id.marketplace) {
+            showFragment(MarketPlaceFragment.getInstance());
          }
 
          return true;
       }
+
    }
+
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@drawable/bg_day_and_night"
+   android:paddingHorizontal="@dimen/layout_gap">
+
+   <!-- The text to be displayed on top of the image -->
+
+   <TextView
+      android:id="@+id/greeting_text"
+      style="@style/Info_Text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/layout_gap"
+      android:gravity="center"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      tools:text="@string/good_morning" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

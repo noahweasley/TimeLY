@@ -25,7 +25,7 @@ public class BasicInfoListActivity extends AppCompatActivity implements View.OnC
       ViewGroup vg_helpCenter = findViewById(R.id.centre);
       ViewGroup vg_appInfo = findViewById(R.id.app_info);
       // avoiding stupid duplicate code
-      ViewGroup[] vgs = { vg_legal, vg_contact, vg_helpCenter, vg_appInfo};
+      ViewGroup[] vgs = { vg_legal, vg_contact, vg_helpCenter, vg_appInfo };
       for (ViewGroup vg : vgs) vg.setOnClickListener(this);
    }
 
@@ -46,7 +46,7 @@ public class BasicInfoListActivity extends AppCompatActivity implements View.OnC
       } else if (viewId == R.id.legal) {
          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.legal_notice_address)));
          startActivity(Intent.createChooser(intent, getString(R.string.link_open_text)));
-      } else if (viewId == R.id.help) {
+      } else if (viewId == R.id.centre) {
          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.help_address)));
          startActivity(Intent.createChooser(intent, getString(R.string.link_open_text)));
       }

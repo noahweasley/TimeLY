@@ -3,7 +3,6 @@ package com.astrro.timely.exam;
 import static com.astrro.timely.util.Converter.convertTime;
 import static com.astrro.timely.util.MiscUtil.DAYS_3;
 import static com.astrro.timely.util.MiscUtil.isUserPreferred24Hours;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -24,15 +23,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.astrro.timely.R;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.util.Converter;
-import com.astrro.timely.util.MiscUtil;
 import com.astrro.timely.util.PatternUtils;
 import com.astrro.timely.util.ThreadUtils;
 import com.astrro.timely.util.adapters.SimpleOnItemSelectedListener;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
+import com.google.android.material.textfield.TextInputLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -247,7 +247,7 @@ public class AddExamActivity extends AppCompatActivity {
                exam.setId(data[1]);
                exam.setChronologicalOrder(data[0]);
                EventBus.getDefault().post(new EUpdateMessage(exam, EUpdateMessage.EventType.NEW, pagePosition));
-               playAlertTone(getApplicationContext(), MiscUtil.Alert.EXAM);
+               SoundUtils.playAlertTone(getApplicationContext(), AlertType.EXAM);
             } else {
                Toast.makeText(this, "An Error occurred", Toast.LENGTH_LONG).show();
             }

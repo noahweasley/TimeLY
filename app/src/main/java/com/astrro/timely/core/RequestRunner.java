@@ -1,8 +1,6 @@
 package com.astrro.timely.core;
 
-import static com.astrro.timely.util.MiscUtil.Alert;
 import static com.astrro.timely.util.MiscUtil.deleteTaskRunning;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -46,6 +44,8 @@ import com.astrro.timely.todo.TDUpdateMessage;
 import com.astrro.timely.todo.TodoListFragment;
 import com.astrro.timely.todo.TodoListRowHolder;
 import com.astrro.timely.todo.TodoModel;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -192,7 +192,7 @@ public class RequestRunner extends Thread {
                                                        dataCache);
 
          if (isDeleted) {
-            playAlertTone(appContext, Alert.DELETE);
+            SoundUtils.playAlertTone(appContext, AlertType.DELETE);
             if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
          }
       }
@@ -225,7 +225,7 @@ public class RequestRunner extends Thread {
 
       if (!deleteRequestDiscarded) {
          TodoModel examModel = (TodoModel) model;
-         if (database.deleteTodo((TodoModel) model)) playAlertTone(appContext, Alert.DELETE);
+         if (database.deleteTodo((TodoModel) model)) SoundUtils.playAlertTone(appContext, AlertType.DELETE);
       }
    }
 
@@ -263,7 +263,7 @@ public class RequestRunner extends Thread {
          // delete attached images from database
          boolean isDeleted = database.deleteMultipleImages(params.getAssignmentPosition(), itemIndices);
          if (isDeleted) {
-            playAlertTone(appContext, Alert.DELETE);
+            SoundUtils.playAlertTone(appContext, AlertType.DELETE);
             if (mediaUris.isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
          }
       }
@@ -290,7 +290,7 @@ public class RequestRunner extends Thread {
       if (!deleteRequestDiscarded) {
          String uris = database.deleteImage(params.getAdapterPosition(), uri);
          if (uris != null) {
-            playAlertTone(appContext, Alert.DELETE);
+            SoundUtils.playAlertTone(appContext, AlertType.DELETE);
             if (mediaUris.isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
          }
          EventBus.getDefault().post(new UriUpdateEvent(params.getAdapterPosition(), uris));
@@ -321,7 +321,7 @@ public class RequestRunner extends Thread {
          ExamModel examModel = (ExamModel) model;
          boolean isDeleted = database.deleteExamEntry(examModel, examModel.getWeek());
          if (isDeleted) {
-            playAlertTone(appContext, Alert.DELETE);
+            SoundUtils.playAlertTone(appContext, AlertType.DELETE);
             if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
          }
       }
@@ -349,7 +349,7 @@ public class RequestRunner extends Thread {
          CourseModel courseModel = (CourseModel) model;
          boolean isDeleted = database.deleteCourseEntry(courseModel, courseModel.getSemester());
          if (isDeleted) {
-            playAlertTone(appContext, Alert.DELETE);
+            SoundUtils.playAlertTone(appContext, AlertType.DELETE);
             if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
          }
       }
@@ -374,7 +374,7 @@ public class RequestRunner extends Thread {
          boolean isDeleted = database.deleteAssignmentEntry((AssignmentModel) model);
          if (isDeleted) {
             cancelAssignmentNotifier(params.getAssignmentData());
-            playAlertTone(appContext, Alert.DELETE);
+            SoundUtils.playAlertTone(appContext, AlertType.DELETE);
          }
       }
    }
@@ -420,7 +420,7 @@ public class RequestRunner extends Thread {
             if (request.equals(ScheduledTimetableFragment.DELETE_REQUEST))
                cancelScheduledTimetableNotifier((TimetableModel) model);
             else cancelTimetableNotifier((TimetableModel) model);
-            playAlertTone(appContext, Alert.DELETE);
+            SoundUtils.playAlertTone(appContext, AlertType.DELETE);
          }
       }
    }
@@ -482,7 +482,7 @@ public class RequestRunner extends Thread {
          if (isDeleted) {
             if (!alarm.isRepeated()) cancelNonRepeatingAlarm();
             else cancelRepeatingAlarm();
-            playAlertTone(appContext, Alert.DELETE);
+            SoundUtils.playAlertTone(appContext, AlertType.DELETE);
             if (params.getModelList().isEmpty()) EventBus.getDefault().post(new EmptyListEvent());
          }
       }
@@ -495,7 +495,7 @@ public class RequestRunner extends Thread {
       deleteRequestDiscarded = true;
       // wake RequestRunner thread immediately from sleep, for immediate undo response
       interrupt();
-      playAlertTone(appContext, Alert.UNDO);
+      SoundUtils.playAlertTone(appContext, AlertType.UNDO);
    }
 
    /**

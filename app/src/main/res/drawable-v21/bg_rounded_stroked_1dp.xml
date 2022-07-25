@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+   android:color="@color/light_grey">
+   <item>
+      <shape>
+         <stroke
+            android:width="1dp"
+            android:color="@color/colorAccent" />
+         <corners android:radius="200dp" />
+         <padding
+            android:bottom="@dimen/small_button_padding_vertical"
+            android:left="@dimen/small_button_padding_horizontal"
+            android:right="@dimen/small_button_padding_horizontal"
+            android:top="@dimen/small_button_padding_vertical" />
+      </shape>
+   </item>
+</ripple>

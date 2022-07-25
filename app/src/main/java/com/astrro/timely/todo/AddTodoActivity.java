@@ -2,10 +2,9 @@ package com.astrro.timely.todo;
 
 import static com.astrro.timely.todo.TodoModel.SPINNER_CATEGORIES;
 import static com.astrro.timely.todo.TodoModel.SPINNER_CATEGORIES_ALT;
-import static com.astrro.timely.util.collections.CollectionUtils.linearSearch;
 import static com.astrro.timely.util.Converter.convertTime;
 import static com.astrro.timely.util.MiscUtil.isUserPreferred24Hours;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
+import static com.astrro.timely.util.collections.CollectionUtils.linearSearch;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,15 +28,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.astrro.timely.R;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.Converter;
-import com.astrro.timely.util.MiscUtil;
 import com.astrro.timely.util.PatternUtils;
 import com.astrro.timely.util.adapters.SimpleOnItemSelectedListener;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
+import com.google.android.material.textfield.TextInputLayout;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -369,7 +369,7 @@ public class AddTodoActivity extends AppCompatActivity {
                EventBus.getDefault().post(new TDUpdateMessage(todoModel, changePosition, pagePosition,
                                                               TDUpdateMessage.EventType.UPDATE_CURRENT));
 
-            playAlertTone(this, MiscUtil.Alert.TODO);
+            SoundUtils.playAlertTone(this.getApplicationContext(), AlertType.TODO);
 
          } else Toast.makeText(this, "An Error Occurred", Toast.LENGTH_SHORT).show();
 
@@ -392,7 +392,7 @@ public class AddTodoActivity extends AppCompatActivity {
                if (EventBus.getDefault().hasSubscriberForEvent(TodoRefreshEvent.class))
                   EventBus.getDefault().post(new TodoRefreshEvent(todoModel));
 
-               playAlertTone(this, MiscUtil.Alert.TODO);
+               SoundUtils.playAlertTone(getApplicationContext(), AlertType.TODO);
 
             } else Toast.makeText(this, "An Error occurred", Toast.LENGTH_SHORT).show();
 

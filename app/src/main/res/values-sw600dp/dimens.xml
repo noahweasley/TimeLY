@@ -50,7 +50,7 @@
    <dimen name="assignment_list_height_21">220dp</dimen>
    <dimen name="assignment_text_size">14sp</dimen>
    <dimen name="assignment_dialog_text_size_medium">18sp</dimen>
-   <dimen name="image_row_size">200dp</dimen>
+   <dimen name="_2_grid_height">200dp</dimen>
    <dimen name="image_row_size_2">300dp</dimen>
    <dimen name="update_dialog_height">480dp</dimen>
    <dimen name="wave_decoration_height">100dp</dimen>
@@ -112,4 +112,5 @@
    <dimen name="basic_info_text_size">26sp</dimen>
    <dimen name="basic_info_text_size_2">24sp</dimen>
    <dimen name="notification_row_height">100dp</dimen>
+   <dimen name="list_bottom_inset">80dp</dimen>
 </resources>

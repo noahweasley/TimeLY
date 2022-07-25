@@ -50,7 +50,7 @@
    <dimen name="assignment_list_height_21">210dp</dimen>
    <dimen name="assignment_text_size">14sp</dimen>
    <dimen name="assignment_dialog_text_size_medium">16sp</dimen>
-   <dimen name="image_row_size">180dp</dimen>
+   <dimen name="_2_grid_height">180dp</dimen>
    <dimen name="image_row_size_2">280dp</dimen>
    <dimen name="update_dialog_height">400dp</dimen>
    <dimen name="wave_decoration_height">90dp</dimen>
@@ -101,7 +101,7 @@
    <dimen name="editext_text_size">18sp</dimen>
    <dimen name="auth_title_text_size_alt">24sp</dimen>
    <dimen name="layout_gap_2">16dp</dimen>
-   <dimen name="action_bar_size">48dp</dimen>
+   <dimen name="action_bar_size">52dp</dimen>
    <dimen name="min_text_size">14sp</dimen>
    <dimen name="g_sign_parent_size">42dp</dimen>
    <dimen name="profile_image_size">100dp</dimen>
@@ -113,4 +113,5 @@
    <dimen name="basic_info_text_size">24sp</dimen>
    <dimen name="basic_info_text_size_2">22sp</dimen>
    <dimen name="notification_row_height">100dp</dimen>
+   <dimen name="list_bottom_inset">80dp</dimen>
 </resources>

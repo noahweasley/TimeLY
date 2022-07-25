@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.astrro.timely.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.astrro.timely.R;
-import com.astrro.timely.main.MainActivity;
 
 @SuppressWarnings("ConstantConditions")
 public class TimetableFragment extends Fragment {
@@ -49,7 +49,7 @@ public class TimetableFragment extends Fragment {
    @Override
    public void onResume() {
       super.onResume();
-      ((MainActivity) getActivity()).getSupportActionBar().setTitle("Timetable");
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Timetable");
    }
 
    // The horizontal paging adapter of the viewpager

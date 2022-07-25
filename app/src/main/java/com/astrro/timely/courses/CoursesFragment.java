@@ -7,14 +7,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.astrro.timely.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.astrro.timely.R;
-import com.astrro.timely.main.MainActivity;
 
 public class CoursesFragment extends Fragment {
 
@@ -40,7 +40,7 @@ public class CoursesFragment extends Fragment {
    @Override
    public void onResume() {
       super.onResume();
-      ((MainActivity) getActivity()).getSupportActionBar().setTitle("Registered Courses");
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Registered Courses");
    }
 
    // The horizontal paging adapter of the viewpager

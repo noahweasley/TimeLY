@@ -1,9 +1,7 @@
 package com.astrro.timely.alarms;
 
 import static com.astrro.timely.alarms.AlarmReceiver.ALARM_POS;
-import static com.astrro.timely.util.MiscUtil.Alert;
 import static com.astrro.timely.util.MiscUtil.isUserPreferred24Hours;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -40,6 +38,8 @@ import com.astrro.timely.core.DataModel;
 import com.astrro.timely.core.RequestRunner;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
 import com.google.android.material.snackbar.Snackbar;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtoneUtils;
@@ -775,7 +775,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
          alert.show();
       });
 
-      if (playSound) playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
+      if (playSound) SoundUtils.playAlertTone(mActivity.getApplicationContext(), AlertType.ALARM);
    }
 
    private void onLabelClick(View v) {
@@ -969,7 +969,7 @@ class AlarmListHolder extends RecyclerView.ViewHolder {
             database.updateTime(getAbsoluteAdapterPosition(), currentTime);
          });
 
-         playAlertTone(mActivity.getApplicationContext(), Alert.ALARM);
+         SoundUtils.playAlertTone(mActivity.getApplicationContext(), AlertType.ALARM);
 
       }
 

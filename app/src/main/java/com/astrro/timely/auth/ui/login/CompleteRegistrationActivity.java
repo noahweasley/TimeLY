@@ -200,12 +200,6 @@ public class CompleteRegistrationActivity extends AppCompatActivity implements V
    }
 
    @Override
-   protected void onDestroy() {
-      super.onDestroy();
-
-   }
-
-   @Override
    public void onClick(View v) {
       int viewId = v.getId();
       if (viewId == R.id.skip) {

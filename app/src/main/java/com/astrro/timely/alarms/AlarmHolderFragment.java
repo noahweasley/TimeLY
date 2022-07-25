@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.astrro.timely.R;
-import com.astrro.timely.main.MainActivity;
 
 public class AlarmHolderFragment extends Fragment {
 
@@ -42,6 +42,6 @@ public class AlarmHolderFragment extends Fragment {
    @Override
    public void onResume() {
       super.onResume();
-      ((MainActivity) getActivity()).getSupportActionBar().setTitle("Alarms");
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Alarms");
    }
 }

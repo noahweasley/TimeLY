@@ -4,8 +4,6 @@ import static com.astrro.timely.assignment.AssignmentFragment.DATE;
 import static com.astrro.timely.assignment.AssignmentFragment.DESCRIPTION;
 import static com.astrro.timely.assignment.AssignmentFragment.LECTURER_NAME;
 import static com.astrro.timely.assignment.AssignmentFragment.TITLE;
-import static com.astrro.timely.util.MiscUtil.Alert;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -27,13 +25,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputLayout;
 import com.astrro.timely.R;
 import com.astrro.timely.alarms.AlarmHelper;
 import com.astrro.timely.core.SchoolDatabase;
@@ -41,6 +38,10 @@ import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.gallery.ImageDirectory;
 import com.astrro.timely.gallery.ImageGallery;
 import com.astrro.timely.util.PatternUtils;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -235,7 +236,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
    }
 
    @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
+   public boolean onCreateOptionsMenu(@NonNull Menu menu) {
       getMenuInflater().inflate(R.menu.list_menu_files, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       fileCount = layout.findViewById(R.id.counter);
@@ -330,7 +331,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
          Toast alert = Toast.makeText(this, message, Toast.LENGTH_SHORT);
          alert.setGravity(Gravity.CENTER, 0, 0);
          alert.show();
-         playAlertTone(getApplicationContext(), Alert.ASSIGNMENT);
+         SoundUtils.playAlertTone(getApplicationContext(), AlertType.ASSIGNMENT);
 
       } else Toast.makeText(this, "Error occurred", Toast.LENGTH_SHORT).show();
 

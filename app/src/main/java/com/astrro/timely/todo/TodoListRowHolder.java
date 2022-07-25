@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.core.DataModel;
 import com.astrro.timely.core.RequestRunner;
@@ -26,6 +25,9 @@ import com.astrro.timely.todo.TodoListFragment.TodoListAdapter;
 import com.astrro.timely.util.Converter;
 import com.astrro.timely.util.MiscUtil;
 import com.astrro.timely.util.PatternUtils;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -125,7 +127,8 @@ public class TodoListRowHolder extends RecyclerView.ViewHolder {
       cbx_state.setOnClickListener(c -> {
          boolean checked = cbx_state.isChecked();
          boolean isUpdated = db.updateTodoState(todo, checked);
-         if (checked && isUpdated) MiscUtil.playAlertTone(activity, MiscUtil.Alert.TODO_UPDATE);
+         if (checked && isUpdated)
+            SoundUtils.playAlertTone(activity.getApplicationContext(), AlertType.TODO_UPDATE);
       });
 
       // Multi - Select actions

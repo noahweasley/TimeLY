@@ -5,10 +5,8 @@ import static com.astrro.timely.scheduled.ScheduledTimetableFragment.ARG_DATA;
 import static com.astrro.timely.scheduled.ScheduledTimetableFragment.ARG_TO_EDIT;
 import static com.astrro.timely.util.Converter.UNIT_12;
 import static com.astrro.timely.util.Converter.convertTime;
-import static com.astrro.timely.util.MiscUtil.Alert.SCHEDULED_TIMETABLE;
 import static com.astrro.timely.util.MiscUtil.DAYS;
 import static com.astrro.timely.util.MiscUtil.isUserPreferred24Hours;
-import static com.astrro.timely.util.MiscUtil.playAlertTone;
 
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -40,7 +38,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.astrro.timely.R;
 import com.astrro.timely.alarms.AlarmHelper;
 import com.astrro.timely.core.SchoolDatabase;
@@ -50,6 +47,9 @@ import com.astrro.timely.util.Converter;
 import com.astrro.timely.util.PatternUtils;
 import com.astrro.timely.util.ThreadUtils;
 import com.astrro.timely.util.adapters.SimpleOnItemSelectedListener;
+import com.astrro.timely.util.sound.AlertType;
+import com.astrro.timely.util.sound.SoundUtils;
+import com.google.android.material.textfield.TextInputLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -305,7 +305,7 @@ public class AddScheduledDialog extends DialogFragment implements View.OnClickLi
       } else {
          manager.set(AlarmManager.RTC, triggerTime, pi);
       }
-      playAlertTone(context.getApplicationContext(), SCHEDULED_TIMETABLE);
+      SoundUtils.playAlertTone(context.getApplicationContext(), AlertType.SCHEDULED_TIMETABLE);
    }
 
    private class ASDialog extends Dialog {
