@@ -2,9 +2,11 @@ package com.astrro.timely.main.library;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.astrro.timely.R;
 import com.astrro.timely.core.DataModel;
 import com.astrro.timely.custom.InfiniteScrollAdapter;
+import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.test.DummyGenerator;
 import com.google.android.material.divider.MaterialDividerItemDecoration;
 
@@ -45,18 +49,36 @@ public class LibraryFragment extends Fragment {
    }
 
    @Override
-   public void onViewCreated(@NonNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+   public void onViewCreated(@NonNull View view,
+                             @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
 
+      RecyclerView rv_materialList = view.findViewById(R.id.materials);
+      ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
+      ViewGroup vg_connectionFailure = view.findViewById(R.id.connection_failure);
+
       // testing
-       libraryList = DummyGenerator.getDummyDocument(10);
+      ThreadUtils.runBackgroundTask(() -> {
+         libraryList = DummyGenerator.getDummyDocument(10);
+         getActivity().runOnUiThread(() -> {
+            if (!CollectionUtils.isEmpty(libraryList)) {
+               libraryAdapter.notifyDataSetChanged();
+               rv_materialList.setVisibility(View.VISIBLE);
+               vg_connectionFailure.setVisibility(View.GONE);
+            } else {
+               rv_materialList.setVisibility(View.GONE);
+               vg_connectionFailure.setVisibility(View.VISIBLE);
+            }
+            indeterminateProgress.setVisibility(View.GONE);
+         });
+      });
+
       // testing
 
       LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
       MaterialDividerItemDecoration itemDecoration
               = new MaterialDividerItemDecoration(getContext(), layoutManager.getOrientation());
 
-      RecyclerView rv_materialList = view.findViewById(R.id.materials);
       rv_materialList.setLayoutManager(layoutManager);
       rv_materialList.setHasFixedSize(true);
       rv_materialList.addItemDecoration(itemDecoration);
@@ -87,7 +109,7 @@ public class LibraryFragment extends Fragment {
             int lastItem = libraryList.size() - 1;
             libraryAdapter.notifyItemInserted(lastItem);
 
-            Handler handler = new Handler();
+            Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> {
                int scrollPos = libraryList.size();
                libraryList.remove(lastItem);
@@ -114,7 +136,7 @@ public class LibraryFragment extends Fragment {
       @Override
       public void onBindViewHolder(@NonNull MaterialRow holder, int position) {
          super.onBindViewHolder(holder, position);
-         holder.with(position).bindView();
+         holder.with(getList()).bindView();
       }
 
       @Override

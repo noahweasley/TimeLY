@@ -60,16 +60,6 @@
                android:icon="@drawable/ic_alarm"
                android:title="@string/alarms" />
 
-            <item
-               android:id="@+id/__export"
-               android:icon="@drawable/ic_file_export"
-               android:title="@string/generate_export" />
-
-            <item
-               android:id="@+id/__import"
-               android:icon="@drawable/ic_file_import"
-               android:title="@string/generate_import" />
-
          </group>
 
       </menu>

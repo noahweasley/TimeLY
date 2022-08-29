@@ -26,10 +26,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.astrro.timely.R;
-import com.astrro.timely.auth.data.api.RegistrationResponse;
+import com.astrro.timely.auth.data.model.RegistrationResponse;
 import com.astrro.timely.auth.data.api.TimelyApi;
 import com.astrro.timely.auth.data.model.UserAccount;
-import com.astrro.timely.main.MainActivity;
 import com.astrro.timely.util.PatternUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -47,6 +46,7 @@ public class RegistrationActivity extends AppCompatActivity {
    private ActivityResultLauncher<Intent> resultLauncher;
    private EditText edt_firstName;
    private EditText edt_password;
+   private EditText edt_password2;
    private EditText edt_lastName;
    private EditText edt_userName;
    private EditText edt_phoneNumber;
@@ -73,16 +73,9 @@ public class RegistrationActivity extends AppCompatActivity {
       edt_phoneNumber = findViewById(R.id.phone_number);
       edt_email = findViewById(R.id.email);
       edt_password = findViewById(R.id.password);
+      edt_password2 = findViewById(R.id.password_2);
 
-      UserAccount userAccount = new UserAccount();
-      userAccount.setFirstName(edt_firstName.getText());
-      userAccount.setLastName(edt_lastName.getText());
-      userAccount.setUserName(edt_userName.getText());
-      userAccount.setPhoneNumber(edt_phoneNumber.getText());
-      userAccount.setEmail(edt_email.getText());
-      userAccount.setPassword(edt_password.getText());
-
-      signUp.setOnClickListener(v -> registerAcount(userAccount));
+      signUp.setOnClickListener(v -> registerAcount());
 
       cbxLcAgree.setOnCheckedChangeListener((buttonView, isChecked) -> signUp.setEnabled(isChecked));
       // Make Licence agreement statements and login text clickable links
@@ -106,13 +99,13 @@ public class RegistrationActivity extends AppCompatActivity {
       // if account is non null, update UI accordingly
    }
 
-   private void registerAcount(UserAccount userAccount) {
+   private void registerAcount() {
       // first, we verify that the user entered valid inputs
       boolean isErrorOccurred = false;
-      if (!(Patterns.PHONE.matcher(userAccount.getPhoneNumber()).matches())) {
+      if (!(Patterns.PHONE.matcher(edt_phoneNumber.getText()).matches())) {
          ViewGroup container = (ViewGroup) edt_phoneNumber.getParent();
          TextInputLayout til_phoneNumberParent = ((TextInputLayout) container.getParent());
-         til_phoneNumberParent.setError("Input phone number format");
+         til_phoneNumberParent.setError("Input valid phone number");
 
          isErrorOccurred = true;
       }
@@ -120,7 +113,7 @@ public class RegistrationActivity extends AppCompatActivity {
       if (TextUtils.isEmpty(edt_userName.getText())) {
          ViewGroup container = (ViewGroup) edt_userName.getParent();
          TextInputLayout til_userNameParent = ((TextInputLayout) container.getParent());
-         til_userNameParent.setError("Field can't be empty");
+         til_userNameParent.setError("Field required");
 
          isErrorOccurred = true;
       }
@@ -128,7 +121,7 @@ public class RegistrationActivity extends AppCompatActivity {
       if (TextUtils.isEmpty(edt_firstName.getText())) {
          ViewGroup container = (ViewGroup) edt_firstName.getParent();
          TextInputLayout til_firstNameParent = ((TextInputLayout) container.getParent());
-         til_firstNameParent.setError("Field can't be empty");
+         til_firstNameParent.setError("Field required");
 
          isErrorOccurred = true;
       }
@@ -136,12 +129,12 @@ public class RegistrationActivity extends AppCompatActivity {
       if (TextUtils.isEmpty(edt_lastName.getText())) {
          ViewGroup container = (ViewGroup) edt_lastName.getParent();
          TextInputLayout til_lastNameParent = ((TextInputLayout) container.getParent());
-         til_lastNameParent.setError("Field can't be empty");
+         til_lastNameParent.setError("Field required");
 
          isErrorOccurred = true;
       }
 
-      if (!Patterns.EMAIL_ADDRESS.matcher(userAccount.getEmail()).matches()) {
+      if (!Patterns.EMAIL_ADDRESS.matcher(edt_email.getText()).matches()) {
          ViewGroup container = (ViewGroup) edt_email.getParent();
          TextInputLayout til_emailParent = ((TextInputLayout) container.getParent());
          til_emailParent.setError("Input correct e-mail address");
@@ -149,7 +142,19 @@ public class RegistrationActivity extends AppCompatActivity {
          isErrorOccurred = true;
       }
 
-      if (!userAccount.getPassword().matches(PatternUtils.STRONG_PASSWORD)) {
+      if (!edt_password.getText().toString().equals(edt_password2.getText().toString())) {
+         ViewGroup container = (ViewGroup) edt_password.getParent();
+         TextInputLayout til_passwordParent = ((TextInputLayout) container.getParent());
+         til_passwordParent.setError("Password doesn't match");
+
+         ViewGroup container2 = (ViewGroup) edt_password2.getParent();
+         TextInputLayout til_passwordParent2 = ((TextInputLayout) container2.getParent());
+         til_passwordParent2.setError("Password doesn't match");
+
+         return;
+      }
+
+      if (!edt_password.getText().toString().matches(PatternUtils.STRONG_PASSWORD)) {
          ViewGroup container = (ViewGroup) edt_password.getParent();
          TextInputLayout til_passwordParent = ((TextInputLayout) container.getParent());
          til_passwordParent.setError("Must have a minimum of 8 characters, 1 letter and 1 number");
@@ -161,26 +166,55 @@ public class RegistrationActivity extends AppCompatActivity {
    }
 
    private void registerNewUser() {
-      new NetworkRequestDialog<RegistrationResponse>()
-              .setLoadingInfo(getString(R.string.registering))
-              .execute(this, () -> {
-                 UserAccount userAccount = new UserAccount();
-                 try {
-                    return TimelyApi.registerNewUser(userAccount);
-                 } catch (IOException ioException) {
-                    Toast.makeText(this, "Network error occurred", Toast.LENGTH_LONG).show();
-                    return null;
-                 }
-              }).setOnResponseProcessedListener(regResponse -> {
+      NetworkRequestDialog<RegistrationResponse> registrationResponseNetworkRequestDialog = new NetworkRequestDialog<>();
+      registrationResponseNetworkRequestDialog.setProgressInfo(getString(R.string.registering));
+      registrationResponseNetworkRequestDialog.setOnResponseProcessedListener(this::onResponseProcessed);
+      registrationResponseNetworkRequestDialog.execute(this, this::getRegisteredUser);
+   }
 
+   private RegistrationResponse getRegisteredUser() {
+      UserAccount userAccount = new UserAccount();
+      String firstName = edt_firstName.getText().toString();
+      String lastName = edt_lastName.getText().toString();
+
+      userAccount.setFirstName(firstName);
+      userAccount.setLastName(lastName);
+      userAccount.setFullName(firstName + " " +  lastName);
+      userAccount.setUserName(edt_userName.getText());
+      userAccount.setPassword(edt_password.getText());
+      userAccount.setPhoneNumber(edt_phoneNumber.getText());
+      userAccount.setEmail(edt_email.getText());
+      // TODO: remove this call to userAccount.setSchool(), it won't be used in user registration
+      userAccount.setSchool("Nnamdi Azikiwe University, Awka");
+
+      try {
+         return TimelyApi.registerNewUser(userAccount);
+      } catch (IOException ioException) {
+         Toast.makeText(this, "Network error occurred", Toast.LENGTH_LONG).show();
+         return null;
+      }
+   }
+
+   private void onResponseProcessed(RegistrationResponse regResponse) {
+      if (regResponse != null) {
          if (regResponse.getStatusCode() == HttpStatusCodes.OK && regResponse.isUserRegistered()) {
+            UserAccount userAccount = new UserAccount();
+            String firstName = edt_firstName.getText().toString();
+            String lastName = edt_lastName.getText().toString();
 
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setAction(MainActivity.ACTION_LOGIN);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            userAccount.setFirstName(firstName);
+            userAccount.setLastName(lastName);
+            userAccount.setFullName(firstName + " " +  lastName);
+            userAccount.setUserName(edt_userName.getText());
+            userAccount.setPassword(edt_password.getText());
+            userAccount.setPhoneNumber(edt_phoneNumber.getText());
+            userAccount.setEmail(edt_email.getText());
+
+            CompleteRegistrationActivity.start(this, userAccount);
+         } else {
+            Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG).show();
          }
-      });
+      }
    }
 
    private void registerGoogleSignInCallback() {
@@ -265,8 +299,4 @@ public class RegistrationActivity extends AppCompatActivity {
       text.setMovementMethod(LinkMovementMethod.getInstance());
    }
 
-   @Override
-   protected void onDestroy() {
-      super.onDestroy();
-   }
 }

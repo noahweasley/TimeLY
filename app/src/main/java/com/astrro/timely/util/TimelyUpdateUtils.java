@@ -56,7 +56,7 @@ public class TimelyUpdateUtils {
 
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.GENERAL_CHANNEL_ID);
 
-      Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.timely_app_icon);
+      Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_app_icon_mono);
 
       if (updateTitle.equals("Update available")) {
          Uri SYSTEM_DEFAULT = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

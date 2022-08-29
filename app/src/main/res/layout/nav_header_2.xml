@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="90dp"
+   android:background="@color/colorPrimary">
+
+   <ImageView
+      android:id="@+id/imageView4"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:layout_margin="@dimen/layout_gap"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:srcCompat="@drawable/ic_app_icon_mono" />
+
+   <TextView
+      android:id="@+id/textView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/layout_gap"
+      android:layout_marginLeft="@dimen/layout_gap"
+      android:text="@string/app_name"
+      android:textColor="@android:color/white"
+      android:textSize="24sp"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintStart_toEndOf="@+id/imageView4"
+      external:layout_constraintTop_toTopOf="parent" />
+
+   <View
+      android:id="@+id/divider"
+      android:layout_width="match_parent"
+      android:layout_height="2dp"
+      android:background="@color/colorAccent"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintStart_toEndOf="parent"
+      external:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

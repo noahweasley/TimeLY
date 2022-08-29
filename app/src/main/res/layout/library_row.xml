@@ -2,18 +2,113 @@
    xmlns:external="http://schemas.android.com/apk/res-auto"
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
-   android:layout_height="220dp"
-   external:layout_constraintEnd_toEndOf="parent"
-   external:layout_constraintStart_toStartOf="parent">
+   android:layout_height="190dp"
+   android:paddingVertical="@dimen/layout_gap"
+   android:background="?attr/selectableItemBackground"
+   tools:padding="@dimen/layout_gap">
 
-   <TextView
-      android:id="@+id/counter"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textSize="54sp"
+   <ImageView
+      android:id="@+id/document_thumbnail"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:background="@color/image_background_2"
+      android:visibility="gone"
       external:layout_constraintBottom_toBottomOf="parent"
-      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintEnd_toEndOf="@+id/guideline"
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toTopOf="parent"
-      tools:text="20" />
+      tools:visibility="gone" />
+
+   <ImageView
+      android:id="@+id/like"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintTop_toTopOf="@+id/image_placeholder"
+      external:srcCompat="@drawable/ic_heart" />
+
+   <TextView
+      android:id="@+id/image_placeholder"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:background="@color/colorPrimary_50"
+      android:gravity="center"
+      android:text="@string/default_document_mimetype"
+      android:textColor="@android:color/white"
+      android:textSize="32sp"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toStartOf="@+id/guideline"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      tools:text="@string/default_document_mimetype" />
+
+   <TextView
+      android:id="@+id/document_title"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/layout_gap"
+      android:gravity="start"
+      android:maxLines="2"
+      android:text="@string/default_book_title"
+      android:textColor="@android:color/black"
+      android:textSize="@dimen/min_text_size"
+      external:layout_constraintEnd_toStartOf="@+id/like"
+      external:layout_constraintStart_toEndOf="@+id/image_placeholder"
+      external:layout_constraintTop_toTopOf="@+id/image_placeholder"
+      tools:text="Eloquent Javascript: A Modern Introduction to Programming" />
+
+   <TextView
+      android:id="@+id/author"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="@string/default_author"
+      android:textColor="@color/colorPrimary"
+      android:textSize="@dimen/min_text_size"
+      android:textStyle="bold"
+      external:layout_constraintEnd_toEndOf="@+id/document_title"
+      external:layout_constraintStart_toStartOf="@+id/document_title"
+      external:layout_constraintTop_toBottomOf="@+id/document_title"
+      tools:text="Noah Weasley (Admin)" />
+
+   <TextView
+      android:id="@+id/mime_size"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:drawableStart="@drawable/ic_outline_insert_drive_file_24"
+      android:drawableLeft="@drawable/ic_outline_insert_drive_file_24"
+      android:drawablePadding="8dp"
+      android:gravity="center_vertical"
+      android:text="@string/default_document_description"
+      android:textColor="@android:color/black"
+      android:textSize="12sp"
+      external:layout_constraintBottom_toTopOf="@+id/upload_date"
+      external:layout_constraintEnd_toEndOf="@+id/document_title"
+      external:layout_constraintStart_toStartOf="@+id/author"
+      tools:text="@string/default_document_description" />
+
+   <TextView
+      android:id="@+id/upload_date"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:drawableStart="@drawable/ic_access_time_primary_18"
+      android:drawableLeft="@drawable/ic_access_time_primary_18"
+      android:drawablePadding="8dp"
+      android:gravity="center_vertical"
+      android:text="@string/default_upload_time"
+      android:textColor="@android:color/black"
+      android:textSize="12sp"
+      external:layout_constraintBottom_toBottomOf="@+id/image_placeholder"
+      external:layout_constraintEnd_toEndOf="@+id/mime_size"
+      external:layout_constraintStart_toStartOf="@+id/author"
+      tools:text="@string/default_upload_time" />
+
+   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      external:layout_constraintGuide_begin="120dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

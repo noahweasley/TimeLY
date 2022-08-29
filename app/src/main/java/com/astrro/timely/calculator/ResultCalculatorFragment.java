@@ -15,7 +15,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ResultCalculatorFragment extends Fragment {
+public class ResultCalculatorFragment extends Fragment implements MenuProvider {
    public static final String ARG_POSITION = "tab position";
    private List<DataModel> courseModelList = new ArrayList<>();
    private ViewGroup vg_container;
@@ -60,14 +62,13 @@ public class ResultCalculatorFragment extends Fragment {
    }
 
    @Override
-   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-      inflater.inflate(R.menu.fragment_result_calculator, menu);
-      super.onCreateOptionsMenu(menu, inflater);
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.fragment_result_calculator, menu);
    }
 
    @Override
-   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-      int menuItemId = item.getItemId();
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      int menuItemId = menuItem.getItemId();
       if (menuItemId == R.id.calculate_average) {
          // no list items but user still clicked
          if (adapter.getViewHolder() != null) {
@@ -81,8 +82,11 @@ public class ResultCalculatorFragment extends Fragment {
             // .. just show user a generic message
             Toast.makeText(getContext(), "No actions yet", Toast.LENGTH_SHORT).show();
          }
+
+         return true;
       }
-      return super.onOptionsItemSelected(item);
+
+      return false;
    }
 
    private void calculateGPA() {
@@ -136,6 +140,7 @@ public class ResultCalculatorFragment extends Fragment {
                              @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
 
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.RESUMED);
       tv_gpaUnits = view.findViewById(R.id.gpa_units);
 
       Button btn_calcuateGPA = view.findViewById(R.id.calculate);
@@ -194,9 +199,6 @@ public class ResultCalculatorFragment extends Fragment {
 
    @Override
    public void onResume() {
-      // Prevent glitch on adding menu to the toolbar. Only show a particular semester's list rows, if that is the
-      // only visible semester
-      setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
       super.onResume();
       // .. and then
       boolean showInfo1 = PreferenceUtils.getBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_1, true);

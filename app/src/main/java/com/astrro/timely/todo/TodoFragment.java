@@ -11,12 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.astrro.timely.R;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.ThreadUtils;
 import com.astrro.timely.util.collections.CollectionUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -234,7 +234,7 @@ public class TodoFragment extends Fragment {
    private void navigateToCategory(String category) {
       getActivity().getSupportFragmentManager().beginTransaction()
                    .replace(R.id.frame, TodoContainerFragment.newInstance(category), "Todo")
-                   .setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit)
+                   .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                    .addToBackStack(null).commit();
    }
 }

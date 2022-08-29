@@ -18,12 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.assignment.LayoutRefreshEvent;
 import com.astrro.timely.core.ChoiceMode;
@@ -35,9 +35,11 @@ import com.astrro.timely.core.MultiUpdateMessage;
 import com.astrro.timely.core.RequestParams;
 import com.astrro.timely.core.RequestRunner;
 import com.astrro.timely.core.SchoolDatabase;
-import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.collections.CollectionUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,7 +53,7 @@ import java.util.Locale;
  * A simple {@link Fragment} subclass.
  * Use the {@link TodoListFragment#newInstance} factory method to create an instance of this fragment.
  */
-public class TodoListFragment extends Fragment implements ActionMode.Callback {
+public class TodoListFragment extends Fragment implements ActionMode.Callback, MenuProvider {
    public static final String MULTIPLE_DELETE_REQUEST = "Delete multiple todos";
    private static final String ARG_TODO_CATEGORY = "Todo category";
    private static final String ARG_TODO_TAB_POSITION = "Todo tab position";
@@ -103,6 +105,7 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
    @Override
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.RESUMED);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(retrieveToolbarTitle(category));
 
       context = (AppCompatActivity) getActivity();
@@ -153,12 +156,6 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
 
    @Override
    public void onResume() {
-      // Prevent glitch on adding menu to the toolbar. Only show a particular semester's course
-      // count, if that is the only visible semester
-      setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
-      // could have used ViewPager.OnPageChangedListener to increase code readability, but
-      // this was used to reduce code size as there is not much work to be done when ViewPager
-      // scrolls
       if (actionMode != null) actionMode.finish();
       super.onResume();
    }
@@ -177,28 +174,27 @@ public class TodoListFragment extends Fragment implements ActionMode.Callback {
    }
 
    @Override
-   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-      inflater.inflate(R.menu.list_menu_todo, menu);
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.list_menu_todo, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(tdList.size()));
       menu.findItem(R.id.select_all).setVisible(tdList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, getString(R.string.todo_count) + tdList.size());
-
-      super.onCreateOptionsMenu(menu, inflater);
    }
 
    @Override
-   public void onPrepareOptionsMenu(@NonNull Menu menu) {
-      menu.findItem(R.id.select_all).setVisible(tdList.isEmpty() ? false : true);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-      if (item.getItemId() == R.id.select_all) {
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      if (menuItem.getItemId() == R.id.select_all) {
          adapter.selectAllItems();
       }
-      return super.onOptionsItemSelected(item);
+      return false;
+   }
+
+   @Override
+   public void onPrepareMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(tdList.isEmpty() ? false : true);
+      MenuProvider.super.onPrepareMenu(menu);
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

@@ -66,8 +66,7 @@ public class TodoContainerFragment extends Fragment {
       tabs.setTabMode(TabLayout.MODE_FIXED);
       tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
-      new TabLayoutMediator(tabs, pager,
-                            (tab, position) -> tab.setText(position == 0 ? "ACTIVE" : "FINISHED")).attach();
+      new TabLayoutMediator(tabs, pager, (tab, position) -> tab.setText(position == 0 ? "ACTIVE" : "FINISHED")).attach();
    }
 
    private class TodoContainerAdapter extends FragmentStateAdapter {

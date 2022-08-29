@@ -44,7 +44,7 @@
             external:layout_constraintStart_toStartOf="parent"
             external:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
                android:id="@+id/course_name"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
@@ -85,6 +85,7 @@
                android:hint="@string/start_time_hint"
                android:maxLength="8"
                android:maxLines="1"
+               android:paddingTop="8dp"
                android:textSize="@dimen/editext_text_size"
                external:drawableEndCompat="@drawable/ic_access_time_accent"
                external:drawableRightCompat="@drawable/ic_access_time_accent"
@@ -109,11 +110,11 @@
                android:id="@+id/end_time"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:layout_marginTop="@dimen/layout_gap"
                android:background="@android:color/transparent"
                android:drawablePadding="8dp"
                android:hint="@string/end_time_hint"
                android:maxLength="8"
+               android:paddingTop="8dp"
                android:maxLines="1"
                android:textSize="@dimen/editext_text_size"
                external:drawableEndCompat="@drawable/ic_access_time_accent"

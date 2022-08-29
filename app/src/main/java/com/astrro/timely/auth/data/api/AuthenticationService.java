@@ -1,6 +1,7 @@
 package com.astrro.timely.auth.data.api;
 
 import com.astrro.timely.auth.data.model.LoginResponse;
+import com.astrro.timely.auth.data.model.RegistrationResponse;
 import com.astrro.timely.auth.data.model.UserAccount;
 
 import okhttp3.ResponseBody;

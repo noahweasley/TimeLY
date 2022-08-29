@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -35,11 +37,10 @@ import com.astrro.timely.alarms.TimeChangeDetector;
 import com.astrro.timely.alarms.TimeChangeDetectorService;
 import com.astrro.timely.auth.ui.login.LoginActivity;
 import com.astrro.timely.core.SchoolDatabase;
-import com.astrro.timely.exports.ImportResultsActivity;
-import com.astrro.timely.exports.TMLYDataGeneratorDialog;
+import com.astrro.timely.main.chats.ChatsFragment;
 import com.astrro.timely.main.library.StudentLibraryFragment;
 import com.astrro.timely.main.marketplace.MarketPlaceFragment;
-import com.astrro.timely.main.notification.NotificationsActivity;
+import com.astrro.timely.main.notification.NotificationsFragment;
 import com.astrro.timely.settings.SettingsActivity;
 import com.astrro.timely.util.PreferenceUtils;
 import com.astrro.timely.util.TimelyUpdateUtils;
@@ -50,8 +51,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
-   private Fragment visibleFragment = MainPageFragment.getInstance();
+public class MainActivity extends AppCompatActivity implements MenuProvider {
+   private Fragment visibleFragment;
    private boolean dismissable;
    public static final String ACTION_LOGIN = "Login_user_action";
 
@@ -67,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      launchIntroActivity();
       setTheme(R.style.AppTheme_FadeIn);
       setContentView(R.layout.activity_main);
+      addMenuProvider(this);
 
       NavigationView navView = findViewById(R.id.nav_view);
       BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -78,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
       vg_headerView = navView.getHeaderView(0);
       detectUserLoginClickRequest();
       checkedUserLoggingStatus();
-      showFragment(MainPageFragment.getInstance());
 
       navView.setNavigationItemSelectedListener(new NavigationItemListener());
       // check for app updates
@@ -87,12 +89,17 @@ public class MainActivity extends AppCompatActivity {
 
       // then ...
       Toolbar toolbar = findViewById(R.id.toolbar);
-      setSupportActionBar(toolbar);
       drawer = findViewById(R.id.drawer);
       toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
       drawer.addDrawerListener(toggle);
-      startService(new Intent(this, TimeChangeDetectorService.class)); // start OS time and date detection
+      setSupportActionBar(toolbar);
 
+      showFragment(MainPageFragment.getInstance());
+      startService(new Intent(this, TimeChangeDetectorService.class)); // start OS time and date detection
+      showPowerManagementContextUI();
+   }
+
+   private void showPowerManagementContextUI() {
       // ignore power management service to trigger alarms properly
       String cancelText = getString(R.string.later);
       String goText = getString(R.string.go);
@@ -126,14 +133,15 @@ public class MainActivity extends AppCompatActivity {
 
       final String TAG = fragment.getClass().getSimpleName();
 
+      if (visibleFragment != null) transaction.hide(visibleFragment);
       if (fragment.isAdded()) {
-         updateToolbarTitle(fragment);
-         transaction.hide(visibleFragment).show(fragment);
+         transaction.show(fragment);
       } else {
-         transaction.hide(visibleFragment).add(R.id.frame, fragment, TAG);
+         transaction.add(R.id.frame, fragment, TAG);
       }
 
-      transaction.commit();
+      transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
+      updateToolbarTitle(fragment);
       visibleFragment = fragment;
    }
 
@@ -142,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
       if (fragment.getClass() == MarketPlaceFragment.class) title = MarketPlaceFragment.getToolbarTitle();
       else if (fragment.getClass() == StudentLibraryFragment.class) title = StudentLibraryFragment.getToolbarTitle();
       else if (fragment.getClass() == MainPageFragment.class) title = MainPageFragment.getToolbarTitle();
+      else if (fragment.getClass() == ChatsFragment.class) title = ChatsFragment.getToolbarTitle();
+      else if (fragment.getClass() == NotificationsFragment.class) title = NotificationsFragment.getToolbarTitle();
 
       getSupportActionBar().setTitle(title);
    }
@@ -158,7 +168,16 @@ public class MainActivity extends AppCompatActivity {
    @Override
    protected void onResume() {
       super.onResume();
-      launchIntroActivity();
+   }
+
+   @Override
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+   }
+
+   @Override
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      toggle.onOptionsItemSelected(menuItem);
+      return true;
    }
 
    private void checkedUserLoggingStatus() {
@@ -202,8 +221,9 @@ public class MainActivity extends AppCompatActivity {
       // start next screen based on the app's first time launch saved preference
       if (isFirstLaunch) {
          Intent launchIntent = new Intent(this, IntroPageActivity.class);
-         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
          startActivity(launchIntent);
+         finish();
       }
    }
 
@@ -259,24 +279,6 @@ public class MainActivity extends AppCompatActivity {
 
    }
 
-   @Override
-   public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-      // Inflate the menu; this adds items to the action bar if it is present.
-      getMenuInflater().inflate(R.menu.menu_main, menu);
-      return true;
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-      int id = item.getItemId();
-      if (id == R.id.action_settings) {
-         startActivity(new Intent(this, SettingsActivity.class));
-      } else if (id == R.id.update) {
-         TimelyUpdateUtils.checkForUpdates(this);
-      }
-      return super.onOptionsItemSelected(item);
-   }
-
    // Get intent actions and update UI
    private void doHandleRequestAction(Intent intent) {
       final String reqAction = intent.getAction();
@@ -297,11 +299,6 @@ public class MainActivity extends AppCompatActivity {
                  || itemId == R.id.calculator || itemId == R.id.alarms) {
 
             SchoolUtilitesActivity.start(MainActivity.this, itemId);
-         } else if (itemId == R.id.__export) {
-            new TMLYDataGeneratorDialog().show(MainActivity.this);
-         } else if (itemId == R.id.__import) {
-            startActivity(new Intent(MainActivity.this, ImportResultsActivity.class));
-            return true;
          } else if (itemId == R.id.settings) {
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             return true;
@@ -323,9 +320,9 @@ public class MainActivity extends AppCompatActivity {
       public boolean onNavigationItemSelected(@NonNull MenuItem item) {
          int itemId = item.getItemId();
          if (itemId == R.id.notification) {
-            startActivity(new Intent(MainActivity.this, NotificationsActivity.class));
-         } else if (itemId == R.id.profile) {
-            startActivity(new Intent(MainActivity.this, UserProfileActivity.class));
+            showFragment(NotificationsFragment.getInstance());
+         } else if (itemId == R.id.chats) {
+            showFragment(ChatsFragment.getInstance());
          } else if (itemId == R.id.home) {
             showFragment(MainPageFragment.getInstance());
          } else if (itemId == R.id.library) {

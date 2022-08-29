@@ -17,9 +17,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.astrro.timely.R;
+import com.astrro.timely.core.NavigationActivity;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.util.ThreadUtils;
@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 /**
  * A clone of {@link AddCourseDialog} that would be used as an alternate to adding courses
  */
-public class AddCourseActivity extends AppCompatActivity {
+public class AddCourseActivity extends NavigationActivity {
    private final Integer[] CREDITS = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                                        21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40 };
    private SchoolDatabase database;
@@ -161,12 +161,6 @@ public class AddCourseActivity extends AppCompatActivity {
    protected void onDestroy() {
       database.close();
       super.onDestroy();
-   }
-
-   @Override
-   public boolean onSupportNavigateUp() {
-      onBackPressed();
-      return true;
    }
 
    private boolean registerAndClose() {

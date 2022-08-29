@@ -145,7 +145,7 @@ public class  AlarmReSchedulerService extends Service {
               = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
       
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.GENERAL_CHANNEL_ID);
-      Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.timely_app_icon);
+      Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_app_icon_mono);
       
       Intent i = new Intent();
       i.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);

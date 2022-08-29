@@ -1,18 +1,16 @@
 package com.astrro.timely.main;
 
-import android.app.Activity;
+import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.astrro.timely.R;
-import com.astrro.timely.util.adapters.ActivityLifecycleObservingApplication;
 
-public class App extends ActivityLifecycleObservingApplication {
+public class App extends Application {
    public static final String ASSIGNMENT_CHANNEL = "TimeLY's assignments";
    public static final String ASIGNMENT_CHANNEL_ID = "com.astrro.timely.assignments";
    public static final String ALARMS_CHANNEL = "TimeLY's study alarm";
@@ -28,7 +26,6 @@ public class App extends ActivityLifecycleObservingApplication {
    public void onCreate() {
       super.onCreate();
       createNotificationChannels();
-      registerActivityLifecycleCallbacks(this);
    }
 
    private void createNotificationChannels() {
@@ -61,11 +58,6 @@ public class App extends ActivityLifecycleObservingApplication {
          channel5.setDescription(getString(R.string.miscellaneous_channel_desc));
          mgr.createNotificationChannel(channel5);
       }
-   }
-
-   @Override
-   public void onActivityDestroyed(@NonNull Activity activity) {
-      super.onActivityDestroyed(activity);
    }
 
 }

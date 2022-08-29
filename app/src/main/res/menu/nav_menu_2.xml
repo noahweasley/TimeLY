@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+   <group android:checkableBehavior="single">
+
+      <item
+         android:id="@+id/courses"
+         android:icon="@drawable/ic_subject"
+         android:title="@string/registered_course" />
+
+      <item
+         android:id="@+id/timetable"
+         android:icon="@drawable/ic_table_blue"
+         android:title="@string/timetable" />
+
+      <item
+         android:id="@+id/scheduled_classes"
+         android:icon="@drawable/schedule_not_important"
+         android:title="@string/classes" />
+
+      <item
+         android:id="@+id/assignment"
+         android:icon="@drawable/ic_assignment"
+         android:title="@string/assignment" />
+
+      <item
+         android:id="@+id/exam_timetable"
+         android:icon="@drawable/ic_event_note"
+         android:title="@string/exam_timetable" />
+
+      <item
+         android:id="@+id/todo_list"
+         android:icon="@drawable/ic_baseline_event_available_24"
+         android:title="@string/todo_list" />
+
+      <item
+         android:id="@+id/calculator"
+         android:icon="@drawable/ic_baseline_calculate_24"
+         android:title="@string/g_p_a_calculator" />
+
+      <item
+         android:id="@+id/alarms"
+         android:icon="@drawable/ic_alarm"
+         android:title="@string/alarms" />
+
+      <item
+         android:id="@+id/__export"
+         android:icon="@drawable/ic_file_export"
+         android:title="@string/generate_export" />
+
+      <item
+         android:id="@+id/__import"
+         android:icon="@drawable/ic_file_import"
+         android:title="@string/generate_import" />
+
+   </group>
+
+</menu>

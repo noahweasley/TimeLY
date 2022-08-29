@@ -250,7 +250,8 @@
    <string name="login_alt_text">OR LOGIN VIA</string>
    <string name="login_now">Don\'t have an account yet?</string>
    <string name="create_account">Create New Account</string>
-   <string name="password">Password</string>
+   <string name="new_password">New Password</string>
+   <string name="confirm_password">Confirm Password</string>
    <string name="user_name">Username</string>
    <string name="access_message">Login to access your account</string>
    <string name="back">navigate back</string>
@@ -375,4 +376,15 @@
    <string name="recent">Recent</string>
    <string name="recommended">Recommended</string>
    <string name="personal">For You</string>
+   <string name="default_book_title">Eloquent Javascript: A Modern Introduction to Programming</string>
+   <string name="default_author">Noah Weasley (Admin)</string>
+   <string name="default_document_description">PDF - 12.85 MB</string>
+   <string name="default_upload_time">UPLOADED - 09.07.2022</string>
+   <string name="default_document_mimetype">PDF</string>
+   <string name="user_profile">User profile</string>
+   <string name="upload_capitalize">Upload</string>
+   <string name="recent_search">Recent Search</string>
+   <string name="fetching">fetching</string>
+   <string name="notification_text">You are all caught up for now</string>
+   <string name="search_query_hint_chats">Search messages</string>
 </resources>

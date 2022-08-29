@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +31,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.preference.PreferenceManager;
 
 import com.astrro.timely.R;
@@ -53,7 +58,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class AddAssignmentActivity extends AppCompatActivity {
+public class AddAssignmentActivity extends AppCompatActivity implements MenuProvider {
    public static final String SCHEDULE_POS = "Schedule position";
    public static final String ADD_NEW = "com.astrro.timely.addAssignmentActivity.add_new";
    public static final String NEXT_ALARM = "next alarm";
@@ -77,6 +82,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
       database = new SchoolDatabase(this);
       setContentView(R.layout.activity_add_assignment);
 
+      addMenuProvider(this, (LifecycleOwner) this, Lifecycle.State.CREATED);
       boolean shouldEdit = getIntent().getAction().equals("Edit");
 
       Toolbar toolbar = findViewById(R.id.toolbar);
@@ -236,13 +242,17 @@ public class AddAssignmentActivity extends AppCompatActivity {
    }
 
    @Override
-   public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
       getMenuInflater().inflate(R.menu.list_menu_files, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       fileCount = layout.findViewById(R.id.counter);
       fileCount.setText(String.valueOf(0));
       TooltipCompat.setTooltipText(fileCount, "Attached files: " + itemCount);
-      return true;
+   }
+
+   @Override
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      return false; // do nothing, had to implement
    }
 
    private void saveOrUpdateAssignment() {

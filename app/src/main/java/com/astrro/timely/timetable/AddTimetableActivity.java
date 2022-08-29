@@ -34,10 +34,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.astrro.timely.R;
 import com.astrro.timely.alarms.AlarmHelper;
+import com.astrro.timely.core.NavigationActivity;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.util.Converter;
@@ -59,7 +59,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A clone of {@link AddTimetableDialog} that would be used as an alternate to adding timetables
  */
-public class AddTimetableActivity extends AppCompatActivity {
+public class AddTimetableActivity extends NavigationActivity {
    private static String selectedDay;
    private AutoCompleteTextView atv_courseName;
    private EditText edt_startTime, edt_endTime;
@@ -152,8 +152,7 @@ public class AddTimetableActivity extends AppCompatActivity {
 
    private boolean onTouch(View view, MotionEvent event) {
       EditText editText = (EditText) view;
-      TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute,
-                                                int second) -> {
+      TimePickerDialog.OnTimeSetListener tsl = (TimePickerDialog timePicker, int hourOfDay, int minute, int second) -> {
          Calendar calendar = Calendar.getInstance();
          calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
          calendar.set(Calendar.MINUTE, minute);
@@ -200,12 +199,6 @@ public class AddTimetableActivity extends AppCompatActivity {
    protected void onDestroy() {
       database.close();
       super.onDestroy();
-   }
-
-   @Override
-   public boolean onSupportNavigateUp() {
-      onBackPressed();
-      return true;
    }
 
    private boolean registerAndClose() {
@@ -291,7 +284,9 @@ public class AddTimetableActivity extends AppCompatActivity {
       }
 
       if (TextUtils.isEmpty(course)) {
-         atv_courseName.setError("Required");
+         ViewParent container = atv_courseName.getParent();
+         TextInputLayout atv_courseNameParent = ((TextInputLayout) container.getParent());
+         atv_courseNameParent.setError("Field Required");
          errorOccurred = true;
       }
 

@@ -25,7 +25,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,7 +60,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class DaysFragment extends Fragment implements ActionMode.Callback {
+public class DaysFragment extends Fragment implements ActionMode.Callback, MenuProvider {
    public static final String DELETE_REQUEST = "delete timetable";
    public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Timetable";
    public static final String ARG_POSITION = "List position";
@@ -107,6 +109,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
 
    @Override
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.RESUMED);
       coordinator = view.findViewById(R.id.coordinator);
       context = (AppCompatActivity) getActivity();
       Resources resources = getResources();
@@ -156,8 +159,7 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
          float[] resolution = DeviceInfoUtil.getDeviceResolutionDP(context);
          float requiredWidthDP = 368, requiredHeightDP = 750;
 
-         SharedPreferences preferences =
-                 PreferenceManager.getDefaultSharedPreferences(context);
+         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
          boolean useDialog = preferences.getBoolean("prefer_dialog", true);
 
@@ -186,10 +188,6 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
 
    @Override
    public void onResume() {
-      setHasOptionsMenu(true);
-      // could have used ViewPager.OnPageChangedListener to increase code readability, but
-      // this was used to reduce code size as there is not much work to be done when ViewPager
-      // scrolls
       if (actionMode != null) actionMode.finish();
       super.onResume();
    }
@@ -207,31 +205,34 @@ public class DaysFragment extends Fragment implements ActionMode.Callback {
       super.onDetach();
    }
 
+
    @Override
-   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-      inflater.inflate(R.menu.list_menu_timetable, menu);
+   public void onPrepareMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
+      MenuProvider.super.onPrepareMenu(menu);
+   }
+
+   @Override
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.list_menu_timetable, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(tList.size()));
       menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, getString(R.string.timetable_count) + tList.size());
-
-      super.onCreateOptionsMenu(menu, inflater);
    }
 
    @Override
-   public void onPrepareOptionsMenu(@NonNull Menu menu) {
-      menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-      if (item.getItemId() == R.id.select_all) {
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      if (menuItem.getItemId() == R.id.select_all) {
          rowAdapter.selectAllItems();
-      } else if (item.getItemId() == R.id.export) {
+         return true;
+      } else if (menuItem.getItemId() == R.id.export) {
          new TMLYDataGeneratorDialog().show(getContext(), Constants.TIMETABLE);
+         return true;
       }
-      return super.onOptionsItemSelected(item);
+
+      return false;
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

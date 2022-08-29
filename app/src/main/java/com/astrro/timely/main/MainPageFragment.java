@@ -3,12 +3,17 @@ package com.astrro.timely.main;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 
 import com.astrro.timely.R;
 import com.astrro.timely.alarms.TimeChangeDetector;
@@ -21,16 +26,16 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Random;
 
-public class MainPageFragment extends Fragment {
+public class MainPageFragment extends Fragment implements MenuProvider {
    public static final String TAG = "com.astrro.timely.main.MainPageFragment";
    private TextView tv_gText;
    private DayPart lastDayPart;
    private Context context;
-   private static final Fragment fragmentInstance = new MainPageFragment();
+   private static Fragment fragmentInstance;
    private static final String TOOLBAR_TITLE = "Discover";
 
    public static Fragment getInstance() {
-      return fragmentInstance;
+      return fragmentInstance == null ? (fragmentInstance = new MainPageFragment()) : fragmentInstance;
    }
 
    public static String getToolbarTitle() {
@@ -82,6 +87,12 @@ public class MainPageFragment extends Fragment {
    }
 
    @Override
+   protected void finalize() throws Throwable {
+      fragmentInstance = null;
+      super.finalize();
+   }
+
+   @Override
    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedState) {
       return inflater.inflate(R.layout.fragment_main_page, parent, false);
    }
@@ -90,6 +101,7 @@ public class MainPageFragment extends Fragment {
    public void onViewCreated(@NonNull View view, Bundle state) {
       tv_gText = view.findViewById(R.id.greeting_text);
 
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.CREATED);
       EventBus.getDefault().register(this);
       doUpdateGreeting(TimeChangeDetector.requestImmediateTime(getContext()));
    }
@@ -103,7 +115,17 @@ public class MainPageFragment extends Fragment {
    @Override
    public void onDetach() {
       super.onDetach();
+      fragmentInstance = null;
       EventBus.getDefault().unregister(this);
    }
 
+   @Override
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.main_menu, menu);
+   }
+
+   @Override
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      return false;
+   }
 }

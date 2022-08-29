@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.astrro.timely.R;
-import com.astrro.timely.auth.data.api.RegistrationResponse;
+import com.astrro.timely.auth.data.model.RegistrationResponse;
 import com.astrro.timely.auth.data.api.TimelyApi;
 import com.astrro.timely.auth.data.model.UserAccount;
 import com.google.android.material.textfield.TextInputLayout;
@@ -88,7 +88,7 @@ public class GoogleLoginCompletionActivity extends AppCompatActivity {
          userAccount.setUserName(edt_userName.getText());
 
          new NetworkRequestDialog<RegistrationResponse>()
-                 .setLoadingInfo(getString(R.string.registering))
+                 .setProgressInfo(getString(R.string.registering))
                  .execute(this, () -> {
                     try {
                        return TimelyApi.registerNewUser(userAccount);

@@ -23,12 +23,12 @@ import com.astrro.timely.exam.ExamModel;
 import com.astrro.timely.gallery.Image;
 import com.astrro.timely.timetable.TimetableModel;
 import com.astrro.timely.todo.TodoModel;
-import com.astrro.timely.util.Primitives;
-import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.LogUtils;
 import com.astrro.timely.util.PreferenceUtils;
+import com.astrro.timely.util.Primitives;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,6 +102,9 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    private static final int MAX_EXAM_WEEK_COUNT = 28; // equivalent to 4 months
    private static final int MIN_EXAM_WEEK_COUNT = 1; // equivalent to 4 months
 
+   private static final String LIBRARY_SEARCH_TABLE = "Library_Search_Table";
+   private static final String COLUMN_RESENT_SEARCH_QUERY = "Recent_Search_Query";
+
    private static boolean mDeleting;
 
    private final String TAG = "SchoolDatabase";
@@ -110,7 +113,7 @@ public class SchoolDatabase extends SQLiteOpenHelper {
 
    public SchoolDatabase(@Nullable Context context) {
       // remember to update the database version specified in the super class' constructor
-      super(context, "SchoolDatabase.db", null, 3);
+      super(context, "SchoolDatabase.db", null, 4);
       this.context = context;
    }
 
@@ -163,20 +166,31 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       createTodoListTables(db);
       createAssignmentTable(db);
       createAlarmTable(db);
+      createLibraryRecentSearchTable(db);
    }
 
    @Override
    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
       // add or drop tables here
       if (oldVersion == 1 && newVersion == 2) {
-         // bunmp version from v1.0 to v2.0. In v1.0, _Todo Table does not exist, so upgrade former version's
+         // bump version from v1.0 to v2.0. In v1.0, _Todo Table does not exist, so upgrade former version's
          // database, adding the _Todo table to begin data insertion.
          createTodoListTables(db);
       } else if ((oldVersion == 1 || oldVersion == 2) && newVersion == 3) {
          // drop Preference_Table in version 3.0 and replace with androidx preference
          db.execSQL("DROP TABLE IF EXISTS " + PREFERENCE_TABLE);
+      } else if ((oldVersion == 1 || oldVersion == 2 || oldVersion == 3) && newVersion == 4) {
+         // create search query table in version 4.0
+         createLibraryRecentSearchTable(db);
       }
 
+   }
+
+   private void createLibraryRecentSearchTable(SQLiteDatabase db) {
+      String createRecentSearchQuery_stmt = "CREATE TABLE IF NOT EXISTS " + LIBRARY_SEARCH_TABLE + " (" +
+              COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+              COLUMN_RESENT_SEARCH_QUERY + " TEXT )";
+      db.execSQL(createRecentSearchQuery_stmt);
    }
 
    // CREATE ALARM TABLE
@@ -2394,5 +2408,33 @@ public class SchoolDatabase extends SQLiteOpenHelper {
    public boolean isRegisteredCoursesAreAbsent() {
       return isFirstSemesterIsAbsent() && isSecondSemesterIsAbsent();
    }
+
+   /**
+    * @return the user search queries
+    */
+   public List<String> getAllLibrarySearchQueries() {
+      SQLiteDatabase db = getReadableDatabase();
+      Cursor getQueriesCursor = db.rawQuery("SELECT * FROM " + LIBRARY_SEARCH_TABLE, null);
+      List<String> searchQueryList = new ArrayList<>();
+
+      while (getQueriesCursor.moveToNext()) searchQueryList.add(retrieveEntry(getQueriesCursor.getString(0)));
+
+      return searchQueryList;
+   }
+
+   /**
+    * Adds an entry into the library recent search table
+    *
+    * @param searchQuery the search query to be inserted
+    * @return true if the search query was inserted, false otherwise
+    */
+   public boolean addLibrarySearchQuery(String searchQuery) {
+      SQLiteDatabase db = getWritableDatabase();
+      ContentValues values = new ContentValues();
+      values.put(COLUMN_RESENT_SEARCH_QUERY, sanitizeEntry(searchQuery));
+
+      return db.insert(LIBRARY_SEARCH_TABLE, null, values) != -1;
+   }
+
 
 }

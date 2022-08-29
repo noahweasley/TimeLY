@@ -19,13 +19,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.core.ChoiceMode;
 import com.astrro.timely.core.CountEvent;
@@ -38,9 +38,11 @@ import com.astrro.timely.core.RequestParams;
 import com.astrro.timely.core.RequestRunner;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.exports.TMLYDataGeneratorDialog;
-import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.collections.CollectionUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -50,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AssignmentFragment extends Fragment implements ActionMode.Callback {
+public class AssignmentFragment extends Fragment implements ActionMode.Callback, MenuProvider {
    public static final String DELETE_REQUEST = "Delete Assignment";
    public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Assignments";
    public static final String DESCRIPTION = "Description";
@@ -89,7 +91,7 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
 
    @Override
    public void onViewCreated(@NonNull View view, Bundle state) {
-      setHasOptionsMenu(true);
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.CREATED);
       context = (AppCompatActivity) getActivity();
       rV_assignmentList = view.findViewById(R.id.assignment_list);
       coordinator = view.findViewById(R.id.coordinator2);
@@ -189,30 +191,35 @@ public class AssignmentFragment extends Fragment implements ActionMode.Callback 
    }
 
    @Override
-   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-      inflater.inflate(R.menu.list_menu_assignment, menu);
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.list_menu_assignment, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(aList.size()));
       menu.findItem(R.id.select_all).setVisible(aList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, getString(R.string.assignment_count) + aList.size());
-
-      super.onCreateOptionsMenu(menu, inflater);
    }
 
    @Override
-   public void onPrepareOptionsMenu(@NonNull Menu menu) {
-      menu.findItem(R.id.select_all).setVisible(aList.isEmpty() ? false : true);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-      if (item.getItemId() == R.id.select_all) {
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      if (menuItem.getItemId() == R.id.select_all) {
          assignmentAdapter.selectAllItems();
-      } else if (item.getItemId() == R.id.export) {
+         return true;
+      } else if (menuItem.getItemId() == R.id.export) {
          new TMLYDataGeneratorDialog().show(getContext(), Constants.ASSIGNMENT);
+         return true;
+      } else {
+         return false;
       }
-      return super.onOptionsItemSelected(item);
+   }
+
+   @Override
+   public void onPrepareMenu(@NonNull Menu menu) {
+      MenuProvider.super.onPrepareMenu(menu);
+      MenuItem menuItem;
+      if ((menuItem = menu.findItem(R.id.select_all)) != null) {
+         menuItem.setVisible(aList.isEmpty() ? false : true);
+      }
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

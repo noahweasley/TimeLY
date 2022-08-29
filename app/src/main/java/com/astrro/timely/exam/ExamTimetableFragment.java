@@ -22,12 +22,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.core.ChoiceMode;
 import com.astrro.timely.core.CountEvent;
@@ -39,10 +40,11 @@ import com.astrro.timely.core.RequestParams;
 import com.astrro.timely.core.RequestRunner;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.exports.TMLYDataGeneratorDialog;
-import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.DeviceInfoUtil;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.collections.CollectionUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,7 +56,7 @@ import java.util.List;
 import java.util.Locale;
 
 @SuppressWarnings("ConstantConditions")
-public class ExamTimetableFragment extends Fragment implements ActionMode.Callback {
+public class ExamTimetableFragment extends Fragment implements ActionMode.Callback, MenuProvider {
    public static final String ARG_POSITION = "page position";
    public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple exams";
    private static ActionMode actionMode;
@@ -94,6 +96,7 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
 
    @Override
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.RESUMED);
       context = (AppCompatActivity) getActivity();
       ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
       int position = getArguments().getInt(ARG_POSITION);
@@ -166,12 +169,6 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
 
    @Override
    public void onResume() {
-      // Prevent glitch on adding menu to the toolbar. Only show a particular semester's course
-      // count, if that is the only visible semester
-      setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
-      // could have used ViewPager.OnPageChangedListener to increase code readability, but
-      // this was used to reduce code size as there is not much work to be done when ViewPager
-      // scrolls
       if (actionMode != null) actionMode.finish();
       super.onResume();
    }
@@ -190,30 +187,31 @@ public class ExamTimetableFragment extends Fragment implements ActionMode.Callba
    }
 
    @Override
-   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-      inflater.inflate(R.menu.list_menu_exams, menu);
+   public void onPrepareMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(eList.isEmpty() ? false : true);
+      MenuProvider.super.onPrepareMenu(menu);
+   }
+
+   @Override
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.list_menu_exams, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(eList.size()));
       menu.findItem(R.id.select_all).setVisible(eList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, getString(R.string.exams_count) + eList.size());
-
-      super.onCreateOptionsMenu(menu, inflater);
    }
 
    @Override
-   public void onPrepareOptionsMenu(@NonNull Menu menu) {
-      menu.findItem(R.id.select_all).setVisible(eList.isEmpty() ? false : true);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-      if (item.getItemId() == R.id.select_all) {
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      if (menuItem.getItemId() == R.id.select_all) {
          examRowAdapter.selectAllItems();
-      } else if (item.getItemId() == R.id.export) {
+         return true;
+      } else if (menuItem.getItemId() == R.id.export) {
          new TMLYDataGeneratorDialog().show(getContext(), Constants.EXAM);
+         return true;
       }
-      return super.onOptionsItemSelected(item);
+      return false;
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

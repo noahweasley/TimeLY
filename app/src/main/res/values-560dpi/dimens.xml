@@ -91,7 +91,7 @@
    <dimen name="small_dialog_height">270dp</dimen>
    <dimen name="loader_text_size">18sp</dimen>
    <dimen name="import_content_text_text_size">18sp</dimen>
-   <dimen name="small_button_padding_vertical">24dp</dimen>
+   <dimen name="small_button_padding_vertical">18dp</dimen>
    <dimen name="no_task_info_text_size">22sp</dimen>
    <dimen name="dialog_heading_text_size">22sp</dimen>
    <dimen name="dialog_sub_heading_text_size">18sp</dimen>

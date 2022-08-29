@@ -189,6 +189,11 @@
          android:theme="@style/SlidingActivityTheme_No_Fade"
          android:windowSoftInputMode="adjustPan" />
 
+      <activity
+         android:name=".main.library.AddDocumentActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade"
+         android:windowSoftInputMode="adjustPan" />
+
       <!--     Deep-link RecoveryActivity's intent filter to web link    -->
 
       <activity
@@ -224,10 +229,6 @@
          android:windowSoftInputMode="adjustPan" />
 
       <activity
-         android:name=".main.notification.NotificationsActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade" />
-
-      <activity
          android:name=".todo.AddTodoActivity"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />
@@ -236,8 +237,9 @@
          android:name=".about.TimelyBasicInfoActivity"
          android:theme="@style/SlidingActivityTheme_No_Fade" />
 
-      <activity android:name=".main.library.LibrarySearchActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"/>
+      <activity
+         android:name=".main.library.LibrarySearchActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade" />
 
       <activity
          android:name=".about.BasicInfoListActivity"

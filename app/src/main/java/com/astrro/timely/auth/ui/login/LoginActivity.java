@@ -110,55 +110,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
    }
 
    private void performUserLoginAsync(UserAccount googleSignInAccount) {
-      new NetworkRequestDialog<LoginResponse>()
-              .setLoadingInfo(getString(R.string.log_in_text))
-              .execute(this, () -> {
-                 UserAccount userAccount = googleSignInAccount;
+      NetworkRequestDialog<LoginResponse> loginResponseNetworkRequestDialog = new NetworkRequestDialog<>();
+      loginResponseNetworkRequestDialog.setProgressInfo(getString(R.string.log_in_text));
+      loginResponseNetworkRequestDialog.setOnResponseProcessedListener(this::onResponseProcessed);
+      loginResponseNetworkRequestDialog.execute(this, () -> getLoggedInUser(googleSignInAccount));
+   }
 
-                 if (googleSignInAccount == null) {
-                    userAccount = new UserAccount();
-                    userAccount.setEmail(edt_userName.getText());
-                    userAccount.setPassword(edt_passwword.getText());
-                 }
+   private LoginResponse getLoggedInUser(UserAccount userAccount) {
+      if (userAccount == null) {
+         userAccount = new UserAccount();
+         userAccount.setEmail(edt_userName.getText());
+         userAccount.setPassword(edt_passwword.getText());
+      }
 
-                 try {
-                    return TimelyApi.loginUser(userAccount);
-                 } catch (IOException ioException) {
-                    Toast.makeText(this, "Network error occurred", Toast.LENGTH_LONG).show();
-                    return null;
-                 }
+      try {
+         return TimelyApi.loginUser(userAccount);
+      } catch (IOException ioException) {
+         Toast.makeText(this, "Network error occurred", Toast.LENGTH_LONG).show();
+         return null;
+      }
 
-              }).setOnResponseProcessedListener(loginResponse -> {
-
-         if (loginResponse != null) {
-            if (loginResponse.getStatusCode() == HttpStatusCodes.OK) {
-               Map<String, String> map = new HashMap<>();
-               UserAccount userAccount1 = loginResponse.getUserAccount();
-
-               map.put(PreferenceUtils.USER_ID, userAccount1.getUserId());
-               map.put(PreferenceUtils.USER_PASSWORD, userAccount1.getPassword());
-               map.put(PreferenceUtils.USER_NAME, userAccount1.getEmail());
-               map.put(PreferenceUtils.USER_SCHOOL, userAccount1.getSchool());
-               map.put(PreferenceUtils.USER_IS_LOGGED_IN, String.valueOf(true));
-
-               PreferenceUtils.setStringArraySync(this, map);
-
-               Intent intent = new Intent(this, MainActivity.class);
-               intent.setAction(MainActivity.ACTION_LOGIN);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-               startActivity(intent);
-            } else {
-               ViewParent viewParent = edt_userName.getParent();
-               TextInputLayout til_userName = (TextInputLayout) viewParent.getParent();
-               til_userName.setError("Username might be incorrect");
-
-               ViewParent viewParent2 = edt_passwword.getParent();
-               TextInputLayout til_password = (TextInputLayout) viewParent2.getParent();
-               til_password.setError("Password might be incorrect");
-            }
-
-         }
-      });
    }
 
    private void doGoogleSignIn() {
@@ -199,6 +170,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
          performUserLoginAsync(UserAccount.createFromGoogleSignIn(account));
       } else {
          Toast.makeText(this, "Google login failed", Toast.LENGTH_LONG).show();
+      }
+   }
+
+   private void onResponseProcessed(LoginResponse loginResponse) {
+
+      if (loginResponse != null) {
+         if (loginResponse.getStatusCode() == HttpStatusCodes.OK) {
+            Map<String, String> map = new HashMap<>();
+            UserAccount userAccount1 = loginResponse.getUserAccount();
+
+            map.put(PreferenceUtils.USER_ID, userAccount1.getUserId());
+            map.put(PreferenceUtils.USER_PASSWORD, userAccount1.getPassword());
+            map.put(PreferenceUtils.USER_NAME, userAccount1.getEmail());
+            map.put(PreferenceUtils.USER_SCHOOL, userAccount1.getSchool());
+            map.put(PreferenceUtils.USER_IS_LOGGED_IN, String.valueOf(true));
+
+            PreferenceUtils.setStringArraySync(this, map);
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setAction(MainActivity.ACTION_LOGIN);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+         } else {
+            ViewParent viewParent = edt_userName.getParent();
+            TextInputLayout til_userName = (TextInputLayout) viewParent.getParent();
+            til_userName.setError("Username might be incorrect");
+
+            ViewParent viewParent2 = edt_passwword.getParent();
+            TextInputLayout til_password = (TextInputLayout) viewParent2.getParent();
+            til_password.setError("Password might be incorrect");
+         }
+
       }
    }
 

@@ -12,6 +12,7 @@ import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.astrro.timely.R;
+import com.astrro.timely.core.DataModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -43,8 +44,8 @@ public class NotificationRowHolder extends RecyclerView.ViewHolder {
          Picasso.get().load(profileImage).centerCrop().resize(px, px).into(img_profileImage);
    }
 
-   public NotificationRowHolder with(List<Notification> notificationList) {
-      this.notification = notificationList.get(getAbsoluteAdapterPosition());
+   public NotificationRowHolder with(List<DataModel> notificationList) {
+      this.notification = (Notification) notificationList.get(getAbsoluteAdapterPosition());
       return this;
    }
 }

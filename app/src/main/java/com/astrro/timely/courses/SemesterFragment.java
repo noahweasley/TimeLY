@@ -21,12 +21,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.core.ChoiceMode;
 import com.astrro.timely.core.CountEvent;
@@ -38,10 +39,11 @@ import com.astrro.timely.core.RequestParams;
 import com.astrro.timely.core.RequestRunner;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.exports.TMLYDataGeneratorDialog;
-import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.Constants;
 import com.astrro.timely.util.DeviceInfoUtil;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.collections.CollectionUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SemesterFragment extends Fragment implements ActionMode.Callback {
+public class SemesterFragment extends Fragment implements ActionMode.Callback, MenuProvider {
    public static final String ARG_POSITION = "page position";
    public static final String MULTIPLE_DELETE_REQUEST = "Delete Multiple Courses";
    private static ActionMode actionMode;
@@ -94,6 +96,7 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
       // if modelList was empty, a layout indicating an empty list will be displayed, to avoid
       // displaying an empty list, which is not just quite good for UX design.
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.RESUMED);
       context = (AppCompatActivity) getActivity();
       ProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
       boolean isPage1 = getArguments().getInt(ARG_POSITION) == 0;
@@ -154,12 +157,6 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
 
    @Override
    public void onResume() {
-      // Prevent glitch on adding menu to the toolbar. Only show a particular semester's course
-      // count, if that is the only visible semester
-      setHasOptionsMenu(true); // onCreateOptionsMenu will be called after this
-      // could have used ViewPager.OnPageChangedListener to increase code readability, but
-      // this was used to reduce code size as there is not much work to be done when ViewPager
-      // scrolls
       if (actionMode != null) actionMode.finish();
       super.onResume();
    }
@@ -178,30 +175,32 @@ public class SemesterFragment extends Fragment implements ActionMode.Callback {
    }
 
    @Override
-   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-      inflater.inflate(R.menu.list_menu_courses, menu);
+   public void onPrepareMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(cList.isEmpty() ? false : true);
+      MenuProvider.super.onPrepareMenu(menu);
+   }
+
+   @Override
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.list_menu_courses, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(cList.size()));
       menu.findItem(R.id.select_all).setVisible(cList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, getString(R.string.courses_count) + cList.size());
-
-      super.onCreateOptionsMenu(menu, inflater);
    }
 
    @Override
-   public void onPrepareOptionsMenu(@NonNull Menu menu) {
-      menu.findItem(R.id.select_all).setVisible(cList.isEmpty() ? false : true);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-      if (item.getItemId() == R.id.select_all) {
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      if (menuItem.getItemId() == R.id.select_all) {
          courseAdapter.selectAllItems();
-      } else if (item.getItemId() == R.id.export) {
+         return true;
+      } else if (menuItem.getItemId() == R.id.export) {
          new TMLYDataGeneratorDialog().show(getContext(), Constants.COURSE);
+         return true;
       }
-      return super.onOptionsItemSelected(item);
+
+      return false;
    }
 
    private int getPagePosition() {

@@ -23,7 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -59,7 +61,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class ScheduledTimetableFragment extends Fragment implements ActionMode.Callback {
+public class ScheduledTimetableFragment extends Fragment implements ActionMode.Callback, MenuProvider {
    public static final String DELETE_REQUEST = "delete scheduled timetable";
    public static final String MULTIPLE_DELETE_REQUEST = "delete multiple timetable";
    public static final String ARG_DATA = "Timetable Data";
@@ -98,7 +100,7 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
 
    @Override
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-      setHasOptionsMenu(true);
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.CREATED);
       context = (AppCompatActivity) getActivity();
       Resources resources = getResources();
       coordinator = view.findViewById(R.id.coordinator);
@@ -262,30 +264,31 @@ public class ScheduledTimetableFragment extends Fragment implements ActionMode.C
    }
 
    @Override
-   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-      inflater.inflate(R.menu.list_menu_scheduled, menu);
+   public void onPrepareMenu(@NonNull Menu menu) {
+      menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
+      MenuProvider.super.onPrepareMenu(menu);
+   }
+
+   @Override
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.list_menu_scheduled, menu);
       View layout = menu.findItem(R.id.list_item_count).getActionView();
       itemCount = layout.findViewById(R.id.counter);
       itemCount.setText(String.valueOf(tList.size()));
       menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
       TooltipCompat.setTooltipText(itemCount, getString(R.string.classes_count) + tList.size());
-
-      super.onCreateOptionsMenu(menu, inflater);
    }
 
    @Override
-   public void onPrepareOptionsMenu(@NonNull Menu menu) {
-      menu.findItem(R.id.select_all).setVisible(tList.isEmpty() ? false : true);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-      if (item.getItemId() == R.id.select_all) {
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      if (menuItem.getItemId() == R.id.select_all) {
          tableRowAdapter.selectAllItems();
-      } else if (item.getItemId() == R.id.export) {
+         return true;
+      } else if (menuItem.getItemId() == R.id.export) {
          new TMLYDataGeneratorDialog().show(getContext(), Constants.SCHEDULED_TIMETABLE);
+         return true;
       }
-      return super.onOptionsItemSelected(item);
+      return false;
    }
 
    @Subscribe(threadMode = ThreadMode.MAIN)

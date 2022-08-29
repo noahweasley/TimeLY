@@ -38,13 +38,40 @@
 
    </androidx.appcompat.widget.Toolbar>
 
-   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/suggestions"
+   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/results"
       android:layout_width="0dp"
       android:layout_height="0dp"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toBottomOf="@+id/toolbar" />
+      external:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+      <TextView
+         android:id="@+id/recent"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="@dimen/layout_gap"
+         android:text="@string/recent_search"
+         android:textColor="@android:color/black"
+         android:textSize="18sp"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toTopOf="parent" />
+
+      <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/suggestions"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         android:layout_marginTop="@dimen/layout_gap"
+         external:layout_constraintBottom_toBottomOf="parent"
+         external:layout_constraintEnd_toEndOf="parent"
+         external:layout_constraintHorizontal_bias="0.0"
+         external:layout_constraintStart_toStartOf="parent"
+         external:layout_constraintTop_toBottomOf="@+id/recent"
+         external:layout_constraintVertical_bias="1.0" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

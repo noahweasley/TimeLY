@@ -17,17 +17,18 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.astrro.timely.R;
 import com.astrro.timely.util.adapters.SimpleQueryTextListener;
 import com.astrro.timely.util.views.ViewHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class StudentLibraryFragment extends Fragment {
    public static final String TAG = "com.astrro.timely.main.library.StudentLibraryFragment";
    private static final String EXTRA_SEARCH_QUERY = "Search_Query";
-   private static final Fragment fragmentInstance = new StudentLibraryFragment();
+   private static Fragment fragmentInstance;
    private static final String TOOLBAR_TITLE = "Student Library";
 
    public static Fragment getInstance() {
-      return fragmentInstance;
+      return fragmentInstance == null ? (fragmentInstance = new StudentLibraryFragment()) : fragmentInstance;
    }
 
    public static String getToolbarTitle() {
@@ -54,6 +55,9 @@ public class StudentLibraryFragment extends Fragment {
                              @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
 
+      FloatingActionButton fab_addDocument = view.findViewById(R.id.add_document);
+      fab_addDocument.setOnClickListener(v -> AddDocumentActivity.start(getContext()));
+
       SearchView sv_search = view.findViewById(R.id.search);
       sv_search.setOnQueryTextListener(new QueryTextListener());
       ViewHelper.setupSearchView(sv_search);
@@ -73,6 +77,18 @@ public class StudentLibraryFragment extends Fragment {
             tab.setText(R.string.personal);
          }
       }).attach();
+   }
+
+   @Override
+   public void onDetach() {
+      super.onDetach();
+      fragmentInstance = null;
+   }
+
+   @Override
+   protected void finalize() throws Throwable {
+      fragmentInstance = null;
+      super.finalize();
    }
 
    private class QueryTextListener extends SimpleQueryTextListener {

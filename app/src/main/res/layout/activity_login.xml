@@ -106,7 +106,7 @@
             android:drawableStart="@drawable/ic_baseline_lock_24"
             android:drawableLeft="@drawable/ic_baseline_lock_24"
             android:drawablePadding="8dp"
-            android:hint="@string/password"
+            android:hint="@string/new_password"
             android:inputType="textPassword"
             android:textColorHint="@color/light_grey"
             android:textSize="@dimen/editext_text_size"

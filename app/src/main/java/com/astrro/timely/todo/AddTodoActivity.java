@@ -24,11 +24,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.astrro.timely.R;
+import com.astrro.timely.core.NavigationActivity;
 import com.astrro.timely.core.SchoolDatabase;
 import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.util.Constants;
@@ -48,7 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class AddTodoActivity extends AppCompatActivity {
+public class AddTodoActivity extends NavigationActivity {
    public static final String EXTRA_IS_EDITABLE = "com.astrro.timely.todo.edit";
    public static final String EXTRA_DEFAULT_CATEGORY = "com.astrro.timely.todo.category.default";
    public static final String[] CATEGORIES = { "Miscelaneous", "Work", "Music", "Creativity", "Travel", "Study"
@@ -419,9 +419,4 @@ public class AddTodoActivity extends AppCompatActivity {
       database.close();
    }
 
-   @Override
-   public boolean onSupportNavigateUp() {
-      onBackPressed();
-      return true;
-   }
 }

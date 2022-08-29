@@ -14,15 +14,27 @@ import com.astrro.timely.R;
 
 public class MarketPlaceFragment extends Fragment {
    public static final String TAG = "com.astrro.timely.main.marketplace.MarketPlaceFragment";
-   private static final Fragment fragmentInstance = new MarketPlaceFragment();
+   private static Fragment fragmentInstance;
    private static final String TOOLBAR_TITLE = "MarketPlace";
 
    public static Fragment getInstance() {
-      return fragmentInstance;
+      return fragmentInstance == null ? (fragmentInstance = new MarketPlaceFragment()) : fragmentInstance;
    }
 
    public static String getToolbarTitle() {
       return TOOLBAR_TITLE;
+   }
+
+   @Override
+   public void onDetach() {
+      super.onDetach();
+      fragmentInstance = null;
+   }
+
+   @Override
+   protected void finalize() throws Throwable {
+      fragmentInstance = null;
+      super.finalize();
    }
 
    @Nullable

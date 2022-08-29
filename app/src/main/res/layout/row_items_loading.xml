@@ -10,9 +10,9 @@
    <com.astrro.timely.custom.MaterialProgressbar
       android:id="@+id/indeterminateProgress"
       style="@style/Widget.MaterialProgressBar.ProgressBar"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_margin="@dimen/layout_gap"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_margin="8dp"
       android:indeterminate="true"
       external:layout_constraintBottom_toTopOf="@id/text"
       external:layout_constraintEnd_toEndOf="parent"

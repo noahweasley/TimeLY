@@ -1,6 +1,7 @@
 package com.astrro.timely.auth.data.api;
 
 import com.astrro.timely.auth.data.model.LoginResponse;
+import com.astrro.timely.auth.data.model.RegistrationResponse;
 import com.astrro.timely.auth.data.model.UserAccount;
 
 import java.io.IOException;
@@ -50,14 +51,14 @@ public class TimelyApi {
       AuthenticationService apiService = ServiceGenerator.createService(AuthenticationService.class);
       Call<RegistrationResponse> responseCall = apiService.registerUser(userAccount);
 
-      Response<RegistrationResponse> loginResponse = responseCall.execute();
+      Response<RegistrationResponse> registrationResponse = responseCall.execute();
 
-      if (loginResponse.isSuccessful()) {
-         RegistrationResponse response = loginResponse.body();
-         response.setStatusCode(loginResponse.code());
+      if (registrationResponse.isSuccessful()) {
+         RegistrationResponse response = registrationResponse.body();
+         response.setStatusCode(registrationResponse.code());
          return response;
       } else {
-         return null;
+         return RegistrationResponse.fromStatusCode(registrationResponse.code());
       }
    }
 

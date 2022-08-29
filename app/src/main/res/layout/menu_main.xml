@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:external="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent">
+
+   <com.google.android.material.imageview.ShapeableImageView
+      android:id="@+id/profile_image"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_margin="@dimen/layout_gap"
+      external:contentPadding="8dp"
+      external:layout_constraintBottom_toBottomOf="parent"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintTop_toTopOf="parent"
+      external:shapeAppearanceOverlay="@style/Circular_Image"
+      external:srcCompat="@drawable/ic_profile_male" />
+
+   <ImageButton
+      android:id="@+id/post"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:layout_marginHorizontal="8dp"
+      external:layout_constraintBottom_toBottomOf="@+id/profile_image"
+      external:layout_constraintEnd_toStartOf="@+id/profile_image"
+      external:layout_constraintHorizontal_bias="0.66"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toTopOf="@+id/profile_image"
+      external:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
