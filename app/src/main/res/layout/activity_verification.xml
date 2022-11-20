@@ -98,7 +98,7 @@
       external:layout_constraintStart_toStartOf="@+id/timer"
       external:layout_constraintTop_toBottomOf="@+id/verification_pin" />
 
-   <com.astrro.timely.custom.CountdownTimer
+   <com.astrro.timely.widgets.CountdownTimer
       android:id="@+id/timer"
       android:layout_width="0dp"
       android:layout_height="wrap_content"

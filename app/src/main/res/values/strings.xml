@@ -307,7 +307,7 @@
    <string name="add_post">add post</string>
    <string name="videos">Videos</string>
    <string name="products">Products</string>
-   <string name="chats">Chats</string>
+   <string name="chats">Messaging</string>
    <string name="other">Others</string>
    <string name="home">Home</string>
    <string name="story_image">story image</string>
@@ -319,7 +319,7 @@
    <string name="add_location">add location</string>
    <string name="attach_link">attach link</string>
    <string name="default_update_time">1 hour ago</string>
-   <string name="default_message"><b>Noah wesley</b> liked your comment</string>
+   <string name="default_message"><b>Noah weasley</b> liked your comment</string>
    <string name="video_all_caps">VIDEOS</string>
    <string name="movie_all_caps">MOVIES</string>
    <string name="others">OTHERS</string>
@@ -387,4 +387,9 @@
    <string name="fetching">fetching</string>
    <string name="notification_text">You are all caught up for now</string>
    <string name="search_query_hint_chats">Search messages</string>
+   <string name="name"><b>Noah Weasley</b></string>
+   <string name="search_query_hint_messages">Search messages</string>
+   <string name="default_topic">Engineering</string>
+   <string name="start_conversation">Start conversation</string>
+   <string name="add_to_library">Add to library</string>
 </resources>

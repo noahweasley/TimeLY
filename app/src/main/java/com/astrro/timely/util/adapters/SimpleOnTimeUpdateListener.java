@@ -1,6 +1,6 @@
 package com.astrro.timely.util.adapters;
 
-import com.astrro.timely.custom.CountdownTimer;
+import com.astrro.timely.widgets.CountdownTimer;
 
 /**
  * A simple adapter class for {@link CountdownTimer#OnTimeUpdateListner}

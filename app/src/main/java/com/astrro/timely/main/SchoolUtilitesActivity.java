@@ -1,15 +1,21 @@
 package com.astrro.timely.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -34,6 +40,7 @@ import com.astrro.timely.settings.SettingsActivity;
 import com.astrro.timely.timetable.TimetableFragment;
 import com.astrro.timely.todo.TodoFragment;
 import com.astrro.timely.util.Constants;
+import com.astrro.timely.util.PreferenceUtils;
 import com.astrro.timely.util.TimelyUpdateUtils;
 import com.google.android.material.navigation.NavigationView;
 
@@ -54,7 +61,7 @@ public class SchoolUtilitesActivity extends AppCompatActivity implements MenuPro
       setContentView(R.layout.activity_school_utilities);
       Toolbar toolbar = findViewById(R.id.toolbar);
       setSupportActionBar(toolbar);
-
+      showPowerManagementContextUI();
       addMenuProvider(this, (LifecycleOwner) this, Lifecycle.State.RESUMED);
       NavigationView navView = findViewById(R.id.nav_view);
       navView.setNavigationItemSelectedListener(this);
@@ -199,4 +206,42 @@ public class SchoolUtilitesActivity extends AppCompatActivity implements MenuPro
       }
       return true;
    }
+
+   private void showPowerManagementContextUI() {
+      // ignore power management service to trigger alarms properly
+      String cancelText = getString(R.string.later);
+      String goText = getString(R.string.go);
+      String noticeTitle = getString(R.string.noticeTitle);
+      String neutralText = getString(R.string.never);
+      String noticeMessage = getString(R.string.noticeMessage);
+      final String RESTRICTION_GRANT = PreferenceUtils.getStringValue(this, PreferenceUtils.RESTRICTION_ACCESS_KEY,
+                                                                      PreferenceUtils.GRANT_ACCESS);
+      final boolean ACCESS_DENIED = RESTRICTION_GRANT.equals(PreferenceUtils.DENY_ACCESS);
+      PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+         if (!ACCESS_DENIED && !powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
+            // notify user of their actions to remove restrictions on battery optimizations
+            new AlertDialog.Builder(this)
+                    .setTitle(noticeTitle)
+                    .setMessage(noticeMessage)
+                    .setIcon(R.drawable.ic_baseline_info_24)
+                    .setNegativeButton(cancelText, this::requestAction)
+                    .setNeutralButton(neutralText, this::requestAction)
+                    .setPositiveButton(goText, this::requestAction)
+                    .create()
+                    .show();
+         }
+      }
+   }
+
+   @RequiresApi(api = Build.VERSION_CODES.M)
+   private void requestAction(DialogInterface dialog, int which) {
+      if (which == DialogInterface.BUTTON_POSITIVE)
+         startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+      else if (which == DialogInterface.BUTTON_NEUTRAL)
+         PreferenceUtils.setStringValue(this, PreferenceUtils.RESTRICTION_ACCESS_KEY, PreferenceUtils.DENY_ACCESS);
+      dialog.cancel();
+   }
+
+
 }

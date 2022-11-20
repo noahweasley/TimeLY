@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.astrro.timely.R;
 import com.astrro.timely.auth.data.model.UserAccount;
-import com.astrro.timely.custom.CountdownTimer;
+import com.astrro.timely.widgets.CountdownTimer;
 import com.astrro.timely.util.adapters.SimpleOnTimeUpdateListener;
 
 public class VerificationActivity extends AppCompatActivity {

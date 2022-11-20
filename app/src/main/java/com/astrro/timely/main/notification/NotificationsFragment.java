@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +18,6 @@ import com.astrro.timely.core.DataModel;
 import com.astrro.timely.util.ThreadUtils;
 import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.test.DummyGenerator;
-import com.google.android.material.divider.MaterialDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +69,7 @@ public class NotificationsFragment extends Fragment {
       rv_notificationList.setAdapter(new NotificationsAdapter());
       rv_notificationList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-      rv_notificationList.addItemDecoration(
-              new MaterialDividerItemDecoration(getContext(), MaterialDividerItemDecoration.VERTICAL));
+      rv_notificationList.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
    }
 
    @Override

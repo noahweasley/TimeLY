@@ -26,8 +26,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Random;
 
-public class MainPageFragment extends Fragment implements MenuProvider {
-   public static final String TAG = "com.astrro.timely.main.MainPageFragment";
+public class FeedsFragment extends Fragment implements MenuProvider {
+   public static final String TAG = "com.astrro.timely.main.FeedsFragment";
    private TextView tv_gText;
    private DayPart lastDayPart;
    private Context context;
@@ -35,7 +35,7 @@ public class MainPageFragment extends Fragment implements MenuProvider {
    private static final String TOOLBAR_TITLE = "Discover";
 
    public static Fragment getInstance() {
-      return fragmentInstance == null ? (fragmentInstance = new MainPageFragment()) : fragmentInstance;
+      return fragmentInstance == null ? (fragmentInstance = new FeedsFragment()) : fragmentInstance;
    }
 
    public static String getToolbarTitle() {
@@ -79,7 +79,6 @@ public class MainPageFragment extends Fragment implements MenuProvider {
                }
                break;
             default:
-
                throw new IllegalStateException("Unexpected value: " + time.getCurrentDayPart());
          }
       }

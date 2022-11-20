@@ -28,6 +28,7 @@ public class SoundUtils {
     *
     * @param context the context which the tone is being played
     */
+   @SuppressWarnings("deprecation")
    public static void playAlertTone(Context context, AlertType type) {
       // If alert tone are disabled, don't play any alert tone
       if (!PreferenceUtils.getBooleanValue(context, ENABLE_ALERTS_KEY, true)) return;

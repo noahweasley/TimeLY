@@ -8,8 +8,9 @@
       android:id="@+id/notification_list"
       android:layout_width="match_parent"
       android:layout_height="0dp"
+      android:clipToPadding="false"
       android:paddingHorizontal="@dimen/layout_gap"
-      android:paddingTop="@dimen/layout_gap"
+      android:paddingTop="8dp"
       android:visibility="gone"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +24,7 @@
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toTopOf="parent">
 
-      <com.astrro.timely.custom.MaterialProgressbar
+      <com.astrro.timely.widgets.MaterialProgressbar
          android:id="@+id/indeterminateProgress"
          style="@style/Widget.MaterialProgressBar.ProgressBar"
          android:layout_width="wrap_content"
@@ -57,12 +58,12 @@
       android:id="@+id/text"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:visibility="gone"
       android:layout_marginHorizontal="@dimen/layout_gap"
       android:gravity="center"
       android:text="@string/notification_text"
       android:textColor="@android:color/black"
       android:textSize="22sp"
+      android:visibility="gone"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintStart_toStartOf="parent"

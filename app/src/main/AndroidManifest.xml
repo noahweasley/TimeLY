@@ -242,6 +242,10 @@
          android:theme="@style/SlidingActivityTheme_No_Fade" />
 
       <activity
+         android:name=".main.chats.MessageSearchActivity"
+         android:theme="@style/SlidingActivityTheme_No_Fade" />
+
+      <activity
          android:name=".about.BasicInfoListActivity"
          android:exported="false"
          android:theme="@style/SlidingActivityTheme_No_Fade" />

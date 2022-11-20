@@ -17,7 +17,7 @@
       external:layout_constraintTop_toTopOf="parent"
       external:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-   <com.astrro.timely.custom.MaterialProgressbar
+   <com.astrro.timely.widgets.MaterialProgressbar
       android:id="@+id/content_loading"
       style="@style/Widget.MaterialProgressBar.ProgressBar"
       android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
       external:layout_constraintStart_toStartOf="parent"
       external:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-   <com.astrro.timely.custom.MaterialProgressbar
+   <com.astrro.timely.widgets.MaterialProgressbar
       android:id="@+id/indeterminateProgress"
       style="@style/Widget.MaterialProgressBar.ProgressBar"
       android:layout_width="wrap_content"

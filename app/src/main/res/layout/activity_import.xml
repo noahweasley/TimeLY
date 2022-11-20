@@ -72,7 +72,7 @@
       external:layout_constraintTop_toBottomOf="@id/toolbar"
       tools:visibility="gone">
 
-      <com.astrro.timely.custom.MaterialProgressbar
+      <com.astrro.timely.widgets.MaterialProgressbar
          android:id="@+id/indeterminateProgress"
          style="@style/Widget.MaterialProgressBar.ProgressBar"
          android:layout_width="wrap_content"
@@ -171,7 +171,7 @@
          external:layout_constraintTop_toTopOf="parent"
          external:layout_constraintVertical_bias="0.8" />
 
-      <com.astrro.timely.custom.MaterialProgressbar
+      <com.astrro.timely.widgets.MaterialProgressbar
          android:id="@+id/indeterminateProgress"
          style="@style/Widget.MaterialProgressBar.ProgressBar"
          android:layout_width="0dp"

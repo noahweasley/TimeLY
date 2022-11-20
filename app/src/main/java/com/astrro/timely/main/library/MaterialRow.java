@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.astrro.timely.R;
 import com.astrro.timely.core.DataModel;
-import com.astrro.timely.custom.InfiniteScrollAdapter;
+import com.astrro.timely.widgets.InfiniteScrollAdapter;
 import com.astrro.timely.gallery.Image;
 import com.squareup.picasso.Picasso;
 

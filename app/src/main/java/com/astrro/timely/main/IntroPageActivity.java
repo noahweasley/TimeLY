@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.astrro.timely.util.PreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -68,11 +69,11 @@ public class IntroPageActivity extends AppCompatActivity implements View.OnClick
       skip.setOnClickListener(this::navigateToLandingPage);
    }
 
-
    private void navigateToLandingPage(View view) {
+      PreferenceUtils.setFirstLaunchKey(getApplicationContext(), false);
       Intent nav_main = new Intent(this, MainActivity.class);
       nav_main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-      startActivity(nav_main);
+      startActivity(nav_main);      // TimeLY is being exited, set the first launch key to false
    }
 
    @Override

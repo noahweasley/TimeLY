@@ -3,8 +3,8 @@
    xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
    android:layout_height="190dp"
-   android:paddingVertical="@dimen/layout_gap"
    android:background="?attr/selectableItemBackground"
+   android:paddingVertical="@dimen/layout_gap"
    tools:padding="@dimen/layout_gap">
 
    <ImageView
@@ -70,6 +70,20 @@
       external:layout_constraintStart_toStartOf="@+id/document_title"
       external:layout_constraintTop_toBottomOf="@+id/document_title"
       tools:text="Noah Weasley (Admin)" />
+
+   <TextView
+      android:id="@+id/category"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginVertical="8dp"
+      android:background="@drawable/bg_category"
+      android:text="@string/default_topic"
+      android:textColor="@android:color/black"
+      android:textSize="12sp"
+      external:layout_constraintBottom_toTopOf="@+id/mime_size"
+      external:layout_constraintStart_toStartOf="@+id/author"
+      external:layout_constraintTop_toBottomOf="@+id/author"
+      external:layout_constraintVertical_bias="0.9" />
 
    <TextView
       android:id="@+id/mime_size"

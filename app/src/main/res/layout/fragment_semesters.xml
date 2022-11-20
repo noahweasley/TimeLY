@@ -23,7 +23,7 @@
       external:layout_constraintTop_toTopOf="parent"
       tools:visibility="visible" />
 
-   <com.astrro.timely.custom.MaterialProgressbar
+   <com.astrro.timely.widgets.MaterialProgressbar
       android:id="@+id/indeterminateProgress"
       style="@style/Widget.MaterialProgressBar.ProgressBar"
       android:layout_width="wrap_content"

@@ -27,7 +27,7 @@
       app:layout_constraintStart_toEndOf="@+id/materialProgressbar"
       app:layout_constraintTop_toTopOf="parent" />
 
-   <com.astrro.timely.custom.MaterialProgressbar
+   <com.astrro.timely.widgets.MaterialProgressbar
       android:id="@+id/materialProgressbar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

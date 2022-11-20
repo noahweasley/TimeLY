@@ -1,13 +1,9 @@
 package com.astrro.timely.main;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
-import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,9 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
@@ -55,12 +49,13 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
    private Fragment visibleFragment;
    private boolean dismissable;
    public static final String ACTION_LOGIN = "Login_user_action";
+   private BottomNavigationView bottomNavigationView;
 
    static {
       AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
    }
 
-   DrawerLayout drawer;
+   private DrawerLayout drawer;
    private ActionBarDrawerToggle toggle;
    private TimeChangeDetector timeChangeDetector;
    private View vg_headerView;
@@ -74,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
       addMenuProvider(this);
 
       NavigationView navView = findViewById(R.id.nav_view);
-      BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+      bottomNavigationView = findViewById(R.id.bottom_navigation);
 
       bottomNavigationView.setOnItemSelectedListener(new NavigationBarItemListener());
       // navigate to user sign up | login screen
@@ -94,36 +89,24 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
       drawer.addDrawerListener(toggle);
       setSupportActionBar(toolbar);
 
-      showFragment(MainPageFragment.getInstance());
-      startService(new Intent(this, TimeChangeDetectorService.class)); // start OS time and date detection
-      showPowerManagementContextUI();
-   }
-
-   private void showPowerManagementContextUI() {
-      // ignore power management service to trigger alarms properly
-      String cancelText = getString(R.string.later);
-      String goText = getString(R.string.go);
-      String noticeTitle = getString(R.string.noticeTitle);
-      String neutralText = getString(R.string.never);
-      String noticeMessage = getString(R.string.noticeMessage);
-      final String RESTRICTION_GRANT = PreferenceUtils.getStringValue(this, PreferenceUtils.RESTRICTION_ACCESS_KEY,
-                                                                      PreferenceUtils.GRANT_ACCESS);
-      final boolean ACCESS_DENIED = RESTRICTION_GRANT.equals(PreferenceUtils.DENY_ACCESS);
-      PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-         if (!ACCESS_DENIED && !powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
-            // notify user of their actions to remove restrictions on battery optimizations
-            new AlertDialog.Builder(this)
-                    .setTitle(noticeTitle)
-                    .setMessage(noticeMessage)
-                    .setIcon(R.drawable.ic_baseline_info_24)
-                    .setNegativeButton(cancelText, this::requestAction)
-                    .setNeutralButton(neutralText, this::requestAction)
-                    .setPositiveButton(goText, this::requestAction)
-                    .create()
-                    .show();
+      if (savedInstanceState == null) {
+         showFragment(FeedsFragment.getInstance());
+      } else {
+         if (visibleFragment != null) {
+            showFragment(visibleFragment);
          }
       }
+   }
+
+   @Override
+   protected void onResume() {
+      super.onResume();
+      startService(new Intent(this, TimeChangeDetectorService.class)); // start OS time and date detection
+   }
+
+   @Override
+   protected void onPause() {
+      super.onPause();
    }
 
    private void showFragment(Fragment fragment) {
@@ -133,11 +116,19 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
 
       final String TAG = fragment.getClass().getSimpleName();
 
-      if (visibleFragment != null) transaction.hide(visibleFragment);
+      if (visibleFragment != null) {
+         transaction.hide(visibleFragment);
+         Log.d(getClass().getSimpleName(), visibleFragment.getClass().getSimpleName() + " was saved");
+      }
+
       if (fragment.isAdded()) {
          transaction.show(fragment);
+         if (visibleFragment != null)
+            Log.d(getClass().getSimpleName(), visibleFragment.getClass().getSimpleName() + " will show");
       } else {
          transaction.add(R.id.frame, fragment, TAG);
+         if (visibleFragment != null)
+            Log.d(getClass().getSimpleName(), fragment.getClass().getSimpleName() + ", has been added now");
       }
 
       transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
@@ -149,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
       String title = null;
       if (fragment.getClass() == MarketPlaceFragment.class) title = MarketPlaceFragment.getToolbarTitle();
       else if (fragment.getClass() == StudentLibraryFragment.class) title = StudentLibraryFragment.getToolbarTitle();
-      else if (fragment.getClass() == MainPageFragment.class) title = MainPageFragment.getToolbarTitle();
+      else if (fragment.getClass() == FeedsFragment.class) title = FeedsFragment.getToolbarTitle();
       else if (fragment.getClass() == ChatsFragment.class) title = ChatsFragment.getToolbarTitle();
       else if (fragment.getClass() == NotificationsFragment.class) title = NotificationsFragment.getToolbarTitle();
 
@@ -163,11 +154,6 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
 
       vg_authGroup.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
       vg_userProfile.setOnClickListener(v -> startActivity(new Intent(this, UserProfileActivity.class)));
-   }
-
-   @Override
-   protected void onResume() {
-      super.onResume();
    }
 
    @Override
@@ -227,15 +213,6 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
       }
    }
 
-   @RequiresApi(api = Build.VERSION_CODES.M)
-   private void requestAction(DialogInterface dialog, int which) {
-      if (which == DialogInterface.BUTTON_POSITIVE)
-         startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
-      else if (which == DialogInterface.BUTTON_NEUTRAL)
-         PreferenceUtils.setStringValue(this, PreferenceUtils.RESTRICTION_ACCESS_KEY, PreferenceUtils.DENY_ACCESS);
-      dialog.cancel();
-   }
-
    @Override
    protected void onPostCreate(Bundle state) {
       super.onPostCreate(state);
@@ -268,10 +245,16 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
          if (dismissable) {
             super.onBackPressed();
          } else {
-            String app_name = getString(R.string.app_name);
-            String exit_message = getString(R.string.exit_message);
-            String full_exit_message = String.format(Locale.US, "%s %s", exit_message, app_name);
-            Toast.makeText(this, full_exit_message, Toast.LENGTH_SHORT).show();
+            if (visibleFragment == FeedsFragment.getInstance()) {
+               String app_name = getString(R.string.app_name);
+               String exit_message = getString(R.string.exit_message);
+               String full_exit_message = String.format(Locale.US, "%s %s", exit_message, app_name);
+               Toast.makeText(this, full_exit_message, Toast.LENGTH_SHORT).show();
+            } else {
+               showFragment(FeedsFragment.getInstance());
+               bottomNavigationView.setSelectedItemId(R.id.home);
+               return;
+            }
          }
          dismissable = true;
          new Handler(getMainLooper()).postDelayed(() -> dismissable = false, 2000);
@@ -293,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
       public boolean onNavigationItemSelected(@NonNull MenuItem item) {
          int itemId = item.getItemId();
          if (itemId == R.id.home) {
-            showFragment(MainPageFragment.getInstance());
+            showFragment(FeedsFragment.getInstance());
          } else if (itemId == R.id.courses || itemId == R.id.timetable || itemId == R.id.scheduled_classes
                  || itemId == R.id.assignment || itemId == R.id.exam_timetable || itemId == R.id.todo_list
                  || itemId == R.id.calculator || itemId == R.id.alarms) {
@@ -324,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
          } else if (itemId == R.id.chats) {
             showFragment(ChatsFragment.getInstance());
          } else if (itemId == R.id.home) {
-            showFragment(MainPageFragment.getInstance());
+            showFragment(FeedsFragment.getInstance());
          } else if (itemId == R.id.library) {
             showFragment(StudentLibraryFragment.getInstance());
          } else if (itemId == R.id.marketplace) {
@@ -335,5 +318,4 @@ public class MainActivity extends AppCompatActivity implements MenuProvider {
       }
 
    }
-
 }

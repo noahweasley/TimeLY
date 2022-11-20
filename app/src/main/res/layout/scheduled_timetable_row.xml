@@ -35,7 +35,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/bg_decor_left" />
 
-         <com.astrro.timely.custom.VerticalTextView
+         <com.astrro.timely.widgets.VerticalTextView
             android:id="@+id/vertical_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

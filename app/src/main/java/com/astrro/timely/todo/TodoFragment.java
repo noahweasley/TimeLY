@@ -235,6 +235,7 @@ public class TodoFragment extends Fragment {
       getActivity().getSupportFragmentManager().beginTransaction()
                    .replace(R.id.frame, TodoContainerFragment.newInstance(category), "Todo")
                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                   .setReorderingAllowed(true)
                    .addToBackStack(null).commit();
    }
 }

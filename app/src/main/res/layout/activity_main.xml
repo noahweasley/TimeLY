@@ -1,62 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:external="http://schemas.android.com/apk/res-auto"
    xmlns:tools="http://schemas.android.com/tools"
-   android:id="@+id/drawer"
    android:layout_width="match_parent"
-   android:layout_height="match_parent"
-   android:fitsSystemWindows="true"
-   tools:context=".main.MainActivity"
-   tools:openDrawer="start">
+   android:layout_height="match_parent">
 
-   <androidx.constraintlayout.widget.ConstraintLayout
+   <androidx.drawerlayout.widget.DrawerLayout
+      android:id="@+id/drawer"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
-
-      <androidx.appcompat.widget.Toolbar
-         android:id="@+id/toolbar"
-         android:layout_width="match_parent"
-         android:layout_height="@dimen/action_bar_size"
-         android:background="@color/colorPrimary"
-         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-         external:layout_constraintEnd_toEndOf="parent"
-         external:layout_constraintStart_toStartOf="parent"
-         external:layout_constraintTop_toTopOf="parent"
-         external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-         external:subtitleTextColor="@android:color/white" />
-
-      <FrameLayout
-         android:id="@+id/frame"
-         android:layout_width="match_parent"
-         android:layout_height="0dp"
-         external:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-         external:layout_constraintEnd_toEndOf="parent"
-         external:layout_constraintStart_toStartOf="parent"
-         external:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-      <com.google.android.material.bottomnavigation.BottomNavigationView
-         android:id="@+id/bottom_navigation"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:background="@color/bottomNavColor"
-         external:itemIconTint="@color/bottom_navigation_selection"
-         external:labelVisibilityMode="labeled"
-         external:layout_constraintBottom_toBottomOf="parent"
-         external:layout_constraintEnd_toEndOf="parent"
-         external:layout_constraintStart_toStartOf="parent"
-         external:menu="@menu/bottom_menu" />
-
-   </androidx.constraintlayout.widget.ConstraintLayout>
-
-   <com.google.android.material.navigation.NavigationView
-      android:id="@+id/nav_view"
-      android:layout_width="240dp"
       android:layout_height="match_parent"
-      android:layout_gravity="start"
-      android:fitsSystemWindows="false"
-      external:headerLayout="@layout/nav_header"
-      external:itemBackground="@drawable/bg_checked"
-      external:itemIconTint="@color/colorPrimary"
-      external:menu="@menu/nav_menu" />
+      android:fitsSystemWindows="true"
+      tools:context=".main.MainActivity"
+      tools:openDrawer="start">
 
-</androidx.drawerlayout.widget.DrawerLayout>
+      <androidx.constraintlayout.widget.ConstraintLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+
+         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_size"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toTopOf="parent"
+            external:layout_scrollFlags="scroll|enterAlways"
+            external:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            external:subtitleTextColor="@android:color/white" />
+
+         <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            external:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bottomNavColor"
+            external:itemIconTint="@color/bottom_navigation_selection"
+            external:labelVisibilityMode="labeled"
+            external:layout_constraintBottom_toBottomOf="parent"
+            external:layout_constraintEnd_toEndOf="parent"
+            external:layout_constraintStart_toStartOf="parent"
+            external:menu="@menu/bottom_menu" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <com.google.android.material.navigation.NavigationView
+         android:id="@+id/nav_view"
+         android:layout_width="240dp"
+         android:layout_height="match_parent"
+         android:layout_gravity="start"
+         android:fitsSystemWindows="false"
+         external:headerLayout="@layout/nav_header"
+         external:itemBackground="@drawable/bg_checked"
+         external:itemIconTint="@color/colorPrimary"
+         external:menu="@menu/nav_menu" />
+
+   </androidx.drawerlayout.widget.DrawerLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -117,4 +117,5 @@
    <dimen name="basic_info_text_size_2">20sp</dimen>
    <dimen name="notification_row_height">100dp</dimen>
    <dimen name="list_bottom_inset">80dp</dimen>
+   <dimen name="chats_row_height">70dp</dimen>
 </resources>

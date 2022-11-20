@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <color name="window_background_color">@android:color/white</color>
+<!--   <color name="window_background_color">#151515</color>-->
+<!--   <color name="colorPrimary">#121212</color>-->
+<!--   <color name="colorPrimaryDark">@color/colorPrimary</color>-->
+<!--   <color name="colorAccent">#B89866</color>-->
+<!--   <color name="colorControlNormal">@color/colorAccent</color>-->
+<!--   <color name="bottomNavColor">@color/window_background_color</color>-->
 </resources>

@@ -27,7 +27,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.core.DataModel;
 import com.astrro.timely.core.RequestRunner;
-import com.astrro.timely.custom.VerticalTextView;
+import com.astrro.timely.widgets.VerticalTextView;
 import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.scheduled.AddScheduledActivity;
 import com.astrro.timely.scheduled.AddScheduledDialog;

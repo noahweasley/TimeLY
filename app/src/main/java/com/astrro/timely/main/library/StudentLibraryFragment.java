@@ -3,6 +3,9 @@ package com.astrro.timely.main.library;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -21,7 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-public class StudentLibraryFragment extends Fragment {
+public class StudentLibraryFragment extends Fragment implements MenuProvider {
    public static final String TAG = "com.astrro.timely.main.library.StudentLibraryFragment";
    private static final String EXTRA_SEARCH_QUERY = "Search_Query";
    private static Fragment fragmentInstance;
@@ -54,6 +59,7 @@ public class StudentLibraryFragment extends Fragment {
    public void onViewCreated(@NonNull View view,
                              @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
+      requireActivity().addMenuProvider(this, this.getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
       FloatingActionButton fab_addDocument = view.findViewById(R.id.add_document);
       fab_addDocument.setOnClickListener(v -> AddDocumentActivity.start(getContext()));
@@ -89,6 +95,16 @@ public class StudentLibraryFragment extends Fragment {
    protected void finalize() throws Throwable {
       fragmentInstance = null;
       super.finalize();
+   }
+
+   @Override
+   public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+      menuInflater.inflate(R.menu.library, menu);
+   }
+
+   @Override
+   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+      return false;
    }
 
    private class QueryTextListener extends SimpleQueryTextListener {

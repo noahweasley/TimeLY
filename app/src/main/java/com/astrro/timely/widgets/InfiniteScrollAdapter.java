@@ -1,4 +1,4 @@
-package com.astrro.timely.custom;
+package com.astrro.timely.widgets;
 
 import android.view.View;
 import android.view.ViewGroup;

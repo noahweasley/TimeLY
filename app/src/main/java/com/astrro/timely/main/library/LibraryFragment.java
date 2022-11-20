@@ -11,21 +11,21 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.astrro.timely.R;
 import com.astrro.timely.core.DataModel;
-import com.astrro.timely.custom.InfiniteScrollAdapter;
+import com.astrro.timely.widgets.InfiniteScrollAdapter;
 import com.astrro.timely.util.ThreadUtils;
 import com.astrro.timely.util.collections.CollectionUtils;
 import com.astrro.timely.util.test.DummyGenerator;
-import com.google.android.material.divider.MaterialDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LibraryFragment extends Fragment {
+public class LibraryFragment extends Fragment{
    public static final String ARG_POSITION = "Page Position";
    private List<DataModel> libraryList = new ArrayList<>();
    private boolean isLoading;
@@ -76,8 +76,7 @@ public class LibraryFragment extends Fragment {
       // testing
 
       LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-      MaterialDividerItemDecoration itemDecoration
-              = new MaterialDividerItemDecoration(getContext(), layoutManager.getOrientation());
+      DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), layoutManager.getOrientation());
 
       rv_materialList.setLayoutManager(layoutManager);
       rv_materialList.setHasFixedSize(true);
