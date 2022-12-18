@@ -17,14 +17,11 @@ import java.util.Set;
 public class Calculator {
 
    /**
-    * Calculates G.P.A, returning a future with results. A custom  {@link java.util.concurrent.Future} and
-    * {@link java.util.concurrent.CompletableFuture} was used to support pre Android API Level 26 devices.
+    * Calculates G.P.A, returning a future with results
     *
     * @param context  the contexts that would be used to get user settings
     * @param scoreMap the score map of the user
-    * @return a future result of the calculation and resolves to a floating point value
-    * @see java.util.concurrent.Future
-    * @see java.util.concurrent.CompletableFuture
+    * @return the calculated G.P.A
     */
    public static float calculateGPA(Context context, Map<Integer, String[]> scoreMap) {
       Set<Map.Entry<Integer, String[]>> entries = scoreMap.entrySet();
@@ -49,9 +46,7 @@ public class Calculator {
       float value = (float) totalScore / (float) totalCredits;
       // just in case the user miraclously is offering only one course that semester and that course is a zero credit
       // unit course. ;=)
-      if (Float.isNaN(value)) {
-         return 0.0f;
-      } else return value;
+      return Float.isNaN(value) ? 0.0f : value;
    }
 
    // easily get grade scores by multiplying grades with credits
