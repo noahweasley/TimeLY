@@ -28,11 +28,11 @@ import java.util.Random;
 
 public class FeedsFragment extends Fragment implements MenuProvider {
    public static final String TAG = "com.astrro.timely.main.FeedsFragment";
+   private static final String TOOLBAR_TITLE = "Discover";
+   private static Fragment fragmentInstance;
    private TextView tv_gText;
    private DayPart lastDayPart;
    private Context context;
-   private static Fragment fragmentInstance;
-   private static final String TOOLBAR_TITLE = "Discover";
 
    public static Fragment getInstance() {
       return fragmentInstance == null ? (fragmentInstance = new FeedsFragment()) : fragmentInstance;

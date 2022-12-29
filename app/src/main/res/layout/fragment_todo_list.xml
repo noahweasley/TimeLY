@@ -64,11 +64,13 @@
 
          <TextView
             android:id="@+id/textView11"
-            style="@style/Info_Text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/no_todos"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/no_task_info_text_size"
+            android:textStyle="bold"
             external:layout_constraintBottom_toBottomOf="parent"
             external:layout_constraintEnd_toEndOf="parent"
             external:layout_constraintHorizontal_bias="0.0"
@@ -77,7 +79,6 @@
             external:layout_constraintVertical_bias="0.14" />
 
          <TextView
-            android:id="@+id/textView10"
             style="@style/Info_Text.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

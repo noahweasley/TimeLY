@@ -53,7 +53,9 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:text="@string/no_assignments_yet"
-         style="@style/Info_Text"
+         android:textColor="@color/colorPrimary"
+         android:textSize="@dimen/no_task_info_text_size"
+         android:textStyle="bold"
          external:layout_constraintBottom_toBottomOf="parent"
          external:layout_constraintEnd_toEndOf="parent"
          external:layout_constraintStart_toStartOf="parent"
@@ -61,7 +63,6 @@
          external:layout_constraintVertical_bias="0.050000012" />
 
       <TextView
-         android:id="@+id/textView13"
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:gravity="center"

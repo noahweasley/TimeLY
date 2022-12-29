@@ -2,7 +2,6 @@ package com.astrro.timely.gallery;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.astrro.timely.R;
 import com.astrro.timely.assignment.AddAssignmentActivity;
-import com.astrro.timely.auth.ui.login.CompleteRegistrationActivity;
-import com.astrro.timely.util.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -31,7 +28,6 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
    private List<? extends Image> imageList;
    private boolean isChecked;
    private String requestAction;
-   private Image image;
 
    @SuppressLint("ClickableViewAccessibility")
    ImageGalleryRowHolder(View rootView) {
@@ -50,13 +46,6 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
                   imageAdapter.setMultiSelectionEnabled(false);
                }
             } else ImageSlideActivity.start(context, getAbsoluteAdapterPosition(), imageList);
-
-         } else if (requestAction.equals(ImageGallery.ACTION_SINGLE_SELECT)) {
-            Intent intent = new Intent(context, CompleteRegistrationActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra(Constants.EXTRA.EXTRA_IMAGE, image);
-            intent.setAction(Constants.ACTION.SHOW_PICTURE);
-            context.startActivity(intent);
          }
       });
 
@@ -87,7 +76,7 @@ class ImageGalleryRowHolder extends RecyclerView.ViewHolder {
 
    ImageGalleryRowHolder with(ImageGallery.ImageAdapter imageAdapter, List<? extends Image> imageList) {
       this.imageList = imageList;
-      this.image = imageList.get(getAbsoluteAdapterPosition());
+      Image image = imageList.get(getAbsoluteAdapterPosition());
       this.imageContentUri = image.getImageUri();
       this.fileName = image.getFileName();
       this.imageAdapter = imageAdapter;

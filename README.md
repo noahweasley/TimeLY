@@ -15,7 +15,9 @@
 ### About 
 
 TimeLY is the kind of android application you might want to have as a University student, although, the app isn't 
-complete, when it is, it would pack a lot of features that would make students life much more easier. 
+complete, when it is, it would pack a lot of features that would make students life much more easier. This project made 
+me learn all the different ways one should **NEVER** build software, so the code is such a mess and I hope to fix the 
+achitecture of the app someday.
 
 ### Application package usages
 

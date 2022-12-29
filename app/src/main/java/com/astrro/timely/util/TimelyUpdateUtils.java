@@ -14,12 +14,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
+import com.astrro.timely.R;
+import com.astrro.timely.main.App;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
-import com.astrro.timely.R;
-import com.astrro.timely.main.App;
 
 import java.util.Locale;
 

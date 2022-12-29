@@ -14,8 +14,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.gson.Gson;
 import com.astrro.timely.R;
+import com.google.gson.Gson;
 
 public class TodoViewDialog extends DialogFragment {
    static final String ARG_DATA = "todo";

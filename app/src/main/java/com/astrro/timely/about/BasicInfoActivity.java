@@ -12,7 +12,7 @@ import com.astrro.timely.util.AppInfoUtils;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class TimelyBasicInfoActivity extends AppCompatActivity {
+public class BasicInfoActivity extends AppCompatActivity {
 
    @Override
    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {

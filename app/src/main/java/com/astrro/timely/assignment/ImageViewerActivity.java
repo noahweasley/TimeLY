@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.core.ChoiceMode;
 import com.astrro.timely.core.EmptyListEvent;
@@ -33,6 +32,7 @@ import com.astrro.timely.gallery.ImageGallery;
 import com.astrro.timely.gallery.ImageListRowHolder;
 import com.astrro.timely.gallery.ImageMultiChoiceMode;
 import com.astrro.timely.util.ThreadUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

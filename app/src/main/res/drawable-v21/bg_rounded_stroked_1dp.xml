@@ -8,10 +8,10 @@
             android:color="@color/colorAccent" />
          <corners android:radius="200dp" />
          <padding
-            android:bottom="@dimen/small_button_padding_vertical"
-            android:left="@dimen/small_button_padding_horizontal"
-            android:right="@dimen/small_button_padding_horizontal"
-            android:top="@dimen/small_button_padding_vertical" />
+            android:bottom="@dimen/layout_gap"
+            android:left="@dimen/layout_gap"
+            android:right="@dimen/layout_gap"
+            android:top="@dimen/layout_gap" />
       </shape>
    </item>
 </ripple>

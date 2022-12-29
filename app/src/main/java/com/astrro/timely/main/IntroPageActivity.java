@@ -14,16 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.astrro.timely.R;
 import com.astrro.timely.util.PreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.astrro.timely.R;
 
 public class IntroPageActivity extends AppCompatActivity implements View.OnClickListener {
+   public static final int MAX_PAGE_INDEX = 3;
    private IntroPagerAdapter adapter;
    private ViewPager2 pager_intro;
-   public static final int MAX_PAGE_INDEX = 3;
 
    @Override
    protected void onCreate(@Nullable Bundle savedInstanceState) {

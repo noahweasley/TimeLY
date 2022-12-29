@@ -117,7 +117,6 @@
                external:layout_constraintTop_toTopOf="parent">
 
                <com.google.android.material.textfield.TextInputLayout
-                  android:id="@+id/start_box"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_marginEnd="@dimen/default_gap"
@@ -174,7 +173,6 @@
             </LinearLayout>
 
             <LinearLayout
-               android:id="@+id/bottom"
                android:layout_width="0dp"
                android:layout_height="wrap_content"
                android:layout_marginTop="@dimen/layout_gap"
@@ -185,7 +183,6 @@
                external:layout_constraintTop_toBottomOf="@+id/top">
 
                <com.google.android.material.textfield.TextInputLayout
-                  android:id="@+id/end_box"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_marginEnd="@dimen/default_gap"

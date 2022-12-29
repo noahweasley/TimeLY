@@ -14,7 +14,6 @@
       app:layout_constraintStart_toStartOf="parent" />
 
    <TextView
-      android:id="@+id/textView5"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/default_gap"
@@ -37,7 +36,6 @@
       app:layout_constraintTop_toTopOf="parent" />
 
    <View
-      android:id="@+id/view3"
       android:layout_width="0dp"
       android:layout_height="1dp"
       android:background="@color/colorPrimaryDark"

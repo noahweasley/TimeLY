@@ -8,7 +8,6 @@
    tools:context=".todo.TodoFragment">
 
    <ScrollView
-      android:id="@+id/scroller"
       android:layout_width="0dp"
       android:layout_height="0dp"
       external:layout_constraintBottom_toBottomOf="parent"
@@ -67,7 +66,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_1"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -125,7 +123,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -179,7 +176,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_3"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -232,7 +228,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_8"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -285,7 +280,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_4"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -338,7 +332,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_5"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -391,7 +384,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_6"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -444,7 +436,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_7"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -497,7 +488,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_10"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -550,7 +540,6 @@
                external:layout_constraintVertical_bias="0.4" />
 
             <TextView
-               android:id="@+id/task_count_9"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="@string/default_task_number"
@@ -600,7 +589,6 @@
          external:mpb_progressStyle="circular" />
 
       <TextView
-         android:id="@+id/loader_text"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_marginTop="@dimen/layout_gap"

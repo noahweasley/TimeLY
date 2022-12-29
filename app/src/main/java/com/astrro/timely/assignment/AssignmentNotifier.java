@@ -19,7 +19,7 @@ import androidx.preference.PreferenceManager;
 
 import com.astrro.timely.R;
 import com.astrro.timely.main.App;
-import com.astrro.timely.main.SchoolUtilitesActivity;
+import com.astrro.timely.main.MainActivity;
 
 abstract class AssignmentNotifier extends BroadcastReceiver {
 
@@ -44,7 +44,7 @@ abstract class AssignmentNotifier extends BroadcastReceiver {
       // random ID is used so that an instance of assignment notification won't be updated,
       // instead another notification is sent
       final int NOTIFY_ID = (int) (Math.random() * Integer.MAX_VALUE);
-      Intent viewIntent = new Intent(context, SchoolUtilitesActivity.class).setAction("com.astrro.timely.assignments");
+      Intent viewIntent = new Intent(context, MainActivity.class).setAction("com.astrro.timely.assignments");
 
       PendingIntent viewPI = PendingIntent.getActivity(context, 111, viewIntent, 0);
       // send a notification as a reminder

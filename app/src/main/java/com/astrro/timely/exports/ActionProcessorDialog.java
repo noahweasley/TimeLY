@@ -12,8 +12,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.astrro.timely.R;
-import com.astrro.timely.util.collections.ISupplier;
 import com.astrro.timely.util.ThreadUtils;
+import com.astrro.timely.util.collections.ISupplier;
 
 public class ActionProcessorDialog<T> extends DialogFragment {
    private static final String ARG_LIST = "list";

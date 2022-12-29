@@ -16,7 +16,6 @@
       external:srcCompat="@drawable/ic_app_icon_mono" />
 
    <TextView
-      android:id="@+id/textView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/layout_gap"

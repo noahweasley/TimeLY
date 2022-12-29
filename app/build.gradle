@@ -49,9 +49,6 @@ android {
     }
 
     dependencies {
-        def retrofit_version = "2.9.0"
-        def nav_version = "2.5.0"
-
         implementation fileTree(dir: 'libs', include: ['*.jar'])
         implementation 'androidx.legacy:legacy-support-v4:1.0.0'
         implementation 'org.jetbrains:annotations:15.0'
@@ -66,8 +63,6 @@ android {
         implementation "androidx.multidex:multidex:2.0.1"
         implementation 'androidx.viewpager2:viewpager2:1.0.0'
         implementation 'com.google.code.gson:gson:2.8.8'
-        implementation "androidx.navigation:navigation-fragment:$nav_version"
-        implementation "androidx.navigation:navigation-ui:$nav_version"
 
         implementation 'com.kevalpatel2106:ringtonepicker:1.2'
         implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
@@ -76,17 +71,6 @@ android {
         implementation 'com.airbnb.android:lottie:3.7.0'
         implementation 'com.github.javiersantos:AppUpdater:2.7'
         implementation 'me.zhanghai.android.materialprogressbar:library:1.1.6'
-        //noinspection GradleDependency
-        implementation 'com.github.yalantis:ucrop:2.2.6-native'
-
-        // networking libraries
-        implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-        implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-        implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
-        implementation 'com.google.android.gms:play-services-auth:20.4.0'
-        implementation 'com.google.android.gms:play-services-base:18.1.0'
-
-        implementation 'io.github.chaosleung:pinview:1.4.4'
 
         implementation ('com.wdullaer:materialdatetimepicker:4.2.3') {
             exclude group: 'androidx.appcompat'

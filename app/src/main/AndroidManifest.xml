@@ -100,11 +100,6 @@
          </intent-filter>
       </activity>
 
-      <!-- UCrop library's activity -->
-      <activity
-         android:name="com.yalantis.ucrop.UCropActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade" />
-
       <activity
          android:name=".settings.SettingsActivity"
          android:theme="@style/SlidingActivityTheme_No_Fade" />
@@ -173,98 +168,13 @@
          android:windowSoftInputMode="adjustResize" />
 
       <activity
-         android:name=".auth.ui.login.LoginActivity"
-         android:launchMode="singleTask"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustPan" />
-
-      <activity
-         android:name=".auth.ui.login.CompleteRegistrationActivity"
-         android:launchMode="singleTask"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustPan" />
-
-      <activity
-         android:name=".auth.ui.login.GoogleLoginCompletionActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustPan" />
-
-      <activity
-         android:name=".main.library.AddDocumentActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustPan" />
-
-      <!--     Deep-link RecoveryActivity's intent filter to web link    -->
-
-      <activity
-         android:name=".auth.ui.login.RecoveryActivity"
-         android:exported="true"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustPan">
-
-         <intent-filter android:autoVerify="true">
-            <action android:name="android.intent.action.VIEW" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-
-            <data
-               android:host="www.timely.org"
-               android:mimeType="*/*"
-               android:pathPrefix="/recover"
-               android:scheme="http" />
-
-         </intent-filter>
-
-      </activity>
-
-      <activity
-         android:name=".auth.ui.login.RegistrationActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustPan" />
-
-      <activity
-         android:name=".auth.ui.login.VerificationActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustPan" />
-
-      <activity
          android:name=".todo.AddTodoActivity"
          android:theme="@style/AppTheme.SlideVertical_recipient"
          android:windowSoftInputMode="adjustResize" />
 
       <activity
-         android:name=".about.TimelyBasicInfoActivity"
+         android:name=".about.BasicInfoActivity"
          android:theme="@style/SlidingActivityTheme_No_Fade" />
-
-      <activity
-         android:name=".main.library.LibrarySearchActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade" />
-
-      <activity
-         android:name=".main.chats.MessageSearchActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade" />
-
-      <activity
-         android:name=".about.BasicInfoListActivity"
-         android:exported="false"
-         android:theme="@style/SlidingActivityTheme_No_Fade" />
-
-      <activity
-         android:name=".main.UserProfileActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustResize" />
-
-      <activity
-         android:name=".about.ContactActivity"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustResize" />
-
-      <activity
-         android:name=".main.SchoolUtilitesActivity"
-         android:launchMode="singleTask"
-         android:theme="@style/SlidingActivityTheme_No_Fade"
-         android:windowSoftInputMode="adjustResize" />
 
       <activity
          android:name=".exports.ImportResultsActivity"

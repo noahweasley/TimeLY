@@ -42,7 +42,6 @@ public class Calculator {
          }
       }
 
-      // then do final gpa calculations
       float value = (float) totalScore / (float) totalCredits;
       // just in case the user miraclously is offering only one course that semester and that course is a zero credit
       // unit course. ;=)

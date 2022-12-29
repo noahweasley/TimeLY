@@ -23,7 +23,7 @@ import androidx.preference.PreferenceManager;
 
 import com.astrro.timely.R;
 import com.astrro.timely.main.App;
-import com.astrro.timely.main.SchoolUtilitesActivity;
+import com.astrro.timely.main.MainActivity;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +49,7 @@ public class ScheduledTaskNotifier extends BroadcastReceiver {
       final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                         : SYSTEM_DEFAULT;
 
-      Intent sIntent = new Intent(context, SchoolUtilitesActivity.class).setAction("com.astrro.timely.scheduled");
+      Intent sIntent = new Intent(context, MainActivity.class).setAction("com.astrro.timely.scheduled");
       PendingIntent pi = PendingIntent.getActivity(context, 1156, sIntent, PendingIntent.FLAG_UPDATE_CURRENT);
       // Notification message
       String message = "You have a scheduled class, <b>" + course + "</b> in <b>10 minutes</b>";

@@ -25,12 +25,12 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.assignment.AssignmentFragment.AssignmentRowAdapter;
 import com.astrro.timely.core.DataModel;
 import com.astrro.timely.core.RequestRunner;
 import com.astrro.timely.error.ErrorDialog;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 

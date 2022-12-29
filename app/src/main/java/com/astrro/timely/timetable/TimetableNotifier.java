@@ -24,7 +24,7 @@ import androidx.preference.PreferenceManager;
 
 import com.astrro.timely.R;
 import com.astrro.timely.main.App;
-import com.astrro.timely.main.SchoolUtilitesActivity;
+import com.astrro.timely.main.MainActivity;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -57,7 +57,7 @@ public class TimetableNotifier extends BroadcastReceiver {
       final Uri DEFAULT_URI = type.equals("TimeLY's Default") || SYSTEM_DEFAULT == null ? APP_DEFAULT
                                                                                         : SYSTEM_DEFAULT;
 
-      Intent contentIntent = new Intent(context, SchoolUtilitesActivity.class).setAction("com.astrro.timely.timetable");
+      Intent contentIntent = new Intent(context, MainActivity.class).setAction("com.astrro.timely.timetable");
 
       PendingIntent contentPI = PendingIntent.getActivity(context, 200, contentIntent, 0);
 

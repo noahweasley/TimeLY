@@ -23,17 +23,17 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.astrro.timely.R;
 import com.astrro.timely.core.DataModel;
 import com.astrro.timely.core.RequestRunner;
-import com.astrro.timely.widgets.VerticalTextView;
 import com.astrro.timely.error.ErrorDialog;
 import com.astrro.timely.scheduled.AddScheduledActivity;
 import com.astrro.timely.scheduled.AddScheduledDialog;
 import com.astrro.timely.scheduled.ScheduledTimetableFragment;
 import com.astrro.timely.util.Converter;
 import com.astrro.timely.util.DeviceInfoUtil;
+import com.astrro.timely.widgets.VerticalTextView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
