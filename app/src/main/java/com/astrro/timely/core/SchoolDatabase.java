@@ -2409,32 +2409,4 @@ public class SchoolDatabase extends SQLiteOpenHelper {
       return isFirstSemesterIsAbsent() && isSecondSemesterIsAbsent();
    }
 
-   /**
-    * @return the user search queries
-    */
-   public List<String> getAllLibrarySearchQueries() {
-      SQLiteDatabase db = getReadableDatabase();
-      Cursor getQueriesCursor = db.rawQuery("SELECT * FROM " + LIBRARY_SEARCH_TABLE, null);
-      List<String> searchQueryList = new ArrayList<>();
-
-      while (getQueriesCursor.moveToNext()) searchQueryList.add(retrieveEntry(getQueriesCursor.getString(0)));
-
-      return searchQueryList;
-   }
-
-   /**
-    * Adds an entry into the library recent search table
-    *
-    * @param searchQuery the search query to be inserted
-    * @return true if the search query was inserted, false otherwise
-    */
-   public boolean addLibrarySearchQuery(String searchQuery) {
-      SQLiteDatabase db = getWritableDatabase();
-      ContentValues values = new ContentValues();
-      values.put(COLUMN_RESENT_SEARCH_QUERY, sanitizeEntry(searchQuery));
-
-      return db.insert(LIBRARY_SEARCH_TABLE, null, values) != -1;
-   }
-
-
 }
