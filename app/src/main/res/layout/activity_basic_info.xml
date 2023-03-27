@@ -49,12 +49,26 @@
       android:layout_marginTop="@dimen/layout_gap_2"
       android:gravity="center"
       android:textColor="@color/white"
-      tools:text="@string/company_name"
       android:textSize="@dimen/basic_info_text_size_2"
       external:layout_constraintBottom_toBottomOf="parent"
       external:layout_constraintEnd_toEndOf="parent"
       external:layout_constraintHorizontal_bias="0.0"
       external:layout_constraintStart_toStartOf="parent"
-      external:layout_constraintTop_toBottomOf="@+id/imageView" />
+      external:layout_constraintTop_toBottomOf="@+id/imageView"
+      tools:text="@string/company_name" />
+
+   <Button
+      android:id="@+id/update_check"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/whats_new"
+      android:textColor="@color/white"
+      external:layout_constraintBottom_toTopOf="@+id/version_name"
+      external:layout_constraintEnd_toEndOf="parent"
+      external:layout_constraintHorizontal_bias="0.498"
+      external:layout_constraintStart_toStartOf="parent"
+      external:layout_constraintTop_toBottomOf="@+id/production_date"
+      external:layout_constraintVertical_bias="0.712" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

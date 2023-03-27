@@ -55,8 +55,8 @@ public class GPAAveragerDialog extends DialogFragment implements Runnable {
 
          tv_gpa = findViewById(R.id.gpa);
 
-         (handler = new Handler(Looper.getMainLooper()))
-                 .postDelayed(GPAAveragerDialog.this, getResources().getInteger(android.R.integer.config_longAnimTime));
+         Handler handler = new Handler(Looper.getMainLooper());
+         handler.postDelayed(GPAAveragerDialog.this, getResources().getInteger(android.R.integer.config_longAnimTime));
       }
 
    }

@@ -1,6 +1,8 @@
 package com.astrro.timely.about;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -12,7 +14,7 @@ import com.astrro.timely.util.AppInfoUtils;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class BasicInfoActivity extends AppCompatActivity {
+public class BasicInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
    @Override
    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -32,6 +34,14 @@ public class BasicInfoActivity extends AppCompatActivity {
 
       TextView tv_productionData = findViewById(R.id.production_date);
       tv_productionData.setText(String.format(Locale.US, "%s 2018 - %d %s", copyRight, year, companyName));
+
+      Button btn_whatsNew = findViewById(R.id.update_check);
+      btn_whatsNew.setOnClickListener(this);
+   }
+
+   @Override
+   public void onClick(View v) {
+
    }
 
    @Override

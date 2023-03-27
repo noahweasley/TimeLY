@@ -211,4 +211,5 @@
    <string name="exact_alarm_request_info">"Permission is required to trigger alarms at the time you specified. Grant permission? "</string>
    <string name="delete_button_descritption">delete button</string>
    <string name="school_utilities">School Utilities</string>
+   <string name="whats_new">What\'s New</string>
 </resources>

@@ -12,17 +12,33 @@
 
 ![Presentation 5](/presentation/5.jpg?raw=true)
 
-### About 
+### About
 
-TimeLY is the kind of android application you might want to have as a University student, although, the app isn't 
-complete, when it is, it would pack a lot of features that would make students life much more easier. This project made 
-me learn all the different ways one should **NEVER** build software, so the code is such a mess and I hope to fix the 
-achitecture of the app someday.
+> TimeLY is an Android application that manages students activities and notifies them when an event occurs
+
+## Features
+
+- View and Edit student's registered courses
+- View and Edit student's timetable; exam, scheduled and normal class timetable
+- Todo List
+- Study Alarms
+- G.P.A Calculator
+- Save class Assignments
+- Sends notifications when event occurs
+- Share tasks with another device using import and export
+- App Auto update
+
+## Technologies Used
+
+- Java
+- Android SDK
+- SQLite
+- XML
 
 ### Application package usages
 
-**N.B** : _All packages listed here are located [here](https://github.com/noahweasley/TimeLY/tree/master/app/src/main/java/com/noah/timely)_
-
+**N.B** : _All packages listed here are
+located [here](https://github.com/noahweasley/TimeLY/tree/master/app/src/main/java/com/noah/timely)_
 
 |   Package  | Details                                                                                         |
 |:----------:|-------------------------------------------------------------------------------------------------|
@@ -45,20 +61,24 @@ achitecture of the app someday.
 | todo       | Package that contains TimeLY's todo management system                                           |
 | util       | Package that contains all utility classes, methods, enums...                                    |
 
-
 ## Contributing
 
 There are many ways in which you can participate in this project, for example:
 
-* [Submit bugs and feature requests](https://github.com/noahweasley/TimeLY/issues), and help us verify as they are checked in
+* [Submit bugs and feature requests](https://github.com/noahweasley/TimeLY/issues), and help us verify as they are checked
+  in
 * Review [source code changes](https://github.com/noahweasley/TimeLY/pulls)
 * Review the project and make pull requests for anything from typos to additional and new content
 
-
-If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute`, stating what would be your contributions.
+If you are interested in fixing issues and contributing directly to the code base, open an issue with `Want to Contribute`
+, stating what would be your contributions.
 
 ## License
 
 TimeLY :copyright: is under the GPL 3.0 licence
 
 Please review [license](https://github.com/noahweasley/TimeLY/blob/master/LICENSE) to get full details.
+
+## Contact
+
+If you have any questions or feedback, please reach out to me at [mailto:iebenmelu@gmail.com].

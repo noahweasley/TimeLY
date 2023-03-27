@@ -74,8 +74,8 @@ public class ResultCalculatorFragment extends Fragment implements MenuProvider {
          if (adapter.getViewHolder() != null) {
             ThreadUtils.runBackgroundTask(() -> {
                Map<Integer, String[]>[] scoreMaps = adapter.getViewHolder().getScoreMaps();
-               float avgGPA = Calculator.calulateAverageGPA(getContext(), scoreMaps);
-               getActivity().runOnUiThread(() -> new GPAAveragerDialog().show(getContext(), avgGPA));
+               float averageGPA = Calculator.calulateAverageGPA(getContext(), scoreMaps);
+               getActivity().runOnUiThread(() -> new GPAAveragerDialog().show(getContext(), averageGPA));
             });
          } else {
             // .. just show user a generic message
@@ -89,12 +89,14 @@ public class ResultCalculatorFragment extends Fragment implements MenuProvider {
    }
 
    private void calculateGPA() {
+      // Todo: fix "showing same GPA" for the two semesters. Start from here
+      // fixme: Data from the view holder is wongly retrieved. Retrieve only the score map for a particular semester
       Map<Integer, String[]> scoreMap = adapter.getViewHolder().getScoreMap();
 
       ThreadUtils.runBackgroundTask(() -> {
          float gpaValue = Calculator.calculateGPA(getContext(), scoreMap);
 
-         if (isAdded())
+         if (isAdded()) {
             getActivity().runOnUiThread(() -> {
                ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, gpaValue);
                valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -108,8 +110,8 @@ public class ResultCalculatorFragment extends Fragment implements MenuProvider {
                valueAnimator.start();
             });
 
+         }
       });
-
    }
 
    @Override
@@ -223,8 +225,7 @@ public class ResultCalculatorFragment extends Fragment implements MenuProvider {
             } else if (action == ResultCalculatorInfoDialog.ACTION_DONT_SHOW) {
                if (getArguments().getInt(ARG_POSITION) == 0)
                   PreferenceUtils.setBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_1, false);
-               else
-                  PreferenceUtils.setBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_2, false);
+               else PreferenceUtils.setBooleanValue(getContext(), PreferenceUtils.GPA_INFO_SHOWN_2, false);
             } // end if - else
 
          }); // end callback

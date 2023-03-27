@@ -17,7 +17,7 @@ import java.util.Set;
 public class Calculator {
 
    /**
-    * Calculates G.P.A, returning a future with results
+    * Calculates G.P.A, returning the results
     *
     * @param context  the contexts that would be used to get user settings
     * @param scoreMap the score map of the user
@@ -89,8 +89,6 @@ public class Calculator {
     * @return the total credit units of a semester from the course model list used
     */
    public static double getTotalCredits(Context context, List<DataModel> courseModelList) {
-      // couldn't find a better way to do this because, Collection.stream() isn't backported and I couldn't find out
-      // a way to reproduce Stream.reduce()
       int maxGPAScale = Integer.parseInt(PreferenceUtils.getStringValue(context, "max_gpa_scale", "5"));
       List<Integer> creditsList = new ArrayList<>();
       for (DataModel courseModel : courseModelList) {
